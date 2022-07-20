@@ -1,0 +1,16 @@
+.vscode/
+build/
+CMakeFiles/
+makefile
+.cproject
+.project
+cmake_install.cmake
+CMakeCache.txt
+qmk_port_ch582.bin
+qmk_port_ch582.elf
+qmk_port_ch582.hex
+qmk_port_ch582.map
+.ninja_deps
+.ninja_log
+build.ninja
+CMakeLists.txt

@@ -1,0 +1,6 @@
+[submodule "qmk_firmware"]
+	path = qmk_firmware
+	url = https://github.com/qmk/qmk_firmware.git
+[submodule "CherryUSB"]
+	path = CherryUSB
+	url = https://github.com/sakumisu/CherryUSB.git
