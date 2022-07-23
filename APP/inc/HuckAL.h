@@ -39,7 +39,4 @@
 #define SAFETY_DELAY \
     mDelayuS(300);
 
-// CherryUSB
-void usb_dc_low_level_init();
-
 #endif
