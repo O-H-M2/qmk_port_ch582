@@ -1,6 +1,8 @@
 #ifndef _USB_CONFIG_H
 #define _USB_CONFIG_H
 
+#include "CH58x_usbdev.h"
+
 /* USB common Configuration */
 #ifndef CONFIG_USB_DBG_LEVEL
 #define CONFIG_USB_DBG_LEVEL USB_DBG_INFO
@@ -117,5 +119,65 @@
 // #define CONFIG_USB_EHCI_INFO_ENABLE
 #define CONFIG_USB_ECHI_HCOR_RESERVED_DISABLE
 // #define CONFIG_USB_EHCI_CONFIGFLAG
+
+#if defined pEP0_DataBuf
+#undef pEP0_DataBuf
+#endif
+
+#if defined pEP1_OUT_DataBuf
+#undef pEP1_OUT_DataBuf
+#endif
+
+#if defined pEP1_IN_DataBuf
+#undef pEP1_IN_DataBuf
+#endif
+
+#if defined pEP2_OUT_DataBuf
+#undef pEP2_OUT_DataBuf
+#endif
+
+#if defined pEP2_IN_DataBuf
+#undef pEP2_IN_DataBuf
+#endif
+
+#if defined pEP3_OUT_DataBuf
+#undef pEP3_OUT_DataBuf
+#endif
+
+#if defined pEP3_IN_DataBuf
+#undef pEP3_IN_DataBuf
+#endif
+
+#if defined pEP4_OUT_DataBuf
+#undef pEP4_OUT_DataBuf
+#endif
+
+#if defined pEP4_IN_DataBuf
+#undef pEP4_IN_DataBuf
+#endif
+
+#if defined pEP5_OUT_DataBuf
+#undef pEP5_OUT_DataBuf
+#endif
+
+#if defined pEP5_IN_DataBuf
+#undef pEP5_IN_DataBuf
+#endif
+
+#if defined pEP6_OUT_DataBuf
+#undef pEP6_OUT_DataBuf
+#endif
+
+#if defined pEP6_IN_DataBuf
+#undef pEP6_IN_DataBuf
+#endif
+
+#if defined pEP7_OUT_DataBuf
+#undef pEP7_OUT_DataBuf
+#endif
+
+#if defined pEP7_IN_DataBuf
+#undef pEP7_IN_DataBuf
+#endif
 
 #endif
