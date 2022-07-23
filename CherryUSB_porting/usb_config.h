@@ -180,4 +180,44 @@
 #undef pEP7_IN_DataBuf
 #endif
 
+#if defined USB_PID_OUT
+#undef USB_PID_OUT
+#endif
+
+#if defined USB_PID_IN
+#undef USB_PID_IN
+#endif
+
+#if defined USB_PID_SOF
+#undef USB_PID_SOF
+#endif
+
+#if defined USB_PID_SETUP
+#undef USB_PID_SETUP
+#endif
+
+#if defined USB_PID_DATA0
+#undef USB_PID_DATA0
+#endif
+
+#if defined USB_PID_DATA1
+#undef USB_PID_DATA1
+#endif
+
+#if defined USB_PID_ACK
+#undef USB_PID_ACK
+#endif
+
+#if defined USB_PID_NAK
+#undef USB_PID_NAK
+#endif
+
+#if defined USB_PID_STALL
+#undef USB_PID_STALL
+#endif
+
+#if defined USB_PID_PRE
+#undef USB_PID_PRE
+#endif
+
 #endif
