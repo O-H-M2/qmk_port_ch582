@@ -135,7 +135,7 @@ void init_usb_driver()
     usbd_hid_report_descriptor_register(0, KeyboardReport, HID_KEYBOARD_REPORT_DESC_SIZE);
     /*!< register report descriptor interface 1 */
     usbd_hid_report_descriptor_register(1, RawReport, HID_RAWHID_REPORT_DESC_SIZE);
-    /*!< register report descriptor interface 1 */
+    /*!< register report descriptor interface 2 */
     usbd_hid_report_descriptor_register(2, ExtrkeyReport, HID_EXTRAKEY_REPORT_DESC_SIZE);
     usbd_initialize();
 }

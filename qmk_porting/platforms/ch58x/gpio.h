@@ -25,19 +25,19 @@ typedef uint8_t pin_t;
 /* GPIOA 0 ~ 15
    GPIOB 16 ~ 39 */
 
-#define determineGPIOGroup(pin) ((pin >= 0) && (pin <= 15)) ? true : false
+#define determineGPIONum(pin)     ((uint32_t)(0x01 << (pin)))
+#define GPIOModeConfig(pin, mode) ((pin >= A0) && (pin <= A15)) ? GPIOA_ModeCfg(determineGPIONum(pin), mode) : (((pin >= B0) && (pin <= B23)) ? GPIOB_ModeCfg(determineGPIONum(pin - 16), mode) : 0)
 
-#define setPinInput(pin)           determineGPIOGroup(pin) ? GPIOA_ModeCfg(pin, GPIO_ModeIN_Floating) : GPIOB_ModeCfg(pin - 16, GPIO_ModeIN_Floating)
-#define setPinInputHigh(pin)       determineGPIOGroup(pin) ? GPIOA_ModeCfg(pin, GPIO_ModeIN_PU) : GPIOB_ModeCfg(pin - 16, GPIO_ModeIN_PU)
-#define setPinInputLow(pin)        determineGPIOGroup(pin) ? GPIOA_ModeCfg(pin, GPIO_ModeIN_PD) : GPIOB_ModeCfg(pin - 16, GPIO_ModeIN_PD)
-#define setPinOutputPushPull(pin)  determineGPIOGroup(pin) ? GPIOA_ModeCfg(pin, GPIO_ModeOut_PP_5mA) : GPIOB_ModeCfg(pin - 16, GPIO_ModeOut_PP_5mA)
+#define setPinInput(pin)           GPIOModeConfig(pin, GPIO_ModeIN_Floating)
+#define setPinInputHigh(pin)       GPIOModeConfig(pin, GPIO_ModeIN_PU)
+#define setPinInputLow(pin)        GPIOModeConfig(pin, GPIO_ModeIN_PD)
+#define setPinOutputPushPull(pin)  GPIOModeConfig(pin, GPIO_ModeOut_PP_5mA)
 #define setPinOutputOpenDrain(pin) _Static_assert(0, "WCH platform does not implement an open-drain output")
 #define setPinOutput(pin)          setPinOutputPushPull(pin)
 
-#define writePinHigh(pin)    determineGPIOGroup(pin) ? GPIOA_SetBits(pin) : GPIOB_SetBits(pin - 16)
-#define writePinLow(pin)     determineGPIOGroup(pin) ? GPIOA_ResetBits(pin) : GPIOB_ResetBits(pin - 16)
+#define writePinHigh(pin)    ((pin >= A0) && (pin <= A15)) ? GPIOA_SetBits(determineGPIONum(pin)) : (((pin >= B0) && (pin <= B23)) ? GPIOB_SetBits(determineGPIONum(pin - 16)) : 0)
+#define writePinLow(pin)     ((pin >= A0) && (pin <= A15)) ? GPIOA_ResetBits(determineGPIONum(pin)) : (((pin >= B0) && (pin <= B23)) ? GPIOB_ResetBits(determineGPIONum(pin - 16)) : 0)
 #define writePin(pin, level) ((level) ? writePinHigh(pin) : writePinLow(pin))
 
-#define readPin(pin) determineGPIOGroup(pin) ? GPIOA_ReadPortPin(pin) : GPIOB_ReadPortPin(pin - 16)
-
-#define togglePin(pin) determineGPIOGroup(pin) ? GPIOA_InverseBits(pin) : GPIOB_InverseBits(pin - 16)
+#define readPin(pin)   ((pin >= A0) && (pin <= A15)) ? GPIOA_ReadPortPin(determineGPIONum(pin)) : (((pin >= B0) && (pin <= B23)) ? GPIOB_ReadPortPin(determineGPIONum(pin - 16)) : 0)
+#define togglePin(pin) ((pin >= A0) && (pin <= A15)) ? GPIOA_InverseBits(determineGPIONum(pin)) : (((pin >= B0) && (pin <= B23)) ? GPIOB_InverseBits(determineGPIONum(pin - 16)) : 0)
