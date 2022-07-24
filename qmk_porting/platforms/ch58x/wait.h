@@ -26,11 +26,10 @@ extern "C" {
 #define wait_us(us) DelayUs(us)
 
 #ifndef GPIO_INPUT_PIN_DELAY
-#    define GPIO_INPUT_PIN_DELAY (FREQ_SYS / 1000000L / 4)
+#define GPIO_INPUT_PIN_DELAY (FREQ_SYS / 1000000L / 4)
 #endif
 
-#define waitInputPinDelay() wait_cpuclock(GPIO_INPUT_PIN_DELAY)
-
+#define waitInputPinDelay() wait_us(1)
 
 #ifdef __cplusplus
 }

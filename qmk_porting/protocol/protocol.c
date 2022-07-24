@@ -3,7 +3,10 @@
 #include "usb_device_state.h"
 #include "usb_main.h"
 
-uint8_t keyboard_leds(void);
+uint8_t keyboard_leds(void)
+{
+    //TODO: finish this
+}
 
 void send_keyboard(report_keyboard_t *report)
 {

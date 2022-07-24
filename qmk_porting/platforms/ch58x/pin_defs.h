@@ -17,7 +17,7 @@
 
 #include "CH58x_gpio.h"
 
-#define NO_PIN (pin_t)(~0)
+#define NO_PIN UINT8_MAX
 
 #define A0  0
 #define A1  1
