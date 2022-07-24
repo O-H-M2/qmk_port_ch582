@@ -123,59 +123,45 @@
 #if defined pEP0_DataBuf
 #undef pEP0_DataBuf
 #endif
-
 #if defined pEP1_OUT_DataBuf
 #undef pEP1_OUT_DataBuf
 #endif
-
 #if defined pEP1_IN_DataBuf
 #undef pEP1_IN_DataBuf
 #endif
-
 #if defined pEP2_OUT_DataBuf
 #undef pEP2_OUT_DataBuf
 #endif
-
 #if defined pEP2_IN_DataBuf
 #undef pEP2_IN_DataBuf
 #endif
-
 #if defined pEP3_OUT_DataBuf
 #undef pEP3_OUT_DataBuf
 #endif
-
 #if defined pEP3_IN_DataBuf
 #undef pEP3_IN_DataBuf
 #endif
-
 #if defined pEP4_OUT_DataBuf
 #undef pEP4_OUT_DataBuf
 #endif
-
 #if defined pEP4_IN_DataBuf
 #undef pEP4_IN_DataBuf
 #endif
-
 #if defined pEP5_OUT_DataBuf
 #undef pEP5_OUT_DataBuf
 #endif
-
 #if defined pEP5_IN_DataBuf
 #undef pEP5_IN_DataBuf
 #endif
-
 #if defined pEP6_OUT_DataBuf
 #undef pEP6_OUT_DataBuf
 #endif
-
 #if defined pEP6_IN_DataBuf
 #undef pEP6_IN_DataBuf
 #endif
-
 #if defined pEP7_OUT_DataBuf
 #undef pEP7_OUT_DataBuf
 #endif
-
 #if defined pEP7_IN_DataBuf
 #undef pEP7_IN_DataBuf
 #endif
@@ -183,39 +169,30 @@
 #if defined USB_PID_OUT
 #undef USB_PID_OUT
 #endif
-
 #if defined USB_PID_IN
 #undef USB_PID_IN
 #endif
-
 #if defined USB_PID_SOF
 #undef USB_PID_SOF
 #endif
-
 #if defined USB_PID_SETUP
 #undef USB_PID_SETUP
 #endif
-
 #if defined USB_PID_DATA0
 #undef USB_PID_DATA0
 #endif
-
 #if defined USB_PID_DATA1
 #undef USB_PID_DATA1
 #endif
-
 #if defined USB_PID_ACK
 #undef USB_PID_ACK
 #endif
-
 #if defined USB_PID_NAK
 #undef USB_PID_NAK
 #endif
-
 #if defined USB_PID_STALL
 #undef USB_PID_STALL
 #endif
-
 #if defined USB_PID_PRE
 #undef USB_PID_PRE
 #endif

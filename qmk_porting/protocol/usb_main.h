@@ -8,32 +8,28 @@
 
 /*!< keyboard in endpoint */
 #define KBD_IN_EP          0x81 /*!< address */
-#define KBD_IN_EP_SIZE     8    /*!< max packet length */
-#define KBD_IN_EP_INTERVAL 10   /*!< polling time */
+#define KBD_IN_EP_SIZE     64   /*!< max packet length */
+#define KBD_IN_EP_INTERVAL 1    /*!< polling time */
 
 /*!< keyboard out endpoint */
 #define KBD_OUT_EP          0x01 /*!< address */
-#define KBD_OUT_EP_SIZE     1    /*!< max packet length */
-#define KBD_OUT_EP_INTERVAL 10   /*!< polling time */
+#define KBD_OUT_EP_SIZE     8    /*!< max packet length */
+#define KBD_OUT_EP_INTERVAL 1    /*!< polling time */
 
 /*!< hidraw in endpoint */
 #define HIDRAW_IN_EP       0x82
 #define HIDRAW_IN_SIZE     64
-#define HIDRAW_IN_INTERVAL 10
+#define HIDRAW_IN_INTERVAL 1
 
 /*!< hidraw out endpoint */
 #define HIDRAW_OUT_EP          0x02
 #define HIDRAW_OUT_EP_SIZE     64
-#define HIDRAW_OUT_EP_INTERVAL 10
+#define HIDRAW_OUT_EP_INTERVAL 1
 
 #define USBD_VID           0xffff
 #define USBD_PID           0xffff
-#define USBD_MAX_POWER     100
+#define USBD_MAX_POWER     500
 #define USBD_LANGID_STRING 1033
-
-/*!< hid state ! Data can be sent only when state is idle  */
-uint8_t keyboard_state = HID_STATE_IDLE;
-uint8_t custom_state = HID_STATE_IDLE;
 
 /*!< config descriptor size */
 #define USB_HID_CONFIG_DESC_SIZ 73
@@ -56,8 +52,8 @@ static const uint8_t hid_descriptor[] = {
     0x00,                          /* bAlternateSetting: Alternate setting */
     0x02,                          /* bNumEndpoints */
     0x03,                          /* bInterfaceClass: HID */
-    0x01,                          /* bInterfaceSubClass : 1=BOOT, 0=no boot */
-    0x01,                          /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00,                          /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x00,                          /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
     0,                             /* iInterface: Index of string descriptor */
     /******************** Descriptor of Keyboard HID ********************/
     /* 18 */
@@ -65,10 +61,10 @@ static const uint8_t hid_descriptor[] = {
     HID_DESCRIPTOR_TYPE_HID, /* bDescriptorType: HID */
     0x11,                    /* bcdHID: HID Class Spec release number */
     0x01,
-    0x00,                          /* bCountryCode: Hardware target country */
-    0x01,                          /* bNumDescriptors: Number of HID class descriptors to follow */
-    0x22,                          /* bDescriptorType */
-    HID_KEYBOARD_REPORT_DESC_SIZE, /* wItemLength: Total length of Report descriptor */
+    0x00,                           /* bCountryCode: Hardware target country */
+    0x01,                           /* bNumDescriptors: Number of HID class descriptors to follow */
+    HID_DESCRIPTOR_TYPE_HID_REPORT, /* bDescriptorType */
+    HID_KEYBOARD_REPORT_DESC_SIZE,  /* wItemLength: Total length of Report descriptor */
     0x00,
     /******************** Descriptor of Keyboard in endpoint ********************/
     /* 27 */
@@ -105,10 +101,10 @@ static const uint8_t hid_descriptor[] = {
     HID_DESCRIPTOR_TYPE_HID, /* bDescriptorType: HID */
     0x11,                    /* bcdHID: HID Class Spec release number */
     0x01,
-    0x00,                        /* bCountryCode: Hardware target country */
-    0x01,                        /* bNumDescriptors: Number of HID class descriptors to follow */
-    0x22,                        /* bDescriptorType */
-    HID_CUSTOM_REPORT_DESC_SIZE, /* wItemLength: Total length of Report descriptor */
+    0x00,                           /* bCountryCode: Hardware target country */
+    0x01,                           /* bNumDescriptors: Number of HID class descriptors to follow */
+    HID_DESCRIPTOR_TYPE_HID_REPORT, /* bDescriptorType */
+    HID_CUSTOM_REPORT_DESC_SIZE,    /* wItemLength: Total length of Report descriptor */
     0x00,
     /******************** Descriptor of Custom in endpoint ********************/
     /* 59 */
@@ -185,21 +181,6 @@ static const uint8_t hid_descriptor[] = {
     '4', 0x00,                  /* wcChar7 */
     '5', 0x00,                  /* wcChar8 */
     '6', 0x00,                  /* wcChar9 */
-#ifdef CONFIG_USB_HS
-    ///////////////////////////////////////
-    /// device qualifier descriptor
-    ///////////////////////////////////////
-    0x0a,
-    USB_DESCRIPTOR_TYPE_DEVICE_QUALIFIER,
-    0x00,
-    0x02,
-    0x00,
-    0x00,
-    0x00,
-    0x40,
-    0x01,
-    0x00,
-#endif
     0x00
 };
 
@@ -271,91 +252,6 @@ static usbd_interface_t hid_intf_1;
 /*!< interface two */
 static usbd_interface_t hid_intf_2;
 
-/* function ------------------------------------------------------------------*/
-static void usbd_hid_kbd_in_callback(uint8_t ep)
-{
-    /*!< endpoint call back */
-    /*!< transfer successfully */
-    if (keyboard_state == HID_STATE_BUSY) {
-        /*!< update the state  */
-        keyboard_state = HID_STATE_IDLE;
-    }
-}
-
-static void usbd_hid_kbd_out_callback(uint8_t ep)
-{
-    /*!< here you can write the LED processing from the host */
-    enum hid_kbd_led led_state;
-    /*!< read the led data from host send */
-    usbd_ep_read(ep, &led_state, KBD_OUT_EP_SIZE, NULL);
-    /*!< diy */
-    if (led_state & HID_KBD_LED_NUM_LOCK) {
-        /*!< num lock */
-        /*!< do what you like */
-    } else {
-    }
-    if (led_state & HID_KBD_LED_CAPS_LOCK) {
-        /*!< caps lock */
-    } else {
-    }
-
-    if (led_state & HID_KBD_LED_SCROLL_LOCK) {
-        /*!< scroll lock */
-        /*!< do what you like */
-    } else {
-    }
-    if (led_state & HID_KBD_LED_COMPOSE) {
-        /*!< compose led */
-        /*!< do what you like */
-    } else {
-    }
-    if (led_state & HID_KBD_LED_KANA) {
-        /*!< kana led */
-        /*!< do what you like */
-    } else {
-    }
-}
-
-static void usbd_hid_custom_in_callback(uint8_t ep)
-{
-    /*!< endpoint call back */
-    /*!< transfer successfully */
-    if (custom_state == HID_STATE_BUSY) {
-        /*!< update the state  */
-        custom_state = HID_STATE_IDLE;
-    }
-}
-
-static void usbd_hid_custom_out_callback(uint8_t ep)
-{
-    /*!< read the data from host send */
-    uint8_t custom_data[HIDRAW_OUT_EP_SIZE];
-    usbd_ep_read(HIDRAW_OUT_EP, custom_data, HIDRAW_OUT_EP_SIZE, NULL);
-
-    /*!< you can use the data do some thing you like */
-}
-
-/*!< endpoint call back */
-static usbd_endpoint_t keyboard_in_ep = {
-    .ep_cb = usbd_hid_kbd_in_callback,
-    .ep_addr = 0x81
-};
-
-static usbd_endpoint_t keyboard_out_ep = {
-    .ep_cb = usbd_hid_kbd_out_callback,
-    .ep_addr = 0x01
-};
-
-static usbd_endpoint_t custom_in_ep = {
-    .ep_cb = usbd_hid_custom_in_callback,
-    .ep_addr = 0x82
-};
-
-static usbd_endpoint_t custom_out_ep = {
-    .ep_cb = usbd_hid_custom_out_callback,
-    .ep_addr = 0x02
-};
-
-
-
 void init_usb_driver();
+void hid_keyboard_send_report(uint8_t ep, uint8_t *data, uint8_t len);
+void hid_custom_send_report(uint8_t ep, uint8_t *data, uint8_t len);
