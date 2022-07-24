@@ -1,14 +1,91 @@
 #include "usb_main.h"
 
-/* function ------------------------------------------------------------------*/
-/**
-  * @brief            hid custom init
-  * @pre              none
-  * @param[in]        none
-  * @retval           none
-  */
-void hid_custom_keyboard_init(void)
+/*!< hid state ! Data can be sent only when state is idle  */
+uint8_t keyboard_state = HID_STATE_IDLE;
+uint8_t custom_state = HID_STATE_IDLE;
+
+void usbd_hid_kbd_in_callback(uint8_t ep)
 {
+    /*!< endpoint call back */
+    /*!< transfer successfully */
+    if (keyboard_state == HID_STATE_BUSY) {
+        /*!< update the state  */
+        keyboard_state = HID_STATE_IDLE;
+    }
+}
+
+void usbd_hid_kbd_out_callback(uint8_t ep)
+{
+    /*!< here you can write the LED processing from the host */
+    enum hid_kbd_led led_state;
+    /*!< read the led data from host send */
+    usbd_ep_read(ep, (uint8_t *)(&led_state), KBD_OUT_EP_SIZE, NULL);
+    /*!< diy */
+    if (led_state & HID_KBD_LED_NUM_LOCK) {
+        /*!< num lock */
+        /*!< do what you like */
+    } else {
+    }
+    if (led_state & HID_KBD_LED_CAPS_LOCK) {
+        /*!< caps lock */
+    } else {
+    }
+
+    if (led_state & HID_KBD_LED_SCROLL_LOCK) {
+        /*!< scroll lock */
+        /*!< do what you like */
+    } else {
+    }
+    if (led_state & HID_KBD_LED_COMPOSE) {
+        /*!< compose led */
+        /*!< do what you like */
+    } else {
+    }
+    if (led_state & HID_KBD_LED_KANA) {
+        /*!< kana led */
+        /*!< do what you like */
+    } else {
+    }
+}
+
+void usbd_hid_custom_in_callback(uint8_t ep)
+{
+    /*!< endpoint call back */
+    /*!< transfer successfully */
+    if (custom_state == HID_STATE_BUSY) {
+        /*!< update the state  */
+        custom_state = HID_STATE_IDLE;
+    }
+}
+
+void usbd_hid_custom_out_callback(uint8_t ep)
+{
+    /*!< read the data from host send */
+    uint8_t custom_data[HIDRAW_OUT_EP_SIZE];
+    usbd_ep_read(HIDRAW_OUT_EP, custom_data, HIDRAW_OUT_EP_SIZE, NULL);
+
+    /*!< you can use the data do some thing you like */
+}
+
+void init_usb_driver()
+{
+    usbd_endpoint_t keyboard_in_ep = {
+        .ep_cb = usbd_hid_kbd_in_callback,
+        .ep_addr = KBD_IN_EP
+    };
+    usbd_endpoint_t keyboard_out_ep = {
+        .ep_cb = usbd_hid_kbd_out_callback,
+        .ep_addr = KBD_OUT_EP
+    };
+    usbd_endpoint_t custom_in_ep = {
+        .ep_cb = usbd_hid_custom_in_callback,
+        .ep_addr = HIDRAW_IN_EP
+    };
+    usbd_endpoint_t custom_out_ep = {
+        .ep_cb = usbd_hid_custom_out_callback,
+        .ep_addr = HIDRAW_OUT_EP
+    };
+
     usbd_desc_register(hid_descriptor);
     /*!< add interface ! the first interface */
     usbd_hid_add_interface(&hid_class, &hid_intf_1);
@@ -92,8 +169,4 @@ void hid_custom_test(void)
     uint8_t sendbuffer2[64] = { 6 };
     hid_custom_send_report(HIDRAW_IN_EP, sendbuffer2, HIDRAW_IN_SIZE);
     //HAL_Delay(1000);
-}
-
-void init_usb_driver()
-{
 }
