@@ -1,8 +1,13 @@
 #include "usb_main.h"
 
+static usbd_class_t hid_class;
+static usbd_interface_t hid_intf_1;
+static usbd_interface_t hid_intf_2;
+static usbd_interface_t hid_intf_3;
 /*!< hid state ! Data can be sent only when state is idle  */
-uint8_t keyboard_state = HID_STATE_IDLE;
-uint8_t custom_state = HID_STATE_IDLE;
+static uint8_t keyboard_state = HID_STATE_IDLE;
+static uint8_t custom_state = HID_STATE_IDLE;
+static uint8_t extra_state = HID_STATE_IDLE;
 
 void usbd_hid_kbd_in_callback(uint8_t ep)
 {
@@ -21,6 +26,7 @@ void usbd_hid_kbd_out_callback(uint8_t ep)
     /*!< read the led data from host send */
     usbd_ep_read(ep, (uint8_t *)(&led_state), KBD_OUT_EP_SIZE, NULL);
     /*!< diy */
+    //TODO: finish the keyboard led part
     if (led_state & HID_KBD_LED_NUM_LOCK) {
         /*!< num lock */
         /*!< do what you like */
@@ -65,15 +71,16 @@ void usbd_hid_custom_out_callback(uint8_t ep)
     usbd_ep_read(HIDRAW_OUT_EP, custom_data, HIDRAW_OUT_EP_SIZE, NULL);
 
     /*!< you can use the data do some thing you like */
+    //TODO: finish this
 }
 
 void usbd_hid_exkey_in_callback(uint8_t ep)
 {
     /*!< endpoint call back */
     /*!< transfer successfully */
-    if (custom_state == HID_STATE_BUSY) {
+    if (extra_state == HID_STATE_BUSY) {
         /*!< update the state  */
-        custom_state = HID_STATE_IDLE;
+        extra_state = HID_STATE_IDLE;
     }
 }
 
