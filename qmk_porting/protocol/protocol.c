@@ -10,19 +10,31 @@ void send_keyboard(report_keyboard_t *report)
     hid_keyboard_send_report(KBD_IN_EP, report->raw, KBD_IN_EP_SIZE);
 }
 
-void send_mouse(report_mouse_t *report);
+void send_mouse(report_mouse_t *report)
+{
+    sizeof(report_mouse_t) - 1; //! currently we don't have ac pan
+}
 
 void send_consumer(uint16_t data)
 {
-    hid_custom_send_report(HIDRAW_IN_EP, &data, HIDRAW_IN_SIZE);
+    uint8_t report_to_send[3];
+    report_to_send[0] = REPORT_ID_CONSUMER;
+    memcpy(report_to_send + 1, &data, 2);
+    hid_custom_send_report(EXKEY_IN_EP, report_to_send, 3);
 }
 
 void send_system(uint16_t data)
 {
-    send_consumer(data);
+    uint8_t report_to_send[3];
+    report_to_send[0] = REPORT_ID_SYSTEM;
+    memcpy(report_to_send + 1, &data, 2);
+    hid_custom_send_report(EXKEY_IN_EP, report_to_send, 3);
 }
 
-void send_programmable_button(uint32_t data);
+void send_programmable_button(uint32_t data)
+{
+}
+
 void send_digitizer(report_digitizer_t *report);
 
 host_driver_t ch582_driver = { keyboard_leds, send_keyboard, send_mouse, send_system, send_consumer, send_programmable_button };

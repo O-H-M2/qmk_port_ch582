@@ -67,23 +67,41 @@ void usbd_hid_custom_out_callback(uint8_t ep)
     /*!< you can use the data do some thing you like */
 }
 
+void usbd_hid_exkey_in_callback(uint8_t ep)
+{
+    /*!< endpoint call back */
+    /*!< transfer successfully */
+    if (custom_state == HID_STATE_BUSY) {
+        /*!< update the state  */
+        custom_state = HID_STATE_IDLE;
+    }
+}
+
 void init_usb_driver()
 {
     usbd_endpoint_t keyboard_in_ep = {
         .ep_cb = usbd_hid_kbd_in_callback,
         .ep_addr = KBD_IN_EP
     };
+
     usbd_endpoint_t keyboard_out_ep = {
         .ep_cb = usbd_hid_kbd_out_callback,
         .ep_addr = KBD_OUT_EP
     };
-    usbd_endpoint_t custom_in_ep = {
+
+    usbd_endpoint_t rawhid_in_ep = {
         .ep_cb = usbd_hid_custom_in_callback,
         .ep_addr = HIDRAW_IN_EP
     };
-    usbd_endpoint_t custom_out_ep = {
+
+    usbd_endpoint_t rawhid_out_ep = {
         .ep_cb = usbd_hid_custom_out_callback,
         .ep_addr = HIDRAW_OUT_EP
+    };
+
+    usbd_endpoint_t exkey_in_ep = {
+        .ep_cb = usbd_hid_exkey_in_callback,
+        .ep_addr = EXKEY_IN_EP
     };
 
     usbd_desc_register(hid_descriptor);
@@ -93,17 +111,25 @@ void init_usb_driver()
     usbd_interface_add_endpoint(&hid_intf_1, &keyboard_in_ep);
     /*!< interface0 add endpoint ! the second endpoint */
     usbd_interface_add_endpoint(&hid_intf_1, &keyboard_out_ep);
+
     /*!< add interface the ! second interface */
     usbd_hid_add_interface(&hid_class, &hid_intf_2);
     /*!< interface1 add endpoint ! the first endpoint */
-    usbd_interface_add_endpoint(&hid_intf_2, &custom_in_ep);
+    usbd_interface_add_endpoint(&hid_intf_2, &rawhid_in_ep);
     /*!< interface1 add endpoint ! the second endpoint */
-    usbd_interface_add_endpoint(&hid_intf_2, &custom_out_ep);
-    /*!< register report descriptor interface 0 */
-    usbd_hid_report_descriptor_register(0, hid_keyboard_report_desc, HID_KEYBOARD_REPORT_DESC_SIZE);
-    /*!< register report descriptor interface 1 */
-    usbd_hid_report_descriptor_register(1, hid_custom_report_desc, HID_CUSTOM_REPORT_DESC_SIZE);
+    usbd_interface_add_endpoint(&hid_intf_2, &rawhid_out_ep);
 
+    /*!< register report descriptor interface 3 */
+    usbd_hid_add_interface(&hid_class, &hid_intf_3);
+    /*!< interface2 add endpoint ! the 3rd endpoint */
+    usbd_interface_add_endpoint(&hid_intf_3, &exkey_in_ep);
+
+    /*!< register report descriptor interface 0 */
+    usbd_hid_report_descriptor_register(0, KeyboardReport, HID_KEYBOARD_REPORT_DESC_SIZE);
+    /*!< register report descriptor interface 1 */
+    usbd_hid_report_descriptor_register(1, RawReport, HID_RAWHID_REPORT_DESC_SIZE);
+    /*!< register report descriptor interface 1 */
+    usbd_hid_report_descriptor_register(2, ExtrkeyReport, HID_EXTRAKEY_REPORT_DESC_SIZE);
     usbd_initialize();
 }
 
