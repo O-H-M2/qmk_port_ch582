@@ -2,6 +2,8 @@
 #include "host.h"
 #include "usb_device_state.h"
 #include "usb_main.h"
+#include "print.h"
+#include "CH58x_common.h"
 
 uint8_t keyboard_leds(void)
 {
@@ -67,3 +69,22 @@ void protocol_pre_task()
 void protocol_post_task()
 {
 }
+
+#ifdef DEBUG
+
+int8_t ch58x_send_char(uint8_t s)
+{
+    while (R8_UART1_TFC == UART_FIFO_SIZE) {
+        __nop();
+    }
+    R8_UART1_THR = s;
+    return 0;
+}
+
+void keyboard_post_init_kb()
+{
+    print_set_sendchar(ch58x_send_char);
+    print("Set log output for QMK.\n");
+}
+
+#endif
