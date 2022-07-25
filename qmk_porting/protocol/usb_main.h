@@ -3,26 +3,6 @@
 #include "usbd_core.h"
 #include "usbd_hid.h"
 
-// //////////////////////////////////////
-// //Redefining
-// //Just for debug
-// #define KEYBOARD_SHARED_EP 1
-// #define MOUSE_ENABLE       1
-// #define MOUSE_SHARED_EP    1
-// #define EXTRAKEY_ENABLE    1
-
-// enum hid_report_ids {
-//     REPORT_ID_KEYBOARD = 1,
-//     REPORT_ID_MOUSE,
-//     REPORT_ID_SYSTEM,
-//     REPORT_ID_CONSUMER,
-//     REPORT_ID_PROGRAMMABLE_BUTTON,
-//     REPORT_ID_NKRO,
-//     REPORT_ID_JOYSTICK,
-//     REPORT_ID_DIGITIZER
-// };
-
-// //////////////////////////////////////
 #define HID_STATE_IDLE 0
 #define HID_STATE_BUSY 1
 
@@ -43,7 +23,7 @@
 
 /*!< hidraw out endpoint */
 #define HIDRAW_OUT_EP          0x03
-#define HIDRAW_OUT_EP_SIZE     32
+#define HIDRAW_OUT_EP_SIZE     HIDRAW_IN_SIZE
 #define HIDRAW_OUT_EP_INTERVAL 1
 
 /*!< Extrkey out endpoint */
@@ -374,4 +354,5 @@ static const uint8_t hid_descriptor[] = {
 
 void init_usb_driver();
 void hid_keyboard_send_report(uint8_t ep, uint8_t *data, uint8_t len);
-void hid_custom_send_report(uint8_t ep, uint8_t *data, uint8_t len);
+void raw_hid_send(uint8_t *data, uint8_t length);
+void hid_exkey_send_report(uint8_t ep, uint8_t *data, uint8_t len);

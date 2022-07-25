@@ -7,7 +7,7 @@ static usbd_interface_t hid_intf_3;
 /*!< hid state ! Data can be sent only when state is idle  */
 static uint8_t keyboard_state = HID_STATE_IDLE;
 static uint8_t custom_state = HID_STATE_IDLE;
-static uint8_t extra_state = HID_STATE_IDLE;
+static uint8_t exkey_state = HID_STATE_IDLE;
 
 void usbd_hid_kbd_in_callback(uint8_t ep)
 {
@@ -54,6 +54,10 @@ void usbd_hid_kbd_out_callback(uint8_t ep)
     }
 }
 
+__attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length)
+{
+}
+
 void usbd_hid_custom_in_callback(uint8_t ep)
 {
     /*!< endpoint call back */
@@ -71,16 +75,16 @@ void usbd_hid_custom_out_callback(uint8_t ep)
     usbd_ep_read(HIDRAW_OUT_EP, custom_data, HIDRAW_OUT_EP_SIZE, NULL);
 
     /*!< you can use the data do some thing you like */
-    //TODO: finish this
+    raw_hid_receive(custom_data, HIDRAW_OUT_EP_SIZE);
 }
 
 void usbd_hid_exkey_in_callback(uint8_t ep)
 {
     /*!< endpoint call back */
     /*!< transfer successfully */
-    if (extra_state == HID_STATE_BUSY) {
+    if (exkey_state == HID_STATE_BUSY) {
         /*!< update the state  */
-        extra_state = HID_STATE_IDLE;
+        exkey_state = HID_STATE_IDLE;
     }
 }
 
@@ -168,12 +172,33 @@ void hid_keyboard_send_report(uint8_t ep, uint8_t *data, uint8_t len)
   * @param[in]        len length of data to be sent
   * @retval           none
   */
-void hid_custom_send_report(uint8_t ep, uint8_t *data, uint8_t len)
+static void hid_custom_send_report(uint8_t ep, uint8_t *data, uint8_t len)
 {
     if (usb_device_is_configured()) {
         if (custom_state == HID_STATE_IDLE) {
             /*!< updata the state */
             custom_state = HID_STATE_BUSY;
+            /*!< write buffer */
+            usbd_ep_write(ep, data, len, NULL);
+        }
+    }
+}
+
+void raw_hid_send(uint8_t *data, uint8_t length)
+{
+    // TODO: implement variable size packet
+    if (length != HIDRAW_IN_SIZE) {
+        return;
+    }
+    hid_custom_send_report(HIDRAW_IN_EP, data, length);
+}
+
+void hid_exkey_send_report(uint8_t ep, uint8_t *data, uint8_t len)
+{
+    if (usb_device_is_configured()) {
+        if (exkey_state == HID_STATE_IDLE) {
+            /*!< updata the state */
+            exkey_state = HID_STATE_BUSY;
             /*!< write buffer */
             usbd_ep_write(ep, data, len, NULL);
         }
