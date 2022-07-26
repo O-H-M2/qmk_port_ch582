@@ -13,4 +13,3 @@ qmk_port_ch582.map
 .ninja_deps
 .ninja_log
 build.ninja
-CMakeLists.txt

@@ -2,6 +2,7 @@
 
 #include "usbd_core.h"
 #include "usbd_hid.h"
+#include "report.h"
 
 #define HID_STATE_IDLE 0
 #define HID_STATE_BUSY 1
@@ -40,10 +41,8 @@ static const uint8_t KeyboardReport[] = {
     0x05, 0x01, // Usage Page (Generic Desktop)
     0x09, 0x06, // Usage (Keyboard)
     0xA1, 0x01, // Collection (Application)
-// Modifiers (8 bits)
-
-    0x85, 0x01, // ID (1)
-
+                // Modifiers (8 bits)
+    // 0x85, REPORT_ID_KEYBOARD, // Report ID (1)
     0x05, 0x07, //   Usage Page (Keyboard/Keypad)
     0x19, 0xE0, //   Usage Minimum (Keyboard Left Control)
     0x29, 0xE7, //   Usage Maximum (Keyboard Right GUI)
@@ -82,12 +81,11 @@ static const uint8_t KeyboardReport[] = {
 
 static const uint8_t ExtrkeyReport[] = {
 
-
     // Mouse report descriptor
     0x05, 0x01,            // Usage Page (Generic Desktop)
     0x09, 0x02,            // Usage (Mouse)
     0xA1, 0x01,            // Collection (Application)
-    0x85, 0x02, //   Report ID
+    0x85, REPORT_ID_MOUSE, //   Report ID
     0x09, 0x01,            //   Usage (Pointer)
     0xA1, 0x00,            //   Collection (Physical)
     // Buttons (8 bits)
@@ -128,12 +126,11 @@ static const uint8_t ExtrkeyReport[] = {
     0xC0,             //   End Collection
     0xC0,             // End Collection
 
-
     // Extrakeys report descriptor
     0x05, 0x01,             // Usage Page (Generic Desktop)
     0x09, 0x80,             // Usage (System Control)
     0xA1, 0x01,             // Collection (Application)
-    0x85, 0x03, //   Report ID
+    0x85, REPORT_ID_SYSTEM, //   Report ID
     0x19, 0x01,             //   Usage Minimum (Pointer)
     0x2A, 0xB7, 0x00,       //   Usage Maximum (System Display LCD Autoscale)
     0x15, 0x01,             //   Logical Minimum
@@ -146,7 +143,7 @@ static const uint8_t ExtrkeyReport[] = {
     0x05, 0x0C,               // Usage Page (Consumer)
     0x09, 0x01,               // Usage (Consumer Control)
     0xA1, 0x01,               // Collection (Application)
-    0x85, 0x05, //   Report ID
+    0x85, REPORT_ID_CONSUMER, //   Report ID
     0x19, 0x01,               //   Usage Minimum (Consumer Control)
     0x2A, 0xA0, 0x02,         //   Usage Maximum (AC Desktop Show All Applications)
     0x15, 0x01,               //   Logical Minimum
@@ -157,7 +154,6 @@ static const uint8_t ExtrkeyReport[] = {
     0xC0                      // End Collection
 
 };
-
 
 static const uint8_t RawReport[] = {
     0x06, 0x60, 0xFF, // Usage Page (Vendor Defined)
@@ -179,7 +175,6 @@ static const uint8_t RawReport[] = {
     0x91, 0x02,       //   Output (Data, Variable, Absolute)
     0xC0
 };
-
 
 /*!< config descriptor size */
 #define USB_HID_CONFIG_DESC_SIZ 0x5B
