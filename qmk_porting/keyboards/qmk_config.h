@@ -27,11 +27,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT MK02
 
 /* key matrix size */
-#define MATRIX_ROWS 6
-#define MATRIX_COLS 17
+#define MATRIX_ROWS 5
+#define MATRIX_COLS 14
 
-#define MATRIX_ROW_PINS { A3, A4, A5, A6, A7, B0 }
-#define MATRIX_COL_PINS { B13, B14, B15, A15, B3, B4, B5, B6, B7, B8, B9, B16, B17, B18, A1, A2, B12 }
+#define MATRIX_ROW_PINS { B9,A7,B8,B16,B18}
+#define MATRIX_COL_PINS {A4,A5,A6,A0,A1,A3,B17,B5,B4,B3,B2,B1,B0,B21 }
 #define DIODE_DIRECTION ROW2COL
 
 /* define if matrix has ghost */
