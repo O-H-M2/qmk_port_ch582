@@ -41,9 +41,9 @@ static const uint8_t KeyboardReport[] = {
     0x09, 0x06, // Usage (Keyboard)
     0xA1, 0x01, // Collection (Application)
 // Modifiers (8 bits)
-#ifdef KEYBOARD_SHARED_EP
-    0x85, REPORT_ID_KEYBOARD, // ID (1)
-#endif
+
+    0x85, 0x01, // ID (1)
+
     0x05, 0x07, //   Usage Page (Keyboard/Keypad)
     0x19, 0xE0, //   Usage Minimum (Keyboard Left Control)
     0x29, 0xE7, //   Usage Maximum (Keyboard Right GUI)
@@ -81,48 +81,59 @@ static const uint8_t KeyboardReport[] = {
 };
 
 static const uint8_t ExtrkeyReport[] = {
-#ifdef MOUSE_ENABLE
-    0x05, 0x01, // USAGE_PAGE (Generic Desktop)
-    0x09, 0x02, // USAGE (Mouse)
-    0xa1, 0x01, // COLLECTION (Application)
-#ifdef MOUSE_SHARED_EP
-    0x85, REPORT_ID_MOUSE, // ID (2)
-#endif
-    0x09, 0x01, //   USAGE (Pointer)
-    0xa1, 0x00, //   COLLECTION (Physical)
 
-    // Buttons (5 bits)
+
+    // Mouse report descriptor
+    0x05, 0x01,            // Usage Page (Generic Desktop)
+    0x09, 0x02,            // Usage (Mouse)
+    0xA1, 0x01,            // Collection (Application)
+    0x85, 0x02, //   Report ID
+    0x09, 0x01,            //   Usage (Pointer)
+    0xA1, 0x00,            //   Collection (Physical)
+    // Buttons (8 bits)
     0x05, 0x09, //     Usage Page (Button)
     0x19, 0x01, //     Usage Minimum (Button 1)
-    0x29, 0x05, //     Usage Maximum (Button 5)
+    0x29, 0x08, //     Usage Maximum (Button 8)
     0x15, 0x00, //     Logical Minimum (0)
     0x25, 0x01, //     Logical Maximum (1)
-    0x95, 0x05, //     Report Count (5)
+    0x95, 0x08, //     Report Count (8)
     0x75, 0x01, //     Report Size (1)
     0x81, 0x02, //     Input (Data, Variable, Absolute)
-    // Button padding (3 bits)
-    0x95, 0x01, //     Report Count (1)
-    0x75, 0x03, //     Report Size (3)
-    0x81, 0x03, //     Input (Constant)
 
-    0x05, 0x01, //     USAGE_PAGE (Generic Desktop)
-    0x09, 0x30, //     USAGE (X)
-    0x09, 0x31, //     USAGE (Y)
-    0x09, 0x38, //     USAGE (Wheel)
-    0x15, 0x81, //     LOGICAL_MINIMUM (-127)
-    0x25, 0x7f, //     LOGICAL_MAXIMUM (127)
-    0x75, 0x08, //     REPORT_SIZE (8)
-    0x95, 0x03, //     REPORT_COUNT (3)
-    0x81, 0x06, //     INPUT (Data,Var,Rel)
-    0xc0,       //   END_COLLECTION
-    0xc0,       // END_COLLECTION
-#endif
-#ifdef EXTRAKEY_ENABLE
+    // X/Y position (2 bytes)
+    0x05, 0x01, //     Usage Page (Generic Desktop)
+    0x09, 0x30, //     Usage (X)
+    0x09, 0x31, //     Usage (Y)
+    0x15, 0x81, //     Logical Minimum (-127)
+    0x25, 0x7F, //     Logical Maximum (127)
+    0x95, 0x02, //     Report Count (2)
+    0x75, 0x08, //     Report Size (8)
+    0x81, 0x06, //     Input (Data, Variable, Relative)
+
+    // Vertical wheel (1 byte)
+    0x09, 0x38, //     Usage (Wheel)
+    0x15, 0x81, //     Logical Minimum (-127)
+    0x25, 0x7F, //     Logical Maximum (127)
+    0x95, 0x01, //     Report Count (1)
+    0x75, 0x08, //     Report Size (8)
+    0x81, 0x06, //     Input (Data, Variable, Relative)
+    // Horizontal wheel (1 byte)
+    0x05, 0x0C,       //     Usage Page (Consumer)
+    0x0A, 0x38, 0x02, //     Usage (AC Pan)
+    0x15, 0x81,       //     Logical Minimum (-127)
+    0x25, 0x7F,       //     Logical Maximum (127)
+    0x95, 0x01,       //     Report Count (1)
+    0x75, 0x08,       //     Report Size (8)
+    0x81, 0x06,       //     Input (Data, Variable, Relative)
+    0xC0,             //   End Collection
+    0xC0,             // End Collection
+
+
     // Extrakeys report descriptor
     0x05, 0x01,             // Usage Page (Generic Desktop)
     0x09, 0x80,             // Usage (System Control)
     0xA1, 0x01,             // Collection (Application)
-    0x85, REPORT_ID_SYSTEM, //   Report ID
+    0x85, 0x03, //   Report ID
     0x19, 0x01,             //   Usage Minimum (Pointer)
     0x2A, 0xB7, 0x00,       //   Usage Maximum (System Display LCD Autoscale)
     0x15, 0x01,             //   Logical Minimum
@@ -135,7 +146,7 @@ static const uint8_t ExtrkeyReport[] = {
     0x05, 0x0C,               // Usage Page (Consumer)
     0x09, 0x01,               // Usage (Consumer Control)
     0xA1, 0x01,               // Collection (Application)
-    0x85, REPORT_ID_CONSUMER, //   Report ID
+    0x85, 0x05, //   Report ID
     0x19, 0x01,               //   Usage Minimum (Consumer Control)
     0x2A, 0xA0, 0x02,         //   Usage Maximum (AC Desktop Show All Applications)
     0x15, 0x01,               //   Logical Minimum
@@ -144,10 +155,10 @@ static const uint8_t ExtrkeyReport[] = {
     0x75, 0x10,               //   Report Size (16)
     0x81, 0x00,               //   Input (Data, Array, Absolute)
     0xC0                      // End Collection
-#endif
+
 };
 
-#ifdef RAW_ENABLE
+
 static const uint8_t RawReport[] = {
     0x06, 0x60, 0xFF, // Usage Page (Vendor Defined)
     0x09, 0x61,       // Usage (Vendor Defined)
@@ -168,7 +179,7 @@ static const uint8_t RawReport[] = {
     0x91, 0x02,       //   Output (Data, Variable, Absolute)
     0xC0
 };
-#endif
+
 
 /*!< config descriptor size */
 #define USB_HID_CONFIG_DESC_SIZ 0x5B
