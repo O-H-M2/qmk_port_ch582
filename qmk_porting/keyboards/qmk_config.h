@@ -20,25 +20,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
 /* USB Device descriptor parameter */
-#define VENDOR_ID       0xFEED
-#define PRODUCT_ID      0x0B91
-#define DEVICE_VER      0x0001
+#define VENDOR_ID    0xFEED
+#define PRODUCT_ID   0x0B91
+#define DEVICE_VER   0x0001
 #define MANUFACTURER Xiaomi
-#define PRODUCT MK02
+#define PRODUCT      MK02
 
 /* key matrix size */
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 14
 
-#define MATRIX_ROW_PINS { B9,A7,B8,B16,B18}
-#define MATRIX_COL_PINS {A4,A5,A6,A0,A1,A3,B17,B5,B4,B3,B2,B1,B0,B21 }
+#define MATRIX_ROW_PINS      \
+    {                        \
+        B9, A7, B8, B16, B18 \
+    }
+#define MATRIX_COL_PINS                                          \
+    {                                                            \
+        A4, A5, A6, A0, A1, A3, B17, B5, B4, B3, B2, B1, B0, B21 \
+    }
 #define DIODE_DIRECTION ROW2COL
 
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
 /* Set 0 if debouncing isn't needed */
-#define DEBOUNCE    5
+#define DEBOUNCE 5
 
 /*
  * Feature disable options
