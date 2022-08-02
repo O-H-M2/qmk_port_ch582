@@ -25,8 +25,7 @@ typedef uint8_t pin_t;
 /* GPIOA 0 ~ 15
    GPIOB 16 ~ 39 */
 
-#define determineGPIONum(pin)     ((uint32_t)(0x01 << (pin)))
-#define GPIOModeConfig(pin, mode) ((pin >= A0) && (pin <= A15)) ? GPIOA_ModeCfg(determineGPIONum(pin), mode) : (((pin >= B0) && (pin <= B23)) ? GPIOB_ModeCfg(determineGPIONum(pin - 16), mode) : 0)
+#define GPIOModeConfig(pin, mode) ((pin & 0x80000000) ? GPIOB_ModeCfg(pin & 0x7FFFFFFF, mode) : (GPIOA_ModeCfg(pin & 0x7FFFFFFF, mode)))
 
 #define setPinInput(pin)           GPIOModeConfig(pin, GPIO_ModeIN_Floating)
 #define setPinInputHigh(pin)       GPIOModeConfig(pin, GPIO_ModeIN_PU)
@@ -35,9 +34,9 @@ typedef uint8_t pin_t;
 #define setPinOutputOpenDrain(pin) _Static_assert(0, "WCH platform does not implement an open-drain output")
 #define setPinOutput(pin)          setPinOutputPushPull(pin)
 
-#define writePinHigh(pin)    ((pin >= A0) && (pin <= A15)) ? GPIOA_SetBits(determineGPIONum(pin)) : (((pin >= B0) && (pin <= B23)) ? GPIOB_SetBits(determineGPIONum(pin - 16)) : 0)
-#define writePinLow(pin)     ((pin >= A0) && (pin <= A15)) ? GPIOA_ResetBits(determineGPIONum(pin)) : (((pin >= B0) && (pin <= B23)) ? GPIOB_ResetBits(determineGPIONum(pin - 16)) : 0)
+#define writePinHigh(pin)    ((pin & 0x80000000) ? GPIOB_SetBits(pin & 0x7FFFFFFF) : GPIOA_SetBits(pin & 0x7FFFFFFF))
+#define writePinLow(pin)     ((pin & 0x80000000) ? GPIOB_ResetBits(pin & 0x7FFFFFFF) : GPIOA_ResetBits(pin & 0x7FFFFFFF))
 #define writePin(pin, level) ((level) ? writePinHigh(pin) : writePinLow(pin))
 
-#define readPin(pin)   ((pin >= A0) && (pin <= A15)) ? GPIOA_ReadPortPin(determineGPIONum(pin)) : (((pin >= B0) && (pin <= B23)) ? GPIOB_ReadPortPin(determineGPIONum(pin - 16)) : 0)
-#define togglePin(pin) ((pin >= A0) && (pin <= A15)) ? GPIOA_InverseBits(determineGPIONum(pin)) : (((pin >= B0) && (pin <= B23)) ? GPIOB_InverseBits(determineGPIONum(pin - 16)) : 0)
+#define readPin(pin)   ((pin & 0x80000000) ? GPIOB_ReadPortPin(pin & 0x7FFFFFFF) : GPIOA_ReadPortPin(pin & 0x7FFFFFFF))
+#define togglePin(pin) ((pin & 0x80000000) ? GPIOB_InverseBits(pin & 0x7FFFFFFF) : GPIOA_InverseBits(pin & 0x7FFFFFFF))
