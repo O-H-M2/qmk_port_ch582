@@ -6,6 +6,8 @@ void platform_setup()
     PWR_DCDCCfg(ENABLE);
 #endif
     SetSysClock(CLK_SOURCE_PLL_60MHz);
+    DelayMs(5);
+    PowerMonitor(ENABLE, HALevel_2V1);
 #if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
     GPIOA_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
     GPIOB_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);

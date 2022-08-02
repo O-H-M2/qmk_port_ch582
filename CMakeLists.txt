@@ -58,7 +58,6 @@ include_directories(BLE_LIB
                     USB_LIB
                     RVMSIS  
                     StdPeriphDriver/inc
-                    # printf
                     APP/inc
                     HAL/include
 
@@ -82,8 +81,8 @@ include_sub_directories_recursively(${PROJECT_SOURCE_DIR}/qmk_porting)
 
 # 宏定义
 add_definitions(-DDEBUG=1)
-add_definitions(-DMATRIX_ROWS=5 -DMATRIX_COLS=14 -DRGBLED_NUM=1 -DMOUSE_ENABLE=1 -DRAW_ENABLE=1)
-# add_definitions(-DMATRIX_ROW_PINS={B9,A7,B8,B16,B18} -DMATRIX_COL_PINS={A4,A5,A6,A0,A1,A3,B17,B5,B4,B3,B2,B1,B0,B21} -DDIODE_DIRECTION=0)
+# add_definitions(-DDCDC_ENABLE=1 -DHAL_SLEEP=1)
+add_definitions(-DMATRIX_ROWS=5 -DMATRIX_COLS=14 -DDIODE_DIRECTION=0 -DRGBLED_NUM=1 -DMOUSE_ENABLE=1 -DRAW_ENABLE=1)
 add_definitions(-DQMK_VERSION="0.0.1" -DQMK_BUILDDATE="Today")
 add_definitions(-DQMK_KEYBOARD_H="mk02.h")
 add_definitions(-DBOOTMAGIC_LITE_ROW=1 -DBOOTMAGIC_LITE_COLUMN=1)
@@ -94,7 +93,6 @@ file(GLOB_RECURSE SOURCES
                 "USB_LIB/*.c"
                 "RVMSIS/*.c"
                 "StdPeriphDriver/*.c" 
-                # "printf/printf.c"
                 "APP/*.c"
                 "HAL/*.c"
 
