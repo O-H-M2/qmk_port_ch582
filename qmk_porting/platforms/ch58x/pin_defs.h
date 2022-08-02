@@ -17,49 +17,46 @@
 
 #include "CH58x_gpio.h"
 
-#define NO_PIN UINT8_MAX
+#define NO_PIN 0
 
-#define GPIO_A_CONVERT(index) (1U << index)
-#define GPIO_B_CONVERT(index) (0x80000000 & (1U << index))
+#define A0  GPIO_Pin_0
+#define A1  GPIO_Pin_1
+#define A2  GPIO_Pin_2
+#define A3  GPIO_Pin_3
+#define A4  GPIO_Pin_4
+#define A5  GPIO_Pin_5
+#define A6  GPIO_Pin_6
+#define A7  GPIO_Pin_7
+#define A8  GPIO_Pin_8
+#define A9  GPIO_Pin_9
+#define A10 GPIO_Pin_10
+#define A11 GPIO_Pin_11
+#define A12 GPIO_Pin_12
+#define A13 GPIO_Pin_13
+#define A14 GPIO_Pin_14
+#define A15 GPIO_Pin_15
 
-#define A0  GPIO_A_CONVERT(0)
-#define A1  GPIO_A_CONVERT(1)
-#define A2  GPIO_A_CONVERT(2)
-#define A3  GPIO_A_CONVERT(3)
-#define A4  GPIO_A_CONVERT(4)
-#define A5  GPIO_A_CONVERT(5)
-#define A6  GPIO_A_CONVERT(6)
-#define A7  GPIO_A_CONVERT(7)
-#define A8  GPIO_A_CONVERT(8)
-#define A9  GPIO_A_CONVERT(9)
-#define A10 GPIO_A_CONVERT(10)
-#define A11 GPIO_A_CONVERT(11)
-#define A12 GPIO_A_CONVERT(12)
-#define A13 GPIO_A_CONVERT(13)
-#define A14 GPIO_A_CONVERT(14)
-#define A15 GPIO_A_CONVERT(15)
-
-#define B0  GPIO_B_CONVERT(0)
-#define B1  GPIO_B_CONVERT(1)
-#define B2  GPIO_B_CONVERT(2)
-#define B3  GPIO_B_CONVERT(3)
-#define B4  GPIO_B_CONVERT(4)
-#define B5  GPIO_B_CONVERT(5)
-#define B6  GPIO_B_CONVERT(6)
-#define B7  GPIO_B_CONVERT(7)
-#define B8  GPIO_B_CONVERT(8)
-#define B9  GPIO_B_CONVERT(9)
-#define B10 GPIO_B_CONVERT(10)
-#define B11 GPIO_B_CONVERT(11)
-#define B12 GPIO_B_CONVERT(12)
-#define B13 GPIO_B_CONVERT(13)
-#define B14 GPIO_B_CONVERT(14)
-#define B15 GPIO_B_CONVERT(15)
-#define B16 GPIO_B_CONVERT(16)
-#define B17 GPIO_B_CONVERT(17)
-#define B18 GPIO_B_CONVERT(18)
-#define B19 GPIO_B_CONVERT(19)
-#define B20 GPIO_B_CONVERT(20)
-#define B21 GPIO_B_CONVERT(21)
-#define B22 GPIO_B_CONVERT(22)
-#define B23 GPIO_B_CONVERT(23)
+#define B0  0x80000000 | GPIO_Pin_0
+#define B1  0x80000000 | GPIO_Pin_1
+#define B2  0x80000000 | GPIO_Pin_2
+#define B3  0x80000000 | GPIO_Pin_3
+#define B4  0x80000000 | GPIO_Pin_4
+#define B5  0x80000000 | GPIO_Pin_5
+#define B6  0x80000000 | GPIO_Pin_6
+#define B7  0x80000000 | GPIO_Pin_7
+#define B8  0x80000000 | GPIO_Pin_8
+#define B9  0x80000000 | GPIO_Pin_9
+#define B10 0x80000000 | GPIO_Pin_10
+#define B11 0x80000000 | GPIO_Pin_11
+#define B12 0x80000000 | GPIO_Pin_12
+#define B13 0x80000000 | GPIO_Pin_13
+#define B14 0x80000000 | GPIO_Pin_14
+#define B15 0x80000000 | GPIO_Pin_15
+#define B16 0x80000000 | GPIO_Pin_16
+#define B17 0x80000000 | GPIO_Pin_17
+#define B18 0x80000000 | GPIO_Pin_18
+#define B19 0x80000000 | GPIO_Pin_19
+#define B20 0x80000000 | GPIO_Pin_20
+#define B21 0x80000000 | GPIO_Pin_21
+#define B22 0x80000000 | GPIO_Pin_22
+#define B23 0x80000000 | GPIO_Pin_23
