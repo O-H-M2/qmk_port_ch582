@@ -68,7 +68,10 @@ include_directories(BLE_LIB
                     CherryUSB/core
                     CherryUSB/port/ch32
 
+                    qmk_firmware
                     qmk_firmware/lib/printf
+
+                    tmk_core/protocol
 
                     # qmk_firmware/tmk_core/protocol
                     )
@@ -82,7 +85,8 @@ include_sub_directories_recursively(${PROJECT_SOURCE_DIR}/qmk_porting)
 # 宏定义
 add_definitions(-DDEBUG=1)
 # add_definitions(-DDCDC_ENABLE=1 -DHAL_SLEEP=1)
-add_definitions(-DMATRIX_ROWS=5 -DMATRIX_COLS=14 -DDIODE_DIRECTION=0 -DRGBLED_NUM=1 -DMOUSE_ENABLE=1 -DRAW_ENABLE=1)
+add_definitions(-DMATRIX_ROWS=5 -DMATRIX_COLS=14 -DMOUSE_ENABLE=1 -DRAW_ENABLE=1)
+add_definitions(-DRGBLED_NUM=61 -DEEPROM_ENABLE=1 -DRGBLIGHT_ENABLE=1 -DRGBLIGHT_USE_TIMER=1 -DCOMMAND_ENABLE=1)
 add_definitions(-DQMK_VERSION="0.0.1" -DQMK_BUILDDATE="Today")
 add_definitions(-DQMK_KEYBOARD_H="mk02.h")
 add_definitions(-DBOOTMAGIC_LITE_ROW=1 -DBOOTMAGIC_LITE_COLUMN=1)
@@ -113,9 +117,9 @@ file(GLOB_RECURSE SOURCES
                 # "qmk_firmware/quantum/led_matrix/*.c"
                 "qmk_firmware/quantum/logging/*.c"
                 # "qmk_firmware/quantum/painter/*.c"
-                # "qmk_firmware/quantum/process_keycode/*.c"
+                "qmk_firmware/quantum/process_keycode/process_rgb.c"
                 # "qmk_firmware/quantum/rgb_matrix/*.c"
-                # "qmk_firmware/quantum/rgblight/*.c"
+                "qmk_firmware/quantum/rgblight/*.c"
                 # "qmk_firmware/quantum/sequencer/*.c"
                 # "qmk_firmware/quantum/split_common/*.c"
                 "qmk_firmware/quantum/action_layer.c"
@@ -125,7 +129,7 @@ file(GLOB_RECURSE SOURCES
                 "qmk_firmware/quantum/bitwise.c"
                 "qmk_firmware/quantum/caps_word.c"
                 "qmk_firmware/quantum/color.c"
-                # "qmk_firmware/quantum/command.c"
+                "qmk_firmware/quantum/command.c"
                 # "qmk_firmware/quantum/crc.c"
                 "qmk_firmware/quantum/deferred_exec.c"
                 # "qmk_firmware/quantum/digitizer.c"
@@ -138,7 +142,7 @@ file(GLOB_RECURSE SOURCES
                 "qmk_firmware/quantum/keyboard.c"
                 "qmk_firmware/quantum/keycode_config.c"
                 "qmk_firmware/quantum/keymap_common.c"
-                # "qmk_firmware/quantum/led_tables.c"
+                "qmk_firmware/quantum/led_tables.c"
                 "qmk_firmware/quantum/led.c"
                 "qmk_firmware/quantum/main.c"
                 "qmk_firmware/quantum/matrix_common.c"

@@ -1,5 +1,8 @@
 #include "usb_main.h"
 
+uint8_t keyboard_protocol = 1;
+uint8_t keyboard_idle = 0;
+
 static usbd_class_t hid_class;
 static usbd_interface_t hid_intf_1;
 static usbd_interface_t hid_intf_2;
