@@ -21,11 +21,7 @@
 
 typedef uint32_t pin_t;
 
-/* Operation of GPIO by pin. */
-/* GPIOA 0 ~ 15
-   GPIOB 16 ~ 39 */
-
-#define GPIOModeConfig(pin, mode) ((pin & 0x80000000) ? GPIOB_ModeCfg(pin, mode) : (GPIOA_ModeCfg(pin, mode)))
+#define GPIOModeConfig(pin, mode) ((pin & 0x80000000) ? GPIOB_ModeCfg(pin & 0x7FFFFFFF, mode) : GPIOA_ModeCfg(pin, mode))
 
 #define setPinInput(pin)           GPIOModeConfig(pin, GPIO_ModeIN_Floating)
 #define setPinInputHigh(pin)       GPIOModeConfig(pin, GPIO_ModeIN_PU)
@@ -34,9 +30,9 @@ typedef uint32_t pin_t;
 #define setPinOutputOpenDrain(pin) _Static_assert(0, "WCH platform does not implement an open-drain output")
 #define setPinOutput(pin)          setPinOutputPushPull(pin)
 
-#define writePinHigh(pin)    ((pin & 0x80000000) ? GPIOB_SetBits(pin) : GPIOA_SetBits(pin))
-#define writePinLow(pin)     ((pin & 0x80000000) ? GPIOB_ResetBits(pin) : GPIOA_ResetBits(pin))
+#define writePinHigh(pin)    ((pin & 0x80000000) ? GPIOB_SetBits(pin & 0x7FFFFFFF) : GPIOA_SetBits(pin))
+#define writePinLow(pin)     ((pin & 0x80000000) ? GPIOB_ResetBits(pin & 0x7FFFFFFF) : GPIOA_ResetBits(pin))
 #define writePin(pin, level) ((level) ? writePinHigh(pin) : writePinLow(pin))
 
-#define readPin(pin)   ((pin & 0x80000000) ? GPIOB_ReadPortPin(pin) : GPIOA_ReadPortPin(pin))
-#define togglePin(pin) ((pin & 0x80000000) ? GPIOB_InverseBits(pin) : GPIOA_InverseBits(pin))
+#define readPin(pin)   (((pin & 0x80000000) ? GPIOB_ReadPortPin(pin & 0x7FFFFFFF) : GPIOA_ReadPortPin(pin)) ? 1 : 0)
+#define togglePin(pin) ((pin & 0x80000000) ? GPIOB_InverseBits(pin & 0x7FFFFFFF) : GPIOA_InverseBits(pin))
