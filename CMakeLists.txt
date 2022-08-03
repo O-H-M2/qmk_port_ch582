@@ -70,10 +70,6 @@ include_directories(BLE_LIB
 
                     qmk_firmware
                     qmk_firmware/lib/printf
-
-                    tmk_core/protocol
-
-                    # qmk_firmware/tmk_core/protocol
                     )
 
 include_sub_directories_recursively(${PROJECT_SOURCE_DIR}/qmk_firmware/tmk_core)
@@ -86,7 +82,9 @@ include_sub_directories_recursively(${PROJECT_SOURCE_DIR}/qmk_porting)
 add_definitions(-DDEBUG=1)
 # add_definitions(-DDCDC_ENABLE=1 -DHAL_SLEEP=1)
 add_definitions(-DMATRIX_ROWS=5 -DMATRIX_COLS=14 -DMOUSE_ENABLE=1 -DRAW_ENABLE=1)
-add_definitions(-DRGBLED_NUM=61 -DEEPROM_ENABLE=1 -DRGBLIGHT_ENABLE=1 -DRGBLIGHT_USE_TIMER=1 -DCOMMAND_ENABLE=1)
+add_definitions(-DRGBLED_NUM=61 -DEEPROM_ENABLE=1 -DRGBLIGHT_ENABLE=1 -DCOMMAND_ENABLE=1)
+add_definitions(-DRGBLIGHT_LIMIT_VAL=100)
+add_definitions(-DRGBLIGHT_EFFECT_BREATHING -DRGBLIGHT_EFFECT_RAINBOW_MOOD -DRGBLIGHT_EFFECT_RAINBOW_SWIRL -DRGBLIGHT_EFFECT_SNAKE -DRGBLIGHT_EFFECT_KNIGHT -DRGBLIGHT_EFFECT_CHRISTMAS -DRGBLIGHT_EFFECT_ALTERNATING -DRGBLIGHT_EFFECT_TWINKLE)
 add_definitions(-DQMK_VERSION="0.0.1" -DQMK_BUILDDATE="Today")
 add_definitions(-DQMK_KEYBOARD_H="mk02.h")
 add_definitions(-DBOOTMAGIC_LITE_ROW=1 -DBOOTMAGIC_LITE_COLUMN=1)
