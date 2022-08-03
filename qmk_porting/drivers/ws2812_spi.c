@@ -1,0 +1,104 @@
+#include "quantum.h"
+#include "ws2812.h"
+
+// Define SPI config speed
+#ifndef WS2812_SPI_DIVISOR
+#define WS2812_SPI_DIVISOR FREQ_SYS / 1000000 / 3.2 + 1 //target 3.2MHz
+#endif
+
+#define BYTES_FOR_LED_BYTE 4
+#ifdef RGBW
+#define WS2812_CHANNELS 4
+#else
+#define WS2812_CHANNELS 3
+#endif
+#define BYTES_FOR_LED (BYTES_FOR_LED_BYTE * WS2812_CHANNELS)
+#define DATA_SIZE     (BYTES_FOR_LED * RGBLED_NUM)
+#define RESET_SIZE    (1000 * WS2812_TRST_US / (2 * WS2812_TIMING))
+#define PREAMBLE_SIZE 4
+
+__attribute__((aligned(4))) static uint8_t txbuf[PREAMBLE_SIZE + DATA_SIZE + RESET_SIZE] = { 0 };
+
+/*
+ * As the trick here is to use the SPI to send a huge pattern of 0 and 1 to
+ * the ws2812b protocol, we use this helper function to translate bytes into
+ * 0s and 1s for the LED (with the appropriate timing).
+ */
+static uint8_t get_protocol_eq(uint8_t data, int pos)
+{
+    uint8_t eq = 0;
+    if (data & (1 << (2 * (3 - pos))))
+        eq = 0b1110;
+    else
+        eq = 0b1000;
+    if (data & (2 << (2 * (3 - pos))))
+        eq += 0b11100000;
+    else
+        eq += 0b10000000;
+    return eq;
+}
+
+static void set_led_color_rgb(LED_TYPE color, int pos)
+{
+    uint8_t *tx_start = &txbuf[PREAMBLE_SIZE];
+
+#if (WS2812_BYTE_ORDER == WS2812_BYTE_ORDER_GRB)
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + j] = get_protocol_eq(color.g, j);
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + BYTES_FOR_LED_BYTE + j] = get_protocol_eq(color.r, j);
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + BYTES_FOR_LED_BYTE * 2 + j] = get_protocol_eq(color.b, j);
+#elif (WS2812_BYTE_ORDER == WS2812_BYTE_ORDER_RGB)
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + j] = get_protocol_eq(color.r, j);
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + BYTES_FOR_LED_BYTE + j] = get_protocol_eq(color.g, j);
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + BYTES_FOR_LED_BYTE * 2 + j] = get_protocol_eq(color.b, j);
+#elif (WS2812_BYTE_ORDER == WS2812_BYTE_ORDER_BGR)
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + j] = get_protocol_eq(color.b, j);
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + BYTES_FOR_LED_BYTE + j] = get_protocol_eq(color.g, j);
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + BYTES_FOR_LED_BYTE * 2 + j] = get_protocol_eq(color.r, j);
+#endif
+#ifdef RGBW
+    for (int j = 0; j < 4; j++)
+        tx_start[BYTES_FOR_LED * pos + BYTES_FOR_LED_BYTE * 4 + j] = get_protocol_eq(color.w, j);
+#endif
+}
+
+void ws2812_init(void)
+{
+    // we have only one spi controller
+    setPinOutput(RGB_DI_PIN);
+    R8_SPI0_CLOCK_DIV = WS2812_SPI_DIVISOR;
+    R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
+    R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE | RB_SPI_SCK_OE;
+    R8_SPI0_CTRL_CFG |= RB_SPI_AUTO_IF;
+    R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
+
+    writePinHigh(B22);
+    setPinOutput(B22);
+
+    print("Initiated SPI.\n");
+}
+
+void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
+{
+    static bool s_init = false;
+    if (!s_init) {
+        ws2812_init();
+        s_init = true;
+    }
+
+    for (uint8_t i = 0; i < leds; i++) {
+        set_led_color_rgb(ledarray[i], i);
+    }
+
+    // Send async - each led takes ~0.03ms, 50 leds ~1.5ms, animations flushing faster than send will cause issues.
+    // Instead spiSend can be used to send synchronously (or the thread logic can be added back).
+    SPI0_MasterDMATrans(txbuf, sizeof(txbuf) / sizeof(txbuf[0]));
+}

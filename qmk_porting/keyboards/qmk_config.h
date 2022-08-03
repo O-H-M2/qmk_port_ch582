@@ -26,13 +26,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MANUFACTURER Xiaomi
 #define PRODUCT      MK02
 
-/* key matrix size */
-#define MATRIX_ROWS 5
-#define MATRIX_COLS 14
-
-#define MATRIX_ROW_PINS { B9, A7, B8, B16, B18 }
-#define MATRIX_COL_PINS { A4, A5, A6, A0, A1, A3, B17, B5, B4, B3, B2, B1, B0, B21 }
+#define MATRIX_ROW_PINS      \
+    {                        \
+        B9, A7, B8, B16, B18 \
+    }
+#define MATRIX_COL_PINS                                          \
+    {                                                            \
+        A4, A5, A6, A0, A1, A3, B17, B5, B4, B3, B2, B1, B0, B21 \
+    }
 #define DIODE_DIRECTION COL2ROW
+
+#ifdef RGBLIGHT_ENABLE
+#define RGBLIGHT_USE_TIMER
+#define RGBLIGHT_EFFECT_RGB_TEST
+#define RGBLIGHT_LIMIT_VAL 200
+#define RGB_DI_PIN         A14
+#define WS2812_BYTE_ORDER  WS2812_BYTE_ORDER_RGB
+#endif
 
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
