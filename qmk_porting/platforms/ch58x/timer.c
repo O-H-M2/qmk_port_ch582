@@ -8,7 +8,7 @@ void timer_init(void)
     // clear interrupt bits
     R8_TMR0_INTER_EN = 0;
     // and disable interrupt
-    PFIC_EnableIRQ(TMR0_IRQn);
+    PFIC_DisableIRQ(TMR0_IRQn);
 }
 
 uint16_t timer_read(void)
