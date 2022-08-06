@@ -17,4 +17,3 @@
 
 #include "CH58x_common.h"
 #include "config.h"
-#include "qmk_config.h"

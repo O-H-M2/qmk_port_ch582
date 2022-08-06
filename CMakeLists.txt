@@ -3,15 +3,15 @@ set(CMAKE_SYSTEM_VERSION 1)
 cmake_minimum_required(VERSION 3.20)
 
 if (APPLE)
-    add_definitions(-DINT_SOFT)
+set(TOOLCHAIN_PATH /Users/huckies/wch-riscv-gnu-toolchain/bin/)
 endif ()
-set(CMAKE_C_COMPILER riscv-none-embed-gcc)
-set(CMAKE_CXX_COMPILER riscv-none-embed-g++)
-set(CMAKE_ASM_COMPILER riscv-none-embed-gcc)
-set(CMAKE_AR riscv-none-embed-ar)
-set(CMAKE_OBJCOPY riscv-none-embed-objcopy)
-set(CMAKE_OBJDUMP riscv-none-embed-objdump)
-set(SIZE riscv-none-embed-size)
+set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}riscv-none-embed-gcc)
+set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}riscv-none-embed-g++)
+set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PATH}riscv-none-embed-gcc)
+set(CMAKE_AR ${TOOLCHAIN_PATH}riscv-none-embed-ar)
+set(CMAKE_OBJCOPY ${TOOLCHAIN_PATH}riscv-none-embed-objcopy)
+set(CMAKE_OBJDUMP ${TOOLCHAIN_PATH}riscv-none-embed-objdump)
+set(SIZE ${TOOLCHAIN_PATH}riscv-none-embed-size)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
@@ -79,15 +79,7 @@ include_sub_directories_recursively(${PROJECT_SOURCE_DIR}/qmk_porting)
 # message("include_dirs=${dirs}")
 
 # 宏定义
-add_definitions(-DDEBUG=1)
-# add_definitions(-DDCDC_ENABLE=1 -DHAL_SLEEP=1)
-add_definitions(-DMATRIX_ROWS=5 -DMATRIX_COLS=14 -DMOUSE_ENABLE=1 -DRAW_ENABLE=1)
-add_definitions(-DRGBLED_NUM=61 -DEEPROM_ENABLE=1 -DRGBLIGHT_ENABLE=1 -DCOMMAND_ENABLE=1)
-add_definitions(-DRGBLIGHT_LIMIT_VAL=100)
-add_definitions(-DRGBLIGHT_EFFECT_BREATHING -DRGBLIGHT_EFFECT_RAINBOW_MOOD -DRGBLIGHT_EFFECT_RAINBOW_SWIRL -DRGBLIGHT_EFFECT_SNAKE -DRGBLIGHT_EFFECT_KNIGHT -DRGBLIGHT_EFFECT_CHRISTMAS -DRGBLIGHT_EFFECT_ALTERNATING -DRGBLIGHT_EFFECT_TWINKLE)
-add_definitions(-DQMK_VERSION="0.0.1" -DQMK_BUILDDATE="Today")
-add_definitions(-DQMK_KEYBOARD_H="mk02.h")
-add_definitions(-DBOOTMAGIC_LITE_ROW=1 -DBOOTMAGIC_LITE_COLUMN=1)
+# add_definitions(-include qmk_config.h)
 
 # 源码文件
 file(GLOB_RECURSE SOURCES 
@@ -196,6 +188,7 @@ add_link_options(-T ${LINKER_SCRIPT})
 
 # 编译可执行文件
 add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
+target_precompile_headers(${PROJECT_NAME}.elf PUBLIC ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/qmk_config.h)
 
 # 链接静态库
 target_link_libraries(${PROJECT_NAME}.elf 
