@@ -2,17 +2,6 @@ set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_VERSION 1)
 cmake_minimum_required(VERSION 3.20)
 
-if (APPLE)
-set(TOOLCHAIN_PATH /Users/huckies/wch-riscv-gnu-toolchain/bin/)
-endif ()
-set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}riscv-none-embed-gcc)
-set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}riscv-none-embed-g++)
-set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PATH}riscv-none-embed-gcc)
-set(CMAKE_AR ${TOOLCHAIN_PATH}riscv-none-embed-ar)
-set(CMAKE_OBJCOPY ${TOOLCHAIN_PATH}riscv-none-embed-objcopy)
-set(CMAKE_OBJDUMP ${TOOLCHAIN_PATH}riscv-none-embed-objdump)
-set(SIZE ${TOOLCHAIN_PATH}riscv-none-embed-size)
-
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 # 项目设置
@@ -23,6 +12,7 @@ set(CMAKE_C_STANDARD 99)
 # 编译参数 一般不用改
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
+add_compile_options(-Wno-unused-function -Wno-unused-variable -Wno-type-limits -fdiagnostics-color=always)
 
 # 编译等级
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
