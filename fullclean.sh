@@ -1,5 +1,6 @@
 #!/bin/zsh zsh
 
+rm -rf ./build
 rm -rf ./CMakeFiles
 rm .cproject
 rm .project
