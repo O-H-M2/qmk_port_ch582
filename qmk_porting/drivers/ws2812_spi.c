@@ -19,6 +19,32 @@
 
 __attribute__((aligned(4))) static uint8_t txbuf[PREAMBLE_SIZE + DATA_SIZE + RESET_SIZE] = { 0 };
 
+__INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
+{
+    R8_SPI0_INTER_EN = 0;
+    if (R8_SPI0_INT_FLAG & RB_SPI_IF_CNT_END) {
+        R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
+        R8_SPI0_INT_FLAG |= RB_SPI_IF_CNT_END;
+        spi_transfering = false;
+    }
+}
+
+static volatile uint8_t spi_transfering = false;
+
+static void SPI0_StartDMA(uint8_t *pbuf, uint16_t len)
+{
+    if (!spi_transfering) {
+        spi_transfering = true;
+        R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
+        R16_SPI0_DMA_BEG = (uint32_t)pbuf;
+        R16_SPI0_DMA_END = (uint32_t)(pbuf + len);
+        R16_SPI0_TOTAL_CNT = len;
+        R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END | RB_SPI_IF_DMA_END;
+        R8_SPI0_CTRL_CFG |= RB_SPI_DMA_ENABLE;
+        R8_SPI0_INTER_EN |= RB_SPI_IF_CNT_END;
+    }
+}
+
 /*
  * As the trick here is to use the SPI to send a huge pattern of 0 and 1 to
  * the ws2812b protocol, we use this helper function to translate bytes into
@@ -76,9 +102,10 @@ void ws2812_init(void)
     setPinOutput(RGB_DI_PIN);
     R8_SPI0_CLOCK_DIV = WS2812_SPI_DIVISOR;
     R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
-    R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE | RB_SPI_SCK_OE;
+    R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE;
     R8_SPI0_CTRL_CFG |= RB_SPI_AUTO_IF;
     R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
+    PFIC_EnableIRQ(SPI0_IRQn);
 
     writePinHigh(B22);
     setPinOutput(B22);
@@ -100,5 +127,5 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
 
     // Send async - each led takes ~0.03ms, 50 leds ~1.5ms, animations flushing faster than send will cause issues.
     // Instead spiSend can be used to send synchronously (or the thread logic can be added back).
-    SPI0_MasterDMATrans(txbuf, sizeof(txbuf) / sizeof(txbuf[0]));
+    SPI0_StartDMA(txbuf, sizeof(txbuf) / sizeof(txbuf[0]));
 }
