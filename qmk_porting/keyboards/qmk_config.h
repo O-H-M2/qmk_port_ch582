@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-// platform settings
+//* platform settings
 // #define DEBUG 1
 // #define DCDC_ENABLE 1
 // #define LSE_FREQ 32768
@@ -25,15 +25,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
 /* USB Device descriptor parameter */
-#define VENDOR_ID    0xFEED
+#define VENDOR_ID    0xCAFE
 #define PRODUCT_ID   0x0B91
 #define DEVICE_VER   0x0001
-#define MANUFACTURER Xiaomi
-#define PRODUCT      MK02
+#define MANUFACTURER OctocKiesZ
+#define PRODUCT      mk01
 
 #define QMK_VERSION    "0.0.1"
 #define QMK_BUILDDATE  "Today"
-#define QMK_KEYBOARD_H "mk02.h"
+#define QMK_KEYBOARD_H "mk01.h"
 
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 14
@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_ENABLE 1
 #define COMMAND_ENABLE  1
 
-#ifdef RAW_ENABLE
+#ifdef VIA_ENABLE
 #ifndef DYNAMIC_KEYMAP_ENABLE
 #define DYNAMIC_KEYMAP_ENABLE 1
 #endif

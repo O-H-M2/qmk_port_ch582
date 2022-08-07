@@ -32,8 +32,8 @@
 #define EXKEY_IN_EP_SIZE     5    /*!< max packet length */
 #define EXKEY_IN_EP_INTERVAL 1    /*!< polling time */
 
-#define USBD_VID           0xffff
-#define USBD_PID           0xffff
+#define USBD_VID           VENDOR_ID
+#define USBD_PID           PRODUCT_ID
 #define USBD_MAX_POWER     100
 #define USBD_LANGID_STRING 0x0409
 
@@ -188,11 +188,8 @@ static const uint8_t RawReport[] = {
 
 /*!< global descriptor */
 static const uint8_t hid_descriptor[] = {
-    0x12, 0x01, 0x10, 0x01, 0x00, 0x00, 0x00, 0x40, 0xFE, 0xFE, 0x01, 0x00, 0x01, 0x00, 0x01, 0x02, 0x03, 0x01,
-    //USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, 0x0002, 0x01),
-
-    0x09, 0x02, 0x5B, 0x00, 0x03, 0x01, 0x00, 0xA0, 0xFA,
-    //USB_CONFIG_DESCRIPTOR_INIT(USB_HID_CONFIG_DESC_SIZ, 0x03, 0x01, USB_CONF IG_BUS_POWERED, USBD_MAX_POWER),
+    USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, 0x0002, 0x01),
+    USB_CONFIG_DESCRIPTOR_INIT(USB_HID_CONFIG_DESC_SIZ, 0x03, 0x01, USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
 
     /************** Descriptor of Keyboard interface ****************/
     //0x09,0x04,0x00,0x00,0x01,0x03,0x01,0x01,0x00
@@ -316,40 +313,27 @@ static const uint8_t hid_descriptor[] = {
     ///////////////////////////////////////
     /// string1 descriptor
     ///////////////////////////////////////
-    0x14,                       /* bLength */
+    0x16,                       /* bLength */
     USB_DESCRIPTOR_TYPE_STRING, /* bDescriptorType */
-    'C', 0x00,                  /* wcChar0 */
-    'h', 0x00,                  /* wcChar1 */
-    'e', 0x00,                  /* wcChar2 */
-    'r', 0x00,                  /* wcChar3 */
-    'r', 0x00,                  /* wcChar4 */
-    'y', 0x00,                  /* wcChar5 */
-    'U', 0x00,                  /* wcChar6 */
-    'S', 0x00,                  /* wcChar7 */
-    'B', 0x00,                  /* wcChar8 */
+    'O', 0x00,                  /* wcChar0 */
+    'c', 0x00,                  /* wcChar1 */
+    't', 0x00,                  /* wcChar2 */
+    'o', 0x00,                  /* wcChar3 */
+    'c', 0x00,                  /* wcChar4 */
+    'K', 0x00,                  /* wcChar5 */
+    'i', 0x00,                  /* wcChar6 */
+    'e', 0x00,                  /* wcChar7 */
+    's', 0x00,                  /* wcChar8 */
+    'Z', 0x00,                  /* wcChar9 */
     ///////////////////////////////////////
     /// string2 descriptor
     ///////////////////////////////////////
-    0x26,                       /* bLength */
+    0x0A,                       /* bLength */
     USB_DESCRIPTOR_TYPE_STRING, /* bDescriptorType */
-    'C', 0x00,                  /* wcChar0 */
-    'h', 0x00,                  /* wcChar1 */
-    'e', 0x00,                  /* wcChar2 */
-    'r', 0x00,                  /* wcChar3 */
-    'r', 0x00,                  /* wcChar4 */
-    'y', 0x00,                  /* wcChar5 */
-    'U', 0x00,                  /* wcChar6 */
-    'S', 0x00,                  /* wcChar7 */
-    'B', 0x00,                  /* wcChar8 */
-    ' ', 0x00,                  /* wcChar9 */
-    'H', 0x00,                  /* wcChar10 */
-    'I', 0x00,                  /* wcChar11 */
-    'D', 0x00,                  /* wcChar12 */
-    ' ', 0x00,                  /* wcChar13 */
-    'D', 0x00,                  /* wcChar14 */
-    'E', 0x00,                  /* wcChar15 */
-    'M', 0x00,                  /* wcChar16 */
-    'O', 0x00,                  /* wcChar17 */
+    'm', 0x00,                  /* wcChar0 */
+    'k', 0x00,                  /* wcChar1 */
+    '0', 0x00,                  /* wcChar2 */
+    '1', 0x00,                  /* wcChar3 */
     ///////////////////////////////////////
     /// string3 descriptor//serial for vial
     ///////////////////////////////////////
