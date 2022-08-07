@@ -48,7 +48,7 @@ include_directories(BLE_LIB
                     USB_LIB
                     RVMSIS  
                     StdPeriphDriver/inc
-                    APP/inc
+                    # APP/inc
                     HAL/include
 
                     CherryUSB_porting
@@ -77,7 +77,7 @@ file(GLOB_RECURSE SOURCES
                 "USB_LIB/*.c"
                 "RVMSIS/*.c"
                 "StdPeriphDriver/*.c" 
-                "APP/*.c"
+                # "APP/*.c"
                 "HAL/*.c"
 
                 "CherryUSB_porting/usb_porting.c"
