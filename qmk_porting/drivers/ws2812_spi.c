@@ -18,6 +18,24 @@
 #define PREAMBLE_SIZE 4
 
 __attribute__((aligned(4))) static uint8_t txbuf[PREAMBLE_SIZE + DATA_SIZE + RESET_SIZE] = { 0 };
+static volatile uint8_t spi_transfering = false;
+
+void ws2812_init(void)
+{
+    // we have only one spi controller
+    setPinOutput(RGB_DI_PIN);
+    R8_SPI0_CLOCK_DIV = WS2812_SPI_DIVISOR;
+    R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
+    R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE;
+    R8_SPI0_CTRL_CFG |= RB_SPI_AUTO_IF;
+    R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
+    PFIC_EnableIRQ(SPI0_IRQn);
+
+    writePinHigh(B22);
+    setPinOutput(B22);
+
+    print("Initiated SPI.\n");
+}
 
 __INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
 {
@@ -28,8 +46,6 @@ __INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
         spi_transfering = false;
     }
 }
-
-static volatile uint8_t spi_transfering = false;
 
 static void SPI0_StartDMA(uint8_t *pbuf, uint16_t len)
 {
@@ -94,23 +110,6 @@ static void set_led_color_rgb(LED_TYPE color, int pos)
     for (int j = 0; j < 4; j++)
         tx_start[BYTES_FOR_LED * pos + BYTES_FOR_LED_BYTE * 4 + j] = get_protocol_eq(color.w, j);
 #endif
-}
-
-void ws2812_init(void)
-{
-    // we have only one spi controller
-    setPinOutput(RGB_DI_PIN);
-    R8_SPI0_CLOCK_DIV = WS2812_SPI_DIVISOR;
-    R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
-    R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE;
-    R8_SPI0_CTRL_CFG |= RB_SPI_AUTO_IF;
-    R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
-    PFIC_EnableIRQ(SPI0_IRQn);
-
-    writePinHigh(B22);
-    setPinOutput(B22);
-
-    print("Initiated SPI.\n");
 }
 
 void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)

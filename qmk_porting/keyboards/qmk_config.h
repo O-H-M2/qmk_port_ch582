@@ -18,8 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 // platform settings
-#define DEBUG       1
-#define DCDC_ENABLE 1
+#define DEBUG 1
+// #define DCDC_ENABLE 1
+// #define LSE_FREQ 32768
+#ifdef LSE_FREQ
+#define FREQ_RTC LSE_FREQ
+#else
+#define FREQ_RTC 32768
+#endif
 
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
@@ -55,27 +61,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define COMMAND_ENABLE  1
 
 #ifdef RGBLIGHT_ENABLE
-#define RGBLED_NUM        3
+#define RGBLED_NUM        61
 #define RGB_DI_PIN        A14
 #define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_RGB
 // #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_EFFECT_BREATHING
 #define RGBLIGHT_EFFECT_RAINBOW_MOOD
 // #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
-// #define RGBLIGHT_RAINBOW_SWIRL_RANGE 50
-#define RGBLIGHT_EFFECT_STATIC_GRADIENT
 // #define RGBLIGHT_EFFECT_SNAKE
 // #define RGBLIGHT_EFFECT_KNIGHT
-// #define RGBLIGHT_EFFECT_CHRISTMAS
+#define RGBLIGHT_EFFECT_CHRISTMAS
+// #define RGBLIGHT_EFFECT_STATIC_GRADIENT
+#define RGBLIGHT_EFFECT_RGB_TEST
 // #define RGBLIGHT_EFFECT_ALTERNATING
 // #define RGBLIGHT_EFFECT_TWINKLE
-#define RGBLIGHT_LIMIT_VAL   100
-#define RGBLIGHT_HUE_STEP    10
-#define RGBLIGHT_SAT_STEP    10
-#define RGBLIGHT_VAL_STEP    10
-#define RGBLIGHT_DEFAULT_HUE 50
-#define RGBLIGHT_DEFAULT_SAT 50
-#define RGBLIGHT_DEFAULT_SPD 100
+// #define RGBLIGHT_LIMIT_VAL 20
+#define RGBLIGHT_LIMIT_VAL 128
+// #define RGBLIGHT_DEFAULT_VAL 10
+// #define RGBLIGHT_HUE_STEP    10
+// #define RGBLIGHT_SAT_STEP    10
+// #define RGBLIGHT_VAL_STEP    10
+// #define RGBLIGHT_DEFAULT_HUE 50
+// #define RGBLIGHT_DEFAULT_SAT 50
+#define RGBLIGHT_DEFAULT_SPD 1
 #endif
 
 /* define if matrix has ghost */
