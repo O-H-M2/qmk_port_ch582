@@ -1,6 +1,6 @@
 {
     "name": "mk01",
-    "vendorId": "0x0001",
+    "vendorId": "0xCAFE",
     "productId": "0x0B91",
     "lighting": "qmk_rgblight",
     "matrix": {
