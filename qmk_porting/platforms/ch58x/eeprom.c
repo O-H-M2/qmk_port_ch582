@@ -5,6 +5,7 @@ uint8_t eeprom_read_byte(const uint8_t *__p)
     uint8_t ret = 0;
 
     EEPROM_READ(QMK_EEPROM_START_POSITION + (uint32_t)__p, &ret, sizeof(ret));
+    return ret;
 }
 
 uint16_t eeprom_read_word(const uint16_t *__p)
@@ -12,6 +13,7 @@ uint16_t eeprom_read_word(const uint16_t *__p)
     uint16_t ret = 0;
 
     EEPROM_READ(QMK_EEPROM_START_POSITION + (uint32_t)__p, &ret, sizeof(ret));
+    return ret;
 }
 
 uint32_t eeprom_read_dword(const uint32_t *__p)
@@ -19,6 +21,7 @@ uint32_t eeprom_read_dword(const uint32_t *__p)
     uint32_t ret = 0;
 
     EEPROM_READ(QMK_EEPROM_START_POSITION + (uint32_t)__p, &ret, sizeof(ret));
+    return ret;
 }
 
 // void eeprom_read_block(void *__dst, const void *__src, size_t __n)
