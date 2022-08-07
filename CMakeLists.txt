@@ -115,7 +115,7 @@ file(GLOB_RECURSE SOURCES
                 "qmk_firmware/quantum/deferred_exec.c"
                 # "qmk_firmware/quantum/digitizer.c"
                 # "qmk_firmware/quantum/dip_switch.c"
-                # "qmk_firmware/quantum/dynamic_keymap.c"
+                "qmk_firmware/quantum/dynamic_keymap.c"
                 "qmk_firmware/quantum/eeconfig.c"
                 # "qmk_firmware/quantum/encoder.c"
                 # "qmk_firmware/quantum/haptic.c"
@@ -139,7 +139,7 @@ file(GLOB_RECURSE SOURCES
                 # "qmk_firmware/quantum/utf8.c"
                 # "qmk_firmware/quantum/variable_trace.c"
                 # "qmk_firmware/quantum/velocikey.c"
-                # "qmk_firmware/quantum/via.c"
+                "qmk_firmware/quantum/via.c"
                 # "qmk_firmware/quantum/wpm.c"
 
                 # "qmk_firmware/tmk_core/*.c"
