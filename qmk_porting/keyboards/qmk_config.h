@@ -18,14 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 // platform settings
-#define DEBUG 1
+// #define DEBUG 1
 // #define DCDC_ENABLE 1
 // #define LSE_FREQ 32768
-#ifdef LSE_FREQ
-#define FREQ_RTC LSE_FREQ
-#else
-#define FREQ_RTC 32768
-#endif
 
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
@@ -54,8 +49,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BOOTMAGIC_LITE_ROW    1
 #define BOOTMAGIC_LITE_COLUMN 1
 
-#define MOUSE_ENABLE    1
-#define RAW_ENABLE      1
+#define MOUSE_ENABLE 1
+#define RAW_ENABLE   1
 // #define EEPROM_ENABLE   1
 #define RGBLIGHT_ENABLE 1
 #define COMMAND_ENABLE  1
@@ -67,19 +62,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_EFFECT_BREATHING
 #define RGBLIGHT_EFFECT_RAINBOW_MOOD
-// #define RGBLIGHT_EFFECT_RAINBOW_SWIRL
-// #define RGBLIGHT_EFFECT_SNAKE
-// #define RGBLIGHT_EFFECT_KNIGHT
-// #define RGBLIGHT_EFFECT_CHRISTMAS
-// #define RGBLIGHT_EFFECT_STATIC_GRADIENT
-#define RGBLIGHT_EFFECT_RGB_TEST
-// #define RGBLIGHT_EFFECT_ALTERNATING
-// #define RGBLIGHT_EFFECT_TWINKLE
+#define RGBLIGHT_EFFECT_RAINBOW_SWIRL
+#define RGBLIGHT_EFFECT_SNAKE
+#define RGBLIGHT_EFFECT_KNIGHT
+#define RGBLIGHT_EFFECT_CHRISTMAS
+#define RGBLIGHT_EFFECT_STATIC_GRADIENT
+// #define RGBLIGHT_EFFECT_RGB_TEST
+#define RGBLIGHT_EFFECT_ALTERNATING
+#define RGBLIGHT_EFFECT_TWINKLE
 #define RGBLIGHT_LIMIT_VAL 128
 // #define RGBLIGHT_DEFAULT_VAL 10
-#define RGBLIGHT_HUE_STEP    40
-#define RGBLIGHT_SAT_STEP    40
-#define RGBLIGHT_VAL_STEP    40
+#define RGBLIGHT_HUE_STEP 30
+#define RGBLIGHT_SAT_STEP 30
+#define RGBLIGHT_VAL_STEP 30
 // #define RGBLIGHT_DEFAULT_HUE 50
 // #define RGBLIGHT_DEFAULT_SAT 50
 // #define RGBLIGHT_DEFAULT_SPD 1
