@@ -31,6 +31,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TIMER_DIFF_32(a, b)   TIMER_DIFF(a, b, UINT32_MAX)
 #define TIMER_DIFF_RAW(a, b)  TIMER_DIFF_8(a, b)
 
+#define CLK_PER_US (1.0 / ((1.0 / FREQ_RTC) * 1000 * 1000)) // 0.032 clk/us
+#define CLK_PER_MS (CLK_PER_US * 1000)                      // 32clk/ms
+
+#define US_PER_CLK (1.0 / CLK_PER_US)    //   31.25us/clk
+#define MS_PER_CLK (US_PER_CLK / 1000.0) //   0.03125ms/clk
+
+#define SYS_TO_US(clk) ((uint32_t)((clk)*US_PER_CLK))
+#define SYS_TO_MS(clk) ((uint32_t)((clk)*MS_PER_CLK))
+
+#define US_TO_SYS(us) ((uint32_t)((us)*CLK_PER_US))
+#define MS_TO_SYS(ms) ((uint32_t)((ms)*CLK_PER_MS))
+
 #ifdef __cplusplus
 extern "C" {
 #endif

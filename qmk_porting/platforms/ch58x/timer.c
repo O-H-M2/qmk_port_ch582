@@ -1,42 +1,44 @@
 #include "timer.h"
 
+static uint32_t ticks_offset = 0;
+
 void timer_init(void)
 {
-    R32_TMR0_CNT_END = FREQ_SYS / 1000;
-    R8_TMR0_CTRL_MOD = RB_TMR_ALL_CLEAR;
-    R8_TMR0_CTRL_MOD = RB_TMR_COUNT_EN;
-    // clear interrupt bits
-    R8_TMR0_INTER_EN = 0;
-    // and disable interrupt
-    PFIC_DisableIRQ(TMR0_IRQn);
+    timer_clear();
 }
 
-uint16_t timer_read(void)
+inline uint16_t timer_read()
 {
-    return R16_TMR0_COUNT;
+    return (uint16_t)(timer_read32() & 0xFFFF);
 }
 
-uint32_t timer_read32(void)
+inline uint32_t timer_read32()
 {
-    return R32_TMR0_COUNT;
+    uint32_t tick;
+
+    do {
+        tick = R32_RTC_CNT_32K;
+    } while (tick != R32_RTC_CNT_32K);
+
+    return SYS_TO_MS(tick - ticks_offset);
 }
 
-uint64_t timer_read64(void)
+inline uint64_t timer_read64(void)
 {
-    return (uint64_t)R32_TMR0_COUNT;
+    return (uint64_t)timer_read32();
 }
 
-uint16_t timer_elapsed(uint16_t tlast)
+inline uint16_t timer_elapsed(uint16_t tlast)
 {
     return TIMER_DIFF_16(timer_read(), tlast);
 }
 
-uint32_t timer_elapsed32(uint32_t tlast)
+inline uint32_t timer_elapsed32(uint32_t tlast)
 {
     return TIMER_DIFF_32(timer_read32(), tlast);
 }
 
 void timer_clear(void)
 {
-    R8_TMR0_CTRL_MOD = RB_TMR_ALL_CLEAR;
+    ticks_offset = timer_read32();
 }
