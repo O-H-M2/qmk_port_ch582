@@ -189,7 +189,6 @@ static void hid_custom_send_report(uint8_t ep, uint8_t *data, uint8_t len)
 
 void raw_hid_send(uint8_t *data, uint8_t length)
 {
-    // TODO: implement variable size packet
     if (length != HIDRAW_IN_SIZE) {
         return;
     }
@@ -208,26 +207,26 @@ void hid_exkey_send_report(uint8_t ep, uint8_t *data, uint8_t len)
     }
 }
 
-/**
-  * @brief            hid custom test
-  * @pre              none
-  * @param[in]        none
-  * @retval           none
-  */
-void hid_custom_test(void)
-{
-    /*!< keyboard test */
-    uint8_t sendbuffer1[8] = { 0x00, 0x00, HID_KEY_A, 0x00, 0x00, 0x00, 0x00, 0x00 }; //A
-    hid_keyboard_send_report(KBD_IN_EP, sendbuffer1, KBD_IN_EP_SIZE);
-    /*!< delay 10ms */
-    //HAL_Delay(10);
-    /*!< send button up */
-    sendbuffer1[2] = 0;
-    hid_keyboard_send_report(KBD_IN_EP, sendbuffer1, KBD_IN_EP_SIZE);
-    /*!< delay 1000ms the custom test */
-    //HAL_Delay(1000);
-    /*!< custom test */
-    uint8_t sendbuffer2[64] = { 6 };
-    hid_custom_send_report(HIDRAW_IN_EP, sendbuffer2, HIDRAW_IN_SIZE);
-    //HAL_Delay(1000);
-}
+// /**
+//   * @brief            hid custom test
+//   * @pre              none
+//   * @param[in]        none
+//   * @retval           none
+//   */
+// void hid_custom_test(void)
+// {
+//     /*!< keyboard test */
+//     uint8_t sendbuffer1[8] = { 0x00, 0x00, HID_KEY_A, 0x00, 0x00, 0x00, 0x00, 0x00 }; //A
+//     hid_keyboard_send_report(KBD_IN_EP, sendbuffer1, KBD_IN_EP_SIZE);
+//     /*!< delay 10ms */
+//     //HAL_Delay(10);
+//     /*!< send button up */
+//     sendbuffer1[2] = 0;
+//     hid_keyboard_send_report(KBD_IN_EP, sendbuffer1, KBD_IN_EP_SIZE);
+//     /*!< delay 1000ms the custom test */
+//     //HAL_Delay(1000);
+//     /*!< custom test */
+//     uint8_t sendbuffer2[64] = { 6 };
+//     hid_custom_send_report(HIDRAW_IN_EP, sendbuffer2, HIDRAW_IN_SIZE);
+//     //HAL_Delay(1000);
+// }
