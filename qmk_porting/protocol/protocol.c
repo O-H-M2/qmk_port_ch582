@@ -77,10 +77,12 @@ int8_t ch58x_send_char(uint8_t s)
     R8_UART1_THR = s;
     return 0;
 }
+#endif
 
-void keyboard_post_init_kb()
+void keyboard_post_init_user(void)
 {
+#ifdef DEBUG
     print_set_sendchar(ch58x_send_char);
     print("Set log output for QMK.\n");
-}
 #endif
+}
