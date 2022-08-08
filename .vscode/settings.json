@@ -41,7 +41,11 @@
         "eeconfig.h": "c",
         "rgblight_list.h": "c",
         "rgblight_breathe_table.h": "c",
-        "timer.h": "c"
+        "timer.h": "c",
+        "usb_descriptor.h": "c",
+        "usbd_core.h": "c",
+        "action_layer.h": "c",
+        "usb_main.h": "c"
     },
     "cmake.configureOnOpen": true
 }
