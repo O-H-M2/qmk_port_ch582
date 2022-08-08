@@ -1,4 +1,4 @@
-.settings/
+# .settings/
 build/
 CMakeFiles/
 makefile
