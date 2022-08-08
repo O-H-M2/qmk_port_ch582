@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MOUSE_ENABLE    
 #define RAW_ENABLE      
-// #define VIA_ENABLE      
+#define VIA_ENABLE      
 #define EEPROM_ENABLE   
 #define RGBLIGHT_ENABLE 
 #define COMMAND_ENABLE  
