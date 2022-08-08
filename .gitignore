@@ -1,3 +1,4 @@
+.settings/
 build/
 CMakeFiles/
 makefile
@@ -5,10 +6,7 @@ makefile
 .project
 cmake_install.cmake
 CMakeCache.txt
-qmk_port_ch582.bin
-qmk_port_ch582.elf
-qmk_port_ch582.hex
-qmk_port_ch582.map
+qmk_port_ch582.*
 .ninja_deps
 .ninja_log
 build.ninja
