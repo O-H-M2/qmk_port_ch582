@@ -58,6 +58,6 @@ file(GLOB_RECURSE quantum_SOURCES
                     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/utf8.c"
                     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/variable_trace.c"
                     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/velocikey.c"
-                    "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/via.c"
+                    # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/via.c"
                     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/wpm.c"
                     )

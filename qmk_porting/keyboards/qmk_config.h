@@ -49,16 +49,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BOOTMAGIC_LITE_ROW    1
 #define BOOTMAGIC_LITE_COLUMN 1
 
-#define MOUSE_ENABLE    1
-#define RAW_ENABLE      1
-#define VIA_ENABLE      1
-#define EEPROM_ENABLE   1
-#define RGBLIGHT_ENABLE 1
-#define COMMAND_ENABLE  1
+#define MOUSE_ENABLE    
+#define RAW_ENABLE      
+// #define VIA_ENABLE      
+#define EEPROM_ENABLE   
+#define RGBLIGHT_ENABLE 
+#define COMMAND_ENABLE  
 
 #ifdef VIA_ENABLE
 #ifndef DYNAMIC_KEYMAP_ENABLE
-#define DYNAMIC_KEYMAP_ENABLE 1
+#define DYNAMIC_KEYMAP_ENABLE
 #endif
 #endif
 #ifdef RGBLIGHT_ENABLE
@@ -77,13 +77,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_EFFECT_ALTERNATING
 #define RGBLIGHT_EFFECT_TWINKLE
 #define RGBLIGHT_LIMIT_VAL 128
-// #define RGBLIGHT_DEFAULT_VAL 10
-#define RGBLIGHT_HUE_STEP 30
-#define RGBLIGHT_SAT_STEP 30
-#define RGBLIGHT_VAL_STEP 30
-// #define RGBLIGHT_DEFAULT_HUE 50
-// #define RGBLIGHT_DEFAULT_SAT 50
-// #define RGBLIGHT_DEFAULT_SPD 1
+#define RGBLIGHT_HUE_STEP 20
+#define RGBLIGHT_SAT_STEP 20
+#define RGBLIGHT_VAL_STEP 20
+#define RGBLIGHT_DEFAULT_HUE 50
+#define RGBLIGHT_DEFAULT_SAT 50
+#define RGBLIGHT_DEFAULT_VAL 10
+#define RGBLIGHT_DEFAULT_SPD 1
 #endif
 
 /* define if matrix has ghost */
