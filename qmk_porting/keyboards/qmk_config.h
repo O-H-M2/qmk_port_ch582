@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 //* platform settings
-// #define DEBUG 1
-// #define DCDC_ENABLE 1
+// #define DEBUG       1
+#define DCDC_ENABLE 1
 // #define LSE_FREQ 32768
 
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
@@ -49,17 +49,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BOOTMAGIC_LITE_ROW    1
 #define BOOTMAGIC_LITE_COLUMN 1
 
-#define MOUSE_ENABLE    
-#define RAW_ENABLE      
-#define VIA_ENABLE      
-#define EEPROM_ENABLE   
-#define RGBLIGHT_ENABLE 
-#define COMMAND_ENABLE  
+#define NKRO_ENABLE
+#define MOUSE_ENABLE
+#define RAW_ENABLE
+#define VIA_ENABLE
+#define EEPROM_ENABLE
+#define RGBLIGHT_ENABLE
+#define COMMAND_ENABLE
 
-#ifdef VIA_ENABLE
-#ifndef DYNAMIC_KEYMAP_ENABLE
-#define DYNAMIC_KEYMAP_ENABLE
+#if defined NKRO_ENABLE
+// a special trick
+#define PROTOCOL_ARM_ATSAM
 #endif
+#if defined VIA_ENABLE && !defined DYNAMIC_KEYMAP_ENABLE
+#define DYNAMIC_KEYMAP_ENABLE
 #endif
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        61
@@ -76,10 +79,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define RGBLIGHT_EFFECT_RGB_TEST
 #define RGBLIGHT_EFFECT_ALTERNATING
 #define RGBLIGHT_EFFECT_TWINKLE
-#define RGBLIGHT_LIMIT_VAL 128
-#define RGBLIGHT_HUE_STEP 20
-#define RGBLIGHT_SAT_STEP 20
-#define RGBLIGHT_VAL_STEP 20
+#define RGBLIGHT_LIMIT_VAL   128
+#define RGBLIGHT_HUE_STEP    20
+#define RGBLIGHT_SAT_STEP    20
+#define RGBLIGHT_VAL_STEP    20
 #define RGBLIGHT_DEFAULT_HUE 50
 #define RGBLIGHT_DEFAULT_SAT 50
 #define RGBLIGHT_DEFAULT_VAL 10

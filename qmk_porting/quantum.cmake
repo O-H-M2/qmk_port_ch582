@@ -18,6 +18,7 @@ file(GLOB_RECURSE quantum_SOURCES
                     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/logging/*.c"
                     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/painter/*.c"
                     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/process_keycode/process_rgb.c"
+                    "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/process_keycode/process_magic.c"
                     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/rgb_matrix/*.c"
                     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/rgblight/*.c"
                     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/sequencer/*.c"
