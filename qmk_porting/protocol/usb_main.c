@@ -1,5 +1,5 @@
 #include "usb_main.h"
-#include "usb_descriptor.h"
+#include "usb_descriptors.h"
 
 uint8_t keyboard_protocol = 1;
 uint8_t keyboard_idle = 0;
@@ -104,6 +104,11 @@ void init_usb_driver()
         .ep_addr = KBD_OUT_EP
     };
 
+    usbd_endpoint_t exkey_in_ep = {
+        .ep_cb = usbd_hid_exkey_in_callback,
+        .ep_addr = EXKEY_IN_EP
+    };
+
     usbd_endpoint_t rawhid_in_ep = {
         .ep_cb = usbd_hid_custom_in_callback,
         .ep_addr = HIDRAW_IN_EP
@@ -114,76 +119,61 @@ void init_usb_driver()
         .ep_addr = HIDRAW_OUT_EP
     };
 
-    usbd_endpoint_t exkey_in_ep = {
-        .ep_cb = usbd_hid_exkey_in_callback,
-        .ep_addr = EXKEY_IN_EP
-    };
-
     usbd_desc_register(hid_descriptor);
-    /*!< add interface ! the first interface */
     usbd_hid_add_interface(&hid_class, &hid_intf_1);
-    /*!< interface0 add endpoint ! the first endpoint */
     usbd_interface_add_endpoint(&hid_intf_1, &keyboard_in_ep);
-    /*!< interface0 add endpoint ! the second endpoint */
     usbd_interface_add_endpoint(&hid_intf_1, &keyboard_out_ep);
 
-    /*!< add interface the ! second interface */
     usbd_hid_add_interface(&hid_class, &hid_intf_2);
-    /*!< interface1 add endpoint ! the first endpoint */
-    usbd_interface_add_endpoint(&hid_intf_2, &rawhid_in_ep);
-    /*!< interface1 add endpoint ! the second endpoint */
-    usbd_interface_add_endpoint(&hid_intf_2, &rawhid_out_ep);
+    usbd_interface_add_endpoint(&hid_intf_2, &exkey_in_ep);
 
-    /*!< register report descriptor interface 3 */
     usbd_hid_add_interface(&hid_class, &hid_intf_3);
-    /*!< interface2 add endpoint ! the 3rd endpoint */
-    usbd_interface_add_endpoint(&hid_intf_3, &exkey_in_ep);
+    usbd_interface_add_endpoint(&hid_intf_3, &rawhid_in_ep);
+    usbd_interface_add_endpoint(&hid_intf_3, &rawhid_out_ep);
 
-    /*!< register report descriptor interface 0 */
     usbd_hid_report_descriptor_register(0, KeyboardReport, HID_KEYBOARD_REPORT_DESC_SIZE);
-    /*!< register report descriptor interface 1 */
-    usbd_hid_report_descriptor_register(1, RawReport, HID_RAWHID_REPORT_DESC_SIZE);
-    /*!< register report descriptor interface 2 */
-    usbd_hid_report_descriptor_register(2, ExtrkeyReport, HID_EXTRAKEY_REPORT_DESC_SIZE);
+    usbd_hid_report_descriptor_register(1, ExtrkeyReport, HID_EXTRAKEY_REPORT_DESC_SIZE);
+    usbd_hid_report_descriptor_register(2, RawReport, HID_RAWHID_REPORT_DESC_SIZE);
     usbd_initialize();
 }
 
-/**
-  * @brief            device send report to host
-  * @pre              none
-  * @param[in]        ep endpoint address
-  * @param[in]        data points to the data buffer waiting to be sent
-  * @param[in]        len length of data to be sent
-  * @retval           none
-  */
-void hid_keyboard_send_report(uint8_t ep, uint8_t *data, uint8_t len)
+void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
 {
     if (usb_device_is_configured()) {
         if (keyboard_state == HID_STATE_IDLE) {
             /*!< updata the state */
             keyboard_state = HID_STATE_BUSY;
             /*!< write buffer */
-            usbd_ep_write(ep, data, len, NULL);
+            usbd_ep_write(KBD_IN_EP, data, len, NULL);
         }
     }
 }
 
-/**
-  * @brief            device send report to host
-  * @pre              none
-  * @param[in]        ep endpoint address
-  * @param[in]        data points to the data buffer waiting to be sent
-  * @param[in]        len length of data to be sent
-  * @retval           none
-  */
-static void hid_custom_send_report(uint8_t ep, uint8_t *data, uint8_t len)
+void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len)
+{
+    hid_exkey_send_report(data, len);
+}
+
+void hid_exkey_send_report(uint8_t *data, uint8_t len)
+{
+    if (usb_device_is_configured()) {
+        if (exkey_state == HID_STATE_IDLE) {
+            /*!< updata the state */
+            exkey_state = HID_STATE_BUSY;
+            /*!< write buffer */
+            usbd_ep_write(EXKEY_IN_EP, data, len, NULL);
+        }
+    }
+}
+
+static void hid_custom_send_report(uint8_t *data, uint8_t len)
 {
     if (usb_device_is_configured()) {
         if (custom_state == HID_STATE_IDLE) {
             /*!< updata the state */
             custom_state = HID_STATE_BUSY;
             /*!< write buffer */
-            usbd_ep_write(ep, data, len, NULL);
+            usbd_ep_write(HIDRAW_IN_EP, data, len, NULL);
         }
     }
 }
@@ -193,17 +183,5 @@ void raw_hid_send(uint8_t *data, uint8_t length)
     if (length != HIDRAW_IN_SIZE) {
         return;
     }
-    hid_custom_send_report(HIDRAW_IN_EP, data, length);
-}
-
-void hid_exkey_send_report(uint8_t ep, uint8_t *data, uint8_t len)
-{
-    if (usb_device_is_configured()) {
-        if (exkey_state == HID_STATE_IDLE) {
-            /*!< updata the state */
-            exkey_state = HID_STATE_BUSY;
-            /*!< write buffer */
-            usbd_ep_write(ep, data, len, NULL);
-        }
-    }
+    hid_custom_send_report(data, length);
 }

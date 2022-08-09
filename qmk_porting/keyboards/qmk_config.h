@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MOUSE_ENABLE
 #define NKRO_ENABLE
+#define FORCE_NKRO
 #define RAW_ENABLE
 #define VIA_ENABLE
 #define EEPROM_ENABLE
@@ -104,20 +105,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_TAPPING
 //#define NO_ACTION_ONESHOT
 
-#ifdef NKRO_ENABLE
-// a special trick
-#define PROTOCOL_ARM_ATSAM
-#endif
-#ifdef VIA_ENABLE
-#ifndef DYNAMIC_KEYMAP_ENABLE
-#define DYNAMIC_KEYMAP_ENABLE
-#endif
-#ifndef RAW_ENABLE
-#define RAW_ENABLE
-#endif
-#endif
-#ifdef DYNAMIC_KEYMAP_ENABLE
-#ifndef EEPROM_ENABLE
-#define EEPROM_ENABLE
-#endif
-#endif
+#include "pre_handler.h"
