@@ -152,7 +152,11 @@ const uint8_t RawReport[] = {
 };
 
 /*!< config descriptor size */
-#define USB_HID_CONFIG_DESC_SIZ 0x5B
+// #define USB_HID_CONFIG_DESC_SIZ 0x5B
+#define USB_HID_CONFIG_DESC_SIZ (USB_SIZEOF_CONFIG_DESC +                                          \
+                                 USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2 + \
+                                 USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC +     \
+                                 USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2)
 
 /*!< report descriptor size */
 #define HID_KEYBOARD_REPORT_DESC_SIZE sizeof(KeyboardReport)
@@ -167,120 +171,97 @@ const uint8_t hid_descriptor[] = {
     USB_CONFIG_DESCRIPTOR_INIT(USB_HID_CONFIG_DESC_SIZ, 0x03, 0x01, USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
 
     /************** Descriptor of Keyboard interface ****************/
-    //0x09,0x04,0x00,0x00,0x01,0x03,0x01,0x01,0x00
-    /*err 09 */
-    0x09, /* bLength: Interface Descriptor size */
-    0x04, /* bDescriptorType: Interface descriptor type */
-    0x00, /* bInterfaceNumber: Number of Interface */
-    0x00, /* bAlternateSetting: Alternate setting */
+    0x09, /* bLength */
+    0x04, /* bDescriptorType */
+    0x00, /* bInterfaceNumber */
+    0x00, /* bAlternateSetting */
     0x01, /* bNumEndpoints */
-    0x03, /* bInterfaceClass: HID */
+    0x03, /* bInterfaceClass */
     0x01, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
     0x01, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
-    0,    /* iInterface: Index of string descriptor */
+    0x00, /* iInterface: Index of string descriptor */
     /******************** Descriptor of Keyboard HID ********************/
-    /*err 18 */
-    //0x09,0x21,0x11,0x01,0x00,0x01,0x22,0x40,0x00
-    0x09, /* bLength: HID Descriptor size */
-    0x21, /* bDescriptorType: HID */
-    0x11, /* bcdHID: HID Class Spec release number */
-    0x01,
-    0x00,                          /* bCountryCode: Hardware target country */
-    0x01,                          /* bNumDescriptors: Number of HID class descriptors to follow */
-    0x22,                          /* bDescriptorType */
-    HID_KEYBOARD_REPORT_DESC_SIZE, /* wItemLength: Total length of Report descriptor */
-    0x00,
+    0x09,                                 /* bLength */
+    0x21,                                 /* bDescriptorType */
+    0x11, 0x01,                           /* bcdHID */
+    0x00,                                 /* bCountryCode */
+    0x01,                                 /* bNumDescriptors */
+    0x22,                                 /* bDescriptorType */
+    WBVAL(HID_KEYBOARD_REPORT_DESC_SIZE), /* wItemLength */
     /******************** Descriptor of Keyboard in endpoint ********************/
-    /*err 27 */
-    //0x07,0x05,0x81,0x03,0x08,0x00,0x0A
-    0x07,           /* bLength: Endpoint Descriptor size */
-    0x05,           /* bDescriptorType: */
-    KBD_IN_EP,      /* bEndpointAddress: Endpoint Address (IN) */
-    0x03,           /* bmAttributes: Interrupt endpoint */
-    KBD_IN_EP_SIZE, /* wMaxPacketSize: 4 Byte max */
-    0x00,
-    KBD_IN_EP_INTERVAL, /* bInterval: Polling Interval */
-
-    /************** Descriptor of RAWHID interface *****************/
-    /*err 41 */
-    //0x09,0x04,0x01,0x00,0x02,0x03,0x00,0x00,0x00
-    0x09, /* bLength: Interface Descriptor size */
-    0x04, /* bDescriptorType: Interface descriptor type */
-    0x01, /* bInterfaceNumber: Number of Interface */
-    0x00, /* bAlternateSetting: Alternate setting */
-    0x02, /* bNumEndpoints */
-    0x03, /* bInterfaceClass: HID */
-    0x00, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
-    0x00, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
-    0,    /* iInterface: Index of string descriptor */
-    /******************** Descriptor of RAWHID HID ********************/
-    /*err 50 */
-    //0x09,0x21,0x11,0x01,0x00,0x01,0x22,0x22,0x00
-    0x09, /* bLength: HID Descriptor size */
-    0x21, /* bDescriptorType: HID */
-    0x11, /* bcdHID: HID Class Spec release number */
-    0x01,
-    0x00,                        /* bCountryCode: Hardware target country */
-    0x01,                        /* bNumDescriptors: Number of HID class descriptors to follow */
-    0x22,                        /* bDescriptorType */
-    HID_RAWHID_REPORT_DESC_SIZE, /* wItemLength: Total length of Report descriptor */
-    0x00,
-    /******************** Descriptor of RAWHID in endpoint ********************/
-    /*err 59 */
-    //0x07,0x05,0x82,0x03,0x20,0x00,0x0A
-    0x07,           /* bLength: Endpoint Descriptor size */
-    0x05,           /* bDescriptorType: */
-    HIDRAW_IN_EP,   /* bEndpointAddress: Endpoint Address (IN) */
-    0x03,           /* bmAttributes: Interrupt endpoint */
-    HIDRAW_IN_SIZE, /* wMaxPacketSize: 4 Byte max */
-    0x00,
-    HIDRAW_IN_INTERVAL, /* bInterval: Polling Interval */
-    /******************** Descriptor of RAWHID out endpoint ********************/
-    /*err 66 */
-    //0x07,0x05,0x03,0x03,0x20,0x00,0x01
-    0x07,               /* bLength: Endpoint Descriptor size */
-    0x05,               /* bDescriptorType: */
-    HIDRAW_OUT_EP,      /* bEndpointAddress: Endpoint Address (IN) */
-    0x03,               /* bmAttributes: Interrupt endpoint */
-    HIDRAW_OUT_EP_SIZE, /* wMaxPacketSize: 4 Byte max */
-    0x00,
-    HIDRAW_OUT_EP_INTERVAL, /* bInterval: Polling Interval */
+    0x07,                  /* bLength */
+    0x05,                  /* bDescriptorType */
+    KBD_IN_EP,             /* bEndpointAddress */
+    0x03,                  /* bmAttributes */
+    WBVAL(KBD_IN_EP_SIZE), /* wMaxPacketSize */
+    KBD_IN_EP_INTERVAL,    /* bInterval */
+    /******************** Descriptor of Keyboard out endpoint ********************/
+    0x07,                   /* bLength */
+    0x05,                   /* bDescriptorType */
+    KBD_OUT_EP,             /* bEndpointAddress */
+    0x03,                   /* bmAttributes */
+    WBVAL(KBD_OUT_EP_SIZE), /* wMaxPacketSize */
+    KBD_OUT_EP_INTERVAL,    /* bInterval */
 
     /************** Descriptor of EXTRAKEY interface *****************/
-    /*err 41 */
-    //0x09,0x04,0x02,0x00,0x01,0x03,0x00,0x00,0x00
-    0x09, /* bLength: Interface Descriptor size */
-    0x04, /* bDescriptorType: Interface descriptor type */
-    0x02, /* bInterfaceNumber: Number of Interface */
-    0x00, /* bAlternateSetting: Alternate setting */
+    0x09, /* bLength */
+    0x04, /* bDescriptorType */
+    0x01, /* bInterfaceNumber */
+    0x00, /* bAlternateSetting */
     0x01, /* bNumEndpoints */
-    0x03, /* bInterfaceClass: HID */
+    0x03, /* bInterfaceClass */
     0x00, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
     0x00, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
-    0,    /* iInterface: Index of string descriptor */
+    0x00, /* iInterface: Index of string descriptor */
     /******************** Descriptor of EXTRAKEY HID ********************/
-    /* 50 */
-    //0x09,0x21,0x11,0x01,0x00,0x01,0x22,0xBC,0x00
-    0x09, /* bLength: HID Descriptor size */
-    0x21, /* bDescriptorType: HID */
-    0x11, /* bcdHID: HID Class Spec release number */
-    0x01,
-    0x00,                          /* bCountryCode: Hardware target country */
-    0x01,                          /* bNumDescriptors: Number of HID class descriptors to follow */
-    0x22,                          /* bDescriptorType */
-    HID_EXTRAKEY_REPORT_DESC_SIZE, /* wItemLength: Total length of Report descriptor */
-    0x00,
-    /******************** Descriptor of EXTRAKEY out endpoint ********************/
-    /*err 66 */
-    //0x07,0x05,0x84,0x03,0x20,0x00,0x01
-    0x07,             /* bLength: Endpoint Descriptor size */
-    0x05,             /* bDescriptorType: */
-    0x84,             /* bEndpointAddress: Endpoint Address (IN) */
-    0x03,             /* bmAttributes: Interrupt endpoint */
-    EXKEY_IN_EP_SIZE, /* wMaxPacketSize: 4 Byte max */
-    0x00,
-    HIDRAW_OUT_EP_INTERVAL, /* bInterval: Polling Interval */
-    /*err 73 */
+    0x09,                                 /* bLength */
+    0x21,                                 /* bDescriptorType */
+    0x11, 0x01,                           /* bcdHID */
+    0x00,                                 /* bCountryCode */
+    0x01,                                 /* bNumDescriptors */
+    0x22,                                 /* bDescriptorType */
+    WBVAL(HID_EXTRAKEY_REPORT_DESC_SIZE), /* wItemLength */
+    /******************** Descriptor of EXTRAKEY in endpoint ********************/
+    0x07,                    /* bLength */
+    0x05,                    /* bDescriptorType */
+    EXKEY_IN_EP,             /* bEndpointAddress */
+    0x03,                    /* bmAttributes */
+    WBVAL(EXKEY_IN_EP_SIZE), /* wMaxPacketSize */
+    EXKEY_IN_EP_INTERVAL,    /* bInterval */
+
+    /************** Descriptor of RAWHID interface *****************/
+    0x09, /* bLength */
+    0x04, /* bDescriptorType */
+    0x02, /* bInterfaceNumber */
+    0x00, /* bAlternateSetting */
+    0x02, /* bNumEndpoints */
+    0x03, /* bInterfaceClass */
+    0x00, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x00, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00, /* iInterface: Index of string descriptor */
+    /******************** Descriptor of RAWHID HID ********************/
+    0x09,                               /* bLength */
+    0x21,                               /* bDescriptorType */
+    0x11, 0x01,                         /* bcdHID */
+    0x00,                               /* bCountryCode */
+    0x01,                               /* bNumDescriptors */
+    0x22,                               /* bDescriptorType */
+    WBVAL(HID_RAWHID_REPORT_DESC_SIZE), /* wItemLength */
+    /******************** Descriptor of RAWHID in endpoint ********************/
+    0x07,                  /* bLength */
+    0x05,                  /* bDescriptorType */
+    HIDRAW_IN_EP,          /* bEndpointAddress */
+    0x03,                  /* bmAttributes */
+    WBVAL(HIDRAW_IN_SIZE), /* wMaxPacketSize */
+    HIDRAW_IN_INTERVAL,    /* bInterval */
+    /******************** Descriptor of RAWHID out endpoint ********************/
+    0x07,                      /* bLength */
+    0x05,                      /* bDescriptorType */
+    HIDRAW_OUT_EP,             /* bEndpointAddress */
+    0x03,                      /* bmAttributes */
+    WBVAL(HIDRAW_OUT_EP_SIZE), /* wMaxPacketSize */
+    HIDRAW_OUT_EP_INTERVAL,    /* bInterval */
+
     ///////////////////////////////////////
     /// string0 descriptor
     ///////////////////////////////////////

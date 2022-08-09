@@ -4,6 +4,7 @@
 #include "usb_main.h"
 #include "print.h"
 #include "CH58x_common.h"
+#include "keycode_config.h"
 
 uint8_t keyboard_leds(void)
 {
@@ -12,28 +13,47 @@ uint8_t keyboard_leds(void)
 
 void send_keyboard(report_keyboard_t *report)
 {
-    hid_keyboard_send_report(KBD_IN_EP, report->raw, KBD_IN_EP_SIZE);
+#ifdef NKRO_ENABLE
+    if (keymap_config.nkro) {
+        uint8_t report_to_send[EXKEY_IN_EP_SIZE];
+
+        memcpy(report_to_send, &report->nkro, sizeof(report_to_send));
+        hid_nkro_keyboard_send_report(report_to_send, sizeof(report_to_send));
+    } else
+#endif
+    {
+        uint8_t report_to_send[KEYBOARD_REPORT_SIZE];
+
+        memcpy(report_to_send, report, sizeof(report_to_send));
+        hid_bios_keyboard_send_report(report_to_send, sizeof(report_to_send));
+    }
 }
 
 void send_mouse(report_mouse_t *report)
 {
-    sizeof(report_mouse_t) - 1; //! currently we don't have ac pan
+    uint8_t report_to_send[6];
+
+    report_to_send[0] = REPORT_ID_MOUSE;
+    memcpy(report_to_send + 1, report, 5);
+    hid_exkey_send_report(report_to_send, 6);
 }
 
 void send_consumer(uint16_t data)
 {
     uint8_t report_to_send[3];
+
     report_to_send[0] = REPORT_ID_CONSUMER;
     memcpy(report_to_send + 1, &data, 2);
-    hid_exkey_send_report(EXKEY_IN_EP, report_to_send, 3);
+    hid_exkey_send_report(report_to_send, 3);
 }
 
 void send_system(uint16_t data)
 {
     uint8_t report_to_send[3];
+
     report_to_send[0] = REPORT_ID_SYSTEM;
     memcpy(report_to_send + 1, &data, 2);
-    hid_exkey_send_report(EXKEY_IN_EP, report_to_send, 3);
+    hid_exkey_send_report(report_to_send, 3);
 }
 
 void send_programmable_button(uint32_t data)
