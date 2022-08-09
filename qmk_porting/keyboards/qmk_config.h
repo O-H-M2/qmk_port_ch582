@@ -49,21 +49,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BOOTMAGIC_LITE_ROW    1
 #define BOOTMAGIC_LITE_COLUMN 1
 
-#define NKRO_ENABLE
 #define MOUSE_ENABLE
+#define NKRO_ENABLE
 #define RAW_ENABLE
 #define VIA_ENABLE
 #define EEPROM_ENABLE
 #define RGBLIGHT_ENABLE
 #define COMMAND_ENABLE
 
-#if defined NKRO_ENABLE
-// a special trick
-#define PROTOCOL_ARM_ATSAM
-#endif
-#if defined VIA_ENABLE && !defined DYNAMIC_KEYMAP_ENABLE
-#define DYNAMIC_KEYMAP_ENABLE
-#endif
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        61
 #define RGB_DI_PIN        A14
@@ -110,3 +103,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_LAYER
 //#define NO_ACTION_TAPPING
 //#define NO_ACTION_ONESHOT
+
+#ifdef NKRO_ENABLE
+// a special trick
+#define PROTOCOL_ARM_ATSAM
+#endif
+#ifdef VIA_ENABLE
+#ifndef DYNAMIC_KEYMAP_ENABLE
+#define DYNAMIC_KEYMAP_ENABLE
+#endif
+#ifndef RAW_ENABLE
+#define RAW_ENABLE
+#endif
+#endif
+#ifdef DYNAMIC_KEYMAP_ENABLE
+#ifndef EEPROM_ENABLE
+#define EEPROM_ENABLE
+#endif
+#endif
