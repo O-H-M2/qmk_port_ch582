@@ -1,4 +1,5 @@
 #include "usb_main.h"
+#include "usb_descriptor.h"
 
 uint8_t keyboard_protocol = 1;
 uint8_t keyboard_idle = 0;

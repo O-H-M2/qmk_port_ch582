@@ -45,7 +45,8 @@
         "usb_descriptor.h": "c",
         "usbd_core.h": "c",
         "action_layer.h": "c",
-        "usb_main.h": "c"
+        "usb_main.h": "c",
+        "usbd_hid.h": "c"
     },
     "cmake.configureOnOpen": true
 }
