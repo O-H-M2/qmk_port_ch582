@@ -9,16 +9,3 @@
 #undef FORCE_NKRO
 #endif
 #endif
-#ifdef VIA_ENABLE
-#ifndef DYNAMIC_KEYMAP_ENABLE
-#define DYNAMIC_KEYMAP_ENABLE
-#endif
-#ifndef RAW_ENABLE
-#define RAW_ENABLE
-#endif
-#endif
-#ifdef DYNAMIC_KEYMAP_ENABLE
-#ifndef EEPROM_ENABLE
-#define EEPROM_ENABLE
-#endif
-#endif

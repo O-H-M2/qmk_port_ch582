@@ -43,11 +43,13 @@ function(include_sub_directories_recursively root_dir)
     endforeach()
 endfunction()
 
+include(qmk_porting/keyboards/rules.cmake)
 include(qmk_porting/quantum.cmake)
 include(sdk/riscv.cmake)
 include(CherryUSB_porting/CherryUSB.cmake)
 include(qmk_porting/tmk_core.cmake)
 include(qmk_porting/qmk_porting.cmake)
+include(qmk_porting/common_features.cmake)
 
 # get_property(dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 # message("include_dirs=${dirs}")
