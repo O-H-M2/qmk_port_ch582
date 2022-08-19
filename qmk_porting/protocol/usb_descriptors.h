@@ -167,7 +167,7 @@ const uint8_t RawReport[] = {
 
 /*!< global descriptor */
 const uint8_t hid_descriptor[] = {
-    USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, 0x0002, 0x01),
+    USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, DEVICE_VER, 0x01),
     USB_CONFIG_DESCRIPTOR_INIT(USB_HID_CONFIG_DESC_SIZ, 0x03, 0x01, USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
 
     /************** Descriptor of Keyboard interface ****************/
@@ -175,7 +175,7 @@ const uint8_t hid_descriptor[] = {
     0x04, /* bDescriptorType */
     0x00, /* bInterfaceNumber */
     0x00, /* bAlternateSetting */
-    0x01, /* bNumEndpoints */
+    0x02, /* bNumEndpoints */
     0x03, /* bInterfaceClass */
     0x01, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
     0x01, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
