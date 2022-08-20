@@ -4,6 +4,9 @@
 
 #ifdef NKRO_ENABLE
 #include "protocol/usb_descriptor.h"
+#ifdef USB_CONFIG_POWER_MA
+#undef USB_CONFIG_POWER_MA
+#endif
 #else
 #define KEYBOARD_EPSIZE 8
 #define RAW_EPSIZE      32
