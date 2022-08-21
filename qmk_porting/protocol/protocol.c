@@ -6,9 +6,16 @@
 #include "CH58x_common.h"
 #include "keycode_config.h"
 
-uint8_t keyboard_leds(void)
+static uint8_t keyboard_led_state;
+
+uint8_t keyboard_leds()
 {
-    //TODO: finish this
+    return keyboard_led_state;
+}
+
+uint8_t set_keyboard_leds(uint8_t state)
+{
+    keyboard_led_state = state;
 }
 
 void send_keyboard(report_keyboard_t *report)
@@ -60,7 +67,9 @@ void send_programmable_button(uint32_t data)
 {
 }
 
-void send_digitizer(report_digitizer_t *report);
+void send_digitizer(report_digitizer_t *report)
+{
+}
 
 host_driver_t ch582_driver = { keyboard_leds, send_keyboard, send_mouse, send_system, send_consumer, send_programmable_button };
 

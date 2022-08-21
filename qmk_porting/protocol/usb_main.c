@@ -15,79 +15,43 @@ static uint8_t exkey_state = HID_STATE_IDLE;
 
 void usbd_hid_kbd_in_callback(uint8_t ep)
 {
-    /*!< endpoint call back */
-    /*!< transfer successfully */
     if (keyboard_state == HID_STATE_BUSY) {
-        /*!< update the state  */
         keyboard_state = HID_STATE_IDLE;
     }
 }
 
 void usbd_hid_kbd_out_callback(uint8_t ep)
 {
-    /*!< here you can write the LED processing from the host */
-    enum hid_kbd_led led_state;
-    /*!< read the led data from host send */
-    usbd_ep_read(ep, (uint8_t *)(&led_state), KBD_OUT_EP_SIZE, NULL);
-    /*!< diy */
-    //TODO: finish the keyboard led part
-    if (led_state & HID_KBD_LED_NUM_LOCK) {
-        /*!< num lock */
-        /*!< do what you like */
-    } else {
-    }
-    if (led_state & HID_KBD_LED_CAPS_LOCK) {
-        /*!< caps lock */
-    } else {
-    }
+    uint8_t led_state;
 
-    if (led_state & HID_KBD_LED_SCROLL_LOCK) {
-        /*!< scroll lock */
-        /*!< do what you like */
-    } else {
-    }
-    if (led_state & HID_KBD_LED_COMPOSE) {
-        /*!< compose led */
-        /*!< do what you like */
-    } else {
-    }
-    if (led_state & HID_KBD_LED_KANA) {
-        /*!< kana led */
-        /*!< do what you like */
-    } else {
-    }
+    usbd_ep_read(ep, &led_state, KBD_OUT_EP_SIZE, NULL);
+    extern uint8_t set_keyboard_leds(uint8_t state);
+    set_keyboard_leds(led_state);
 }
 
 __attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length)
 {
+    // placeholder in case VIA is disabled
 }
 
 void usbd_hid_custom_in_callback(uint8_t ep)
 {
-    /*!< endpoint call back */
-    /*!< transfer successfully */
     if (custom_state == HID_STATE_BUSY) {
-        /*!< update the state  */
         custom_state = HID_STATE_IDLE;
     }
 }
 
 void usbd_hid_custom_out_callback(uint8_t ep)
 {
-    /*!< read the data from host send */
     uint8_t custom_data[HIDRAW_OUT_EP_SIZE];
     usbd_ep_read(HIDRAW_OUT_EP, custom_data, HIDRAW_OUT_EP_SIZE, NULL);
 
-    /*!< you can use the data do some thing you like */
     raw_hid_receive(custom_data, HIDRAW_OUT_EP_SIZE);
 }
 
 void usbd_hid_exkey_in_callback(uint8_t ep)
 {
-    /*!< endpoint call back */
-    /*!< transfer successfully */
     if (exkey_state == HID_STATE_BUSY) {
-        /*!< update the state  */
         exkey_state = HID_STATE_IDLE;
     }
 }
@@ -141,9 +105,7 @@ void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
 {
     if (usb_device_is_configured()) {
         if (keyboard_state == HID_STATE_IDLE) {
-            /*!< updata the state */
             keyboard_state = HID_STATE_BUSY;
-            /*!< write buffer */
             usbd_ep_write(KBD_IN_EP, data, len, NULL);
         }
     }
@@ -158,9 +120,7 @@ void hid_exkey_send_report(uint8_t *data, uint8_t len)
 {
     if (usb_device_is_configured()) {
         if (exkey_state == HID_STATE_IDLE) {
-            /*!< updata the state */
             exkey_state = HID_STATE_BUSY;
-            /*!< write buffer */
             usbd_ep_write(EXKEY_IN_EP, data, len, NULL);
         }
     }
@@ -170,9 +130,7 @@ static void hid_custom_send_report(uint8_t *data, uint8_t len)
 {
     if (usb_device_is_configured()) {
         if (custom_state == HID_STATE_IDLE) {
-            /*!< updata the state */
             custom_state = HID_STATE_BUSY;
-            /*!< write buffer */
             usbd_ep_write(HIDRAW_IN_EP, data, len, NULL);
         }
     }
