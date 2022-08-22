@@ -56,7 +56,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        61
-#define RGB_DI_PIN        A14
 #define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_RGB
 // #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_EFFECT_BREATHING
@@ -82,9 +81,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef RGB_MATRIX_ENABLE
 #define WS2812_PWM_DRIVER 1
 #define RGBLED_NUM 61
-#define RGB_DI_PIN A10
 #define DRIVER_LED_TOTAL RGBLED_NUM
-#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 200
+#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 128
 #define RGB_DISABLE_WHEN_USB_SUSPENDED
 #define ENABLE_RGB_MATRIX_ALPHAS_MODS
 #define ENABLE_RGB_MATRIX_GRADIENT_UP_DOWN
