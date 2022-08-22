@@ -49,10 +49,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BOOTMAGIC_LITE_ROW    1
 #define BOOTMAGIC_LITE_COLUMN 1
 
-#define MOUSE_ENABLE
-#define NKRO_ENABLE
 #define FORCE_NKRO
-#define COMMAND_ENABLE
+
+// #define ENCODERS_PAD_A A10
+// #define ENCODERS_PAD_B A11
 
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        61
@@ -79,9 +79,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef RGB_MATRIX_ENABLE
-#define WS2812_PWM_DRIVER 1
-#define RGBLED_NUM 61
-#define DRIVER_LED_TOTAL RGBLED_NUM
+#define WS2812_PWM_DRIVER             1
+#define RGBLED_NUM                    61
+#define DRIVER_LED_TOTAL              RGBLED_NUM
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 128
 #define RGB_DISABLE_WHEN_USB_SUSPENDED
 #define ENABLE_RGB_MATRIX_ALPHAS_MODS
