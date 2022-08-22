@@ -4,13 +4,10 @@
 
 #include <stdint.h>
 #include <stdlib.h>
-#include "CH58x_common.h"
 
-// we use EEPROM_CUSTOM
-#define EEPROM_SIZE             0x8000
-#define TOTAL_EEPROM_BYTE_COUNT (EEPROM_SIZE)
+// Start address of eeprom for qmk
 #ifndef QMK_EEPROM_START_POSITION
-#define QMK_EEPROM_START_POSITION 0
+#define QMK_EEPROM_START_POSITION 0x0000
 #endif
 
 uint8_t eeprom_read_byte(const uint8_t *__p);
@@ -25,3 +22,11 @@ void eeprom_update_byte(uint8_t *__p, uint8_t __value);
 void eeprom_update_word(uint16_t *__p, uint16_t __value);
 void eeprom_update_dword(uint32_t *__p, uint32_t __value);
 void eeprom_update_block(const void *__src, void *__dst, size_t __n);
+
+#if defined(EEPROM_CUSTOM)
+#include "eeprom_ch58x_custom.h"
+#define TOTAL_EEPROM_BYTE_COUNT (EEPROM_SIZE)
+#elif defined(EEPROM_WEAR_LEVELING)
+#include "wear_leveling_ch58x_config.h"
+#define TOTAL_EEPROM_BYTE_COUNT (WEAR_LEVELING_LOGICAL_SIZE)
+#endif
