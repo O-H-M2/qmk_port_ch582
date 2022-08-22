@@ -1,3 +1,30 @@
+# MOUSE_ENABLE
+if(MOUSE_ENABLE)
+    add_definitions(-DMOUSE_ENABLE)
+    message(STATUS "MOUSE_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/mousekey.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/pointing_device_drivers.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/pointing_device.c"
+    )
+endif()
+
+# NKRO_ENABLE
+if(NKRO_ENABLE)
+    add_definitions(-DNKRO_ENABLE)
+    message(STATUS "NKRO_ENABLE")
+    list(APPEND quantum_SOURCES
+    )
+endif()
+
+# ENCODER_ENABLE
+if(ENCODER_ENABLE)
+    message(STATUS "ENCODER_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/encoder.c"
+    )
+endif()
+
 # VIA_ENABLE
 if(VIA_ENABLE)
     add_definitions(-DVIA_ENABLE -DRAW_ENABLE -DDYNAMIC_KEYMAP_ENABLE)
@@ -7,6 +34,15 @@ if(VIA_ENABLE)
     list(APPEND quantum_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/dynamic_keymap.c"
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/via.c"
+    )
+endif()
+
+# COMMAND_ENABLE
+if(COMMAND_ENABLE)
+    add_definitions(-DCOMMAND_ENABLE)
+    message(STATUS "COMMAND_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/command.c"
     )
 endif()
 
@@ -26,6 +62,7 @@ if(EEPROM_ENABLE)
     message(STATUS "EEPROM_DRIVER = ${EEPROM_DRIVER}")
     list(APPEND quantum_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/eeprom/eeprom_driver.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/eeconfig.c"
     )
 
     if(EEPROM_DRIVER STREQUAL "custom")

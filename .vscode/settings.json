@@ -50,7 +50,8 @@
         "udi_device_epsize.h": "c",
         "eeprom_driver.h": "c",
         "version.h": "c",
-        "pre_handler.h": "c"
+        "pre_handler.h": "c",
+        "encoder.h": "c"
     },
     "cmake.configureOnOpen": true
 }
