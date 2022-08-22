@@ -30,6 +30,7 @@ if(EEPROM_ENABLE)
 
     if(EEPROM_DRIVER STREQUAL "custom")
         add_definitions(-DEEPROM_CUSTOM)
+        include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/eeprom)
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_ch58x_custom.c"
         )

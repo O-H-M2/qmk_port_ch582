@@ -47,7 +47,9 @@
         "action_layer.h": "c",
         "usb_main.h": "c",
         "usbd_hid.h": "c",
-        "udi_device_epsize.h": "c"
+        "udi_device_epsize.h": "c",
+        "eeprom_driver.h": "c",
+        "version.h": "c"
     },
     "cmake.configureOnOpen": true
 }
