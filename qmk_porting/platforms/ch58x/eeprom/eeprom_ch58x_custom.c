@@ -10,12 +10,12 @@
 static uint8_t data_buf[EEPROM_SIZE];
 
 void eeprom_driver_init(void) {
-    PRINT("eeprom_driver_init\n");
+    print("eeprom_driver_init\n");
     EEPROM_READ(EEPROM_BASE_ADDR, data_buf, EEPROM_SIZE);
 }
 
 void eeprom_driver_erase(void) {
-    PRINT("eeprom_driver_erase\n");
+    print("eeprom_driver_erase\n");
     EEPROM_ERASE(EEPROM_BASE_ADDR, EEPROM_SIZE);
 }
 

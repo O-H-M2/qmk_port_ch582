@@ -4,7 +4,6 @@
 #include "wear_leveling.h"
 #include "wear_leveling_internal.h"
 #include "eeprom.h"
-#include "CH58x_common.h"
 
 bool backing_store_init(void)
 {
