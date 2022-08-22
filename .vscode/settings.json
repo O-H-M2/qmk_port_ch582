@@ -49,7 +49,8 @@
         "usbd_hid.h": "c",
         "udi_device_epsize.h": "c",
         "eeprom_driver.h": "c",
-        "version.h": "c"
+        "version.h": "c",
+        "pre_handler.h": "c"
     },
     "cmake.configureOnOpen": true
 }

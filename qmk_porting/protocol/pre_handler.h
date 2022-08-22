@@ -9,3 +9,13 @@
 #undef FORCE_NKRO
 #endif
 #endif
+
+#ifdef WS2812_DRIVER_SPI
+#define RGB_DI_PIN A14
+#elif defined WS2812_DRIVER_PWM
+#if WS2812_PWM_DRIVER == 1
+#define RGB_DI_PIN A10
+#elif WS2812_PWM_DRIVER == 2
+#define RGB_DI_PIN A11
+#endif
+#endif
