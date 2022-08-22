@@ -16,28 +16,29 @@ add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-
 add_compile_options(-fdiagnostics-color=always)
 
 # 编译等级
-if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     message(STATUS "Maximum optimization for speed")
     add_compile_options(-Ofast)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
     message(STATUS "Maximum optimization for speed, debug info included")
     add_compile_options(-Ofast -g)
-elseif ("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
     message(STATUS "Maximum optimization for size")
     add_compile_options(-Os)
-else ()
+else()
     message(STATUS "Minimal optimization, debug info included")
     add_compile_options(-Og -g)
-endif ()
+endif()
 
 function(include_sub_directories_recursively root_dir)
-    if (IS_DIRECTORY ${root_dir})
+    if(IS_DIRECTORY ${root_dir})
         include_directories(${root_dir})
     endif()
 
     file(GLOB ALL_SUB RELATIVE ${root_dir} ${root_dir}/*)
+
     foreach(sub ${ALL_SUB})
-        if (IS_DIRECTORY ${root_dir}/${sub})
+        if(IS_DIRECTORY ${root_dir}/${sub})
             include_sub_directories_recursively(${root_dir}/${sub})
         endif()
     endforeach()
@@ -57,12 +58,12 @@ include(qmk_porting/qmk_porting.cmake)
 
 # 源码文件
 file(GLOB SOURCES
-                ${CH582_SOURCES}
-                ${CherryUSB_SOURCES}
-                ${quantum_SOURCES}
-                ${tmk_core_SOURCES}
-                ${QMK_PORTING_SOURCES}
-                )
+    ${CH582_SOURCES}
+    ${CherryUSB_SOURCES}
+    ${quantum_SOURCES}
+    ${tmk_core_SOURCES}
+    ${QMK_PORTING_SOURCES}
+)
 
 # message("include_dirs=${SOURCES}")
 
@@ -77,6 +78,6 @@ target_link_libraries(${PROJECT_NAME}.elf ${CH582_LIB})
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)
 add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
-        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}.elf> ${HEX_FILE}
-        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
+    COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}.elf> ${HEX_FILE}
+    COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
 )
