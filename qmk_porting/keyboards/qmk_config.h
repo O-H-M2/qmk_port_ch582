@@ -51,8 +51,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define FORCE_NKRO
 
-// #define ENCODERS_PAD_A A10
-// #define ENCODERS_PAD_B A11
+#ifdef ENCODER_ENABLE
+#define ENCODERS_PAD_A     { A10 }
+#define ENCODERS_PAD_B     { A11 }
+#define ENCODER_RESOLUTION 4
+#endif
 
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        61

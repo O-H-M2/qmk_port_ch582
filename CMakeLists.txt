@@ -44,6 +44,7 @@ function(include_sub_directories_recursively root_dir)
     endforeach()
 endfunction()
 
+include(qmk_porting/disable_features.cmake)
 include(qmk_porting/keyboards/rules.cmake)
 include(qmk_porting/quantum.cmake)
 include(sdk/riscv.cmake)

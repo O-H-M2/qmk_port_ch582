@@ -17,12 +17,28 @@ if(NKRO_ENABLE)
     )
 endif()
 
+# EXTRAKEY_ENABLE
+if(EXTRAKEY_ENABLE)
+    add_definitions(-DEXTRAKEY_ENABLE)
+    message(STATUS "EXTRAKEY_ENABLE")
+endif()
+
 # ENCODER_ENABLE
 if(ENCODER_ENABLE)
+    add_definitions(-DENCODER_ENABLE)
     message(STATUS "ENCODER_ENABLE")
     list(APPEND quantum_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/encoder.c"
     )
+endif()
+
+# ENCODER_MAP_ENABLE
+if(ENCODER_MAP_ENABLE)
+    if(NOT ENCODER_ENABLE)
+        message(FATAL_ERROR "ENCODER_MAP_ENABLE requires ENCODER_ENABLE, either disable ENCODER_MAP explicitly or enable ENCODER!")
+    endif()
+    add_definitions(-DENCODER_MAP_ENABLE)
+    message(STATUS "ENCODER_MAP_ENABLE")
 endif()
 
 # VIA_ENABLE
