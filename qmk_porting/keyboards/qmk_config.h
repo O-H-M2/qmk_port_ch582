@@ -114,6 +114,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENABLE_RGB_MATRIX_PIXEL_FLOW
 #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
 #endif
+
+#ifdef WS2812
+#define WS2812_EN_PIN   B22
+#define WS2812_EN_LEVEL 1
+#endif
+
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
