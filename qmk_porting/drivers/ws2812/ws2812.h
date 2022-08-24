@@ -29,23 +29,23 @@
  */
 
 #ifndef WS2812_TIMING
-#    define WS2812_TIMING 1250
+#define WS2812_TIMING 1250
 #endif
 
 #ifndef WS2812_T1H
-#    define WS2812_T1H 900 // Width of a 1 bit in ns
+#define WS2812_T1H 900 // Width of a 1 bit in ns
 #endif
 
 #ifndef WS2812_T1L
-#    define WS2812_T1L (WS2812_TIMING - WS2812_T1H) // Width of a 1 bit in ns
+#define WS2812_T1L (WS2812_TIMING - WS2812_T1H) // Width of a 1 bit in ns
 #endif
 
 #ifndef WS2812_T0H
-#    define WS2812_T0H 350 // Width of a 0 bit in ns
+#define WS2812_T0H 350 // Width of a 0 bit in ns
 #endif
 
 #ifndef WS2812_T0L
-#    define WS2812_T0L (WS2812_TIMING - WS2812_T0H) // Width of a 0 bit in ns
+#define WS2812_T0L (WS2812_TIMING - WS2812_T0H) // Width of a 0 bit in ns
 #endif
 
 /*
@@ -53,7 +53,7 @@
  * component revisions require a minimum of 280us.
  */
 #if !defined(WS2812_TRST_US)
-#    define WS2812_TRST_US 280
+#define WS2812_TRST_US 280
 #endif
 
 /* User Interface
@@ -68,3 +68,4 @@
  *         - Wait 50us to reset the LEDs
  */
 void ws2812_setleds(LED_TYPE *ledarray, uint16_t number_of_leds);
+void ws2812_deinit();

@@ -18,23 +18,22 @@
 #define PREAMBLE_SIZE 4
 
 __attribute__((aligned(4))) static uint8_t txbuf[PREAMBLE_SIZE + DATA_SIZE + RESET_SIZE] = { 0 };
+static volatile bool ws2812_inited = false;
 static volatile uint8_t spi_transfering = false;
 
-void ws2812_init(void)
+static void ws2812_init()
 {
     // we have only one spi controller
     setPinOutput(RGB_DI_PIN);
+    writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
+    setPinOutput(WS2812_EN_PIN);
+
     R8_SPI0_CLOCK_DIV = WS2812_SPI_DIVISOR;
     R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
     R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE;
     R8_SPI0_CTRL_CFG |= RB_SPI_AUTO_IF;
     R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
     PFIC_EnableIRQ(SPI0_IRQn);
-
-    writePinHigh(B22);
-    setPinOutput(B22);
-
-    print("Initiated SPI.\n");
 }
 
 __INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
@@ -114,10 +113,9 @@ static void set_led_color_rgb(LED_TYPE color, int pos)
 
 void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
 {
-    static bool s_init = false;
-    if (!s_init) {
+    if (!ws2812_inited) {
         ws2812_init();
-        s_init = true;
+        ws2812_inited = true;
     }
 
     for (uint8_t i = 0; i < leds; i++) {
@@ -127,4 +125,14 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     // Send async - each led takes ~0.03ms, 50 leds ~1.5ms, animations flushing faster than send will cause issues.
     // Instead spiSend can be used to send synchronously (or the thread logic can be added back).
     SPI0_StartDMA(txbuf, sizeof(txbuf) / sizeof(txbuf[0]));
+}
+
+void ws2812_deinit()
+{
+#if WS2812_EN_LEVEL
+    setPinInputLow(WS2812_EN_PIN);
+#else
+    setPinInputHigh(WS2812_EN_PIN);
+#endif
+    ws2812_inited = false;
 }

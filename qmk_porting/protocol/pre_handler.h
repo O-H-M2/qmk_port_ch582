@@ -10,6 +10,11 @@
 #endif
 #endif
 
+#ifdef WS2812
+#define WS2812_EN_PIN B22
+#define WS2812_EN_LEVEL 1
+#endif
+
 #ifdef WS2812_DRIVER_SPI
 #define RGB_DI_PIN A14
 #elif defined WS2812_DRIVER_PWM

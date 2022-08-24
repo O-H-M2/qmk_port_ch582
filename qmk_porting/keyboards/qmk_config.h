@@ -72,8 +72,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_HUE_STEP    20
 #define RGBLIGHT_SAT_STEP    20
 #define RGBLIGHT_VAL_STEP    20
-#define RGBLIGHT_DEFAULT_HUE 50
-#define RGBLIGHT_DEFAULT_SAT 50
+#define RGBLIGHT_DEFAULT_HUE 127
+#define RGBLIGHT_DEFAULT_SAT 255
 #define RGBLIGHT_DEFAULT_VAL 10
 #define RGBLIGHT_DEFAULT_SPD 1
 #endif

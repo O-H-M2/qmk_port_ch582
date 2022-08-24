@@ -51,6 +51,7 @@ if(BOOTMAGIC_ENABLE)
     add_definitions(-DBOOTMAGIC_LITE)
     message(STATUS "BOOTMAGIC_ENABLE")
     list(APPEND quantum_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/bootmagic/magic.c"
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/bootmagic/bootmagic_lite.c"
     )
 endif()
@@ -90,7 +91,9 @@ set(WS2812_REQUIRED OFF CACHE BOOL "QMK" FORCE)
 
 # RGBLIGHT_ENABLE
 if(RGBLIGHT_ENABLE)
-    add_definitions(-DRGBLIGHT_ENABLE -DUSE_CIE1931_CURVE)
+    add_definitions(-DRGBLIGHT_ENABLE)
+
+    # add_definitions(-DUSE_CIE1931_CURVE)
     set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
     message(STATUS "RGBLIGHT_ENABLE")
     list(APPEND quantum_SOURCES
@@ -103,7 +106,9 @@ endif()
 
 # RGB_MATRIX_ENABLE
 if(RGB_MATRIX_ENABLE)
-    add_definitions(-DRGB_MATRIX_ENABLE -DUSE_CIE1931_CURVE)
+    add_definitions(-DRGB_MATRIX_ENABLE)
+
+    # add_definitions(-DUSE_CIE1931_CURVE)
     set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
     message(STATUS "RGB_MATRIX_ENABLE")
     include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/lib8tion)

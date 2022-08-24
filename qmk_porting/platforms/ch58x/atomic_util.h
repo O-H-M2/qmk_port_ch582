@@ -20,25 +20,22 @@
 #include "CH58x_sys.h"
 
 // Macro to help make GPIO and other controls atomic.
-// The SYS_DisableAllIrq() & SYS_RecoverIrq() way ignores all interrupt toggle operations in critical session
 
-// static uint32_t irq_status;
+static uint32_t irq_status;
 
 static __inline__ uint8_t __interrupt_disable__(void)
 {
-    PFIC_DisableAllIRQ();
-    // SYS_DisableAllIrq(&irq_status);
+    SYS_DisableAllIrq(&irq_status);
 
     return 1;
 }
 
 static __inline__ void __interrupt_enable__(const uint8_t *__s)
 {
-    PFIC_EnableAllIRQ();
-    // SYS_RecoverIrq(irq_status);
-
-    __nop();
     (void)__s;
+
+    SYS_RecoverIrq(irq_status);
+    __nop();
 }
 
 #define ATOMIC_BLOCK(type) for (type, __ToDo = __interrupt_disable__(); __ToDo; __ToDo = 0)
