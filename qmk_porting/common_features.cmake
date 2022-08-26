@@ -56,6 +56,43 @@ if(BOOTMAGIC_ENABLE)
     )
 endif()
 
+# WS2812_REQUIRED default
+set(WS2812_REQUIRED OFF CACHE BOOL "QMK" FORCE)
+
+# RGBLIGHT_ENABLE
+if(RGBLIGHT_ENABLE)
+    add_definitions(-DRGBLIGHT_ENABLE)
+
+    # add_definitions(-DUSE_CIE1931_CURVE)
+    set(EEPROM_ENABLE ON CACHE BOOL "QMK" FORCE)
+    set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
+    message(STATUS "RGBLIGHT_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/rgblight/*.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/color.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/process_keycode/process_rgb.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/led_tables.c"
+    )
+endif()
+
+# RGB_MATRIX_ENABLE
+if(RGB_MATRIX_ENABLE)
+    add_definitions(-DRGB_MATRIX_ENABLE)
+
+    # add_definitions(-DUSE_CIE1931_CURVE)
+    set(EEPROM_ENABLE ON CACHE BOOL "QMK" FORCE)
+    set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
+    message(STATUS "RGB_MATRIX_ENABLE")
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/lib8tion)
+    list(APPEND quantum_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/rgb_matrix/*.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/color.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/process_keycode/process_rgb.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/lib8tion/*.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/led_tables.c"
+    )
+endif()
+
 # EEPROM_ENABLE
 if(EEPROM_ENABLE)
     add_definitions(-DEEPROM_ENABLE -DEEPROM_DRIVER)
@@ -84,41 +121,6 @@ if(EEPROM_ENABLE)
     else()
         message(FATAL_ERROR "Unsupported EEprom Driver!")
     endif()
-endif()
-
-# WS2812_REQUIRED default
-set(WS2812_REQUIRED OFF CACHE BOOL "QMK" FORCE)
-
-# RGBLIGHT_ENABLE
-if(RGBLIGHT_ENABLE)
-    add_definitions(-DRGBLIGHT_ENABLE)
-
-    # add_definitions(-DUSE_CIE1931_CURVE)
-    set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
-    message(STATUS "RGBLIGHT_ENABLE")
-    list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/rgblight/*.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/color.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/process_keycode/process_rgb.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/led_tables.c"
-    )
-endif()
-
-# RGB_MATRIX_ENABLE
-if(RGB_MATRIX_ENABLE)
-    add_definitions(-DRGB_MATRIX_ENABLE)
-
-    # add_definitions(-DUSE_CIE1931_CURVE)
-    set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
-    message(STATUS "RGB_MATRIX_ENABLE")
-    include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/lib8tion)
-    list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/rgb_matrix/*.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/color.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/process_keycode/process_rgb.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/lib8tion/*.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/led_tables.c"
-    )
 endif()
 
 # WS2812 REQUIRED

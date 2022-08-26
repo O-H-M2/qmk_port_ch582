@@ -51,7 +51,12 @@
         "eeprom_driver.h": "c",
         "version.h": "c",
         "pre_handler.h": "c",
-        "encoder.h": "c"
+        "encoder.h": "c",
+        "hal.h": "c",
+        "devinfoservice.h": "c",
+        "mk01.h": "c",
+        "hiddev.h": "c",
+        "scanparamservice.h": "c"
     },
     "cmake.configureOnOpen": true
 }
