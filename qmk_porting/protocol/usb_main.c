@@ -3,6 +3,7 @@
 
 uint8_t keyboard_protocol = 1;
 uint8_t keyboard_idle = 0;
+extern uint8_t keyboard_led_state;
 
 static usbd_class_t hid_class;
 static usbd_interface_t hid_intf_1;
@@ -25,8 +26,7 @@ void usbd_hid_kbd_out_callback(uint8_t ep)
     uint8_t led_state;
 
     usbd_ep_read(ep, &led_state, KBD_OUT_EP_SIZE, NULL);
-    extern uint8_t set_keyboard_leds(uint8_t state);
-    set_keyboard_leds(led_state);
+    keyboard_led_state = led_state;
 }
 
 __attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length)

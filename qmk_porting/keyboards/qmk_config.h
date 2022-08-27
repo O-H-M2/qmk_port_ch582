@@ -1,26 +1,15 @@
-/*
-Copyright 2015 Jun Wako <wakojun@gmail.com>
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #pragma once
 
 //* platform settings
 // #define DEBUG       1
 #define DCDC_ENABLE 1
 // #define LSE_FREQ 32768
+#define BLE_TX_NUM_EVENT          4
+#define PERIPHERAL_MAX_CONNECTION 2
+#define CENTRAL_MAX_CONNECTION    0
+#define BLE_BUFF_MAX_LEN          36
+// #define BLE_MEMHEAP_SIZE          (1024 * 7)
+// #define BLE_BUFF_NUM              10
 
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
@@ -141,5 +130,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_LAYER
 //#define NO_ACTION_TAPPING
 //#define NO_ACTION_ONESHOT
+
+#include "ble_config.h"
 
 #include "pre_handler.h"

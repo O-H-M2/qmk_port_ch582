@@ -6,16 +6,11 @@
 #include "CH58x_common.h"
 #include "keycode_config.h"
 
-static uint8_t keyboard_led_state;
+uint8_t keyboard_led_state;
 
 uint8_t keyboard_leds()
 {
     return keyboard_led_state;
-}
-
-uint8_t set_keyboard_leds(uint8_t state)
-{
-    keyboard_led_state = state;
 }
 
 void send_keyboard(report_keyboard_t *report)

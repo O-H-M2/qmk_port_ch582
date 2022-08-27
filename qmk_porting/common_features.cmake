@@ -143,3 +143,12 @@ if(WS2812_REQUIRED)
         message(FATAL_ERROR "Unsupported WS2812 Driver!")
     endif()
 endif()
+
+# BLE_ENABLE
+if(BLE_ENABLE)
+    add_definitions(-DBLE_ENABLE)
+    message(STATUS "BLE_ENABLE")
+    list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
+    )
+endif()

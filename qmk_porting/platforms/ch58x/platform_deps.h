@@ -16,4 +16,15 @@
 #pragma once
 
 #include "CH58x_common.h"
-#include "config.h"
+#include "HAL.h"
+#include "ble.h"
+
+enum {
+    kbd_protocol_usb = 1,
+    kbd_protocol_ble,
+    kbd_protocol_2g4,
+};
+
+extern volatile uint8_t kbd_protocol_type;
+
+void platform_setup_ble();

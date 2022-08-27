@@ -36,3 +36,56 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 }
 
 #endif
+
+void platform_setup(void);
+void protocol_setup(void);
+void protocol_pre_init(void);
+void protocol_post_init(void);
+
+void protocol_init(void)
+{
+    protocol_pre_init();
+    keyboard_init();
+    protocol_post_init();
+}
+
+__HIGH_CODE void protocol_task()
+{
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        keyboard_task();
+    }
+#ifdef BLE_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_ble) {
+        TMOS_SystemProcess();
+    }
+#endif
+}
+
+__HIGH_CODE int main()
+{
+    platform_setup();
+    protocol_setup();
+    keyboard_setup();
+
+    protocol_init();
+
+    // TODO: implement the judge conditions
+    if (0) {
+        // cable mode
+        kbd_protocol_type = kbd_protocol_usb;
+    } else if (1) {
+        // bluetooth mode
+        platform_setup_ble();
+        kbd_protocol_type = kbd_protocol_ble;
+    } else {
+        // 2.4g mode
+        kbd_protocol_type = kbd_protocol_2g4;
+    }
+
+    /* Main loop */
+    for (;;) {
+        protocol_task();
+
+        // housekeeping_task();
+    }
+}

@@ -30,13 +30,11 @@ file(GLOB_RECURSE quantum_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/bitwise.c"
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/caps_word.c"
 
-    # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/color.c"
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/crc.c"
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/deferred_exec.c"
 
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/digitizer.c"
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/dip_switch.c"
-    # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/eeconfig.c"
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/haptic.c"
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/joystick.c"
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/keyboard.c"

@@ -1,5 +1,12 @@
 #include "platform_deps.h"
 
+volatile uint8_t kbd_protocol_type = 0;
+__attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
+
+#if (defined(BLE_MAC)) && (BLE_MAC == TRUE)
+const uint8_t MacAddr[6] = { 0x84, 0xC2, 0xE4, 0x03, 0x02, 0x02 };
+#endif
+
 void platform_setup()
 {
 #if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
@@ -8,10 +15,6 @@ void platform_setup()
     SetSysClock(CLK_SOURCE_PLL_60MHz);
     DelayMs(5);
     PowerMonitor(ENABLE, HALevel_2V1);
-#if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
-    GPIOA_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
-    GPIOB_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
-#endif
 #ifdef DEBUG
     GPIOA_SetBits(GPIO_Pin_9);
     GPIOA_ModeCfg(GPIO_Pin_8, GPIO_ModeIN_PU);
@@ -34,5 +37,17 @@ void platform_setup()
     Calibration_LSI(Level_64);
 #endif
     PRINT("Chip start, %s\n", VER_LIB);
-    // HAL_Init();
+}
+
+void platform_setup_ble()
+{
+#if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
+    GPIOA_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
+    GPIOB_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
+#endif
+    CH58X_BLEInit();
+    HAL_Init();
+    GAPRole_PeripheralInit();
+    HidDev_Init();
+    hogp_init();
 }

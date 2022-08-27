@@ -19,3 +19,19 @@
 #define RGB_DI_PIN A11
 #endif
 #endif
+
+#ifdef LSE_FREQ
+#define FREQ_RTC   LSE_FREQ
+#define CLK_OSC32K 0
+#else
+#define FREQ_RTC   32768
+#define CLK_OSC32K 2
+#endif
+
+#define MACRO2STR_(_macro) #_macro
+#define MACRO2STR(_macro)  MACRO2STR_(_macro)
+
+// ms to 1 tick (625us)
+#define SYS_TICK_MS(x) MS1_TO_SYSTEM_TIME(x)
+// ms to 1.25ms (connection interval)
+#define MS_UNIT_1_25(x) ((int)(x / 1.25))
