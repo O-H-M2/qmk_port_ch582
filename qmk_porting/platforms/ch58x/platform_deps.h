@@ -21,22 +21,10 @@
 #include "ble.h"
 #endif
 
-enum {
-    kbd_protocol_usb = 1,
-#ifdef BLE_ENABLE
-    kbd_protocol_ble,
-#endif
-#ifdef ESB_ENABLE
-    kbd_protocol_2g4,
-#endif
-};
-
-extern volatile uint8_t kbd_protocol_type;
-
 #ifdef BLE_ENABLE
 void platform_setup_ble();
 #endif
 
 #ifdef ESB_ENABLE
-void platform_setup_2g4();
+void platform_setup_esb();
 #endif

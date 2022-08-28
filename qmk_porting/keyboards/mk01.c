@@ -42,7 +42,7 @@ void protocol_setup(void);
 void protocol_pre_init(void);
 void protocol_post_init(void);
 
-void protocol_init(void)
+void protocol_init()
 {
     protocol_pre_init();
     keyboard_init();
@@ -51,29 +51,28 @@ void protocol_init(void)
 
 __HIGH_CODE void protocol_task()
 {
-    if (kbd_protocol_type == kbd_protocol_usb) {
-        keyboard_task();
-    }
+    for (;;) {
+        if (kbd_protocol_type == kbd_protocol_usb) {
+            keyboard_task();
+        }
 #ifdef BLE_ENABLE
-    else if (kbd_protocol_type == kbd_protocol_ble) {
-        TMOS_SystemProcess();
-    }
+        else if (kbd_protocol_type == kbd_protocol_ble) {
+            TMOS_SystemProcess();
+            keyboard_task();
+        }
 #endif
 #ifdef ESB_ENABLE
-    else if (kbd_protocol_type == kbd_protocol_2g4) {
-    }
+        else if (kbd_protocol_type == kbd_protocol_esb) {
+        }
 #endif
+    }
 }
 
 __HIGH_CODE int main()
 {
     platform_setup();
-    protocol_setup();
-    keyboard_setup();
 
-    protocol_init();
-
-    // TODO: implement the judge conditions
+    // TODO: implement the mode select conditions
     if (0) {
         // cable mode
         kbd_protocol_type = kbd_protocol_usb;
@@ -88,9 +87,14 @@ __HIGH_CODE int main()
 #ifdef ESB_ENABLE
     else {
         // 2.4g mode
-        kbd_protocol_type = kbd_protocol_2g4;
+        kbd_protocol_type = kbd_protocol_esb;
     }
 #endif
+
+    protocol_setup();
+    keyboard_setup();
+
+    protocol_init();
 
     /* Main loop */
     for (;;) {

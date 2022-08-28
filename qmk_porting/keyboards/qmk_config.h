@@ -39,7 +39,7 @@
 #define BOOTMAGIC_LITE_ROW    1
 #define BOOTMAGIC_LITE_COLUMN 1
 
-#define FORCE_NKRO
+// #define FORCE_NKRO
 
 // #define ENCODERS_PAD_A A10
 // #define ENCODERS_PAD_B A11

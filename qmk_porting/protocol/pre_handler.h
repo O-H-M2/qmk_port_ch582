@@ -35,3 +35,15 @@
 #define SYS_TICK_MS(x) MS1_TO_SYSTEM_TIME(x)
 // ms to 1.25ms (connection interval)
 #define MS_UNIT_1_25(x) ((int)(x / 1.25))
+
+enum {
+    kbd_protocol_usb = 1,
+#ifdef BLE_ENABLE
+    kbd_protocol_ble,
+#endif
+#ifdef ESB_ENABLE
+    kbd_protocol_esb,
+#endif
+};
+
+extern volatile uint8_t kbd_protocol_type;

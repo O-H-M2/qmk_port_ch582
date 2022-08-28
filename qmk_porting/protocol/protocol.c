@@ -5,6 +5,7 @@
 #include "print.h"
 #include "CH58x_common.h"
 #include "keycode_config.h"
+#include "ble.h"
 
 uint8_t keyboard_led_state;
 
@@ -17,45 +18,104 @@ void send_keyboard(report_keyboard_t *report)
 {
 #ifdef NKRO_ENABLE
     if (keymap_config.nkro) {
-        uint8_t report_to_send[EXKEY_IN_EP_SIZE];
+        if (kbd_protocol_type == kbd_protocol_usb) {
+            uint8_t report_to_send[EXKEY_IN_EP_SIZE];
 
-        memcpy(report_to_send, &report->nkro, sizeof(report_to_send));
-        hid_nkro_keyboard_send_report(report_to_send, sizeof(report_to_send));
+            memcpy(report_to_send, &report->nkro, sizeof(report_to_send));
+            hid_nkro_keyboard_send_report(report_to_send, sizeof(report_to_send));
+        }
+#ifdef BLE_ENABLE
+        else if (kbd_protocol_type == kbd_protocol_ble) {
+            HidDev_Report(BLE_REPORT_ID_NKRO, HID_REPORT_TYPE_INPUT, KEYBOARD_REPORT_BITS + 1, (uint8_t *)report);
+        }
+#endif
+#ifdef ESB_ENABLE
+        else if (kbd_protocol_type == kbd_protocol_esb) {
+        }
+#endif
     } else
 #endif
     {
-        uint8_t report_to_send[KEYBOARD_REPORT_SIZE];
+        if (kbd_protocol_type == kbd_protocol_usb) {
+            uint8_t report_to_send[KEYBOARD_REPORT_SIZE];
 
-        memcpy(report_to_send, report, sizeof(report_to_send));
-        hid_bios_keyboard_send_report(report_to_send, sizeof(report_to_send));
+            memcpy(report_to_send, report, sizeof(report_to_send));
+            hid_bios_keyboard_send_report(report_to_send, sizeof(report_to_send));
+        }
+#ifdef BLE_ENABLE
+        else if (kbd_protocol_type == kbd_protocol_ble) {
+            HidDev_Report(BLE_REPORT_ID_KEYBOARD, HID_REPORT_TYPE_INPUT, KEYBOARD_REPORT_SIZE, (uint8_t *)report);
+        }
+#endif
+#ifdef ESB_ENABLE
+        else if (kbd_protocol_type == kbd_protocol_esb) {
+        }
+#endif
     }
 }
 
 void send_mouse(report_mouse_t *report)
 {
-    uint8_t report_to_send[6];
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        uint8_t report_to_send[6];
 
-    report_to_send[0] = REPORT_ID_MOUSE;
-    memcpy(report_to_send + 1, report, 5);
-    hid_exkey_send_report(report_to_send, 6);
-}
-
-void send_consumer(uint16_t data)
-{
-    uint8_t report_to_send[3];
-
-    report_to_send[0] = REPORT_ID_CONSUMER;
-    memcpy(report_to_send + 1, &data, 2);
-    hid_exkey_send_report(report_to_send, 3);
+        report_to_send[0] = REPORT_ID_MOUSE;
+        memcpy(report_to_send + 1, report, 5);
+        hid_exkey_send_report(report_to_send, 6);
+    }
+#ifdef BLE_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_ble) {
+        HidDev_Report(BLE_REPORT_ID_MOUSE, HID_REPORT_TYPE_INPUT, 5, (uint8_t *)report);
+    }
+#endif
+#ifdef ESB_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_esb) {
+    }
+#endif
 }
 
 void send_system(uint16_t data)
 {
-    uint8_t report_to_send[3];
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        uint8_t report_to_send[3];
 
-    report_to_send[0] = REPORT_ID_SYSTEM;
-    memcpy(report_to_send + 1, &data, 2);
-    hid_exkey_send_report(report_to_send, 3);
+        report_to_send[0] = REPORT_ID_SYSTEM;
+        memcpy(report_to_send + 1, &data, 2);
+        hid_exkey_send_report(report_to_send, 3);
+    }
+#ifdef BLE_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_ble) {
+        uint16_t data_to_send = data;
+
+        HidDev_Report(BLE_REPORT_ID_SYSTEM, HID_REPORT_TYPE_INPUT, 2, (uint8_t *)&data_to_send);
+    }
+#endif
+#ifdef ESB_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_esb) {
+    }
+#endif
+}
+
+void send_consumer(uint16_t data)
+{
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        uint8_t report_to_send[3];
+
+        report_to_send[0] = REPORT_ID_CONSUMER;
+        memcpy(report_to_send + 1, &data, 2);
+        hid_exkey_send_report(report_to_send, 3);
+    }
+#ifdef BLE_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_ble) {
+        uint16_t data_to_send = data;
+
+        HidDev_Report(BLE_REPORT_ID_CONSUMER, HID_REPORT_TYPE_INPUT, 2, (uint8_t *)&data_to_send);
+    }
+#endif
+#ifdef ESB_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_esb) {
+    }
+#endif
 }
 
 void send_programmable_button(uint32_t data)
@@ -75,7 +135,19 @@ void protocol_setup()
 
 void protocol_pre_init()
 {
-    init_usb_driver();
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        init_usb_driver();
+    }
+#ifdef BLE_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_ble) {
+        HidDev_Init();
+        hogp_init();
+    }
+#endif
+#ifdef ESB_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_esb) {
+    }
+#endif
 }
 
 void protocol_post_init()
@@ -89,7 +161,6 @@ void protocol_pre_task()
 
 void protocol_post_task()
 {
-    // this will be handle by the stack
 }
 
 #ifdef DEBUG

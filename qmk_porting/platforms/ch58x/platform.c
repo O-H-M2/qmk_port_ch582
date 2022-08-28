@@ -36,6 +36,8 @@ void platform_setup()
     R8_SAFE_ACCESS_SIG = 0;
     Calibration_LSI(Level_64);
 #endif
+    // TODO: set some GPIO for mode decision
+
     PRINT("Chip start, %s\n", VER_LIB);
 }
 
@@ -50,8 +52,6 @@ void platform_setup_ble()
     CH58X_BLEInit();
     HAL_Init();
     GAPRole_PeripheralInit();
-    HidDev_Init();
-    hogp_init();
 }
 
 #endif
