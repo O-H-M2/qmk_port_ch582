@@ -1,3 +1,6 @@
+# default values
+set(WS2812_REQUIRED OFF CACHE BOOL "QMK" FORCE)
+
 # MOUSE_ENABLE
 if(MOUSE_ENABLE)
     add_definitions(-DMOUSE_ENABLE -DMOUSEKEY_ENABLE)
@@ -56,9 +59,6 @@ if(BOOTMAGIC_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/bootmagic/bootmagic_lite.c"
     )
 endif()
-
-# WS2812_REQUIRED default
-set(WS2812_REQUIRED OFF CACHE BOOL "QMK" FORCE)
 
 # RGBLIGHT_ENABLE
 if(RGBLIGHT_ENABLE)
@@ -152,6 +152,10 @@ if(BLE_ENABLE)
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
     )
+
+    if(NOT CUSTOM_MATRIX)
+        message(FATAL_ERROR "Custom matrix is required with Bluetooth LE enabled!")
+    endif()
 endif()
 
 # ESB_ENABLE
@@ -159,6 +163,23 @@ if(ESB_ENABLE)
     add_definitions(-DESB_ENABLE)
     message(STATUS "ESB_ENABLE")
     list(APPEND QMK_PORTING_SOURCES
+
         # "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
+    )
+
+    if(NOT CUSTOM_MATRIX)
+        message(FATAL_ERROR "Custom matrix is required with ESB enabled!")
+    endif()
+endif()
+
+if(CUSTOM_MATRIX)
+    add_definitions(-DCUSTOM_MATRIX)
+    message(STATUS "CUSTOM_MATRIX")
+    list(APPEND QMK_PORTING_SOURCES
+        "${CUSTOM_MATRIX}"
+    )
+else()
+    list(APPEND quantum_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/matrix.c"
     )
 endif()

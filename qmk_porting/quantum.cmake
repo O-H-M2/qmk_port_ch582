@@ -43,7 +43,6 @@ file(GLOB_RECURSE quantum_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/led.c"
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/main.c"
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/matrix_common.c"
-    "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/matrix.c"
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/programmable_button.c"
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/quantum.c"
 
