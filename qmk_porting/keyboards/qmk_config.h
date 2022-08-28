@@ -8,7 +8,7 @@
 #define BLE_TX_NUM_EVENT          4
 #define PERIPHERAL_MAX_CONNECTION 2
 #define CENTRAL_MAX_CONNECTION    0
-#define BLE_BUFF_MAX_LEN          36
+#define BLE_BUFF_MAX_LEN          42
 // #define BLE_MEMHEAP_SIZE          (1024 * 7)
 // #define BLE_BUFF_NUM              10
 
@@ -39,7 +39,7 @@
 #define BOOTMAGIC_LITE_ROW    1
 #define BOOTMAGIC_LITE_COLUMN 1
 
-// #define FORCE_NKRO
+#define FORCE_NKRO
 
 // #define ENCODERS_PAD_A A10
 // #define ENCODERS_PAD_B A11

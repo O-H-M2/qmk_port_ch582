@@ -26,7 +26,7 @@ void send_keyboard(report_keyboard_t *report)
         }
 #ifdef BLE_ENABLE
         else if (kbd_protocol_type == kbd_protocol_ble) {
-            HidDev_Report(BLE_REPORT_ID_NKRO, HID_REPORT_TYPE_INPUT, KEYBOARD_REPORT_BITS + 1, (uint8_t *)report);
+            HidDev_Report(BLE_REPORT_ID_NKRO, HID_REPORT_TYPE_INPUT, KEYBOARD_REPORT_BITS + 1, (uint8_t *)report + 1);
         }
 #endif
 #ifdef ESB_ENABLE
