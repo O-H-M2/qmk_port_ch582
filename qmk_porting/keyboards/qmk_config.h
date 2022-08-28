@@ -4,6 +4,7 @@
 // #define DEBUG       1
 #define DCDC_ENABLE 1
 // #define LSE_FREQ 32768
+// #define CH58xBLE_ROM
 #define BLE_TX_NUM_EVENT          4
 #define PERIPHERAL_MAX_CONNECTION 2
 #define CENTRAL_MAX_CONNECTION    0

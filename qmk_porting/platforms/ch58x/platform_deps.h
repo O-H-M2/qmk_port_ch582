@@ -26,7 +26,7 @@ enum {
 #ifdef BLE_ENABLE
     kbd_protocol_ble,
 #endif
-#ifdef 2G4_ENABLE
+#ifdef ESB_ENABLE
     kbd_protocol_2g4,
 #endif
 };
@@ -37,6 +37,6 @@ extern volatile uint8_t kbd_protocol_type;
 void platform_setup_ble();
 #endif
 
-#ifdef 2G4_ENABLE
+#ifdef ESB_ENABLE
 void platform_setup_2g4();
 #endif

@@ -56,7 +56,10 @@
         "devinfoservice.h": "c",
         "mk01.h": "c",
         "hiddev.h": "c",
-        "scanparamservice.h": "c"
+        "scanparamservice.h": "c",
+        "usb_device_state.h": "c",
+        "print.h": "c",
+        "keycode_config.h": "c"
     },
     "cmake.configureOnOpen": true
 }

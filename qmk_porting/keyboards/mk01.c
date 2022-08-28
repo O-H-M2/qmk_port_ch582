@@ -59,7 +59,7 @@ __HIGH_CODE void protocol_task()
         TMOS_SystemProcess();
     }
 #endif
-#ifdef 2G4_ENABLE
+#ifdef ESB_ENABLE
     else if (kbd_protocol_type == kbd_protocol_2g4) {
     }
 #endif
@@ -85,7 +85,7 @@ __HIGH_CODE int main()
         kbd_protocol_type = kbd_protocol_ble;
     }
 #endif
-#ifdef 2G4_ENABLE
+#ifdef ESB_ENABLE
     else {
         // 2.4g mode
         kbd_protocol_type = kbd_protocol_2g4;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CH58xBLE_LIB.h"
+#include "config.h"
 
 // Battery measurement period in (625us)
 #define DEFAULT_BATT_PERIOD SYS_TICK_MS(9375)

@@ -153,10 +153,10 @@ if(BLE_ENABLE)
     )
 endif()
 
-# 2G4_ENABLE
-if(2G4_ENABLE)
-    add_definitions(-D2G4_ENABLE)
-    message(STATUS "2G4_ENABLE")
+# ESB_ENABLE
+if(ESB_ENABLE)
+    add_definitions(-DESB_ENABLE)
+    message(STATUS "ESB_ENABLE")
     list(APPEND QMK_PORTING_SOURCES
         # "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
     )
