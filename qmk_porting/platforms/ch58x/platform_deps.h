@@ -17,14 +17,20 @@
 
 #include "CH58x_common.h"
 #include "HAL.h"
+#ifdef BLE_ENABLE
 #include "ble.h"
+#endif
 
 enum {
     kbd_protocol_usb = 1,
+#ifdef BLE_ENABLE
     kbd_protocol_ble,
+#endif
     kbd_protocol_2g4,
 };
 
 extern volatile uint8_t kbd_protocol_type;
 
+#ifdef BLE_ENABLE
 void platform_setup_ble();
+#endif

@@ -73,11 +73,15 @@ __HIGH_CODE int main()
     if (0) {
         // cable mode
         kbd_protocol_type = kbd_protocol_usb;
-    } else if (1) {
+    }
+#ifdef BLE_ENABLE
+    else if (1) {
         // bluetooth mode
         platform_setup_ble();
         kbd_protocol_type = kbd_protocol_ble;
-    } else {
+    }
+#endif
+    else {
         // 2.4g mode
         kbd_protocol_type = kbd_protocol_2g4;
     }

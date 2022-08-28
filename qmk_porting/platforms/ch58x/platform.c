@@ -39,6 +39,8 @@ void platform_setup()
     PRINT("Chip start, %s\n", VER_LIB);
 }
 
+#ifdef BLE_ENABLE
+
 void platform_setup_ble()
 {
 #if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
@@ -51,3 +53,5 @@ void platform_setup_ble()
     HidDev_Init();
     hogp_init();
 }
+
+#endif
