@@ -163,6 +163,25 @@ void protocol_post_task()
 {
 }
 
+__HIGH_CODE void protocol_task()
+{
+    extern void keyboard_task();
+
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        keyboard_task();
+    }
+#ifdef BLE_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_ble) {
+        TMOS_SystemProcess();
+        keyboard_task();
+    }
+#endif
+#ifdef ESB_ENABLE
+    else if (kbd_protocol_type == kbd_protocol_esb) {
+    }
+#endif
+}
+
 #ifdef DEBUG
 int8_t ch58x_send_char(uint8_t s)
 {

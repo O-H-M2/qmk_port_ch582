@@ -37,39 +37,12 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 
 #endif
 
-void platform_setup(void);
-void protocol_setup(void);
-void protocol_pre_init(void);
-void protocol_post_init(void);
-
-void protocol_init()
-{
-    protocol_pre_init();
-    keyboard_init();
-    protocol_post_init();
-}
-
-__HIGH_CODE void protocol_task()
-{
-    for (;;) {
-        if (kbd_protocol_type == kbd_protocol_usb) {
-            keyboard_task();
-        }
-#ifdef BLE_ENABLE
-        else if (kbd_protocol_type == kbd_protocol_ble) {
-            TMOS_SystemProcess();
-            keyboard_task();
-        }
-#endif
-#ifdef ESB_ENABLE
-        else if (kbd_protocol_type == kbd_protocol_esb) {
-        }
-#endif
-    }
-}
-
 __HIGH_CODE int main()
 {
+    extern void protocol_setup();
+    extern void protocol_init();
+    extern void protocol_task();
+
     platform_setup();
 
     // TODO: implement the mode select conditions

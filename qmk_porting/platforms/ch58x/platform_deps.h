@@ -21,6 +21,8 @@
 #include "ble.h"
 #endif
 
+void platform_setup();
+
 #ifdef BLE_ENABLE
 void platform_setup_ble();
 #endif
