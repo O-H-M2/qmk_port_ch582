@@ -152,3 +152,12 @@ if(BLE_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
     )
 endif()
+
+# 2G4_ENABLE
+if(2G4_ENABLE)
+    add_definitions(-D2G4_ENABLE)
+    message(STATUS "2G4_ENABLE")
+    list(APPEND QMK_PORTING_SOURCES
+        # "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
+    )
+endif()
