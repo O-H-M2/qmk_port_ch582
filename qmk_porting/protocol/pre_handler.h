@@ -1,5 +1,9 @@
 #pragma once
 
+#ifndef EXTRAKEY_ENABLE
+#define EXTRAKEY_ENABLE
+#endif
+
 #ifdef NKRO_ENABLE
 // a special trick
 #define PROTOCOL_LUFA

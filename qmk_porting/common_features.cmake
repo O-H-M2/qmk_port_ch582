@@ -1,6 +1,6 @@
 # MOUSE_ENABLE
 if(MOUSE_ENABLE)
-    add_definitions(-DMOUSE_ENABLE)
+    add_definitions(-DMOUSE_ENABLE -DMOUSEKEY_ENABLE)
     message(STATUS "MOUSE_ENABLE")
     list(APPEND quantum_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/mousekey.c"
@@ -40,6 +40,7 @@ endif()
 # COMMAND_ENABLE
 if(COMMAND_ENABLE)
     add_definitions(-DCOMMAND_ENABLE)
+    set(EEPROM_ENABLE ON CACHE BOOL "QMK" FORCE)
     message(STATUS "COMMAND_ENABLE")
     list(APPEND quantum_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/command.c"
@@ -48,7 +49,7 @@ endif()
 
 # BOOTMAGIC_ENABLE
 if(BOOTMAGIC_ENABLE)
-    add_definitions(-DBOOTMAGIC_LITE)
+    add_definitions(-DBOOTMAGIC_LITE -DBOOTMAGIC_ENABLE)
     message(STATUS "BOOTMAGIC_ENABLE")
     list(APPEND quantum_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/bootmagic/magic.c"

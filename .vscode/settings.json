@@ -59,7 +59,8 @@
         "scanparamservice.h": "c",
         "usb_device_state.h": "c",
         "print.h": "c",
-        "keycode_config.h": "c"
+        "keycode_config.h": "c",
+        "ble_config.h": "c"
     },
     "cmake.configureOnOpen": true
 }

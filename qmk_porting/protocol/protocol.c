@@ -56,6 +56,7 @@ void send_keyboard(report_keyboard_t *report)
 
 void send_mouse(report_mouse_t *report)
 {
+#ifdef MOUSE_ENABLE
     if (kbd_protocol_type == kbd_protocol_usb) {
         uint8_t report_to_send[6];
 
@@ -71,6 +72,7 @@ void send_mouse(report_mouse_t *report)
 #ifdef ESB_ENABLE
     else if (kbd_protocol_type == kbd_protocol_esb) {
     }
+#endif
 #endif
 }
 
