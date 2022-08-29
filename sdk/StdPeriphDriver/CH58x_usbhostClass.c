@@ -13,25 +13,25 @@
   #include "CHRV3UFI.H"
 #endif
 
-/* ÉèÖÃHIDÉÏ´«ËÙÂÊ */
+/* è®¾ç½®HIDä¸Šä¼ é€Ÿç‡ */
 __attribute__((aligned(4))) const uint8_t SetupSetHIDIdle[] = {0x21, HID_SET_IDLE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-/* »ñÈ¡HIDÉè±¸±¨±íÃèÊö·û */
+/* è·å–HIDè®¾å¤‡æŠ¥è¡¨æè¿°ç¬¦ */
 __attribute__((aligned(4))) const uint8_t SetupGetHIDDevReport[] = {0x81, USB_GET_DESCRIPTOR, 0x00, USB_DESCR_TYP_REPORT,
                                                                     0x00, 0x00, 0x41, 0x00};
-/* »ñÈ¡HUBÃèÊö·û */
+/* è·å–HUBæè¿°ç¬¦ */
 __attribute__((aligned(4))) const uint8_t SetupGetHubDescr[] = {HUB_GET_HUB_DESCRIPTOR, HUB_GET_DESCRIPTOR, 0x00,
                                                                 USB_DESCR_TYP_HUB, 0x00, 0x00, sizeof(USB_HUB_DESCR), 0x00};
 
-__attribute__((aligned(4))) uint8_t Com_Buffer[128]; // ¶¨ÒåÓÃ»§ÁÙÊ±»º³åÇø,Ã¶¾ÙÊ±ÓÃÓÚ´¦ÀíÃèÊö·û,Ã¶¾Ù½áÊøÒ²¿ÉÒÔÓÃ×÷ÆÕÍ¨ÁÙÊ±»º³åÇø
+__attribute__((aligned(4))) uint8_t Com_Buffer[128]; // å®šä¹‰ç”¨æˆ·ä¸´æ—¶ç¼“å†²åŒº,æšä¸¾æ—¶ç”¨äºå¤„ç†æè¿°ç¬¦,æšä¸¾ç»“æŸä¹Ÿå¯ä»¥ç”¨ä½œæ™®é€šä¸´æ—¶ç¼“å†²åŒº
 
 /*********************************************************************
  * @fn      AnalyzeHidIntEndp
  *
- * @brief   ´ÓÃèÊö·ûÖĞ·ÖÎö³öHIDÖĞ¶Ï¶ËµãµÄµØÖ·,Èç¹ûHubPortIndexÊÇ0±£´æµ½ROOTHUB£¬Èç¹ûÊÇ·ÇÁãÖµÔò±£´æµ½HUBÏÂ½á¹¹Ìå
+ * @brief   ä»æè¿°ç¬¦ä¸­åˆ†æå‡ºHIDä¸­æ–­ç«¯ç‚¹çš„åœ°å€,å¦‚æœHubPortIndexæ˜¯0ä¿å­˜åˆ°ROOTHUBï¼Œå¦‚æœæ˜¯éé›¶å€¼åˆ™ä¿å­˜åˆ°HUBä¸‹ç»“æ„ä½“
  *
- * @param   buf     - ´ı·ÖÎöÊı¾İ»º³åÇøµØÖ· HubPortIndex£º0±íÊ¾¸ùHUB£¬·Ç0±íÊ¾Íâ²¿HUBÏÂµÄ¶Ë¿ÚºÅ
+ * @param   buf     - å¾…åˆ†ææ•°æ®ç¼“å†²åŒºåœ°å€ HubPortIndexï¼š0è¡¨ç¤ºæ ¹HUBï¼Œé0è¡¨ç¤ºå¤–éƒ¨HUBä¸‹çš„ç«¯å£å·
  *
- * @return  ¶ËµãÊı
+ * @return  ç«¯ç‚¹æ•°
  */
 uint8_t AnalyzeHidIntEndp(uint8_t *buf, uint8_t HubPortIndex)
 {
@@ -40,35 +40,35 @@ uint8_t AnalyzeHidIntEndp(uint8_t *buf, uint8_t HubPortIndex)
 
     if(HubPortIndex)
     {
-        memset(DevOnHubPort[HubPortIndex - 1].GpVar, 0, sizeof(DevOnHubPort[HubPortIndex - 1].GpVar)); //Çå¿ÕÊı×é
+        memset(DevOnHubPort[HubPortIndex - 1].GpVar, 0, sizeof(DevOnHubPort[HubPortIndex - 1].GpVar)); //æ¸…ç©ºæ•°ç»„
     }
     else
     {
-        memset(ThisUsbDev.GpVar, 0, sizeof(ThisUsbDev.GpVar)); //Çå¿ÕÊı×é
+        memset(ThisUsbDev.GpVar, 0, sizeof(ThisUsbDev.GpVar)); //æ¸…ç©ºæ•°ç»„
     }
 
-    for(i = 0; i < ((PUSB_CFG_DESCR)buf)->wTotalLength; i += l) // ËÑË÷ÖĞ¶Ï¶ËµãÃèÊö·û,Ìø¹ıÅäÖÃÃèÊö·ûºÍ½Ó¿ÚÃèÊö·û
+    for(i = 0; i < ((PUSB_CFG_DESCR)buf)->wTotalLength; i += l) // æœç´¢ä¸­æ–­ç«¯ç‚¹æè¿°ç¬¦,è·³è¿‡é…ç½®æè¿°ç¬¦å’Œæ¥å£æè¿°ç¬¦
     {
-        if(((PUSB_ENDP_DESCR)(buf + i))->bDescriptorType == USB_DESCR_TYP_ENDP                         // ÊÇ¶ËµãÃèÊö·û
-           && (((PUSB_ENDP_DESCR)(buf + i))->bmAttributes & USB_ENDP_TYPE_MASK) == USB_ENDP_TYPE_INTER // ÊÇÖĞ¶Ï¶Ëµã
-           && (((PUSB_ENDP_DESCR)(buf + i))->bEndpointAddress & USB_ENDP_DIR_MASK))                    // ÊÇIN¶Ëµã
-        {                                                                                              // ±£´æÖĞ¶Ï¶ËµãµÄµØÖ·,Î»7ÓÃÓÚÍ¬²½±êÖ¾Î»,Çå0
+        if(((PUSB_ENDP_DESCR)(buf + i))->bDescriptorType == USB_DESCR_TYP_ENDP                         // æ˜¯ç«¯ç‚¹æè¿°ç¬¦
+           && (((PUSB_ENDP_DESCR)(buf + i))->bmAttributes & USB_ENDP_TYPE_MASK) == USB_ENDP_TYPE_INTER // æ˜¯ä¸­æ–­ç«¯ç‚¹
+           && (((PUSB_ENDP_DESCR)(buf + i))->bEndpointAddress & USB_ENDP_DIR_MASK))                    // æ˜¯INç«¯ç‚¹
+        {                                                                                              // ä¿å­˜ä¸­æ–­ç«¯ç‚¹çš„åœ°å€,ä½7ç”¨äºåŒæ­¥æ ‡å¿—ä½,æ¸…0
             if(HubPortIndex)
             {
                 DevOnHubPort[HubPortIndex - 1].GpVar[s] = ((PUSB_ENDP_DESCR)(buf + i))->bEndpointAddress & USB_ENDP_ADDR_MASK;
             }
             else
             {
-                ThisUsbDev.GpVar[s] = ((PUSB_ENDP_DESCR)(buf + i))->bEndpointAddress & USB_ENDP_ADDR_MASK; // ÖĞ¶Ï¶ËµãµÄµØÖ·£¬¿ÉÒÔ¸ù¾İĞèÒª±£´æwMaxPacketSizeºÍbInterval
+                ThisUsbDev.GpVar[s] = ((PUSB_ENDP_DESCR)(buf + i))->bEndpointAddress & USB_ENDP_ADDR_MASK; // ä¸­æ–­ç«¯ç‚¹çš„åœ°å€ï¼Œå¯ä»¥æ ¹æ®éœ€è¦ä¿å­˜wMaxPacketSizeå’ŒbInterval
             }
             PRINT("%02x ", (uint16_t)ThisUsbDev.GpVar[s]);
             s++;
             if(s >= 4)
             {
-                break; //Ö»·ÖÎö4¸ö¶Ëµã
+                break; //åªåˆ†æ4ä¸ªç«¯ç‚¹
             }
         }
-        l = ((PUSB_ENDP_DESCR)(buf + i))->bLength; // µ±Ç°ÃèÊö·û³¤¶È,Ìø¹ı
+        l = ((PUSB_ENDP_DESCR)(buf + i))->bLength; // å½“å‰æè¿°ç¬¦é•¿åº¦,è·³è¿‡
         if(l > 16)
         {
             break;
@@ -81,9 +81,9 @@ uint8_t AnalyzeHidIntEndp(uint8_t *buf, uint8_t HubPortIndex)
 /*********************************************************************
  * @fn      AnalyzeBulkEndp
  *
- * @brief   ·ÖÎö³öÅúÁ¿¶Ëµã,GpVar[0]¡¢GpVar[1]´æ·ÅÉÏ´«¶Ëµã¡£GpVar[2]¡¢GpVar[3]´æ·ÅÏÂ´«¶Ëµã
+ * @brief   åˆ†æå‡ºæ‰¹é‡ç«¯ç‚¹,GpVar[0]ã€GpVar[1]å­˜æ”¾ä¸Šä¼ ç«¯ç‚¹ã€‚GpVar[2]ã€GpVar[3]å­˜æ”¾ä¸‹ä¼ ç«¯ç‚¹
  *
- * @param   buf     - ´ı·ÖÎöÊı¾İ»º³åÇøµØÖ· HubPortIndex£º0±íÊ¾¸ùHUB£¬·Ç0±íÊ¾Íâ²¿HUBÏÂµÄ¶Ë¿ÚºÅ
+ * @param   buf     - å¾…åˆ†ææ•°æ®ç¼“å†²åŒºåœ°å€ HubPortIndexï¼š0è¡¨ç¤ºæ ¹HUBï¼Œé0è¡¨ç¤ºå¤–éƒ¨HUBä¸‹çš„ç«¯å£å·
  *
  * @return  0
  */
@@ -95,17 +95,17 @@ uint8_t AnalyzeBulkEndp(uint8_t *buf, uint8_t HubPortIndex)
 
     if(HubPortIndex)
     {
-        memset(DevOnHubPort[HubPortIndex - 1].GpVar, 0, sizeof(DevOnHubPort[HubPortIndex - 1].GpVar)); //Çå¿ÕÊı×é
+        memset(DevOnHubPort[HubPortIndex - 1].GpVar, 0, sizeof(DevOnHubPort[HubPortIndex - 1].GpVar)); //æ¸…ç©ºæ•°ç»„
     }
     else
     {
-        memset(ThisUsbDev.GpVar, 0, sizeof(ThisUsbDev.GpVar)); //Çå¿ÕÊı×é
+        memset(ThisUsbDev.GpVar, 0, sizeof(ThisUsbDev.GpVar)); //æ¸…ç©ºæ•°ç»„
     }
 
-    for(i = 0; i < ((PUSB_CFG_DESCR)buf)->wTotalLength; i += l) // ËÑË÷ÖĞ¶Ï¶ËµãÃèÊö·û,Ìø¹ıÅäÖÃÃèÊö·ûºÍ½Ó¿ÚÃèÊö·û
+    for(i = 0; i < ((PUSB_CFG_DESCR)buf)->wTotalLength; i += l) // æœç´¢ä¸­æ–­ç«¯ç‚¹æè¿°ç¬¦,è·³è¿‡é…ç½®æè¿°ç¬¦å’Œæ¥å£æè¿°ç¬¦
     {
-        if((((PUSB_ENDP_DESCR)(buf + i))->bDescriptorType == USB_DESCR_TYP_ENDP)                         // ÊÇ¶ËµãÃèÊö·û
-           && ((((PUSB_ENDP_DESCR)(buf + i))->bmAttributes & USB_ENDP_TYPE_MASK) == USB_ENDP_TYPE_BULK)) // ÊÇÖĞ¶Ï¶Ëµã
+        if((((PUSB_ENDP_DESCR)(buf + i))->bDescriptorType == USB_DESCR_TYP_ENDP)                         // æ˜¯ç«¯ç‚¹æè¿°ç¬¦
+           && ((((PUSB_ENDP_DESCR)(buf + i))->bmAttributes & USB_ENDP_TYPE_MASK) == USB_ENDP_TYPE_BULK)) // æ˜¯ä¸­æ–­ç«¯ç‚¹
 
         {
             if(HubPortIndex)
@@ -140,7 +140,7 @@ uint8_t AnalyzeBulkEndp(uint8_t *buf, uint8_t HubPortIndex)
                 s2 = 3;
             }
         }
-        l = ((PUSB_ENDP_DESCR)(buf + i))->bLength; // µ±Ç°ÃèÊö·û³¤¶È,Ìø¹ı
+        l = ((PUSB_ENDP_DESCR)(buf + i))->bLength; // å½“å‰æè¿°ç¬¦é•¿åº¦,è·³è¿‡
         if(l > 16)
         {
             break;
@@ -152,11 +152,11 @@ uint8_t AnalyzeBulkEndp(uint8_t *buf, uint8_t HubPortIndex)
 /*********************************************************************
  * @fn      InitRootDevice
  *
- * @brief   ³õÊ¼»¯Ö¸¶¨ROOT-HUB¶Ë¿ÚµÄUSBÉè±¸
+ * @brief   åˆå§‹åŒ–æŒ‡å®šROOT-HUBç«¯å£çš„USBè®¾å¤‡
  *
  * @param   none
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t InitRootDevice(void)
 {
@@ -164,30 +164,30 @@ uint8_t InitRootDevice(void)
     uint8_t cfg, dv_cls, if_cls;
 
     PRINT("Reset host port\n");
-    ResetRootHubPort(); // ¼ì²âµ½Éè±¸ºó,¸´Î»ÏàÓ¦¶Ë¿ÚµÄUSB×ÜÏß
+    ResetRootHubPort(); // æ£€æµ‹åˆ°è®¾å¤‡å,å¤ä½ç›¸åº”ç«¯å£çš„USBæ€»çº¿
     for(i = 0, s = 0; i < 100; i++)
-    { // µÈ´ıUSBÉè±¸¸´Î»ºóÖØĞÂÁ¬½Ó,100mS³¬Ê±
+    { // ç­‰å¾…USBè®¾å¤‡å¤ä½åé‡æ–°è¿æ¥,100mSè¶…æ—¶
         mDelaymS(1);
         if(EnableRootHubPort() == ERR_SUCCESS)
-        { // Ê¹ÄÜ¶Ë¿Ú
+        { // ä½¿èƒ½ç«¯å£
             i = 0;
             s++;
             if(s > 100)
             {
-                break; // ÒÑ¾­ÎÈ¶¨Á¬½Ó100mS
+                break; // å·²ç»ç¨³å®šè¿æ¥100mS
             }
         }
     }
     if(i)
-    { // ¸´Î»ºóÉè±¸Ã»ÓĞÁ¬½Ó
+    { // å¤ä½åè®¾å¤‡æ²¡æœ‰è¿æ¥
         DisableRootHubPort();
         PRINT("Disable host port because of disconnect\n");
         return (ERR_USB_DISCON);
     }
-    SetUsbSpeed(ThisUsbDev.DeviceSpeed); // ÉèÖÃµ±Ç°USBËÙ¶È
+    SetUsbSpeed(ThisUsbDev.DeviceSpeed); // è®¾ç½®å½“å‰USBé€Ÿåº¦
 
     PRINT("GetDevDescr: ");
-    s = CtrlGetDeviceDescr(); // »ñÈ¡Éè±¸ÃèÊö·û
+    s = CtrlGetDeviceDescr(); // è·å–è®¾å¤‡æè¿°ç¬¦
     if(s == ERR_SUCCESS)
     {
         for(i = 0; i < ((PUSB_SETUP_REQ)SetupGetDevDescr)->wLength; i++)
@@ -196,14 +196,14 @@ uint8_t InitRootDevice(void)
         }
         PRINT("\n");
 
-        ThisUsbDev.DeviceVID = ((PUSB_DEV_DESCR)Com_Buffer)->idVendor; //±£´æVID PIDĞÅÏ¢
+        ThisUsbDev.DeviceVID = ((PUSB_DEV_DESCR)Com_Buffer)->idVendor; //ä¿å­˜VID PIDä¿¡æ¯
         ThisUsbDev.DevicePID = ((PUSB_DEV_DESCR)Com_Buffer)->idProduct;
         dv_cls = ((PUSB_DEV_DESCR)Com_Buffer)->bDeviceClass;
 
         s = CtrlSetUsbAddress(((PUSB_SETUP_REQ)SetupSetUsbAddr)->wValue);
         if(s == ERR_SUCCESS)
         {
-            ThisUsbDev.DeviceAddress = ((PUSB_SETUP_REQ)SetupSetUsbAddr)->wValue; // ±£´æUSBµØÖ·
+            ThisUsbDev.DeviceAddress = ((PUSB_SETUP_REQ)SetupSetUsbAddr)->wValue; // ä¿å­˜USBåœ°å€
 
             PRINT("GetCfgDescr: ");
             s = CtrlGetConfigDescr();
@@ -214,12 +214,12 @@ uint8_t InitRootDevice(void)
                     PRINT("x%02X ", (uint16_t)(Com_Buffer[i]));
                 }
                 PRINT("\n");
-                /* ·ÖÎöÅäÖÃÃèÊö·û,»ñÈ¡¶ËµãÊı¾İ/¸÷¶ËµãµØÖ·/¸÷¶Ëµã´óĞ¡µÈ,¸üĞÂ±äÁ¿endp_addrºÍendp_sizeµÈ */
+                /* åˆ†æé…ç½®æè¿°ç¬¦,è·å–ç«¯ç‚¹æ•°æ®/å„ç«¯ç‚¹åœ°å€/å„ç«¯ç‚¹å¤§å°ç­‰,æ›´æ–°å˜é‡endp_addrå’Œendp_sizeç­‰ */
                 cfg = ((PUSB_CFG_DESCR)Com_Buffer)->bConfigurationValue;
-                if_cls = ((PUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceClass; // ½Ó¿ÚÀà´úÂë
+                if_cls = ((PUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceClass; // æ¥å£ç±»ä»£ç 
 
                 if((dv_cls == 0x00) && (if_cls == USB_DEV_CLASS_STORAGE))
-                { // ÊÇUSB´æ´¢ÀàÉè±¸,»ù±¾ÉÏÈ·ÈÏÊÇUÅÌ
+                { // æ˜¯USBå­˜å‚¨ç±»è®¾å¤‡,åŸºæœ¬ä¸Šç¡®è®¤æ˜¯Uç›˜
 #ifdef FOR_ROOT_UDISK_ONLY
                     CHRV3DiskStatus = DISK_USB_ADDR;
                     return (ERR_SUCCESS);
@@ -229,104 +229,104 @@ uint8_t InitRootDevice(void)
                     return (ERR_USB_UNSUPPORT);
                 }
 #else
-                    s = CtrlSetUsbConfig(cfg); // ÉèÖÃUSBÉè±¸ÅäÖÃ
+                    s = CtrlSetUsbConfig(cfg); // è®¾ç½®USBè®¾å¤‡é…ç½®
                     if(s == ERR_SUCCESS)
                     {
                         ThisUsbDev.DeviceStatus = ROOT_DEV_SUCCESS;
                         ThisUsbDev.DeviceType = USB_DEV_CLASS_STORAGE;
                         PRINT("USB-Disk Ready\n");
-                        SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+                        SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
                         return (ERR_SUCCESS);
                     }
                 }
                 else if((dv_cls == 0x00) && (if_cls == USB_DEV_CLASS_PRINTER) && ((PUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceSubClass == 0x01)
-                {                              // ÊÇ´òÓ¡»úÀàÉè±¸
-                    s = CtrlSetUsbConfig(cfg); // ÉèÖÃUSBÉè±¸ÅäÖÃ
+                {                              // æ˜¯æ‰“å°æœºç±»è®¾å¤‡
+                    s = CtrlSetUsbConfig(cfg); // è®¾ç½®USBè®¾å¤‡é…ç½®
                     if(s == ERR_SUCCESS)
                     {
-                        //	Ğè±£´æ¶ËµãĞÅÏ¢ÒÔ±ãÖ÷³ÌĞò½øĞĞUSB´«Êä
+                        //	éœ€ä¿å­˜ç«¯ç‚¹ä¿¡æ¯ä»¥ä¾¿ä¸»ç¨‹åºè¿›è¡ŒUSBä¼ è¾“
                         ThisUsbDev.DeviceStatus = ROOT_DEV_SUCCESS;
                         ThisUsbDev.DeviceType = USB_DEV_CLASS_PRINTER;
                         PRINT("USB-Print Ready\n");
-                        SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+                        SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
                         return (ERR_SUCCESS);
                     }
                 }
                 else if((dv_cls == 0x00) && (if_cls == USB_DEV_CLASS_HID) && ((PUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceSubClass <= 0x01)
-                { // ÊÇHIDÀàÉè±¸,¼üÅÌ/Êó±êµÈ
-                    //  ´ÓÃèÊö·ûÖĞ·ÖÎö³öHIDÖĞ¶Ï¶ËµãµÄµØÖ·
-                    s = AnalyzeHidIntEndp(Com_Buffer, 0); // ´ÓÃèÊö·ûÖĞ·ÖÎö³öHIDÖĞ¶Ï¶ËµãµÄµØÖ·
+                { // æ˜¯HIDç±»è®¾å¤‡,é”®ç›˜/é¼ æ ‡ç­‰
+                    //  ä»æè¿°ç¬¦ä¸­åˆ†æå‡ºHIDä¸­æ–­ç«¯ç‚¹çš„åœ°å€
+                    s = AnalyzeHidIntEndp(Com_Buffer, 0); // ä»æè¿°ç¬¦ä¸­åˆ†æå‡ºHIDä¸­æ–­ç«¯ç‚¹çš„åœ°å€
                     PRINT("AnalyzeHidIntEndp %02x\n", (uint16_t)s);
-                    //  ±£´æÖĞ¶Ï¶ËµãµÄµØÖ·,Î»7ÓÃÓÚÍ¬²½±êÖ¾Î»,Çå0
+                    //  ä¿å­˜ä¸­æ–­ç«¯ç‚¹çš„åœ°å€,ä½7ç”¨äºåŒæ­¥æ ‡å¿—ä½,æ¸…0
                     if_cls = ((PUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceProtocol;
-                    s = CtrlSetUsbConfig(cfg); // ÉèÖÃUSBÉè±¸ÅäÖÃ
+                    s = CtrlSetUsbConfig(cfg); // è®¾ç½®USBè®¾å¤‡é…ç½®
                     if(s == ERR_SUCCESS)
                     {
                         //	    					Set_Idle( );
-                        //	Ğè±£´æ¶ËµãĞÅÏ¢ÒÔ±ãÖ÷³ÌĞò½øĞĞUSB´«Êä
+                        //	éœ€ä¿å­˜ç«¯ç‚¹ä¿¡æ¯ä»¥ä¾¿ä¸»ç¨‹åºè¿›è¡ŒUSBä¼ è¾“
                         ThisUsbDev.DeviceStatus = ROOT_DEV_SUCCESS;
                         if(if_cls == 1)
                         {
                             ThisUsbDev.DeviceType = DEV_TYPE_KEYBOARD;
-                            //	½øÒ»²½³õÊ¼»¯,ÀıÈçÉè±¸¼üÅÌÖ¸Ê¾µÆLEDµÈ
+                            //	è¿›ä¸€æ­¥åˆå§‹åŒ–,ä¾‹å¦‚è®¾å¤‡é”®ç›˜æŒ‡ç¤ºç¯LEDç­‰
                             PRINT("USB-Keyboard Ready\n");
-                            SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+                            SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
                             return (ERR_SUCCESS);
                         }
                         else if(if_cls == 2)
                         {
                             ThisUsbDev.DeviceType = DEV_TYPE_MOUSE;
-                            //	ÎªÁËÒÔºó²éÑ¯Êó±ê×´Ì¬,Ó¦¸Ã·ÖÎöÃèÊö·û,È¡µÃÖĞ¶Ï¶Ë¿ÚµÄµØÖ·,³¤¶ÈµÈĞÅÏ¢
+                            //	ä¸ºäº†ä»¥åæŸ¥è¯¢é¼ æ ‡çŠ¶æ€,åº”è¯¥åˆ†ææè¿°ç¬¦,å–å¾—ä¸­æ–­ç«¯å£çš„åœ°å€,é•¿åº¦ç­‰ä¿¡æ¯
                             PRINT("USB-Mouse Ready\n");
-                            SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+                            SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
                             return (ERR_SUCCESS);
                         }
                         s = ERR_USB_UNSUPPORT;
                     }
                 }
                 else if(dv_cls == USB_DEV_CLASS_HUB)
-                { // ÊÇHUBÀàÉè±¸,¼¯ÏßÆ÷µÈ
+                { // æ˜¯HUBç±»è®¾å¤‡,é›†çº¿å™¨ç­‰
                     s = CtrlGetHubDescr();
                     if(s == ERR_SUCCESS)
                     {
                         PRINT("Max Port:%02X ", (((PXUSB_HUB_DESCR)Com_Buffer)->bNbrPorts));
-                        ThisUsbDev.GpHUBPortNum = ((PXUSB_HUB_DESCR)Com_Buffer)->bNbrPorts; // ±£´æHUBµÄ¶Ë¿ÚÊıÁ¿
+                        ThisUsbDev.GpHUBPortNum = ((PXUSB_HUB_DESCR)Com_Buffer)->bNbrPorts; // ä¿å­˜HUBçš„ç«¯å£æ•°é‡
                         if(ThisUsbDev.GpHUBPortNum > HUB_MAX_PORTS)
                         {
-                            ThisUsbDev.GpHUBPortNum = HUB_MAX_PORTS; // ÒòÎª¶¨Òå½á¹¹DevOnHubPortÊ±ÈËÎª¼Ù¶¨Ã¿¸öHUB²»³¬¹ıHUB_MAX_PORTS¸ö¶Ë¿Ú
+                            ThisUsbDev.GpHUBPortNum = HUB_MAX_PORTS; // å› ä¸ºå®šä¹‰ç»“æ„DevOnHubPortæ—¶äººä¸ºå‡å®šæ¯ä¸ªHUBä¸è¶…è¿‡HUB_MAX_PORTSä¸ªç«¯å£
                         }
-                        s = CtrlSetUsbConfig(cfg); // ÉèÖÃUSBÉè±¸ÅäÖÃ
+                        s = CtrlSetUsbConfig(cfg); // è®¾ç½®USBè®¾å¤‡é…ç½®
                         if(s == ERR_SUCCESS)
                         {
                             ThisUsbDev.DeviceStatus = ROOT_DEV_SUCCESS;
                             ThisUsbDev.DeviceType = USB_DEV_CLASS_HUB;
-                            //Ğè±£´æ¶ËµãĞÅÏ¢ÒÔ±ãÖ÷³ÌĞò½øĞĞUSB´«Êä,±¾À´ÖĞ¶Ï¶Ëµã¿ÉÓÃÓÚHUBÊÂ¼şÍ¨Öª,µ«±¾³ÌĞòÊ¹ÓÃ²éÑ¯×´Ì¬¿ØÖÆ´«Êä´úÌæ
-                            //¸øHUB¸÷¶Ë¿ÚÉÏµç,²éÑ¯¸÷¶Ë¿Ú×´Ì¬,³õÊ¼»¯ÓĞÉè±¸Á¬½ÓµÄHUB¶Ë¿Ú,³õÊ¼»¯Éè±¸
-                            for(i = 1; i <= ThisUsbDev.GpHUBPortNum; i++) // ¸øHUB¸÷¶Ë¿Ú¶¼ÉÏµç
+                            //éœ€ä¿å­˜ç«¯ç‚¹ä¿¡æ¯ä»¥ä¾¿ä¸»ç¨‹åºè¿›è¡ŒUSBä¼ è¾“,æœ¬æ¥ä¸­æ–­ç«¯ç‚¹å¯ç”¨äºHUBäº‹ä»¶é€šçŸ¥,ä½†æœ¬ç¨‹åºä½¿ç”¨æŸ¥è¯¢çŠ¶æ€æ§åˆ¶ä¼ è¾“ä»£æ›¿
+                            //ç»™HUBå„ç«¯å£ä¸Šç”µ,æŸ¥è¯¢å„ç«¯å£çŠ¶æ€,åˆå§‹åŒ–æœ‰è®¾å¤‡è¿æ¥çš„HUBç«¯å£,åˆå§‹åŒ–è®¾å¤‡
+                            for(i = 1; i <= ThisUsbDev.GpHUBPortNum; i++) // ç»™HUBå„ç«¯å£éƒ½ä¸Šç”µ
                             {
-                                DevOnHubPort[i - 1].DeviceStatus = ROOT_DEV_DISCONNECT; // ÇåÍâ²¿HUB¶Ë¿ÚÉÏÉè±¸µÄ×´Ì¬
+                                DevOnHubPort[i - 1].DeviceStatus = ROOT_DEV_DISCONNECT; // æ¸…å¤–éƒ¨HUBç«¯å£ä¸Šè®¾å¤‡çš„çŠ¶æ€
                                 s = HubSetPortFeature(i, HUB_PORT_POWER);
                                 if(s != ERR_SUCCESS)
                                 {
-                                    PRINT("Ext-HUB Port_%1d# power on error\n", (uint16_t)i); // ¶Ë¿ÚÉÏµçÊ§°Ü
+                                    PRINT("Ext-HUB Port_%1d# power on error\n", (uint16_t)i); // ç«¯å£ä¸Šç”µå¤±è´¥
                                 }
                             }
                             PRINT("USB-HUB Ready\n");
-                            SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+                            SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
                             return (ERR_SUCCESS);
                         }
                     }
                 }
                 else
-                {                              // ¿ÉÒÔ½øÒ»²½·ÖÎö
-                    s = CtrlSetUsbConfig(cfg); // ÉèÖÃUSBÉè±¸ÅäÖÃ
+                {                              // å¯ä»¥è¿›ä¸€æ­¥åˆ†æ
+                    s = CtrlSetUsbConfig(cfg); // è®¾ç½®USBè®¾å¤‡é…ç½®
                     if(s == ERR_SUCCESS)
                     {
-                        //	Ğè±£´æ¶ËµãĞÅÏ¢ÒÔ±ãÖ÷³ÌĞò½øĞĞUSB´«Êä
+                        //	éœ€ä¿å­˜ç«¯ç‚¹ä¿¡æ¯ä»¥ä¾¿ä¸»ç¨‹åºè¿›è¡ŒUSBä¼ è¾“
                         ThisUsbDev.DeviceStatus = ROOT_DEV_SUCCESS;
                         ThisUsbDev.DeviceType = DEV_TYPE_UNKNOW;
-                        SetUsbSpeed(1);       // Ä¬ÈÏÎªÈ«ËÙ
-                        return (ERR_SUCCESS); /* Î´ÖªÉè±¸³õÊ¼»¯³É¹¦ */
+                        SetUsbSpeed(1);       // é»˜è®¤ä¸ºå…¨é€Ÿ
+                        return (ERR_SUCCESS); /* æœªçŸ¥è®¾å¤‡åˆå§‹åŒ–æˆåŠŸ */
                     }
                 }
 #endif
@@ -340,18 +340,18 @@ uint8_t InitRootDevice(void)
 #else
     ThisUsbDev.DeviceStatus = ROOT_DEV_FAILED;
 #endif
-    SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+    SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
     return (s);
 }
 
 /*********************************************************************
  * @fn      InitDevOnHub
  *
- * @brief   ³õÊ¼»¯Ã¶¾ÙÍâ²¿HUBºóµÄ¶ş¼¶USBÉè±¸
+ * @brief   åˆå§‹åŒ–æšä¸¾å¤–éƒ¨HUBåçš„äºŒçº§USBè®¾å¤‡
  *
- * @param   HubPortIndex    - Ö¸¶¨Íâ²¿HUB
+ * @param   HubPortIndex    - æŒ‡å®šå¤–éƒ¨HUB
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t InitDevOnHub(uint8_t HubPortIndex)
 {
@@ -362,26 +362,26 @@ uint8_t InitDevOnHub(uint8_t HubPortIndex)
     {
         return (ERR_USB_UNKNOWN);
     }
-    SelectHubPort(HubPortIndex); // Ñ¡Ôñ²Ù×÷Ö¸¶¨µÄROOT-HUB¶Ë¿ÚµÄÍâ²¿HUBµÄÖ¸¶¨¶Ë¿Ú,Ñ¡ÔñËÙ¶È
+    SelectHubPort(HubPortIndex); // é€‰æ‹©æ“ä½œæŒ‡å®šçš„ROOT-HUBç«¯å£çš„å¤–éƒ¨HUBçš„æŒ‡å®šç«¯å£,é€‰æ‹©é€Ÿåº¦
     PRINT("GetDevDescr: ");
-    s = CtrlGetDeviceDescr(); // »ñÈ¡Éè±¸ÃèÊö·û
+    s = CtrlGetDeviceDescr(); // è·å–è®¾å¤‡æè¿°ç¬¦
     if(s != ERR_SUCCESS)
     {
         return (s);
     }
-    DevOnHubPort[HubPortIndex - 1].DeviceVID = ((uint16_t)((PUSB_DEV_DESCR)Com_Buffer)->idVendor); //±£´æVID PIDĞÅÏ¢
+    DevOnHubPort[HubPortIndex - 1].DeviceVID = ((uint16_t)((PUSB_DEV_DESCR)Com_Buffer)->idVendor); //ä¿å­˜VID PIDä¿¡æ¯
     DevOnHubPort[HubPortIndex - 1].DevicePID = ((uint16_t)((PUSB_DEV_DESCR)Com_Buffer)->idProduct);
 
-    dv_cls = ((PUSB_DEV_DESCR)Com_Buffer)->bDeviceClass; // Éè±¸Àà´úÂë
-    cfg = (1 << 4) + HubPortIndex;                       // ¼ÆËã³öÒ»¸öUSBµØÖ·,±ÜÃâµØÖ·ÖØµş
-    s = CtrlSetUsbAddress(cfg);                          // ÉèÖÃUSBÉè±¸µØÖ·
+    dv_cls = ((PUSB_DEV_DESCR)Com_Buffer)->bDeviceClass; // è®¾å¤‡ç±»ä»£ç 
+    cfg = (1 << 4) + HubPortIndex;                       // è®¡ç®—å‡ºä¸€ä¸ªUSBåœ°å€,é¿å…åœ°å€é‡å 
+    s = CtrlSetUsbAddress(cfg);                          // è®¾ç½®USBè®¾å¤‡åœ°å€
     if(s != ERR_SUCCESS)
     {
         return (s);
     }
-    DevOnHubPort[HubPortIndex - 1].DeviceAddress = cfg; // ±£´æ·ÖÅäµÄUSBµØÖ·
+    DevOnHubPort[HubPortIndex - 1].DeviceAddress = cfg; // ä¿å­˜åˆ†é…çš„USBåœ°å€
     PRINT("GetCfgDescr: ");
-    s = CtrlGetConfigDescr(); // »ñÈ¡ÅäÖÃÃèÊö·û
+    s = CtrlGetConfigDescr(); // è·å–é…ç½®æè¿°ç¬¦
     if(s != ERR_SUCCESS)
     {
         return (s);
@@ -392,9 +392,9 @@ uint8_t InitDevOnHub(uint8_t HubPortIndex)
         PRINT("x%02X ", (uint16_t)(Com_Buffer[i]));
     }
     PRINT("\n");
-    /* ·ÖÎöÅäÖÃÃèÊö·û,»ñÈ¡¶ËµãÊı¾İ/¸÷¶ËµãµØÖ·/¸÷¶Ëµã´óĞ¡µÈ,¸üĞÂ±äÁ¿endp_addrºÍendp_sizeµÈ */
-    if_cls = ((PXUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceClass; // ½Ó¿ÚÀà´úÂë
-    if(dv_cls == 0x00 && if_cls == USB_DEV_CLASS_STORAGE)                   // ÊÇUSB´æ´¢ÀàÉè±¸,»ù±¾ÉÏÈ·ÈÏÊÇUÅÌ
+    /* åˆ†æé…ç½®æè¿°ç¬¦,è·å–ç«¯ç‚¹æ•°æ®/å„ç«¯ç‚¹åœ°å€/å„ç«¯ç‚¹å¤§å°ç­‰,æ›´æ–°å˜é‡endp_addrå’Œendp_sizeç­‰ */
+    if_cls = ((PXUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceClass; // æ¥å£ç±»ä»£ç 
+    if(dv_cls == 0x00 && if_cls == USB_DEV_CLASS_STORAGE)                   // æ˜¯USBå­˜å‚¨ç±»è®¾å¤‡,åŸºæœ¬ä¸Šç¡®è®¤æ˜¯Uç›˜
     {
         AnalyzeBulkEndp(Com_Buffer, HubPortIndex);
         for(i = 0; i != 4; i++)
@@ -402,28 +402,28 @@ uint8_t InitDevOnHub(uint8_t HubPortIndex)
             PRINT("%02x ", (uint16_t)DevOnHubPort[HubPortIndex - 1].GpVar[i]);
         }
         PRINT("\n");
-        s = CtrlSetUsbConfig(cfg); // ÉèÖÃUSBÉè±¸ÅäÖÃ
+        s = CtrlSetUsbConfig(cfg); // è®¾ç½®USBè®¾å¤‡é…ç½®
         if(s == ERR_SUCCESS)
         {
             DevOnHubPort[HubPortIndex - 1].DeviceStatus = ROOT_DEV_SUCCESS;
             DevOnHubPort[HubPortIndex - 1].DeviceType = USB_DEV_CLASS_STORAGE;
             PRINT("USB-Disk Ready\n");
-            SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+            SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
             return (ERR_SUCCESS);
         }
     }
-    else if((dv_cls == 0x00) && (if_cls == USB_DEV_CLASS_HID) && (((PXUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceSubClass <= 0x01)) // ÊÇHIDÀàÉè±¸,¼üÅÌ/Êó±êµÈ
+    else if((dv_cls == 0x00) && (if_cls == USB_DEV_CLASS_HID) && (((PXUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceSubClass <= 0x01)) // æ˜¯HIDç±»è®¾å¤‡,é”®ç›˜/é¼ æ ‡ç­‰
     {
         ifc = ((PXUSB_CFG_DESCR_LONG)Com_Buffer)->cfg_descr.bNumInterfaces;
-        s = AnalyzeHidIntEndp(Com_Buffer, HubPortIndex); // ´ÓÃèÊö·ûÖĞ·ÖÎö³öHIDÖĞ¶Ï¶ËµãµÄµØÖ·
+        s = AnalyzeHidIntEndp(Com_Buffer, HubPortIndex); // ä»æè¿°ç¬¦ä¸­åˆ†æå‡ºHIDä¸­æ–­ç«¯ç‚¹çš„åœ°å€
         PRINT("AnalyzeHidIntEndp %02x\n", (uint16_t)s);
         if_cls = ((PXUSB_CFG_DESCR_LONG)Com_Buffer)->itf_descr.bInterfaceProtocol;
-        s = CtrlSetUsbConfig(cfg); // ÉèÖÃUSBÉè±¸ÅäÖÃ
+        s = CtrlSetUsbConfig(cfg); // è®¾ç½®USBè®¾å¤‡é…ç½®
         if(s == ERR_SUCCESS)
         {
             for(dv_cls = 0; dv_cls < ifc; dv_cls++)
             {
-                s = CtrlGetHIDDeviceReport(dv_cls); //»ñÈ¡±¨±íÃèÊö·û
+                s = CtrlGetHIDDeviceReport(dv_cls); //è·å–æŠ¥è¡¨æè¿°ç¬¦
                 if(s == ERR_SUCCESS)
                 {
                     for(i = 0; i < 64; i++)
@@ -433,105 +433,105 @@ uint8_t InitDevOnHub(uint8_t HubPortIndex)
                     PRINT("\n");
                 }
             }
-            //Ğè±£´æ¶ËµãĞÅÏ¢ÒÔ±ãÖ÷³ÌĞò½øĞĞUSB´«Êä
+            //éœ€ä¿å­˜ç«¯ç‚¹ä¿¡æ¯ä»¥ä¾¿ä¸»ç¨‹åºè¿›è¡ŒUSBä¼ è¾“
             DevOnHubPort[HubPortIndex - 1].DeviceStatus = ROOT_DEV_SUCCESS;
             if(if_cls == 1)
             {
                 DevOnHubPort[HubPortIndex - 1].DeviceType = DEV_TYPE_KEYBOARD;
-                //½øÒ»²½³õÊ¼»¯,ÀıÈçÉè±¸¼üÅÌÖ¸Ê¾µÆLEDµÈ
+                //è¿›ä¸€æ­¥åˆå§‹åŒ–,ä¾‹å¦‚è®¾å¤‡é”®ç›˜æŒ‡ç¤ºç¯LEDç­‰
                 if(ifc > 1)
                 {
                     PRINT("USB_DEV_CLASS_HID Ready\n");
-                    DevOnHubPort[HubPortIndex - 1].DeviceType = USB_DEV_CLASS_HID; //¸´ºÏHIDÉè±¸
+                    DevOnHubPort[HubPortIndex - 1].DeviceType = USB_DEV_CLASS_HID; //å¤åˆHIDè®¾å¤‡
                 }
                 PRINT("USB-Keyboard Ready\n");
-                SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+                SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
 
                 return (ERR_SUCCESS);
             }
             else if(if_cls == 2)
             {
                 DevOnHubPort[HubPortIndex - 1].DeviceType = DEV_TYPE_MOUSE;
-                //ÎªÁËÒÔºó²éÑ¯Êó±ê×´Ì¬,Ó¦¸Ã·ÖÎöÃèÊö·û,È¡µÃÖĞ¶Ï¶Ë¿ÚµÄµØÖ·,³¤¶ÈµÈĞÅÏ¢
+                //ä¸ºäº†ä»¥åæŸ¥è¯¢é¼ æ ‡çŠ¶æ€,åº”è¯¥åˆ†ææè¿°ç¬¦,å–å¾—ä¸­æ–­ç«¯å£çš„åœ°å€,é•¿åº¦ç­‰ä¿¡æ¯
                 if(ifc > 1)
                 {
                     PRINT("USB_DEV_CLASS_HID Ready\n");
-                    DevOnHubPort[HubPortIndex - 1].DeviceType = USB_DEV_CLASS_HID; //¸´ºÏHIDÉè±¸
+                    DevOnHubPort[HubPortIndex - 1].DeviceType = USB_DEV_CLASS_HID; //å¤åˆHIDè®¾å¤‡
                 }
                 PRINT("USB-Mouse Ready\n");
-                SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+                SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
 
                 return (ERR_SUCCESS);
             }
             s = ERR_USB_UNSUPPORT;
         }
     }
-    else if(dv_cls == USB_DEV_CLASS_HUB) // ÊÇHUBÀàÉè±¸,¼¯ÏßÆ÷µÈ
+    else if(dv_cls == USB_DEV_CLASS_HUB) // æ˜¯HUBç±»è®¾å¤‡,é›†çº¿å™¨ç­‰
     {
         DevOnHubPort[HubPortIndex - 1].DeviceType = USB_DEV_CLASS_HUB;
-        PRINT("This program don't support Level 2 HUB\n"); // ĞèÒªÖ§³Ö¶à¼¶HUB¼¶ÁªÇë²Î¿¼±¾³ÌĞò½øĞĞÀ©Õ¹
-        s = HubClearPortFeature(i, HUB_PORT_ENABLE);       // ½ûÖ¹HUB¶Ë¿Ú
+        PRINT("This program don't support Level 2 HUB\n"); // éœ€è¦æ”¯æŒå¤šçº§HUBçº§è”è¯·å‚è€ƒæœ¬ç¨‹åºè¿›è¡Œæ‰©å±•
+        s = HubClearPortFeature(i, HUB_PORT_ENABLE);       // ç¦æ­¢HUBç«¯å£
         if(s != ERR_SUCCESS)
         {
             return (s);
         }
         s = ERR_USB_UNSUPPORT;
     }
-    else //ÆäËûÉè±¸
+    else //å…¶ä»–è®¾å¤‡
     {
-        AnalyzeBulkEndp(Com_Buffer, HubPortIndex); //·ÖÎö³öÅúÁ¿¶Ëµã
+        AnalyzeBulkEndp(Com_Buffer, HubPortIndex); //åˆ†æå‡ºæ‰¹é‡ç«¯ç‚¹
         for(i = 0; i != 4; i++)
         {
             PRINT("%02x ", (uint16_t)DevOnHubPort[HubPortIndex - 1].GpVar[i]);
         }
         PRINT("\n");
-        s = CtrlSetUsbConfig(cfg); // ÉèÖÃUSBÉè±¸ÅäÖÃ
+        s = CtrlSetUsbConfig(cfg); // è®¾ç½®USBè®¾å¤‡é…ç½®
         if(s == ERR_SUCCESS)
         {
-            //Ğè±£´æ¶ËµãĞÅÏ¢ÒÔ±ãÖ÷³ÌĞò½øĞĞUSB´«Êä
+            //éœ€ä¿å­˜ç«¯ç‚¹ä¿¡æ¯ä»¥ä¾¿ä¸»ç¨‹åºè¿›è¡ŒUSBä¼ è¾“
             DevOnHubPort[HubPortIndex - 1].DeviceStatus = ROOT_DEV_SUCCESS;
             DevOnHubPort[HubPortIndex - 1].DeviceType = dv_cls ? dv_cls : if_cls;
-            SetUsbSpeed(1);       // Ä¬ÈÏÎªÈ«ËÙ
-            return (ERR_SUCCESS); //Î´ÖªÉè±¸³õÊ¼»¯³É¹¦
+            SetUsbSpeed(1);       // é»˜è®¤ä¸ºå…¨é€Ÿ
+            return (ERR_SUCCESS); //æœªçŸ¥è®¾å¤‡åˆå§‹åŒ–æˆåŠŸ
         }
     }
     PRINT("InitDevOnHub Err = %02X\n", (uint16_t)s);
     DevOnHubPort[HubPortIndex - 1].DeviceStatus = ROOT_DEV_FAILED;
-    SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+    SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
     return (s);
 }
 
 /*********************************************************************
  * @fn      EnumHubPort
  *
- * @brief   Ã¶¾ÙÖ¸¶¨ROOT-HUB¶Ë¿ÚÉÏµÄÍâ²¿HUB¼¯ÏßÆ÷µÄ¸÷¸ö¶Ë¿Ú,¼ì²é¸÷¶Ë¿ÚÓĞÎŞÁ¬½Ó»òÒÆ³ıÊÂ¼ş²¢³õÊ¼»¯¶ş¼¶USBÉè±¸
+ * @brief   æšä¸¾æŒ‡å®šROOT-HUBç«¯å£ä¸Šçš„å¤–éƒ¨HUBé›†çº¿å™¨çš„å„ä¸ªç«¯å£,æ£€æŸ¥å„ç«¯å£æœ‰æ— è¿æ¥æˆ–ç§»é™¤äº‹ä»¶å¹¶åˆå§‹åŒ–äºŒçº§USBè®¾å¤‡
  *
- * @param   RootHubIndex    - ROOT_HUB0ºÍROOT_HUB1
+ * @param   RootHubIndex    - ROOT_HUB0å’ŒROOT_HUB1
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t EnumHubPort()
 {
     uint8_t i, s;
 
-    for(i = 1; i <= ThisUsbDev.GpHUBPortNum; i++) // ²éÑ¯¼¯ÏßÆ÷µÄ¶Ë¿ÚÊÇ·ñÓĞ±ä»¯
+    for(i = 1; i <= ThisUsbDev.GpHUBPortNum; i++) // æŸ¥è¯¢é›†çº¿å™¨çš„ç«¯å£æ˜¯å¦æœ‰å˜åŒ–
     {
-        SelectHubPort(0);        // Ñ¡Ôñ²Ù×÷Ö¸¶¨µÄROOT-HUB¶Ë¿Ú,ÉèÖÃµ±Ç°USBËÙ¶ÈÒÔ¼°±»²Ù×÷Éè±¸µÄUSBµØÖ·
-        s = HubGetPortStatus(i); // »ñÈ¡¶Ë¿Ú×´Ì¬
+        SelectHubPort(0);        // é€‰æ‹©æ“ä½œæŒ‡å®šçš„ROOT-HUBç«¯å£,è®¾ç½®å½“å‰USBé€Ÿåº¦ä»¥åŠè¢«æ“ä½œè®¾å¤‡çš„USBåœ°å€
+        s = HubGetPortStatus(i); // è·å–ç«¯å£çŠ¶æ€
         if(s != ERR_SUCCESS)
         {
-            return (s); // ¿ÉÄÜÊÇ¸ÃHUB¶Ï¿ªÁË
+            return (s); // å¯èƒ½æ˜¯è¯¥HUBæ–­å¼€äº†
         }
         if(((Com_Buffer[0] & (1 << (HUB_PORT_CONNECTION & 0x07))) && (Com_Buffer[2] & (1 << (HUB_C_PORT_CONNECTION & 0x07)))) || (Com_Buffer[2] == 0x10))
-        {                                                          // ·¢ÏÖÓĞÉè±¸Á¬½Ó
-            DevOnHubPort[i - 1].DeviceStatus = ROOT_DEV_CONNECTED; // ÓĞÉè±¸Á¬½Ó
+        {                                                          // å‘ç°æœ‰è®¾å¤‡è¿æ¥
+            DevOnHubPort[i - 1].DeviceStatus = ROOT_DEV_CONNECTED; // æœ‰è®¾å¤‡è¿æ¥
             DevOnHubPort[i - 1].DeviceAddress = 0x00;
-            s = HubGetPortStatus(i); // »ñÈ¡¶Ë¿Ú×´Ì¬
+            s = HubGetPortStatus(i); // è·å–ç«¯å£çŠ¶æ€
             if(s != ERR_SUCCESS)
             {
-                return (s); // ¿ÉÄÜÊÇ¸ÃHUB¶Ï¿ªÁË
+                return (s); // å¯èƒ½æ˜¯è¯¥HUBæ–­å¼€äº†
             }
-            DevOnHubPort[i - 1].DeviceSpeed = Com_Buffer[1] & (1 << (HUB_PORT_LOW_SPEED & 0x07)) ? 0 : 1; // µÍËÙ»¹ÊÇÈ«ËÙ
+            DevOnHubPort[i - 1].DeviceSpeed = Com_Buffer[1] & (1 << (HUB_PORT_LOW_SPEED & 0x07)) ? 0 : 1; // ä½é€Ÿè¿˜æ˜¯å…¨é€Ÿ
             if(DevOnHubPort[i - 1].DeviceSpeed)
             {
                 PRINT("Found full speed device on port %1d\n", (uint16_t)i);
@@ -540,97 +540,97 @@ uint8_t EnumHubPort()
             {
                 PRINT("Found low speed device on port %1d\n", (uint16_t)i);
             }
-            mDelaymS(200);                            // µÈ´ıÉè±¸ÉÏµçÎÈ¶¨
-            s = HubSetPortFeature(i, HUB_PORT_RESET); // ¶ÔÓĞÉè±¸Á¬½ÓµÄ¶Ë¿Ú¸´Î»
+            mDelaymS(200);                            // ç­‰å¾…è®¾å¤‡ä¸Šç”µç¨³å®š
+            s = HubSetPortFeature(i, HUB_PORT_RESET); // å¯¹æœ‰è®¾å¤‡è¿æ¥çš„ç«¯å£å¤ä½
             if(s != ERR_SUCCESS)
             {
-                return (s); // ¿ÉÄÜÊÇ¸ÃHUB¶Ï¿ªÁË
+                return (s); // å¯èƒ½æ˜¯è¯¥HUBæ–­å¼€äº†
             }
             PRINT("Reset port and then wait in\n");
-            do // ²éÑ¯¸´Î»¶Ë¿Ú,Ö±µ½¸´Î»Íê³É,°ÑÍê³ÉºóµÄ×´Ì¬ÏÔÊ¾³öÀ´
+            do // æŸ¥è¯¢å¤ä½ç«¯å£,ç›´åˆ°å¤ä½å®Œæˆ,æŠŠå®Œæˆåçš„çŠ¶æ€æ˜¾ç¤ºå‡ºæ¥
             {
                 mDelaymS(1);
                 s = HubGetPortStatus(i);
                 if(s != ERR_SUCCESS)
                 {
-                    return (s); // ¿ÉÄÜÊÇ¸ÃHUB¶Ï¿ªÁË
+                    return (s); // å¯èƒ½æ˜¯è¯¥HUBæ–­å¼€äº†
                 }
-            } while(Com_Buffer[0] & (1 << (HUB_PORT_RESET & 0x07))); // ¶Ë¿ÚÕıÔÚ¸´Î»ÔòµÈ´ı
+            } while(Com_Buffer[0] & (1 << (HUB_PORT_RESET & 0x07))); // ç«¯å£æ­£åœ¨å¤ä½åˆ™ç­‰å¾…
             mDelaymS(100);
-            s = HubClearPortFeature(i, HUB_C_PORT_RESET);      // Çå³ı¸´Î»Íê³É±êÖ¾
-                                                               //             s = HubSetPortFeature( i, HUB_PORT_ENABLE );                              // ÆôÓÃHUB¶Ë¿Ú
-            s = HubClearPortFeature(i, HUB_C_PORT_CONNECTION); // Çå³ıÁ¬½Ó»òÒÆ³ı±ä»¯±êÖ¾
+            s = HubClearPortFeature(i, HUB_C_PORT_RESET);      // æ¸…é™¤å¤ä½å®Œæˆæ ‡å¿—
+                                                               //             s = HubSetPortFeature( i, HUB_PORT_ENABLE );                              // å¯ç”¨HUBç«¯å£
+            s = HubClearPortFeature(i, HUB_C_PORT_CONNECTION); // æ¸…é™¤è¿æ¥æˆ–ç§»é™¤å˜åŒ–æ ‡å¿—
             if(s != ERR_SUCCESS)
             {
                 return (s);
             }
-            s = HubGetPortStatus(i); // ÔÙ¶ÁÈ¡×´Ì¬,¸´²éÉè±¸ÊÇ·ñ»¹ÔÚ
+            s = HubGetPortStatus(i); // å†è¯»å–çŠ¶æ€,å¤æŸ¥è®¾å¤‡æ˜¯å¦è¿˜åœ¨
             if(s != ERR_SUCCESS)
             {
                 return (s);
             }
             if((Com_Buffer[0] & (1 << (HUB_PORT_CONNECTION & 0x07))) == 0)
             {
-                DevOnHubPort[i - 1].DeviceStatus = ROOT_DEV_DISCONNECT; // Éè±¸²»ÔÚÁË
+                DevOnHubPort[i - 1].DeviceStatus = ROOT_DEV_DISCONNECT; // è®¾å¤‡ä¸åœ¨äº†
             }
-            s = InitDevOnHub(i); // ³õÊ¼»¯¶ş¼¶USBÉè±¸
+            s = InitDevOnHub(i); // åˆå§‹åŒ–äºŒçº§USBè®¾å¤‡
             if(s != ERR_SUCCESS)
             {
                 return (s);
             }
-            SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+            SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
         }
-        else if(Com_Buffer[2] & (1 << (HUB_C_PORT_ENABLE & 0x07))) // Éè±¸Á¬½Ó³ö´í
+        else if(Com_Buffer[2] & (1 << (HUB_C_PORT_ENABLE & 0x07))) // è®¾å¤‡è¿æ¥å‡ºé”™
         {
-            HubClearPortFeature(i, HUB_C_PORT_ENABLE); // Çå³ıÁ¬½Ó´íÎó±êÖ¾
+            HubClearPortFeature(i, HUB_C_PORT_ENABLE); // æ¸…é™¤è¿æ¥é”™è¯¯æ ‡å¿—
             PRINT("Device on port error\n");
-            s = HubSetPortFeature(i, HUB_PORT_RESET); // ¶ÔÓĞÉè±¸Á¬½ÓµÄ¶Ë¿Ú¸´Î»
+            s = HubSetPortFeature(i, HUB_PORT_RESET); // å¯¹æœ‰è®¾å¤‡è¿æ¥çš„ç«¯å£å¤ä½
             if(s != ERR_SUCCESS)
-                return (s); // ¿ÉÄÜÊÇ¸ÃHUB¶Ï¿ªÁË
-            do              // ²éÑ¯¸´Î»¶Ë¿Ú,Ö±µ½¸´Î»Íê³É,°ÑÍê³ÉºóµÄ×´Ì¬ÏÔÊ¾³öÀ´
+                return (s); // å¯èƒ½æ˜¯è¯¥HUBæ–­å¼€äº†
+            do              // æŸ¥è¯¢å¤ä½ç«¯å£,ç›´åˆ°å¤ä½å®Œæˆ,æŠŠå®Œæˆåçš„çŠ¶æ€æ˜¾ç¤ºå‡ºæ¥
             {
                 mDelaymS(1);
                 s = HubGetPortStatus(i);
                 if(s != ERR_SUCCESS)
-                    return (s);                                      // ¿ÉÄÜÊÇ¸ÃHUB¶Ï¿ªÁË
-            } while(Com_Buffer[0] & (1 << (HUB_PORT_RESET & 0x07))); // ¶Ë¿ÚÕıÔÚ¸´Î»ÔòµÈ´ı
+                    return (s);                                      // å¯èƒ½æ˜¯è¯¥HUBæ–­å¼€äº†
+            } while(Com_Buffer[0] & (1 << (HUB_PORT_RESET & 0x07))); // ç«¯å£æ­£åœ¨å¤ä½åˆ™ç­‰å¾…
         }
-        else if((Com_Buffer[0] & (1 << (HUB_PORT_CONNECTION & 0x07))) == 0) // Éè±¸ÒÑ¾­¶Ï¿ª
+        else if((Com_Buffer[0] & (1 << (HUB_PORT_CONNECTION & 0x07))) == 0) // è®¾å¤‡å·²ç»æ–­å¼€
         {
             if(DevOnHubPort[i - 1].DeviceStatus >= ROOT_DEV_CONNECTED)
             {
                 PRINT("Device on port %1d removed\n", (uint16_t)i);
             }
-            DevOnHubPort[i - 1].DeviceStatus = ROOT_DEV_DISCONNECT; // ÓĞÉè±¸Á¬½Ó
+            DevOnHubPort[i - 1].DeviceStatus = ROOT_DEV_DISCONNECT; // æœ‰è®¾å¤‡è¿æ¥
             if(Com_Buffer[2] & (1 << (HUB_C_PORT_CONNECTION & 0x07)))
             {
-                HubClearPortFeature(i, HUB_C_PORT_CONNECTION); // Çå³ıÒÆ³ı±ä»¯±êÖ¾
+                HubClearPortFeature(i, HUB_C_PORT_CONNECTION); // æ¸…é™¤ç§»é™¤å˜åŒ–æ ‡å¿—
             }
         }
     }
-    return (ERR_SUCCESS); // ·µ»Ø²Ù×÷³É¹¦
+    return (ERR_SUCCESS); // è¿”å›æ“ä½œæˆåŠŸ
 }
 
 /*********************************************************************
  * @fn      EnumAllHubPort
  *
- * @brief   Ã¶¾ÙËùÓĞROOT-HUB¶Ë¿ÚÏÂÍâ²¿HUBºóµÄ¶ş¼¶USBÉè±¸
+ * @brief   æšä¸¾æ‰€æœ‰ROOT-HUBç«¯å£ä¸‹å¤–éƒ¨HUBåçš„äºŒçº§USBè®¾å¤‡
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t EnumAllHubPort(void)
 {
     uint8_t s;
 
-    if((ThisUsbDev.DeviceStatus >= ROOT_DEV_SUCCESS) && (ThisUsbDev.DeviceType == USB_DEV_CLASS_HUB)) // HUBÃ¶¾Ù³É¹¦
+    if((ThisUsbDev.DeviceStatus >= ROOT_DEV_SUCCESS) && (ThisUsbDev.DeviceType == USB_DEV_CLASS_HUB)) // HUBæšä¸¾æˆåŠŸ
     {
-        SelectHubPort(0);    // Ñ¡Ôñ²Ù×÷Ö¸¶¨µÄROOT-HUB¶Ë¿Ú,ÉèÖÃµ±Ç°USBËÙ¶ÈÒÔ¼°±»²Ù×÷Éè±¸µÄUSBµØÖ·
-        s = EnumHubPort();   // Ã¶¾ÙÖ¸¶¨ROOT-HUB¶Ë¿ÚÉÏµÄÍâ²¿HUB¼¯ÏßÆ÷µÄ¸÷¸ö¶Ë¿Ú,¼ì²é¸÷¶Ë¿ÚÓĞÎŞÁ¬½Ó»òÒÆ³ıÊÂ¼ş
-        if(s != ERR_SUCCESS) // ¿ÉÄÜÊÇHUB¶Ï¿ªÁË
+        SelectHubPort(0);    // é€‰æ‹©æ“ä½œæŒ‡å®šçš„ROOT-HUBç«¯å£,è®¾ç½®å½“å‰USBé€Ÿåº¦ä»¥åŠè¢«æ“ä½œè®¾å¤‡çš„USBåœ°å€
+        s = EnumHubPort();   // æšä¸¾æŒ‡å®šROOT-HUBç«¯å£ä¸Šçš„å¤–éƒ¨HUBé›†çº¿å™¨çš„å„ä¸ªç«¯å£,æ£€æŸ¥å„ç«¯å£æœ‰æ— è¿æ¥æˆ–ç§»é™¤äº‹ä»¶
+        if(s != ERR_SUCCESS) // å¯èƒ½æ˜¯HUBæ–­å¼€äº†
         {
             PRINT("EnumAllHubPort err = %02X\n", (uint16_t)s);
         }
-        SetUsbSpeed(1); // Ä¬ÈÏÎªÈ«ËÙ
+        SetUsbSpeed(1); // é»˜è®¤ä¸ºå…¨é€Ÿ
     }
     return (ERR_SUCCESS);
 }
@@ -638,32 +638,32 @@ uint8_t EnumAllHubPort(void)
 /*********************************************************************
  * @fn      SearchTypeDevice
  *
- * @brief   ÔÚROOT-HUBÒÔ¼°Íâ²¿HUB¸÷¶Ë¿ÚÉÏËÑË÷Ö¸¶¨ÀàĞÍµÄÉè±¸ËùÔÚµÄ¶Ë¿ÚºÅ,Êä³ö¶Ë¿ÚºÅÎª0xFFFFÔòÎ´ËÑË÷µ½.
- *          µ±È»Ò²¿ÉÒÔ¸ù¾İUSBµÄ³§ÉÌVID²úÆ·PID½øĞĞËÑË÷(ÊÂÏÈÒª¼ÇÂ¼¸÷Éè±¸µÄVIDºÍPID),ÒÔ¼°Ö¸¶¨ËÑË÷ĞòºÅ
+ * @brief   åœ¨ROOT-HUBä»¥åŠå¤–éƒ¨HUBå„ç«¯å£ä¸Šæœç´¢æŒ‡å®šç±»å‹çš„è®¾å¤‡æ‰€åœ¨çš„ç«¯å£å·,è¾“å‡ºç«¯å£å·ä¸º0xFFFFåˆ™æœªæœç´¢åˆ°.
+ *          å½“ç„¶ä¹Ÿå¯ä»¥æ ¹æ®USBçš„å‚å•†VIDäº§å“PIDè¿›è¡Œæœç´¢(äº‹å…ˆè¦è®°å½•å„è®¾å¤‡çš„VIDå’ŒPID),ä»¥åŠæŒ‡å®šæœç´¢åºå·
  *
- * @param   type    - ËÑË÷µÄÉè±¸ÀàĞÍ
+ * @param   type    - æœç´¢çš„è®¾å¤‡ç±»å‹
  *
- * @return  Êä³ö¸ß8Î»ÎªROOT-HUB¶Ë¿ÚºÅ,µÍ8Î»ÎªÍâ²¿HUBµÄ¶Ë¿ÚºÅ,µÍ8Î»Îª0ÔòÉè±¸Ö±½ÓÔÚROOT-HUB¶Ë¿ÚÉÏ
+ * @return  è¾“å‡ºé«˜8ä½ä¸ºROOT-HUBç«¯å£å·,ä½8ä½ä¸ºå¤–éƒ¨HUBçš„ç«¯å£å·,ä½8ä½ä¸º0åˆ™è®¾å¤‡ç›´æ¥åœ¨ROOT-HUBç«¯å£ä¸Š
  */
 uint16_t SearchTypeDevice(uint8_t type)
 {
-    uint8_t RootHubIndex; //CH554Ö»ÓĞÒ»¸öUSB¿Ú,RootHubIndex = 0,Ö»Ğè¿´·µ»ØÖµµÄµÍ°ËÎ»¼´¿É
+    uint8_t RootHubIndex; //CH554åªæœ‰ä¸€ä¸ªUSBå£,RootHubIndex = 0,åªéœ€çœ‹è¿”å›å€¼çš„ä½å…«ä½å³å¯
     uint8_t HubPortIndex;
 
     RootHubIndex = 0;
-    if((ThisUsbDev.DeviceType == USB_DEV_CLASS_HUB) && (ThisUsbDev.DeviceStatus >= ROOT_DEV_SUCCESS)) // Íâ²¿¼¯ÏßÆ÷HUBÇÒÃ¶¾Ù³É¹¦
+    if((ThisUsbDev.DeviceType == USB_DEV_CLASS_HUB) && (ThisUsbDev.DeviceStatus >= ROOT_DEV_SUCCESS)) // å¤–éƒ¨é›†çº¿å™¨HUBä¸”æšä¸¾æˆåŠŸ
     {
-        for(HubPortIndex = 1; HubPortIndex <= ThisUsbDev.GpHUBPortNum; HubPortIndex++) // ËÑË÷Íâ²¿HUBµÄ¸÷¸ö¶Ë¿Ú
+        for(HubPortIndex = 1; HubPortIndex <= ThisUsbDev.GpHUBPortNum; HubPortIndex++) // æœç´¢å¤–éƒ¨HUBçš„å„ä¸ªç«¯å£
         {
             if(DevOnHubPort[HubPortIndex - 1].DeviceType == type && DevOnHubPort[HubPortIndex - 1].DeviceStatus >= ROOT_DEV_SUCCESS)
             {
-                return (((uint16_t)RootHubIndex << 8) | HubPortIndex); // ÀàĞÍÆ¥ÅäÇÒÃ¶¾Ù³É¹¦
+                return (((uint16_t)RootHubIndex << 8) | HubPortIndex); // ç±»å‹åŒ¹é…ä¸”æšä¸¾æˆåŠŸ
             }
         }
     }
     if((ThisUsbDev.DeviceType == type) && (ThisUsbDev.DeviceStatus >= ROOT_DEV_SUCCESS))
     {
-        return ((uint16_t)RootHubIndex << 8); // ÀàĞÍÆ¥ÅäÇÒÃ¶¾Ù³É¹¦,ÔÚROOT-HUB¶Ë¿ÚÉÏ
+        return ((uint16_t)RootHubIndex << 8); // ç±»å‹åŒ¹é…ä¸”æšä¸¾æˆåŠŸ,åœ¨ROOT-HUBç«¯å£ä¸Š
     }
 
     return (0xFFFF);
@@ -672,23 +672,23 @@ uint16_t SearchTypeDevice(uint8_t type)
 /*********************************************************************
  * @fn      SETorOFFNumLock
  *
- * @brief   NumLockµÄµãµÆÅĞ¶Ï
+ * @brief   NumLockçš„ç‚¹ç¯åˆ¤æ–­
  *
- * @param   buf     - µãµÆ¼üÖµ
+ * @param   buf     - ç‚¹ç¯é”®å€¼
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t SETorOFFNumLock(uint8_t *buf)
 {
     uint8_t tmp[] = {0x21, 0x09, 0x00, 0x02, 0x00, 0x00, 0x01, 0x00};
     uint8_t len, s;
-    if((buf[2] == 0x53) & (buf[0] | buf[1] | buf[3] | buf[4] | buf[5] | buf[6] | buf[7] == 0))
+    if((buf[2] == 0x53) & ((buf[0] | buf[1] | buf[3] | buf[4] | buf[5] | buf[6] | buf[7]) == 0))
     {
         for(s = 0; s != sizeof(tmp); s++)
         {
             ((uint8_t *)pSetupReq)[s] = tmp[s];
         }
-        s = HostCtrlTransfer(Com_Buffer, &len); // Ö´ĞĞ¿ØÖÆ´«Êä
+        s = HostCtrlTransfer(Com_Buffer, &len); // æ‰§è¡Œæ§åˆ¶ä¼ è¾“
         if(s != ERR_SUCCESS)
         {
             return (s);
@@ -700,28 +700,28 @@ uint8_t SETorOFFNumLock(uint8_t *buf)
 /*********************************************************************
  * @fn      CtrlGetHIDDeviceReport
  *
- * @brief   »ñÈ¡HIDÉè±¸±¨±íÃèÊö·û,·µ»ØÔÚTxBufferÖĞ
+ * @brief   è·å–HIDè®¾å¤‡æŠ¥è¡¨æè¿°ç¬¦,è¿”å›åœ¨TxBufferä¸­
  *
  * @param   none
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t CtrlGetHIDDeviceReport(uint8_t infc)
 {
     uint8_t s;
     uint8_t len;
 
-    CopySetupReqPkg((int8_t *)SetupSetHIDIdle);
+    CopySetupReqPkg(SetupSetHIDIdle);
     pSetupReq->wIndex = infc;
-    s = HostCtrlTransfer(Com_Buffer, &len); // Ö´ĞĞ¿ØÖÆ´«Êä
+    s = HostCtrlTransfer(Com_Buffer, &len); // æ‰§è¡Œæ§åˆ¶ä¼ è¾“
     if(s != ERR_SUCCESS)
     {
         return (s);
     }
 
-    CopySetupReqPkg((int8_t *)SetupGetHIDDevReport);
+    CopySetupReqPkg(SetupGetHIDDevReport);
     pSetupReq->wIndex = infc;
-    s = HostCtrlTransfer(Com_Buffer, &len); // Ö´ĞĞ¿ØÖÆ´«Êä
+    s = HostCtrlTransfer(Com_Buffer, &len); // æ‰§è¡Œæ§åˆ¶ä¼ è¾“
     if(s != ERR_SUCCESS)
     {
         return (s);
@@ -733,39 +733,39 @@ uint8_t CtrlGetHIDDeviceReport(uint8_t infc)
 /*********************************************************************
  * @fn      CtrlGetHubDescr
  *
- * @brief   »ñÈ¡HUBÃèÊö·û,·µ»ØÔÚCom_BufferÖĞ
+ * @brief   è·å–HUBæè¿°ç¬¦,è¿”å›åœ¨Com_Bufferä¸­
  *
  * @param   none
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t CtrlGetHubDescr(void)
 {
     uint8_t s;
     uint8_t len;
 
-    CopySetupReqPkg((int8_t *)SetupGetHubDescr);
-    s = HostCtrlTransfer(Com_Buffer, &len); // Ö´ĞĞ¿ØÖÆ´«Êä
+    CopySetupReqPkg(SetupGetHubDescr);
+    s = HostCtrlTransfer(Com_Buffer, &len); // æ‰§è¡Œæ§åˆ¶ä¼ è¾“
     if(s != ERR_SUCCESS)
     {
         return (s);
     }
     if(len < ((PUSB_SETUP_REQ)SetupGetHubDescr)->wLength)
     {
-        return (ERR_USB_BUF_OVER); // ÃèÊö·û³¤¶È´íÎó
+        return (ERR_USB_BUF_OVER); // æè¿°ç¬¦é•¿åº¦é”™è¯¯
     }
-    //  if ( len < 4 ) return( ERR_USB_BUF_OVER );                                 // ÃèÊö·û³¤¶È´íÎó
+    //  if ( len < 4 ) return( ERR_USB_BUF_OVER );                                 // æè¿°ç¬¦é•¿åº¦é”™è¯¯
     return (ERR_SUCCESS);
 }
 
 /*********************************************************************
  * @fn      HubGetPortStatus
  *
- * @brief   ²éÑ¯HUB¶Ë¿Ú×´Ì¬,·µ»ØÔÚCom_BufferÖĞ
+ * @brief   æŸ¥è¯¢HUBç«¯å£çŠ¶æ€,è¿”å›åœ¨Com_Bufferä¸­
  *
- * @param   HubPortIndex    - ¶Ë¿ÚºÅ
+ * @param   HubPortIndex    - ç«¯å£å·
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t HubGetPortStatus(uint8_t HubPortIndex)
 {
@@ -777,14 +777,14 @@ uint8_t HubGetPortStatus(uint8_t HubPortIndex)
     pSetupReq->wValue = 0x0000;
     pSetupReq->wIndex = 0x0000 | HubPortIndex;
     pSetupReq->wLength = 0x0004;
-    s = HostCtrlTransfer(Com_Buffer, &len); // Ö´ĞĞ¿ØÖÆ´«Êä
+    s = HostCtrlTransfer(Com_Buffer, &len); // æ‰§è¡Œæ§åˆ¶ä¼ è¾“
     if(s != ERR_SUCCESS)
     {
         return (s);
     }
     if(len < 4)
     {
-        return (ERR_USB_BUF_OVER); // ÃèÊö·û³¤¶È´íÎó
+        return (ERR_USB_BUF_OVER); // æè¿°ç¬¦é•¿åº¦é”™è¯¯
     }
     return (ERR_SUCCESS);
 }
@@ -792,12 +792,12 @@ uint8_t HubGetPortStatus(uint8_t HubPortIndex)
 /*********************************************************************
  * @fn      HubSetPortFeature
  *
- * @brief   ÉèÖÃHUB¶Ë¿ÚÌØĞÔ
+ * @brief   è®¾ç½®HUBç«¯å£ç‰¹æ€§
  *
- * @param   HubPortIndex    - ¶Ë¿ÚºÅ
- * @param   FeatureSelt     - ¶Ë¿ÚÌØĞÔ
+ * @param   HubPortIndex    - ç«¯å£å·
+ * @param   FeatureSelt     - ç«¯å£ç‰¹æ€§
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t HubSetPortFeature(uint8_t HubPortIndex, uint8_t FeatureSelt)
 {
@@ -806,18 +806,18 @@ uint8_t HubSetPortFeature(uint8_t HubPortIndex, uint8_t FeatureSelt)
     pSetupReq->wValue = 0x0000 | FeatureSelt;
     pSetupReq->wIndex = 0x0000 | HubPortIndex;
     pSetupReq->wLength = 0x0000;
-    return (HostCtrlTransfer(NULL, NULL)); // Ö´ĞĞ¿ØÖÆ´«Êä
+    return (HostCtrlTransfer(NULL, NULL)); // æ‰§è¡Œæ§åˆ¶ä¼ è¾“
 }
 
 /*********************************************************************
  * @fn      HubClearPortFeature
  *
- * @brief   Çå³ıHUB¶Ë¿ÚÌØĞÔ
+ * @brief   æ¸…é™¤HUBç«¯å£ç‰¹æ€§
  *
- * @param   HubPortIndex    - ¶Ë¿ÚºÅ
- * @param   FeatureSelt     - ¶Ë¿ÚÌØĞÔ
+ * @param   HubPortIndex    - ç«¯å£å·
+ * @param   FeatureSelt     - ç«¯å£ç‰¹æ€§
  *
- * @return  ´íÎóÂë
+ * @return  é”™è¯¯ç 
  */
 uint8_t HubClearPortFeature(uint8_t HubPortIndex, uint8_t FeatureSelt)
 {
@@ -826,5 +826,5 @@ uint8_t HubClearPortFeature(uint8_t HubPortIndex, uint8_t FeatureSelt)
     pSetupReq->wValue = 0x0000 | FeatureSelt;
     pSetupReq->wIndex = 0x0000 | HubPortIndex;
     pSetupReq->wLength = 0x0000;
-    return (HostCtrlTransfer(NULL, NULL)); // Ö´ĞĞ¿ØÖÆ´«Êä
+    return (HostCtrlTransfer(NULL, NULL)); // æ‰§è¡Œæ§åˆ¶ä¼ è¾“
 }

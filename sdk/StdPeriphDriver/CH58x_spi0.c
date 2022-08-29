@@ -13,7 +13,7 @@
 /*********************************************************************
  * @fn      SPI0_MasterDefInit
  *
- * @brief   Ö÷»úÄ£Ê½Ä¬ÈÏ³õÊ¼»¯£ºÄ£Ê½0+3ÏßÈ«Ë«¹¤+8MHz
+ * @brief   ä¸»æœºæ¨¡å¼é»˜è®¤åˆå§‹åŒ–ï¼šæ¨¡å¼0+3çº¿å…¨åŒå·¥+8MHz
  *
  * @param   none
  *
@@ -21,19 +21,19 @@
  */
 void SPI0_MasterDefInit(void)
 {
-    R8_SPI0_CLOCK_DIV = 4; // Ö÷ÆµÊ±ÖÓ4·ÖÆµ
+    R8_SPI0_CLOCK_DIV = 4; // ä¸»é¢‘æ—¶é’Ÿ4åˆ†é¢‘
     R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
     R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE | RB_SPI_SCK_OE;
-    R8_SPI0_CTRL_CFG |= RB_SPI_AUTO_IF;     // ·ÃÎÊBUFFER/FIFO×Ô¶¯Çå³ıIF_BYTE_END±êÖ¾
-    R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE; // ²»Æô¶¯DMA·½Ê½
+    R8_SPI0_CTRL_CFG |= RB_SPI_AUTO_IF;     // è®¿é—®BUFFER/FIFOè‡ªåŠ¨æ¸…é™¤IF_BYTE_ENDæ ‡å¿—
+    R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE; // ä¸å¯åŠ¨DMAæ–¹å¼
 }
 
 /*********************************************************************
  * @fn      SPI0_CLKCfg
  *
- * @brief   SPI0 »ù×¼Ê±ÖÓÅäÖÃ£¬= d*Tsys
+ * @brief   SPI0 åŸºå‡†æ—¶é’Ÿé…ç½®ï¼Œ= d*Tsys
  *
- * @param   c       - Ê±ÖÓ·ÖÆµÏµÊı
+ * @param   c       - æ—¶é’Ÿåˆ†é¢‘ç³»æ•°
  *
  * @return  none
  */
@@ -53,9 +53,9 @@ void SPI0_CLKCfg(uint8_t c)
 /*********************************************************************
  * @fn      SPI0_DataMode
  *
- * @brief   ÉèÖÃÊı¾İÁ÷Ä£Ê½
+ * @brief   è®¾ç½®æ•°æ®æµæ¨¡å¼
  *
- * @param   m       - Êı¾İÁ÷Ä£Ê½ refer to ModeBitOrderTypeDef
+ * @param   m       - æ•°æ®æµæ¨¡å¼ refer to ModeBitOrderTypeDef
  *
  * @return  none
  */
@@ -87,9 +87,9 @@ void SPI0_DataMode(ModeBitOrderTypeDef m)
 /*********************************************************************
  * @fn      SPI0_MasterSendByte
  *
- * @brief   ·¢ËÍµ¥×Ö½Ú (buffer)
+ * @brief   å‘é€å•å­—èŠ‚ (buffer)
  *
- * @param   d       - ·¢ËÍ×Ö½Ú
+ * @param   d       - å‘é€å­—èŠ‚
  *
  * @return  none
  */
@@ -103,16 +103,16 @@ void SPI0_MasterSendByte(uint8_t d)
 /*********************************************************************
  * @fn      SPI0_MasterRecvByte
  *
- * @brief   ½ÓÊÕµ¥×Ö½Ú (buffer)
+ * @brief   æ¥æ”¶å•å­—èŠ‚ (buffer)
  *
  * @param   none
  *
- * @return  ½ÓÊÕµ½µÄ×Ö½Ú
+ * @return  æ¥æ”¶åˆ°çš„å­—èŠ‚
  */
 uint8_t SPI0_MasterRecvByte(void)
 {
     R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
-    R8_SPI0_BUFFER = 0xFF; // Æô¶¯´«Êä
+    R8_SPI0_BUFFER = 0xFF; // å¯åŠ¨ä¼ è¾“
     while(!(R8_SPI0_INT_FLAG & RB_SPI_FREE));
     return (R8_SPI0_BUFFER);
 }
@@ -120,10 +120,10 @@ uint8_t SPI0_MasterRecvByte(void)
 /*********************************************************************
  * @fn      SPI0_MasterTrans
  *
- * @brief   Ê¹ÓÃFIFOÁ¬Ğø·¢ËÍ¶à×Ö½Ú
+ * @brief   ä½¿ç”¨FIFOè¿ç»­å‘é€å¤šå­—èŠ‚
  *
- * @param   pbuf    - ´ı·¢ËÍµÄÊı¾İÄÚÈİÊ×µØÖ·
- * @param   len     - ÇëÇó·¢ËÍµÄÊı¾İ³¤¶È£¬×î´ó4095
+ * @param   pbuf    - å¾…å‘é€çš„æ•°æ®å†…å®¹é¦–åœ°å€
+ * @param   len     - è¯·æ±‚å‘é€çš„æ•°æ®é•¿åº¦ï¼Œæœ€å¤§4095
  *
  * @return  none
  */
@@ -132,8 +132,8 @@ void SPI0_MasterTrans(uint8_t *pbuf, uint16_t len)
     uint16_t sendlen;
 
     sendlen = len;
-    R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR; // ÉèÖÃÊı¾İ·½ÏòÎªÊä³ö
-    R16_SPI0_TOTAL_CNT = sendlen;         // ÉèÖÃÒª·¢ËÍµÄÊı¾İ³¤¶È
+    R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR; // è®¾ç½®æ•°æ®æ–¹å‘ä¸ºè¾“å‡º
+    R16_SPI0_TOTAL_CNT = sendlen;         // è®¾ç½®è¦å‘é€çš„æ•°æ®é•¿åº¦
     R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END;
     while(sendlen)
     {
@@ -144,16 +144,16 @@ void SPI0_MasterTrans(uint8_t *pbuf, uint16_t len)
             sendlen--;
         }
     }
-    while(R8_SPI0_FIFO_COUNT != 0); // µÈ´ıFIFOÖĞµÄÊı¾İÈ«²¿·¢ËÍÍê³É
+    while(R8_SPI0_FIFO_COUNT != 0); // ç­‰å¾…FIFOä¸­çš„æ•°æ®å…¨éƒ¨å‘é€å®Œæˆ
 }
 
 /*********************************************************************
  * @fn      SPI0_MasterRecv
  *
- * @brief   Ê¹ÓÃFIFOÁ¬Ğø½ÓÊÕ¶à×Ö½Ú
+ * @brief   ä½¿ç”¨FIFOè¿ç»­æ¥æ”¶å¤šå­—èŠ‚
  *
- * @param   pbuf    - ´ı½ÓÊÕµÄÊı¾İÊ×µØÖ·
- * @param   len     - ´ı½ÓÊÕµÄÊı¾İ³¤¶È£¬×î´ó4095
+ * @param   pbuf    - å¾…æ¥æ”¶çš„æ•°æ®é¦–åœ°å€
+ * @param   len     - å¾…æ¥æ”¶çš„æ•°æ®é•¿åº¦ï¼Œæœ€å¤§4095
  *
  * @return  none
  */
@@ -162,8 +162,8 @@ void SPI0_MasterRecv(uint8_t *pbuf, uint16_t len)
     uint16_t readlen;
 
     readlen = len;
-    R8_SPI0_CTRL_MOD |= RB_SPI_FIFO_DIR; // ÉèÖÃÊı¾İ·½ÏòÎªÊäÈë
-    R16_SPI0_TOTAL_CNT = len;            // ÉèÖÃĞèÒª½ÓÊÕµÄÊı¾İ³¤¶È£¬FIFO·½ÏòÎªÊäÈë³¤¶È²»Îª0Ôò»áÆô¶¯´«Êä */
+    R8_SPI0_CTRL_MOD |= RB_SPI_FIFO_DIR; // è®¾ç½®æ•°æ®æ–¹å‘ä¸ºè¾“å…¥
+    R16_SPI0_TOTAL_CNT = len;            // è®¾ç½®éœ€è¦æ¥æ”¶çš„æ•°æ®é•¿åº¦ï¼ŒFIFOæ–¹å‘ä¸ºè¾“å…¥é•¿åº¦ä¸ä¸º0åˆ™ä¼šå¯åŠ¨ä¼ è¾“ */
     R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END;
     while(readlen)
     {
@@ -179,10 +179,10 @@ void SPI0_MasterRecv(uint8_t *pbuf, uint16_t len)
 /*********************************************************************
  * @fn      SPI0_MasterDMATrans
  *
- * @brief   DMA·½Ê½Á¬Ğø·¢ËÍÊı¾İ
+ * @brief   DMAæ–¹å¼è¿ç»­å‘é€æ•°æ®
  *
- * @param   pbuf    - ´ı·¢ËÍÊı¾İÆğÊ¼µØÖ·,ĞèÒªËÄ×Ö½Ú¶ÔÆä
- * @param   len     - ´ı·¢ËÍÊı¾İ³¤¶È
+ * @param   pbuf    - å¾…å‘é€æ•°æ®èµ·å§‹åœ°å€,éœ€è¦å››å­—èŠ‚å¯¹å…¶
+ * @param   len     - å¾…å‘é€æ•°æ®é•¿åº¦
  *
  * @return  none
  */
@@ -201,10 +201,10 @@ void SPI0_MasterDMATrans(uint8_t *pbuf, uint16_t len)
 /*********************************************************************
  * @fn      SPI0_MasterDMARecv
  *
- * @brief   DMA·½Ê½Á¬Ğø½ÓÊÕÊı¾İ
+ * @brief   DMAæ–¹å¼è¿ç»­æ¥æ”¶æ•°æ®
  *
- * @param   pbuf    - ´ı½ÓÊÕÊı¾İ´æ·ÅÆğÊ¼µØÖ·,ĞèÒªËÄ×Ö½Ú¶ÔÆä
- * @param   len     - ´ı½ÓÊÕÊı¾İ³¤¶È
+ * @param   pbuf    - å¾…æ¥æ”¶æ•°æ®å­˜æ”¾èµ·å§‹åœ°å€,éœ€è¦å››å­—èŠ‚å¯¹å…¶
+ * @param   len     - å¾…æ¥æ”¶æ•°æ®é•¿åº¦
  *
  * @return  none
  */
@@ -223,7 +223,7 @@ void SPI0_MasterDMARecv(uint8_t *pbuf, uint16_t len)
 /*********************************************************************
  * @fn      SPI0_SlaveInit
  *
- * @brief   Éè±¸Ä£Ê½Ä¬ÈÏ³õÊ¼»¯£¬½¨ÒéÉèÖÃMISOµÄGPIO¶ÔÓ¦ÎªÊäÈëÄ£Ê½
+ * @brief   è®¾å¤‡æ¨¡å¼é»˜è®¤åˆå§‹åŒ–ï¼Œå»ºè®®è®¾ç½®MISOçš„GPIOå¯¹åº”ä¸ºè¾“å…¥æ¨¡å¼
  *
  * @return  none
  */
@@ -237,9 +237,9 @@ void SPI0_SlaveInit(void)
 /*********************************************************************
  * @fn      SPI0_SlaveRecvByte
  *
- * @brief   ´Ó»úÄ£Ê½£¬½ÓÊÕÒ»×Ö½ÚÊı¾İ
+ * @brief   ä»æœºæ¨¡å¼ï¼Œæ¥æ”¶ä¸€å­—èŠ‚æ•°æ®
  *
- * @return  ½ÓÊÕµ½Êı¾İ
+ * @return  æ¥æ”¶åˆ°æ•°æ®
  */
 uint8_t SPI0_SlaveRecvByte(void)
 {
@@ -251,9 +251,9 @@ uint8_t SPI0_SlaveRecvByte(void)
 /*********************************************************************
  * @fn      SPI0_SlaveSendByte
  *
- * @brief   ´Ó»úÄ£Ê½£¬·¢ËÍÒ»×Ö½ÚÊı¾İ
+ * @brief   ä»æœºæ¨¡å¼ï¼Œå‘é€ä¸€å­—èŠ‚æ•°æ®
  *
- * @param   d       - ´ı·¢ËÍÊı¾İ
+ * @param   d       - å¾…å‘é€æ•°æ®
  *
  * @return  none
  */
@@ -261,16 +261,16 @@ void SPI0_SlaveSendByte(uint8_t d)
 {
     R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
     R8_SPI0_FIFO = d;
-    while(R8_SPI0_FIFO_COUNT != 0); // µÈ´ı·¢ËÍÍê³É
+    while(R8_SPI0_FIFO_COUNT != 0); // ç­‰å¾…å‘é€å®Œæˆ
 }
 
 /*********************************************************************
  * @fn      SPI0_SlaveRecv
  *
- * @brief   ´Ó»úÄ£Ê½£¬½ÓÊÕ¶à×Ö½ÚÊı¾İ
+ * @brief   ä»æœºæ¨¡å¼ï¼Œæ¥æ”¶å¤šå­—èŠ‚æ•°æ®
  *
- * @param   pbuf    - ½ÓÊÕÊÕÊı¾İ´æ·ÅÆğÊ¼µØÖ·
- * @param   len     - ÇëÇó½ÓÊÕÊı¾İ³¤¶È
+ * @param   pbuf    - æ¥æ”¶æ”¶æ•°æ®å­˜æ”¾èµ·å§‹åœ°å€
+ * @param   len     - è¯·æ±‚æ¥æ”¶æ•°æ®é•¿åº¦
  *
  * @return  none
  */
@@ -295,10 +295,10 @@ void SPI0_SlaveRecv(uint8_t *pbuf, uint16_t len)
 /*********************************************************************
  * @fn      SPI0_SlaveTrans
  *
- * @brief   ´Ó»úÄ£Ê½£¬·¢ËÍ¶à×Ö½ÚÊı¾İ
+ * @brief   ä»æœºæ¨¡å¼ï¼Œå‘é€å¤šå­—èŠ‚æ•°æ®
  *
- * @param   pbuf    - ´ı·¢ËÍµÄÊı¾İÄÚÈİÊ×µØÖ·
- * @param   len     - ÇëÇó·¢ËÍµÄÊı¾İ³¤¶È£¬×î´ó4095
+ * @param   pbuf    - å¾…å‘é€çš„æ•°æ®å†…å®¹é¦–åœ°å€
+ * @param   len     - è¯·æ±‚å‘é€çš„æ•°æ®é•¿åº¦ï¼Œæœ€å¤§4095
  *
  * @return  none
  */
@@ -307,7 +307,7 @@ void SPI0_SlaveTrans(uint8_t *pbuf, uint16_t len)
     uint16_t sendlen;
 
     sendlen = len;
-    R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR; // ÉèÖÃÊı¾İ·½ÏòÎªÊä³ö
+    R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR; // è®¾ç½®æ•°æ®æ–¹å‘ä¸ºè¾“å‡º
     R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END;
     while(sendlen)
     {
@@ -318,16 +318,16 @@ void SPI0_SlaveTrans(uint8_t *pbuf, uint16_t len)
             sendlen--;
         }
     }
-    while(R8_SPI0_FIFO_COUNT != 0); // µÈ´ıFIFOÖĞµÄÊı¾İÈ«²¿·¢ËÍÍê³É
+    while(R8_SPI0_FIFO_COUNT != 0); // ç­‰å¾…FIFOä¸­çš„æ•°æ®å…¨éƒ¨å‘é€å®Œæˆ
 }
 
 /*********************************************************************
  * @fn      SPI0_SlaveDMARecv
  *
- * @brief   DMA·½Ê½Á¬Ğø½ÓÊÕÊı¾İ
+ * @brief   DMAæ–¹å¼è¿ç»­æ¥æ”¶æ•°æ®
  *
- * @param   pbuf    - ´ı½ÓÊÕÊı¾İ´æ·ÅÆğÊ¼µØÖ·,ĞèÒªËÄ×Ö½Ú¶ÔÆä
- * @param   len     - ´ı½ÓÊÕÊı¾İ³¤¶È
+ * @param   pbuf    - å¾…æ¥æ”¶æ•°æ®å­˜æ”¾èµ·å§‹åœ°å€,éœ€è¦å››å­—èŠ‚å¯¹å…¶
+ * @param   len     - å¾…æ¥æ”¶æ•°æ®é•¿åº¦
  *
  * @return  none
  */
@@ -346,10 +346,10 @@ void SPI0_SlaveDMARecv(uint8_t *pbuf, uint16_t len)
 /*********************************************************************
  * @fn      SPI0_SlaveDMATrans
  *
- * @brief   DMA·½Ê½Á¬Ğø·¢ËÍÊı¾İ
+ * @brief   DMAæ–¹å¼è¿ç»­å‘é€æ•°æ®
  *
- * @param   pbuf    - ´ı·¢ËÍÊı¾İÆğÊ¼µØÖ·,ĞèÒªËÄ×Ö½Ú¶ÔÆä
- * @param   len     - ´ı·¢ËÍÊı¾İ³¤¶È
+ * @param   pbuf    - å¾…å‘é€æ•°æ®èµ·å§‹åœ°å€,éœ€è¦å››å­—èŠ‚å¯¹å…¶
+ * @param   len     - å¾…å‘é€æ•°æ®é•¿åº¦
  *
  * @return  none
  */

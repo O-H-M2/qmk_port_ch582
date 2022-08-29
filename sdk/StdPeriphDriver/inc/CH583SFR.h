@@ -1761,7 +1761,7 @@ extern "C" {
 #endif
 
 #ifndef USB_DEVICE_ADDR
-#define USB_DEVICE_ADDR         0x02    /* Ä¬ÈÏµÄUSBÉè±¸µØÖ· */
+#define USB_DEVICE_ADDR         0x02    /* é»˜è®¤çš„USBè®¾å¤‡åœ°å€ */
 #endif
 #ifndef DEFAULT_ENDP0_SIZE
 #define DEFAULT_ENDP0_SIZE      8       /* default maximum packet size for endpoint 0 */
@@ -1770,12 +1770,12 @@ extern "C" {
 #define MAX_PACKET_SIZE         64      /* maximum packet size */
 #endif
 #ifndef USB_BO_CBW_SIZE
-#define USB_BO_CBW_SIZE         0x1F    /* ÃüÁî¿éCBWµÄ×Ü³¤¶È */
-#define USB_BO_CSW_SIZE         0x0D    /* ÃüÁî×´Ì¬¿éCSWµÄ×Ü³¤¶È */
+#define USB_BO_CBW_SIZE         0x1F    /* å‘½ä»¤å—CBWçš„æ€»é•¿åº¦ */
+#define USB_BO_CSW_SIZE         0x0D    /* å‘½ä»¤çŠ¶æ€å—CSWçš„æ€»é•¿åº¦ */
 #endif
 #ifndef USB_BO_CBW_SIG
-#define USB_BO_CBW_SIG          0x43425355    /* ÃüÁî¿éCBWÊ¶±ğ±êÖ¾'USBC' */
-#define USB_BO_CSW_SIG          0x53425355    /* ÃüÁî×´Ì¬¿éCSWÊ¶±ğ±êÖ¾'USBS' */
+#define USB_BO_CBW_SIG          0x43425355    /* å‘½ä»¤å—CBWè¯†åˆ«æ ‡å¿—'USBC' */
+#define USB_BO_CSW_SIG          0x53425355    /* å‘½ä»¤çŠ¶æ€å—CSWè¯†åˆ«æ ‡å¿—'USBS' */
 #endif
 
 #ifndef __PACKED

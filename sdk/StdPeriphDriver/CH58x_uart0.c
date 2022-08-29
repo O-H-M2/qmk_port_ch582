@@ -13,7 +13,7 @@
 /*********************************************************************
  * @fn      UART0_DefInit
  *
- * @brief   ´®¿ÚÄ¬ÈÏ³õÊ¼»¯ÅäÖÃ
+ * @brief   ä¸²å£é»˜è®¤åˆå§‹åŒ–é…ç½®
  *
  * @param   none
  *
@@ -22,7 +22,7 @@
 void UART0_DefInit(void)
 {
     UART0_BaudRateCfg(115200);
-    R8_UART0_FCR = (2 << 6) | RB_FCR_TX_FIFO_CLR | RB_FCR_RX_FIFO_CLR | RB_FCR_FIFO_EN; // FIFO´ò¿ª£¬´¥·¢µã4×Ö½Ú
+    R8_UART0_FCR = (2 << 6) | RB_FCR_TX_FIFO_CLR | RB_FCR_RX_FIFO_CLR | RB_FCR_FIFO_EN; // FIFOæ‰“å¼€ï¼Œè§¦å‘ç‚¹4å­—èŠ‚
     R8_UART0_LCR = RB_LCR_WORD_SZ;
     R8_UART0_IER = RB_IER_TXD_EN;
     R8_UART0_DIV = 1;
@@ -31,9 +31,9 @@ void UART0_DefInit(void)
 /*********************************************************************
  * @fn      UART0_BaudRateCfg
  *
- * @brief   ´®¿Ú²¨ÌØÂÊÅäÖÃ
+ * @brief   ä¸²å£æ³¢ç‰¹ç‡é…ç½®
  *
- * @param   baudrate    - ²¨ÌØÂÊ
+ * @param   baudrate    - æ³¢ç‰¹ç‡
  *
  * @return  none
  */
@@ -49,9 +49,9 @@ void UART0_BaudRateCfg(uint32_t baudrate)
 /*********************************************************************
  * @fn      UART0_ByteTrigCfg
  *
- * @brief   ´®¿Ú×Ö½Ú´¥·¢ÖĞ¶ÏÅäÖÃ
+ * @brief   ä¸²å£å­—èŠ‚è§¦å‘ä¸­æ–­é…ç½®
  *
- * @param   b       - ´¥·¢×Ö½ÚÊı refer to UARTByteTRIGTypeDef
+ * @param   b       - è§¦å‘å­—èŠ‚æ•° refer to UARTByteTRIGTypeDef
  *
  * @return  none
  */
@@ -63,14 +63,14 @@ void UART0_ByteTrigCfg(UARTByteTRIGTypeDef b)
 /*********************************************************************
  * @fn      UART0_INTCfg
  *
- * @brief   ´®¿ÚÖĞ¶ÏÅäÖÃ
+ * @brief   ä¸²å£ä¸­æ–­é…ç½®
  *
- * @param   s       - ÖĞ¶Ï¿ØÖÆ×´Ì¬£¬ÊÇ·ñÊ¹ÄÜÏàÓ¦ÖĞ¶Ï
- * @param   i       - ÖĞ¶ÏÀàĞÍ
- *                    RB_IER_MODEM_CHG  - µ÷ÖÆ½âµ÷Æ÷ÊäÈë×´Ì¬±ä»¯ÖĞ¶ÏÊ¹ÄÜÎ»£¨½ö UART0 Ö§³Ö£©
- *                    RB_IER_LINE_STAT  - ½ÓÊÕÏßÂ·×´Ì¬ÖĞ¶Ï
- *                    RB_IER_THR_EMPTY  - ·¢ËÍ±£³Ö¼Ä´æÆ÷¿ÕÖĞ¶Ï
- *                    RB_IER_RECV_RDY   - ½ÓÊÕÊı¾İÖĞ¶Ï
+ * @param   s       - ä¸­æ–­æ§åˆ¶çŠ¶æ€ï¼Œæ˜¯å¦ä½¿èƒ½ç›¸åº”ä¸­æ–­
+ * @param   i       - ä¸­æ–­ç±»å‹
+ *                    RB_IER_MODEM_CHG  - è°ƒåˆ¶è§£è°ƒå™¨è¾“å…¥çŠ¶æ€å˜åŒ–ä¸­æ–­ä½¿èƒ½ä½ï¼ˆä»… UART0 æ”¯æŒï¼‰
+ *                    RB_IER_LINE_STAT  - æ¥æ”¶çº¿è·¯çŠ¶æ€ä¸­æ–­
+ *                    RB_IER_THR_EMPTY  - å‘é€ä¿æŒå¯„å­˜å™¨ç©ºä¸­æ–­
+ *                    RB_IER_RECV_RDY   - æ¥æ”¶æ•°æ®ä¸­æ–­
  *
  * @return  none
  */
@@ -90,7 +90,7 @@ void UART0_INTCfg(FunctionalState s, uint8_t i)
 /*********************************************************************
  * @fn      UART0_Reset
  *
- * @brief   ´®¿ÚÈí¼ş¸´Î»
+ * @brief   ä¸²å£è½¯ä»¶å¤ä½
  *
  * @param   none
  *
@@ -104,10 +104,10 @@ void UART0_Reset(void)
 /*********************************************************************
  * @fn      UART0_SendString
  *
- * @brief   ´®¿Ú¶à×Ö½Ú·¢ËÍ
+ * @brief   ä¸²å£å¤šå­—èŠ‚å‘é€
  *
- * @param   buf     - ´ı·¢ËÍµÄÊı¾İÄÚÈİÊ×µØÖ·
- * @param   l       - ´ı·¢ËÍµÄÊı¾İ³¤¶È
+ * @param   buf     - å¾…å‘é€çš„æ•°æ®å†…å®¹é¦–åœ°å€
+ * @param   l       - å¾…å‘é€çš„æ•°æ®é•¿åº¦
  *
  * @return  none
  */
@@ -128,11 +128,11 @@ void UART0_SendString(uint8_t *buf, uint16_t l)
 /*********************************************************************
  * @fn      UART0_RecvString
  *
- * @brief   ´®¿Ú¶ÁÈ¡¶à×Ö½Ú
+ * @brief   ä¸²å£è¯»å–å¤šå­—èŠ‚
  *
- * @param   buf     - ¶ÁÈ¡Êı¾İ´æ·Å»º´æÇøÊ×µØÖ·
+ * @param   buf     - è¯»å–æ•°æ®å­˜æ”¾ç¼“å­˜åŒºé¦–åœ°å€
  *
- * @return  ¶ÁÈ¡Êı¾İ³¤¶È
+ * @return  è¯»å–æ•°æ®é•¿åº¦
  */
 uint16_t UART0_RecvString(uint8_t *buf)
 {

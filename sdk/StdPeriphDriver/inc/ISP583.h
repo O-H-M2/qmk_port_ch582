@@ -4,8 +4,8 @@
 /* Author:   W.ch 2020.06        */
 /* V1.0 FlashROM library for USER/BOOT */
 /* for the target in USER code area on the chip divided into USER code area and BOOT area */
-/* ÓÃÓÚ¾ßÓĞÓÃ»§´úÂëÇøºÍÒıµ¼ÇøµÄĞ¾Æ¬¡¢²Ù×÷Ä¿±êÎªÓÃ»§´úÂëÇøµÄÇé¿ö£¬
-   ¿ÉÒÔÔÚÓÃ»§´úÂëÖĞ±»µ÷ÓÃ£¨IAP£¬²ÁĞ´×ÔÉí£©£¬Ò²¿ÉÒÔÔÚÒıµ¼´úÂëÖĞ±»µ÷ÓÃ£¨¸üĞÂÓÃ»§´úÂë£© */
+/* ç”¨äºå…·æœ‰ç”¨æˆ·ä»£ç åŒºå’Œå¼•å¯¼åŒºçš„èŠ¯ç‰‡ã€æ“ä½œç›®æ ‡ä¸ºç”¨æˆ·ä»£ç åŒºçš„æƒ…å†µï¼Œ
+   å¯ä»¥åœ¨ç”¨æˆ·ä»£ç ä¸­è¢«è°ƒç”¨ï¼ˆIAPï¼Œæ“¦å†™è‡ªèº«ï¼‰ï¼Œä¹Ÿå¯ä»¥åœ¨å¼•å¯¼ä»£ç ä¸­è¢«è°ƒç”¨ï¼ˆæ›´æ–°ç”¨æˆ·ä»£ç ï¼‰ */
 
 /* Flash-ROM feature:
      for store program code, support block erasing, dword and page writing, dword verifying, unit for Length is byte,

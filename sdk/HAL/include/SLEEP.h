@@ -25,14 +25,14 @@ extern "C" {
  */
 
 /**
- * @brief   ÅäÖÃË¯Ãß»½ĞÑµÄ·½Ê½   - RTC»½ĞÑ£¬´¥·¢Ä£Ê½
+ * @brief   é…ç½®ç¡çœ å”¤é†’çš„æ–¹å¼   - RTCå”¤é†’ï¼Œè§¦å‘æ¨¡å¼
  */
 extern void HAL_SleepInit(void);
 
 /**
- * @brief   Æô¶¯Ë¯Ãß
+ * @brief   å¯åŠ¨ç¡çœ 
  *
- * @param   time    - »½ĞÑµÄÊ±¼äµã£¨RTC¾ø¶ÔÖµ£©
+ * @param   time    - å”¤é†’çš„æ—¶é—´ç‚¹ï¼ˆRTCç»å¯¹å€¼ï¼‰
  *
  * @return  state.
  */

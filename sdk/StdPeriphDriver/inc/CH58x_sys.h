@@ -20,14 +20,14 @@ extern "C" {
  */
 typedef enum
 {
-    RST_STATUS_SW = 0, // ������λ
-    RST_STATUS_RPOR,   // �ϵ縴λ
-    RST_STATUS_WTR,    // ���Ź���ʱ��λ
-    RST_STATUS_MR,     // �ⲿ�ֶ���λ
-    RST_STATUS_LRM0,   // ���Ѹ�λ-����λ����
-    RST_STATUS_GPWSM,  // �µ�ģʽ���Ѹ�λ
-    RST_STATUS_LRM1,   //	���Ѹ�λ-���Ź�����
-    RST_STATUS_LRM2,   //	���Ѹ�λ-�ֶ���λ����
+    RST_STATUS_SW = 0, // 软件复位
+    RST_STATUS_RPOR,   // 上电复位
+    RST_STATUS_WTR,    // 看门狗超时复位
+    RST_STATUS_MR,     // 外部手动复位
+    RST_STATUS_LRM0,   // 唤醒复位-软复位引起
+    RST_STATUS_GPWSM,  // 下电模式唤醒复位
+    RST_STATUS_LRM1,   //	唤醒复位-看门狗引起
+    RST_STATUS_LRM2,   //	唤醒复位-手动复位引起
 
 } SYS_ResetStaTypeDef;
 
@@ -36,132 +36,132 @@ typedef enum
  */
 typedef enum
 {
-    INFO_ROM_READ = 0, // FlashROM ����������� �Ƿ�ɶ�
-    INFO_RESET_EN = 2, // RST#�ⲿ�ֶ���λ���빦���Ƿ���
-    INFO_BOOT_EN,      // ϵͳ�������� BootLoader �Ƿ���
-    INFO_DEBUG_EN,     // ϵͳ������Խӿ��Ƿ���
-    INFO_LOADER,       // ��ǰϵͳ�Ƿ���Bootloader ��
-    STA_SAFEACC_ACT,   // ��ǰϵͳ�Ƿ��ڰ�ȫ����״̬������RWA�������򲻿ɷ���
+    INFO_ROM_READ = 0, // FlashROM 代码和数据区 是否可读
+    INFO_RESET_EN = 2, // RST#外部手动复位输入功能是否开启
+    INFO_BOOT_EN,      // 系统引导程序 BootLoader 是否开启
+    INFO_DEBUG_EN,     // 系统仿真调试接口是否开启
+    INFO_LOADER,       // 当前系统是否处于Bootloader 区
+    STA_SAFEACC_ACT,   // 当前系统是否处于安全访问状态，否则RWA属性区域不可访问
 
 } SYS_InfoStaTypeDef;
 
 /**
- * @brief  ��ȡоƬID�࣬һ��Ϊ�̶�ֵ
+ * @brief  获取芯片ID类，一般为固定值
  */
 #define SYS_GetChipID()      R8_CHIP_ID
 
 /**
- * @brief  ��ȡ��ȫ����ID��һ��Ϊ�̶�ֵ
+ * @brief  获取安全访问ID，一般为固定值
  */
 #define SYS_GetAccessID()    R8_SAFE_ACCESS_ID
 
 /**
- * @brief   ����ϵͳ����ʱ��
+ * @brief   配置系统运行时钟
  *
- * @param   sc      - ϵͳʱ��Դѡ�� refer to SYS_CLKTypeDef
+ * @param   sc      - 系统时钟源选择 refer to SYS_CLKTypeDef
  */
 void SetSysClock(SYS_CLKTypeDef sc);
 
 /**
- * @brief   ��ȡ��ǰϵͳʱ��
+ * @brief   获取当前系统时钟
  *
  * @return  Hz
  */
 uint32_t GetSysClock(void);
 
 /**
- * @brief   ��ȡ��ǰϵͳ��Ϣ״̬
+ * @brief   获取当前系统信息状态
  *
  * @param   i       - refer to SYS_InfoStaTypeDef
  *
- * @return  �Ƿ���
+ * @return  是否开启
  */
 uint8_t SYS_GetInfoSta(SYS_InfoStaTypeDef i);
 
 /**
- * @brief   ��ȡϵͳ�ϴθ�λ״̬
+ * @brief   获取系统上次复位状态
  *
  * @return  refer to SYS_ResetStaTypeDef
  */
 #define SYS_GetLastResetSta()    (R8_RESET_STATUS & RB_RESET_FLAG)
 
 /**
- * @brief   ִ��ϵͳ������λ
+ * @brief   执行系统软件复位
  */
 void SYS_ResetExecute(void);
 
 /**
- * @brief   ���ø�λ����Ĵ�����ֵ�������ֶ���λ�� ������λ�� ���Ź���λ������ͨ���Ѹ�λ��Ӱ��
+ * @brief   设置复位保存寄存器的值，不受手动复位、 软件复位、 看门狗复位或者普通唤醒复位的影响
  *
  * @param   i       - refer to SYS_InfoStaTypeDef
  */
 #define SYS_ResetKeepBuf(d)    (R8_GLOB_RESET_KEEP = d)
 
 /**
- * @brief   �ر������жϣ���������ǰ�ж�ֵ
+ * @brief   关闭所有中断，并保留当前中断值
  *
- * @param   pirqv   - ��ǰ�����ж�ֵ
+ * @param   pirqv   - 当前保留中断值
  */
 void SYS_DisableAllIrq(uint32_t *pirqv);
 
 /**
- * @brief   �ָ�֮ǰ�رյ��ж�ֵ
+ * @brief   恢复之前关闭的中断值
  *
- * @param   irq_status  - ��ǰ�����ж�ֵ
+ * @param   irq_status  - 当前保留中断值
  */
 void SYS_RecoverIrq(uint32_t irq_status);
 
 /**
- * @brief   ��ȡ��ǰϵͳ(SYSTICK)����ֵ
+ * @brief   获取当前系统(SYSTICK)计数值
  *
- * @return  ��ǰ����ֵ
+ * @return  当前计数值
  */
 uint32_t SYS_GetSysTickCnt(void);
 
 /**
- * @brief   ���ؿ��Ź�������ֵ��������
+ * @brief   加载看门狗计数初值，递增型
  *
- * @param   c       - ���Ź�������ֵ
+ * @param   c       - 看门狗计数初值
  */
 #define WWDG_SetCounter(c)    (R8_WDOG_COUNT = c)
 
 /**
- * @brief   ���Ź���ʱ������ж�ʹ��
+ * @brief   看门狗定时器溢出中断使能
  *
- * @param   s       - ����Ƿ��ж�
+ * @param   s       - 溢出是否中断
  */
 void WWDG_ITCfg(FunctionalState s);
 
 /**
- * @brief   ���Ź���ʱ����λ����
+ * @brief   看门狗定时器复位功能
  *
- * @param   s       - ����Ƿ�λ
+ * @param   s       - 溢出是否复位
  */
 void WWDG_ResetCfg(FunctionalState s);
 
 /**
- * @brief   ��ȡ��ǰ���Ź���ʱ�������־
+ * @brief   获取当前看门狗定时器溢出标志
  *
- * @return  ���Ź���ʱ�������־
+ * @return  看门狗定时器溢出标志
  */
 #define WWDG_GetFlowFlag()    (R8_RST_WDOG_CTRL & RB_WDOG_INT_FLAG)
 
 /**
- * @brief   ������Ź��жϱ�־�����¼��ؼ���ֵҲ�����
+ * @brief   清除看门狗中断标志，重新加载计数值也可清除
  */
 void WWDG_ClearFlag(void);
 
 /**
- * @brief   uS ��ʱ
+ * @brief   uS 延时
  *
- * @param   t       - ʱ�����
+ * @param   t       - 时间参数
  */
 void mDelayuS(uint16_t t);
 
 /**
- * @brief   mS ��ʱ
+ * @brief   mS 延时
  *
- * @param   t       - ʱ�����
+ * @param   t       - 时间参数
  */
 void mDelaymS(uint16_t t);
 

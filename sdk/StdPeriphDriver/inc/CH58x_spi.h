@@ -18,22 +18,22 @@ extern "C" {
 /**
  * @brief  SPI0 interrupt bit define
  */
-#define SPI0_IT_FST_BYTE    RB_SPI_IE_FST_BYTE  // ´Ó»úÄ£Ê½µÄÊ××Ö½ÚÃüÁîÄ£Ê½ÏÂ£¬½ÓÊÕµ½Ê××Ö½ÚÖĞ¶Ï
-#define SPI0_IT_FIFO_OV     RB_SPI_IE_FIFO_OV   // FIFO Òç³ö
-#define SPI0_IT_DMA_END     RB_SPI_IE_DMA_END   // DMA ´«Êä½áÊø
-#define SPI0_IT_FIFO_HF     RB_SPI_IE_FIFO_HF   // FIFO Ê¹ÓÃ¹ı°ë
-#define SPI0_IT_BYTE_END    RB_SPI_IE_BYTE_END  // µ¥×Ö½Ú´«ÊäÍê³É
-#define SPI0_IT_CNT_END     RB_SPI_IE_CNT_END   // È«²¿×Ö½Ú´«ÊäÍê³É
+#define SPI0_IT_FST_BYTE    RB_SPI_IE_FST_BYTE  // ä»æœºæ¨¡å¼çš„é¦–å­—èŠ‚å‘½ä»¤æ¨¡å¼ä¸‹ï¼Œæ¥æ”¶åˆ°é¦–å­—èŠ‚ä¸­æ–­
+#define SPI0_IT_FIFO_OV     RB_SPI_IE_FIFO_OV   // FIFO æº¢å‡º
+#define SPI0_IT_DMA_END     RB_SPI_IE_DMA_END   // DMA ä¼ è¾“ç»“æŸ
+#define SPI0_IT_FIFO_HF     RB_SPI_IE_FIFO_HF   // FIFO ä½¿ç”¨è¿‡åŠ
+#define SPI0_IT_BYTE_END    RB_SPI_IE_BYTE_END  // å•å­—èŠ‚ä¼ è¾“å®Œæˆ
+#define SPI0_IT_CNT_END     RB_SPI_IE_CNT_END   // å…¨éƒ¨å­—èŠ‚ä¼ è¾“å®Œæˆ
 
 /**
  * @brief  Configuration data mode
  */
 typedef enum
 {
-    Mode0_LowBitINFront = 0, // Ä£Ê½0£¬µÍÎ»ÔÚÇ°
-    Mode0_HighBitINFront,    // Ä£Ê½0£¬¸ßÎ»ÔÚÇ°
-    Mode3_LowBitINFront,     // Ä£Ê½3£¬µÍÎ»ÔÚÇ°
-    Mode3_HighBitINFront,    // Ä£Ê½3£¬¸ßÎ»ÔÚÇ°
+    Mode0_LowBitINFront = 0, // æ¨¡å¼0ï¼Œä½ä½åœ¨å‰
+    Mode0_HighBitINFront,    // æ¨¡å¼0ï¼Œé«˜ä½åœ¨å‰
+    Mode3_LowBitINFront,     // æ¨¡å¼3ï¼Œä½ä½åœ¨å‰
+    Mode3_HighBitINFront,    // æ¨¡å¼3ï¼Œé«˜ä½åœ¨å‰
 } ModeBitOrderTypeDef;
 
 /**
@@ -41,160 +41,160 @@ typedef enum
  */
 typedef enum
 {
-    Mode_DataStream = 0, // Êı¾İÁ÷Ä£Ê½
-    Mose_FirstCmd,       // Ê××Ö½ÚÃüÁîÄ£Ê½
+    Mode_DataStream = 0, // æ•°æ®æµæ¨¡å¼
+    Mose_FirstCmd,       // é¦–å­—èŠ‚å‘½ä»¤æ¨¡å¼
 } Slave_ModeTypeDef;
 
 /**
- * @brief   Ö÷»úÄ£Ê½Ä¬ÈÏ³õÊ¼»¯£ºÄ£Ê½0+3ÏßÈ«Ë«¹¤+8MHz
+ * @brief   ä¸»æœºæ¨¡å¼é»˜è®¤åˆå§‹åŒ–ï¼šæ¨¡å¼0+3çº¿å…¨åŒå·¥+8MHz
  */
 void SPI0_MasterDefInit(void);
 
 /**
- * @brief   SPI0 »ù×¼Ê±ÖÓÅäÖÃ£¬= d*Tsys
+ * @brief   SPI0 åŸºå‡†æ—¶é’Ÿé…ç½®ï¼Œ= d*Tsys
  *
- * @param   c       - Ê±ÖÓ·ÖÆµÏµÊı
+ * @param   c       - æ—¶é’Ÿåˆ†é¢‘ç³»æ•°
  */
 void SPI0_CLKCfg(uint8_t c);
 
 /**
- * @brief   ÉèÖÃÊı¾İÁ÷Ä£Ê½
+ * @brief   è®¾ç½®æ•°æ®æµæ¨¡å¼
  *
- * @param   m       - Êı¾İÁ÷Ä£Ê½ refer to ModeBitOrderTypeDef
+ * @param   m       - æ•°æ®æµæ¨¡å¼ refer to ModeBitOrderTypeDef
  */
 void SPI0_DataMode(ModeBitOrderTypeDef m);
 
 /**
- * @brief   ·¢ËÍµ¥×Ö½Ú (buffer)
+ * @brief   å‘é€å•å­—èŠ‚ (buffer)
  *
- * @param   d       - ·¢ËÍ×Ö½Ú
+ * @param   d       - å‘é€å­—èŠ‚
  */
 void SPI0_MasterSendByte(uint8_t d);
 
 /**
- * @brief   ½ÓÊÕµ¥×Ö½Ú (buffer)
+ * @brief   æ¥æ”¶å•å­—èŠ‚ (buffer)
  *
  * @param   none
  */
 uint8_t SPI0_MasterRecvByte(void);
 
 /**
- * @brief   Ê¹ÓÃFIFOÁ¬Ğø·¢ËÍ¶à×Ö½Ú
+ * @brief   ä½¿ç”¨FIFOè¿ç»­å‘é€å¤šå­—èŠ‚
  *
- * @param   pbuf    - ´ı·¢ËÍµÄÊı¾İÄÚÈİÊ×µØÖ·
- * @param   len     - ÇëÇó·¢ËÍµÄÊı¾İ³¤¶È£¬×î´ó4095
+ * @param   pbuf    - å¾…å‘é€çš„æ•°æ®å†…å®¹é¦–åœ°å€
+ * @param   len     - è¯·æ±‚å‘é€çš„æ•°æ®é•¿åº¦ï¼Œæœ€å¤§4095
  */
 void SPI0_MasterTrans(uint8_t *pbuf, uint16_t len);
 
 /**
- * @brief   Ê¹ÓÃFIFOÁ¬Ğø½ÓÊÕ¶à×Ö½Ú
+ * @brief   ä½¿ç”¨FIFOè¿ç»­æ¥æ”¶å¤šå­—èŠ‚
  *
- * @param   pbuf    - ´ı½ÓÊÕµÄÊı¾İÊ×µØÖ·
- * @param   len     - ´ı½ÓÊÕµÄÊı¾İ³¤¶È£¬×î´ó4095
+ * @param   pbuf    - å¾…æ¥æ”¶çš„æ•°æ®é¦–åœ°å€
+ * @param   len     - å¾…æ¥æ”¶çš„æ•°æ®é•¿åº¦ï¼Œæœ€å¤§4095
  */
 void SPI0_MasterRecv(uint8_t *pbuf, uint16_t len);
 
 /**
- * @brief   DMA·½Ê½Á¬Ğø·¢ËÍÊı¾İ
+ * @brief   DMAæ–¹å¼è¿ç»­å‘é€æ•°æ®
  *
- * @param   pbuf    - ´ı·¢ËÍÊı¾İÆğÊ¼µØÖ·,ĞèÒªËÄ×Ö½Ú¶ÔÆä
- * @param   len     - ´ı·¢ËÍÊı¾İ³¤¶È
+ * @param   pbuf    - å¾…å‘é€æ•°æ®èµ·å§‹åœ°å€,éœ€è¦å››å­—èŠ‚å¯¹å…¶
+ * @param   len     - å¾…å‘é€æ•°æ®é•¿åº¦
  */
 void SPI0_MasterDMATrans(uint8_t *pbuf, uint16_t len);
 
 /**
- * @brief   DMA·½Ê½Á¬Ğø½ÓÊÕÊı¾İ
+ * @brief   DMAæ–¹å¼è¿ç»­æ¥æ”¶æ•°æ®
  *
- * @param   pbuf    - ´ı½ÓÊÕÊı¾İ´æ·ÅÆğÊ¼µØÖ·,ĞèÒªËÄ×Ö½Ú¶ÔÆä
- * @param   len     - ´ı½ÓÊÕÊı¾İ³¤¶È
+ * @param   pbuf    - å¾…æ¥æ”¶æ•°æ®å­˜æ”¾èµ·å§‹åœ°å€,éœ€è¦å››å­—èŠ‚å¯¹å…¶
+ * @param   len     - å¾…æ¥æ”¶æ•°æ®é•¿åº¦
  */
 void SPI0_MasterDMARecv(uint8_t *pbuf, uint16_t len);
 
-void SPI1_MasterDefInit(void);             /* Ö÷»úÄ£Ê½Ä¬ÈÏ³õÊ¼»¯£ºÄ£Ê½0+3ÏßÈ«Ë«¹¤+8MHz */
-void SPI1_CLKCfg(UINT8 c);                 /* SPI1 »ù×¼Ê±ÖÓÅäÖÃ£¬= d*Tsys */
-void SPI1_DataMode(ModeBitOrderTypeDef m); /* ÉèÖÃÊı¾İÁ÷Ä£Ê½ */
+void SPI1_MasterDefInit(void);             /* ä¸»æœºæ¨¡å¼é»˜è®¤åˆå§‹åŒ–ï¼šæ¨¡å¼0+3çº¿å…¨åŒå·¥+8MHz */
+void SPI1_CLKCfg(UINT8 c);                 /* SPI1 åŸºå‡†æ—¶é’Ÿé…ç½®ï¼Œ= d*Tsys */
+void SPI1_DataMode(ModeBitOrderTypeDef m); /* è®¾ç½®æ•°æ®æµæ¨¡å¼ */
 
-void  SPI1_MasterSendByte(UINT8 d); /* ·¢ËÍµ¥×Ö½Ú (buffer) */
-UINT8 SPI1_MasterRecvByte(void);    /* ½ÓÊÕµ¥×Ö½Ú (buffer) */
+void  SPI1_MasterSendByte(UINT8 d); /* å‘é€å•å­—èŠ‚ (buffer) */
+UINT8 SPI1_MasterRecvByte(void);    /* æ¥æ”¶å•å­—èŠ‚ (buffer) */
 
-void SPI1_MasterTrans(UINT8 *pbuf, UINT16 len); /* Ê¹ÓÃFIFOÁ¬Ğø·¢ËÍ¶à×Ö½Ú */
-void SPI1_MasterRecv(UINT8 *pbuf, UINT16 len);  /* Ê¹ÓÃFIFOÁ¬Ğø½ÓÊÕ¶à×Ö½Ú */
+void SPI1_MasterTrans(UINT8 *pbuf, UINT16 len); /* ä½¿ç”¨FIFOè¿ç»­å‘é€å¤šå­—èŠ‚ */
+void SPI1_MasterRecv(UINT8 *pbuf, UINT16 len);  /* ä½¿ç”¨FIFOè¿ç»­æ¥æ”¶å¤šå­—èŠ‚ */
 
 /**
- * @brief   Éè±¸Ä£Ê½Ä¬ÈÏ³õÊ¼»¯£¬½¨ÒéÉèÖÃMISOµÄGPIO¶ÔÓ¦ÎªÊäÈëÄ£Ê½
+ * @brief   è®¾å¤‡æ¨¡å¼é»˜è®¤åˆå§‹åŒ–ï¼Œå»ºè®®è®¾ç½®MISOçš„GPIOå¯¹åº”ä¸ºè¾“å…¥æ¨¡å¼
  */
 void SPI0_SlaveInit(void);
 
 /**
- * @brief   ¼ÓÔØÊ××Ö½ÚÊı¾İÄÚÈİ
+ * @brief   åŠ è½½é¦–å­—èŠ‚æ•°æ®å†…å®¹
  *
- * @param   d       - Ê××Ö½ÚÊı¾İÄÚÈİ
+ * @param   d       - é¦–å­—èŠ‚æ•°æ®å†…å®¹
  */
 #define SetFirstData(d)    (R8_SPI0_SLAVE_PRE = d)
 
 /**
- * @brief   ´Ó»úÄ£Ê½£¬·¢ËÍÒ»×Ö½ÚÊı¾İ
+ * @brief   ä»æœºæ¨¡å¼ï¼Œå‘é€ä¸€å­—èŠ‚æ•°æ®
  *
- * @param   d       - ´ı·¢ËÍÊı¾İ
+ * @param   d       - å¾…å‘é€æ•°æ®
  */
 void SPI0_SlaveSendByte(uint8_t d);
 
 /**
- * @brief   ´Ó»úÄ£Ê½£¬½ÓÊÕÒ»×Ö½ÚÊı¾İ
+ * @brief   ä»æœºæ¨¡å¼ï¼Œæ¥æ”¶ä¸€å­—èŠ‚æ•°æ®
  *
- * @return  ½ÓÊÕµ½Êı¾İ
+ * @return  æ¥æ”¶åˆ°æ•°æ®
  */
 uint8_t SPI0_SlaveRecvByte(void);
 
 /**
- * @brief   ´Ó»úÄ£Ê½£¬·¢ËÍ¶à×Ö½ÚÊı¾İ
+ * @brief   ä»æœºæ¨¡å¼ï¼Œå‘é€å¤šå­—èŠ‚æ•°æ®
  *
- * @param   pbuf    - ´ı·¢ËÍµÄÊı¾İÄÚÈİÊ×µØÖ·
- * @param   len     - ÇëÇó·¢ËÍµÄÊı¾İ³¤¶È£¬×î´ó4095
+ * @param   pbuf    - å¾…å‘é€çš„æ•°æ®å†…å®¹é¦–åœ°å€
+ * @param   len     - è¯·æ±‚å‘é€çš„æ•°æ®é•¿åº¦ï¼Œæœ€å¤§4095
  */
 void SPI0_SlaveTrans(uint8_t *pbuf, uint16_t len);
 
 /**
- * @brief   ´Ó»úÄ£Ê½£¬½ÓÊÕ¶à×Ö½ÚÊı¾İ
+ * @brief   ä»æœºæ¨¡å¼ï¼Œæ¥æ”¶å¤šå­—èŠ‚æ•°æ®
  *
- * @param   pbuf    - ½ÓÊÕÊÕÊı¾İ´æ·ÅÆğÊ¼µØÖ·
- * @param   len     - ÇëÇó½ÓÊÕÊı¾İ³¤¶È
+ * @param   pbuf    - æ¥æ”¶æ”¶æ•°æ®å­˜æ”¾èµ·å§‹åœ°å€
+ * @param   len     - è¯·æ±‚æ¥æ”¶æ•°æ®é•¿åº¦
  */
 void SPI0_SlaveRecv(uint8_t *pbuf, uint16_t len);
 
 /**
- * @brief   DMA·½Ê½Á¬Ğø·¢ËÍÊı¾İ
+ * @brief   DMAæ–¹å¼è¿ç»­å‘é€æ•°æ®
  *
- * @param   pbuf    - ´ı·¢ËÍÊı¾İÆğÊ¼µØÖ·,ĞèÒªËÄ×Ö½Ú¶ÔÆä
- * @param   len     - ´ı·¢ËÍÊı¾İ³¤¶È
+ * @param   pbuf    - å¾…å‘é€æ•°æ®èµ·å§‹åœ°å€,éœ€è¦å››å­—èŠ‚å¯¹å…¶
+ * @param   len     - å¾…å‘é€æ•°æ®é•¿åº¦
  */
 void SPI0_SlaveDMATrans(uint8_t *pbuf, uint16_t len);
 
 /**
- * @brief   DMA·½Ê½Á¬Ğø½ÓÊÕÊı¾İ
+ * @brief   DMAæ–¹å¼è¿ç»­æ¥æ”¶æ•°æ®
  *
- * @param   pbuf    - ´ı½ÓÊÕÊı¾İ´æ·ÅÆğÊ¼µØÖ·,ĞèÒªËÄ×Ö½Ú¶ÔÆä
- * @param   len     - ´ı½ÓÊÕÊı¾İ³¤¶È
+ * @param   pbuf    - å¾…æ¥æ”¶æ•°æ®å­˜æ”¾èµ·å§‹åœ°å€,éœ€è¦å››å­—èŠ‚å¯¹å…¶
+ * @param   len     - å¾…æ¥æ”¶æ•°æ®é•¿åº¦
  */
 void SPI0_SlaveDMARecv(uint8_t *pbuf, uint16_t len);
 
 /**
- * @brief   ÅäÖÃSPI0ÖĞ¶Ï
+ * @brief   é…ç½®SPI0ä¸­æ–­
  *
- * @param   s       - Ê¹ÄÜ/¹Ø±Õ
+ * @param   s       - ä½¿èƒ½/å…³é—­
  * @param   f       - refer to SPI0 interrupt bit define
  */
 #define SPI0_ITCfg(s, f)       ((s) ? (R8_SPI0_INTER_EN |= f) : (R8_SPI0_INTER_EN &= ~f))
 
 /**
- * @brief   »ñÈ¡ÖĞ¶Ï±êÖ¾×´Ì¬£¬0-Î´ÖÃÎ»£¬(!0)-´¥·¢
+ * @brief   è·å–ä¸­æ–­æ ‡å¿—çŠ¶æ€ï¼Œ0-æœªç½®ä½ï¼Œ(!0)-è§¦å‘
  *
  * @param   f       - refer to SPI0 interrupt bit define
  */
 #define SPI0_GetITFlag(f)      (R8_SPI0_INT_FLAG & f)
 
 /**
- * @brief   Çå³ıµ±Ç°ÖĞ¶Ï±êÖ¾
+ * @brief   æ¸…é™¤å½“å‰ä¸­æ–­æ ‡å¿—
  *
  * @param   f       - refer to SPI0 interrupt bit define
  */

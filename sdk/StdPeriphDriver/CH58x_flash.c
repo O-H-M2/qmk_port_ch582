@@ -51,13 +51,13 @@ void FLASH_ROM_READ(uint32_t StartAddr, void *Buffer, uint32_t len)
 /*********************************************************************
  * @fn      UserOptionByteConfig
  *
- * @brief   Configure User Option Byte.���ڵ����û���������Ч��������Ч,��ÿ����¼��ֻ���޸�һ��
- *          (ʹ�øú���������ʹ�ùٷ��ṩ��.S�ļ���ͬʱ���øú����������ϵ�����ߵ��Խӿ�Ĭ�Ϲر�)
+ * @brief   Configure User Option Byte.需在调用用户配置字生效函数后生效,且每次烧录后只能修改一次
+ *          (使用该函数，必须使用官方提供的.S文件，同时调用该函数后，两次上电后，两线调试接口默认关闭)
  *
- * @param   RESET_EN        - �ⲿ��λ����ʹ��
- * @param   BOOT_PIN        - ENABLE-ʹ��Ĭ��boot��-PB22,DISABLE-ʹ��boot��-PB11
- * @param   UART_NO_KEY_EN  - �����ⰴ������ʹ��
- * @param   FLASHProt_Size  - д������С(��λ4K)
+ * @param   RESET_EN        - 外部复位引脚使能
+ * @param   BOOT_PIN        - ENABLE-使用默认boot脚-PB22,DISABLE-使用boot脚-PB11
+ * @param   UART_NO_KEY_EN  - 串口免按键下载使能
+ * @param   FLASHProt_Size  - 写保护大小(单位4K)
  *
  * @return  0-Success, 1-Err
  */
@@ -80,7 +80,7 @@ uint8_t UserOptionByteConfig(FunctionalState RESET_EN, FunctionalState BOOT_PIN,
             s &= RESET_Disable;
 
         /* bit[7:0]-bit[31-24] */
-        s |= ((~(s << 24)) & 0xFF000000); //��8λ ������Ϣȡ����
+        s |= ((~(s << 24)) & 0xFF000000); //高8位 配置信息取反；
 
         if(BOOT_PIN == ENABLE)
             s |= BOOT_PIN_PB22;
@@ -109,8 +109,8 @@ uint8_t UserOptionByteConfig(FunctionalState RESET_EN, FunctionalState BOOT_PIN,
 /*********************************************************************
  * @fn      UserOptionByteClose_SWD
  *
- * @brief   �����ߵ��Խӿڣ���������ֵ���ֲ���.���ڵ����û���������Ч��������Ч,��ÿ����¼��ֻ���޸�һ��
- *          (ʹ�øú���������ʹ�ùٷ��ṩ��.S�ļ���ͬʱ���øú����������ϵ�����ߵ��Խӿ�Ĭ�Ϲر�)
+ * @brief   关两线调试接口，其余配置值保持不变.需在调用用户配置字生效函数后生效,且每次烧录后只能修改一次
+ *          (使用该函数，必须使用官方提供的.S文件，同时调用该函数后，两次上电后，两线调试接口默认关闭)
  *
  * @return  0-Success, 1-Err
  */
@@ -124,11 +124,11 @@ uint8_t UserOptionByteClose_SWD(void)
     {
         FLASH_EEPROM_CMD(CMD_GET_ROM_INFO, 0x7EFFC, &s, 4);
 
-        s &= ~((1 << 4) | (1 << 7)); //���õ��Թ��ܣ� ����SPI��дFLASH
+        s &= ~((1 << 4) | (1 << 7)); //禁用调试功能， 禁用SPI读写FLASH
 
         /* bit[7:0]-bit[31-24] */
         s &= 0x00FFFFFF;
-        s |= ((~(s << 24)) & 0xFF000000); //��8λ ������Ϣȡ����
+        s |= ((~(s << 24)) & 0xFF000000); //高8位 配置信息取反；
 
         /*Write user option byte*/
         FLASH_ROM_WRITE(0x14, &s, 4);
@@ -148,7 +148,7 @@ uint8_t UserOptionByteClose_SWD(void)
 /*********************************************************************
  * @fn      UserOptionByte_Active
  *
- * @brief   �û���������Ч������ִ�к��Զ���λ
+ * @brief   用户配置字生效函数，执行后自动复位
  *
  * @return  0-Success, 1-Err
  */
