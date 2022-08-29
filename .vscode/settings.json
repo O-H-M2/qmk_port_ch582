@@ -61,7 +61,8 @@
         "print.h": "c",
         "keycode_config.h": "c",
         "ble_config.h": "c",
-        "eeprom_partition_table.h": "c"
+        "eeprom_partition_table.h": "c",
+        "printf.h": "c"
     },
     "cmake.configureOnOpen": true
 }

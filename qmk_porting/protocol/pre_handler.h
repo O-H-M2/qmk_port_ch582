@@ -2,6 +2,8 @@
 
 #ifdef DEBUG
 #define PLF_DEBUG DEBUG
+#else
+#define NO_PRINT
 #endif
 
 #ifndef EXTRAKEY_ENABLE
@@ -57,5 +59,3 @@ enum {
     kbd_protocol_esb,
 #endif
 };
-
-#include <stdio.h>

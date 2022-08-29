@@ -1,7 +1,7 @@
 include_directories(${CMAKE_CURRENT_LIST_DIR}/BLE_LIB
     ${CMAKE_CURRENT_LIST_DIR}/HAL/include
     ${CMAKE_CURRENT_LIST_DIR}/LWNS
-    # ${CMAKE_CURRENT_LIST_DIR}/printf
+    ${CMAKE_CURRENT_LIST_DIR}/printf
     ${CMAKE_CURRENT_LIST_DIR}/RVMSIS
     ${CMAKE_CURRENT_LIST_DIR}/StdPeriphDriver/inc
     ${CMAKE_CURRENT_LIST_DIR}/USB_LIB
@@ -9,7 +9,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/BLE_LIB
 
 file(GLOB_RECURSE CH582_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/HAL/*.c"
-    # "${CMAKE_CURRENT_LIST_DIR}/printf/*.c"
+    "${CMAKE_CURRENT_LIST_DIR}/printf/*.c"
     "${CMAKE_CURRENT_LIST_DIR}/RVMSIS/*.c"
     "${CMAKE_CURRENT_LIST_DIR}/Startup/*.S"
     "${CMAKE_CURRENT_LIST_DIR}/StdPeriphDriver/*.c"
