@@ -26,7 +26,7 @@
 #define START_PARAM_UPDATE_EVT_DELAY SYS_TICK_MS(2000)
 
 // Param update delay
-#define START_PHY_UPDATE_DELAY SYS_TICK_MS(120000)
+#define START_PHY_UPDATE_DELAY SYS_TICK_MS(10000)
 
 // HID idle timeout in msec; set to zero to disable timeout
 #define DEFAULT_HID_IDLE_TIMEOUT 60000

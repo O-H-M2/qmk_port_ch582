@@ -15,7 +15,8 @@ void print_set_sendchar(sendchar_func_t func)
 }
 
 #ifndef PLF_DEBUG
-// fake a _putchar() to avoid link error
+/* platform uart log output is disabled
+ * so we fake a _putchar() to avoid link error */
 void _putchar(char character)
 {
 }
