@@ -8,6 +8,10 @@
 #define EXTRAKEY_ENABLE
 #endif
 
+#ifndef SEND_STRING_ENABLE
+#define SEND_STRING_ENABLE
+#endif
+
 #ifdef NKRO_ENABLE
 // a special trick
 #define PROTOCOL_LUFA
@@ -53,3 +57,5 @@ enum {
     kbd_protocol_esb,
 #endif
 };
+
+#include <stdio.h>

@@ -1,11 +1,12 @@
 include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum)
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware
-    ${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/printf
+    ${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/printf/src/printf
 )
 
+add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/printf)
+
 file(GLOB_RECURSE quantum_SOURCES
-    "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/printf/*.c"
 
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/audio/*.c"
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/backlight/*.c"
