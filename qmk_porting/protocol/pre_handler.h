@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef DEBUG
+#define PLF_DEBUG DEBUG
+#endif
+
 #ifndef EXTRAKEY_ENABLE
 #define EXTRAKEY_ENABLE
 #endif

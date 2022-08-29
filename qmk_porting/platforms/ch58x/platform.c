@@ -8,6 +8,19 @@ __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 const uint8_t MacAddr[6] = { 0x84, 0xC2, 0xE4, 0x03, 0x02, 0x02 };
 #endif
 
+/* we have already set the correct _putchar() function 
+ * disable this to avoid further modification */
+void print_set_sendchar(sendchar_func_t func)
+{
+}
+
+#ifndef PLF_DEBUG
+// fake a _putchar() to avoid link error
+void _putchar(char character)
+{
+}
+#endif
+
 void platform_setup()
 {
 #if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
