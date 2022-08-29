@@ -11,8 +11,7 @@
 #define BLE_BUFF_MAX_LEN          42
 // #define BLE_MEMHEAP_SIZE          (1024 * 7)
 // #define BLE_BUFF_NUM              10
-
-#define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
+// #define QMK_EEPROM_START_POSITION 0x1000
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE
@@ -40,6 +39,7 @@
 #define BOOTMAGIC_LITE_COLUMN 1
 
 #define FORCE_NKRO
+#define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
 // #define ENCODERS_PAD_A A10
 // #define ENCODERS_PAD_B A11

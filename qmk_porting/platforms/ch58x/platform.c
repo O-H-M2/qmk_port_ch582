@@ -1,4 +1,5 @@
 #include "platform_deps.h"
+#include "quantum_keycodes.h"
 
 volatile uint8_t kbd_protocol_type = 0;
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
@@ -39,6 +40,27 @@ void platform_setup()
     // TODO: set some GPIO for mode decision
 
     PRINT("Chip start, %s\n", VER_LIB);
+
+    if (KC_VENDOR_BT1 < SAFE_RANGE) {
+        // keycode violation
+        PRINT("Error: overlap detected between QMK and Vendor defined keycodes!\n");
+        DelayMs(1000);
+        SYS_ResetExecute();
+    }
+
+    PRINT("EEPROM dump: \n");
+    for (uint8_t i = 0; i < 8; i++) {
+        PRINT("Page: %d\n", i);
+        uint8_t eeprom_dump[0x1000] = {};
+        EEPROM_READ(i * 0x1000, eeprom_dump, 0x1000);
+        for (uint16_t j = 0; j < 0x1000; j++) {
+            PRINT("0x%02x ", eeprom_dump[j]);
+            DelayUs(20);
+        }
+        PRINT("\n\n");
+        DelayMs(5);
+    }
+    PRINT("End of EEPROM dump.\n\n");
 }
 
 #ifdef BLE_ENABLE
@@ -46,8 +68,8 @@ void platform_setup()
 void platform_setup_ble()
 {
 #if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
-    GPIOA_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
-    GPIOB_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
+    // GPIOA_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
+    // GPIOB_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
 #endif
     CH58X_BLEInit();
     HAL_Init();

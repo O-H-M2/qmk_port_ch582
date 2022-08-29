@@ -1,6 +1,10 @@
 #pragma once
 
-#include "config.h"
+#define KC_VENDOR_BT1       (__UINT16_MAX__ - 4)
+#define KC_VENDOR_BT2       (__UINT16_MAX__ - 3)
+#define KC_VENDOR_BT3       (__UINT16_MAX__ - 2)
+#define KC_VENDOR_BT4       (__UINT16_MAX__ - 1)
+#define KC_VENDOR_BT_UNPAIR (__UINT16_MAX__)
 
 // Battery measurement period in (625us)
 #define DEFAULT_BATT_PERIOD SYS_TICK_MS(9375)

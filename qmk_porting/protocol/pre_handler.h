@@ -49,5 +49,3 @@ enum {
     kbd_protocol_esb,
 #endif
 };
-
-extern volatile uint8_t kbd_protocol_type;

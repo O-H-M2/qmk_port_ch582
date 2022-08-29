@@ -42,6 +42,7 @@ __HIGH_CODE int main()
     extern void protocol_setup();
     extern void protocol_init();
     extern void protocol_task();
+    extern volatile uint8_t kbd_protocol_type;
 
     platform_setup();
 

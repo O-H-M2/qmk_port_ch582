@@ -153,9 +153,9 @@ if(BLE_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
     )
 
-    if(NOT CUSTOM_MATRIX)
-        message(FATAL_ERROR "Custom matrix is required with Bluetooth LE enabled!")
-    endif()
+    # if(NOT CUSTOM_MATRIX)
+    # message(FATAL_ERROR "Custom matrix is required with Bluetooth LE enabled!")
+    # endif()
 endif()
 
 # ESB_ENABLE
@@ -167,9 +167,9 @@ if(ESB_ENABLE)
         # "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
     )
 
-    if(NOT CUSTOM_MATRIX)
-        message(FATAL_ERROR "Custom matrix is required with ESB enabled!")
-    endif()
+    # if(NOT CUSTOM_MATRIX)
+    # message(FATAL_ERROR "Custom matrix is required with ESB enabled!")
+    # endif()
 endif()
 
 if(CUSTOM_MATRIX)

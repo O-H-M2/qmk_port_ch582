@@ -8,6 +8,7 @@
 #include "ble.h"
 
 uint8_t keyboard_led_state;
+extern volatile uint8_t kbd_protocol_type;
 
 uint8_t keyboard_leds()
 {
