@@ -5,7 +5,9 @@
 #include "print.h"
 #include "CH58x_common.h"
 #include "keycode_config.h"
+#ifdef BLE_ENABLE
 #include "ble.h"
+#endif
 
 uint8_t keyboard_led_state;
 extern volatile uint8_t kbd_protocol_type;
