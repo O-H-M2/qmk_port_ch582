@@ -9,7 +9,7 @@
 
 // Start address of eeprom for qmk
 #ifndef QMK_EEPROM_START_POSITION
-#define QMK_EEPROM_START_POSITION 0x1000
+#define QMK_EEPROM_START_POSITION 0x0000
 #endif
 
 uint8_t eeprom_read_byte(const uint8_t *__p);

@@ -42,7 +42,7 @@ bool backing_store_lock(void)
 
 bool backing_store_read(uint32_t address, backing_store_int_t *value)
 {
-    uint32_t offset = ((WEAR_LEVELING_EEPROM_BASE_ADDR) + address);
+    uint32_t offset = (WEAR_LEVELING_EEPROM_BASE_ADDR + address);
     backing_store_int_t buf;
     uint8_t status = 1;
     status = EEPROM_READ(offset, &buf, sizeof(backing_store_int_t));
