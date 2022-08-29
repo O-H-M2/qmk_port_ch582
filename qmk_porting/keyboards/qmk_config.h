@@ -11,7 +11,8 @@
 #define BLE_BUFF_MAX_LEN          42
 // #define BLE_MEMHEAP_SIZE          (1024 * 7)
 // #define BLE_BUFF_NUM              10
-#define QMK_EEPROM_START_POSITION 0x1000
+
+#include "eeprom_partition_table.h"
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE
