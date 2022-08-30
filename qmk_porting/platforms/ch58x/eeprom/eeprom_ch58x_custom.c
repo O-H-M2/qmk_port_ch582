@@ -39,7 +39,7 @@ void eeprom_write_block(const void *__src, void *__dst, size_t __n)
     if (IS_EEPROM_ADDRESS(end_page_addr)) {
         // eeprom erase
         uint8_t aligned = (start_page_addr == end_page_addr);
-        uint8_t changed = 0;
+        // uint8_t changed = 0;
         EEPROM_ERASE(start_page_addr, EEPROM_PAGE_SIZE);
 
         // eeprom data buffer write

@@ -29,7 +29,7 @@
 #define START_PHY_UPDATE_DELAY SYS_TICK_MS(10000)
 
 // HID idle timeout in msec; set to zero to disable timeout
-#define DEFAULT_HID_IDLE_TIMEOUT 60000
+#define DEFAULT_HID_IDLE_TIMEOUT 0
 
 // Minimum connection interval (units of 1.25ms)
 #define DEFAULT_DESIRED_MIN_CONN_INTERVAL MS_UNIT_1_25(15)

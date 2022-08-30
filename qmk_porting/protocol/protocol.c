@@ -178,7 +178,6 @@ __HIGH_CODE void protocol_task()
 #ifdef BLE_ENABLE
     else if (kbd_protocol_type == kbd_protocol_ble) {
         TMOS_SystemProcess();
-        keyboard_task();
     }
 #endif
 #ifdef ESB_ENABLE

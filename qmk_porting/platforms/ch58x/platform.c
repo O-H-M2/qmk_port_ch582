@@ -2,6 +2,7 @@
 #include "quantum_keycodes.h"
 
 volatile uint8_t kbd_protocol_type = 0;
+extern volatile bool GPIOTigFlag;
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 
 #if (defined(BLE_MAC)) && (BLE_MAC == TRUE)
@@ -27,7 +28,7 @@ void platform_setup()
 #if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
     PWR_DCDCCfg(ENABLE);
 #endif
-    SetSysClock(CLK_SOURCE_PLL_60MHz);
+    SetSysClock(Fsys);
     DelayMs(5);
     PowerMonitor(ENABLE, HALevel_2V1);
 #ifdef DEBUG
@@ -62,6 +63,7 @@ void platform_setup()
         SYS_ResetExecute();
     }
 
+#if 0
     PRINT("EEPROM dump: \n");
     for (uint8_t i = 0; i < 8; i++) {
         PRINT("Page: %d\n", i);
@@ -72,9 +74,10 @@ void platform_setup()
             DelayUs(20);
         }
         PRINT("\n\n");
-        DelayMs(5);
+        DelayMs(1);
     }
     PRINT("End of EEPROM dump.\n\n");
+#endif
 }
 
 #ifdef BLE_ENABLE
@@ -84,10 +87,26 @@ void platform_setup_ble()
 #if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
     // GPIOA_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
     // GPIOB_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
+    PFIC_EnableIRQ(GPIO_A_IRQn);
+    PFIC_EnableIRQ(GPIO_B_IRQn);
 #endif
     CH58X_BLEInit();
     HAL_Init();
     GAPRole_PeripheralInit();
+}
+
+__INTERRUPT __HIGH_CODE void GPIOA_IRQHandler()
+{
+    PRINT("GPIOA Int. %x.\n", R16_PA_INT_IF & R16_PA_INT_EN);
+    R16_PA_INT_IF = R16_PA_INT_IF;
+    GPIOTigFlag = 1;
+}
+
+__INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
+{
+    PRINT("GPIOB Int. %x.\r\n", R16_PB_INT_IF & R16_PB_INT_EN);
+    R16_PB_INT_IF = R16_PB_INT_IF;
+    GPIOTigFlag = 1;
 }
 
 #endif

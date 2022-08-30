@@ -12,6 +12,7 @@ set(CMAKE_C_STANDARD 99)
 # 编译参数 一般不用改
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
+add_compile_options(-Wall -Wno-comment)
 
 # add_compile_options(-Wno-unused-function -Wno-unused-variable -Wno-type-limits)
 add_compile_options(-fdiagnostics-color=always)

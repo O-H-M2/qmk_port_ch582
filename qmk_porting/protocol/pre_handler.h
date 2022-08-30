@@ -24,6 +24,15 @@
 #endif
 #endif
 
+#ifndef WS2812
+#ifdef WS2812_EN_PIN
+#undef WS2812_EN_PIN
+#endif
+#ifdef WS2812_EN_LEVEL
+#undef WS2812_EN_LEVEL
+#endif
+#endif
+
 #ifdef WS2812_DRIVER_SPI
 #define RGB_DI_PIN A14
 #elif defined WS2812_DRIVER_PWM

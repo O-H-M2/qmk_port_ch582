@@ -16,6 +16,7 @@
 #pragma once
 
 #include "CH58x_common.h"
+#include "print.h"
 #include "HAL.h"
 #ifdef BLE_ENABLE
 #include "ble.h"

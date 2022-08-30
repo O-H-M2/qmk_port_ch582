@@ -12,7 +12,7 @@
 #if defined DEBUG
 #define CONFIG_USB_PRINTF printf
 #else
-#define CONFIG_USB_PRINTF
+#define CONFIG_USB_PRINTF(...)
 #endif
 #endif
 

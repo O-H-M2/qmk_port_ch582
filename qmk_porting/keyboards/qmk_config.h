@@ -3,8 +3,10 @@
 //* platform settings
 // #define DEBUG       1
 #define DCDC_ENABLE 1
+#define Fsys CLK_SOURCE_PLL_60MHz
 // #define LSE_FREQ 32768
 // #define CH58xBLE_ROM
+#define HAL_SLEEP                 1
 #define BLE_TX_NUM_EVENT          4
 #define PERIPHERAL_MAX_CONNECTION 2
 #define CENTRAL_MAX_CONNECTION    0
@@ -44,6 +46,9 @@
 
 // #define ENCODERS_PAD_A A10
 // #define ENCODERS_PAD_B A11
+
+#define WS2812_EN_PIN   B22
+#define WS2812_EN_LEVEL 1
 
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        61
@@ -104,11 +109,6 @@
 #define ENABLE_RGB_MATRIX_PIXEL_RAIN
 #define ENABLE_RGB_MATRIX_PIXEL_FLOW
 #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
-#endif
-
-#ifdef WS2812
-#define WS2812_EN_PIN   B22
-#define WS2812_EN_LEVEL 1
 #endif
 
 /* define if matrix has ghost */
