@@ -7,7 +7,16 @@
 #endif
 
 #ifdef BLE_ENABLE
+#ifndef HAL_SLEEP
 #define HAL_SLEEP 1
+#endif
+#ifndef DCDC_ENABLE
+#define DCDC_ENABLE 1
+#endif
+#else
+#ifdef BLE_MATRIX_ENHANCE
+#undef BLE_MATRIX_ENHANCE
+#endif
 #endif
 
 #ifndef EXTRAKEY_ENABLE
@@ -28,6 +37,22 @@
 #endif
 #endif
 
+#ifdef LSE_FREQ
+#define FREQ_RTC   LSE_FREQ
+#define CLK_OSC32K 0
+#ifdef WS2812_DRIVER_PWM
+#warning "WS2812 PWM driver can not be used with LSE!"
+#undef WS2812_DRIVER_PWM
+#endif
+#ifdef WS2812_PWM_DRIVER
+#warning "WS2812 PWM driver can not be used with LSE!"
+#undef WS2812_PWM_DRIVER
+#endif
+#else
+#define FREQ_RTC   32000
+#define CLK_OSC32K 1
+#endif
+
 #ifndef WS2812
 #ifdef WS2812_EN_PIN
 #undef WS2812_EN_PIN
@@ -45,14 +70,6 @@
 #elif WS2812_PWM_DRIVER == 2
 #define RGB_DI_PIN A11
 #endif
-#endif
-
-#ifdef LSE_FREQ
-#define FREQ_RTC   LSE_FREQ
-#define CLK_OSC32K 0
-#else
-#define FREQ_RTC   32768
-#define CLK_OSC32K 2
 #endif
 
 #define MACRO2STR_(_macro) #_macro

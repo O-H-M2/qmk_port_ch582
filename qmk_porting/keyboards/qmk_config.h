@@ -3,13 +3,14 @@
 //* platform settings
 // #define DEBUG       1
 #define DCDC_ENABLE 1
-#define Fsys        CLK_SOURCE_PLL_60MHz
-// #define LSE_FREQ 32768
+#define Fsys        CLK_SOURCE_PLL_20MHz
+// #define LSE_FREQ    32768
 // #define CH58xBLE_ROM
+// #define BLE_MATRIX_ENHANCE        1
 #define BLE_TX_NUM_EVENT          4
 #define PERIPHERAL_MAX_CONNECTION 2
 #define CENTRAL_MAX_CONNECTION    0
-#define BLE_BUFF_MAX_LEN          42
+#define BLE_BUFF_MAX_LEN          48
 // #define BLE_MEMHEAP_SIZE          (1024 * 7)
 // #define BLE_BUFF_NUM              10
 

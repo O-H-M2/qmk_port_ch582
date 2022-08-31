@@ -84,9 +84,28 @@ void platform_setup()
 
 void platform_setup_ble()
 {
+    uint32_t pin_a = GPIO_Pin_All, pin_b = GPIO_Pin_All;
+
+#ifdef PLF_DEBUG
+    pin_a &= ~GPIO_Pin_8;
+    pin_a &= ~GPIO_Pin_9;
+#endif
+#ifdef LSE_FREQ
+    pin_a &= ~GPIO_Pin_10;
+    pin_a &= ~GPIO_Pin_11;
+#endif
+#ifdef WS2812_DRIVER_SPI
+    pin_a &= ~GPIO_Pin_14;
+#elif defined WS2812_DRIVER_PWM
+#if WS2812_PWM_DRIVER == 1
+    pin_a &= ~GPIO_Pin_10;
+#elif WS2812_PWM_DRIVER == 2
+    pin_a &= ~GPIO_Pin_11;
+#endif
+#endif
 #if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
-    // GPIOA_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
-    // GPIOB_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
+    GPIOA_ModeCfg(pin_a, GPIO_ModeIN_PU);
+    GPIOB_ModeCfg(pin_b, GPIO_ModeIN_PU);
 #endif
     CH58X_BLEInit();
     HAL_Init();
@@ -96,18 +115,20 @@ void platform_setup_ble()
 __INTERRUPT __HIGH_CODE void GPIOA_IRQHandler()
 {
     PRINT("GPIOA Int. %x.\n", R16_PA_INT_IF & R16_PA_INT_EN);
-    R16_PA_INT_IF = R16_PA_INT_IF;
     PFIC_DisableIRQ(GPIO_A_IRQn);
     PFIC_DisableIRQ(GPIO_B_IRQn);
+    R16_PA_INT_IF = R16_PA_INT_IF;
+    R16_PB_INT_IF = R16_PB_INT_IF;
     GPIOTigFlag = 1;
 }
 
 __INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
 {
     PRINT("GPIOB Int. %x.\r\n", R16_PB_INT_IF & R16_PB_INT_EN);
-    R16_PB_INT_IF = R16_PB_INT_IF;
     PFIC_DisableIRQ(GPIO_A_IRQn);
     PFIC_DisableIRQ(GPIO_B_IRQn);
+    R16_PA_INT_IF = R16_PA_INT_IF;
+    R16_PB_INT_IF = R16_PB_INT_IF;
     GPIOTigFlag = 1;
 }
 

@@ -64,7 +64,8 @@
         "eeprom_partition_table.h": "c",
         "printf.h": "c",
         "hidkbdservice.h": "c",
-        "ble.h": "c"
+        "ble.h": "c",
+        "gpio.h": "c"
     },
     "cmake.configureOnOpen": true
 }
