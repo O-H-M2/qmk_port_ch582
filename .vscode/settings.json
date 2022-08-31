@@ -63,7 +63,8 @@
         "ble_config.h": "c",
         "eeprom_partition_table.h": "c",
         "printf.h": "c",
-        "hidkbdservice.h": "c"
+        "hidkbdservice.h": "c",
+        "ble.h": "c"
     },
     "cmake.configureOnOpen": true
 }

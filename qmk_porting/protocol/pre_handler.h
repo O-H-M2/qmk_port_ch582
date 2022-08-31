@@ -6,6 +6,10 @@
 #define NO_PRINT
 #endif
 
+#ifdef BLE_ENABLE
+#define HAL_SLEEP 1
+#endif
+
 #ifndef EXTRAKEY_ENABLE
 #define EXTRAKEY_ENABLE
 #endif

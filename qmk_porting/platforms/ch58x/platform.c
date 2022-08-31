@@ -2,7 +2,7 @@
 #include "quantum_keycodes.h"
 
 volatile uint8_t kbd_protocol_type = 0;
-extern volatile bool GPIOTigFlag;
+extern volatile uint8_t GPIOTigFlag;
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 
 #if (defined(BLE_MAC)) && (BLE_MAC == TRUE)
@@ -87,8 +87,6 @@ void platform_setup_ble()
 #if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
     // GPIOA_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
     // GPIOB_ModeCfg(GPIO_Pin_All, GPIO_ModeIN_PU);
-    PFIC_EnableIRQ(GPIO_A_IRQn);
-    PFIC_EnableIRQ(GPIO_B_IRQn);
 #endif
     CH58X_BLEInit();
     HAL_Init();
@@ -99,6 +97,8 @@ __INTERRUPT __HIGH_CODE void GPIOA_IRQHandler()
 {
     PRINT("GPIOA Int. %x.\n", R16_PA_INT_IF & R16_PA_INT_EN);
     R16_PA_INT_IF = R16_PA_INT_IF;
+    PFIC_DisableIRQ(GPIO_A_IRQn);
+    PFIC_DisableIRQ(GPIO_B_IRQn);
     GPIOTigFlag = 1;
 }
 
@@ -106,6 +106,8 @@ __INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
 {
     PRINT("GPIOB Int. %x.\r\n", R16_PB_INT_IF & R16_PB_INT_EN);
     R16_PB_INT_IF = R16_PB_INT_IF;
+    PFIC_DisableIRQ(GPIO_A_IRQn);
+    PFIC_DisableIRQ(GPIO_B_IRQn);
     GPIOTigFlag = 1;
 }
 

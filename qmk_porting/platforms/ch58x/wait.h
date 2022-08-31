@@ -29,7 +29,7 @@ extern "C" {
 #define GPIO_INPUT_PIN_DELAY (FREQ_SYS / 1000000L / 4)
 #endif
 
-#define waitInputPinDelay() wait_us(GPIO_INPUT_PIN_DELAY)
+#define waitInputPinDelay() SAFEOPERATE;
 
 #ifdef __cplusplus
 }
