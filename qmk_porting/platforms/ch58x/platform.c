@@ -38,18 +38,16 @@ void platform_setup()
     UART1_DefInit();
 #endif
 #ifdef LSE_FREQ
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
+    sys_safe_access_enable();
     SAFEOPERATE;
     R8_CK32K_CONFIG |= RB_CLK_OSC32K_XT | RB_CLK_INT32K_PON | RB_CLK_XT32K_PON;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 #else
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
+    sys_safe_access_enable();
     SAFEOPERATE;
     R8_CK32K_CONFIG &= ~(RB_CLK_OSC32K_XT | RB_CLK_XT32K_PON);
     R8_CK32K_CONFIG |= RB_CLK_INT32K_PON;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
     Calibration_LSI(Level_64);
 #endif
     // TODO: set some GPIO for mode decision

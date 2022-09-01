@@ -13,7 +13,7 @@
 /*********************************************************************
  * @fn      PWMX_CycleCfg
  *
- * @brief   PWM4-PWM11åŸºå‡†æ—¶é’Ÿé…ç½®
+ * @brief   PWM4-PWM11»ù×¼Ê±ÖÓÅäÖÃ
  *
  * @param   cyc     - refer to PWMX_CycleTypeDef
  *
@@ -63,7 +63,7 @@ void PWMX_CycleCfg(PWMX_CycleTypeDef cyc)
 /*********************************************************************
  * @fn      PWMX_ACTOUT
  *
- * @brief   PWM4-PWM11é€šé“è¾“å‡ºæ³¢å½¢é…ç½®
+ * @brief   PWM4-PWM11Í¨µÀÊä³ö²¨ĞÎÅäÖÃ
  *
  * @param   ch      - select channel of pwm, refer to channel of PWM define
  * @param   da      - effective pulse width
@@ -97,13 +97,13 @@ void PWMX_ACTOUT(uint8_t ch, uint8_t da, PWMX_PolarTypeDef pr, FunctionalState s
 /*********************************************************************
  * @fn      PWMX_AlterOutCfg
  *
- * @brief   PWM äº¤æ›¿è¾“å‡ºæ¨¡å¼é…ç½®
+ * @brief   PWM ½»ÌæÊä³öÄ£Ê½ÅäÖÃ
  *
  * @param   ch      - select group of PWM alternate output
- *                    RB_PWM4_5_STAG_EN     -  PWM4 å’Œ PWM5 é€šé“äº¤æ›¿è¾“å‡º
- *                    RB_PWM6_7_STAG_EN     -  PWM6 å’Œ PWM7 é€šé“äº¤æ›¿è¾“å‡º
- *                    RB_PWM8_9_STAG_EN     -  PWM8 å’Œ PWM9 é€šé“äº¤æ›¿è¾“å‡º
- *                    RB_PWM10_11_STAG_EN   -  PWM10 å’Œ PWM11 é€šé“äº¤æ›¿è¾“å‡º
+ *                    RB_PWM4_5_STAG_EN     -  PWM4 ºÍ PWM5 Í¨µÀ½»ÌæÊä³ö
+ *                    RB_PWM6_7_STAG_EN     -  PWM6 ºÍ PWM7 Í¨µÀ½»ÌæÊä³ö
+ *                    RB_PWM8_9_STAG_EN     -  PWM8 ºÍ PWM9 Í¨µÀ½»ÌæÊä³ö
+ *                    RB_PWM10_11_STAG_EN   -  PWM10 ºÍ PWM11 Í¨µÀ½»ÌæÊä³ö
  * @param   s       - control pwmx function, ENABLE or DISABLE
  *
  * @return  none

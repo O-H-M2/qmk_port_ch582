@@ -66,7 +66,7 @@ typedef struct
 } PFIC_Type;
 
 /* memory mapped structure for SysTick */
-typedef struct __attribute__((packed))
+typedef struct
 {
     __IO uint32_t CTLR;
     __IO uint32_t SR;
@@ -82,17 +82,17 @@ typedef struct __attribute__((packed))
 #define PFIC_KEY3               ((uint32_t)0xBEEF0000)
 
 /* ##########################   define  #################################### */
-#define __nop()                 asm volatile("nop")
+#define __nop()                 __asm__ volatile("nop")
 
 #define read_csr(reg)           ({unsigned long __tmp;                        \
-     asm volatile ("csrr %0, " #reg : "=r"(__tmp));                 \
+     __asm__ volatile ("csrr %0, " #reg : "=r"(__tmp));                 \
          __tmp; })
 
 #define write_csr(reg, val)     ({                                      \
     if (__builtin_constant_p(val) && (unsigned long)(val) < 32)    \
-      asm volatile ("csrw  " #reg ", %0" :: "i"(val));              \
+      __asm__ volatile ("csrw  " #reg ", %0" :: "i"(val));              \
     else                                                            \
-      asm volatile ("csrw  " #reg ", %0" :: "r"(val)); })
+      __asm__ volatile ("csrw  " #reg ", %0" :: "r"(val)); })
 
 #define PFIC_EnableAllIRQ()     write_csr(0x800, 0x88)
 #define PFIC_DisableAllIRQ()    write_csr(0x800, 0x80)
@@ -321,7 +321,7 @@ __attribute__((always_inline)) RV_STATIC_INLINE void __SEV(void)
 __attribute__((always_inline)) RV_STATIC_INLINE void __WFI(void)
 {
     PFIC->SCTLR &= ~(1 << 3); // wfi
-    asm volatile("wfi");
+    __asm__ volatile("wfi");
 }
 
 /*********************************************************************
@@ -332,9 +332,9 @@ __attribute__((always_inline)) RV_STATIC_INLINE void __WFI(void)
 __attribute__((always_inline)) RV_STATIC_INLINE void __WFE(void)
 {
     PFIC->SCTLR |= (1 << 3) | (1 << 5); // (wfi->wfe)+(__sev)
-    asm volatile("wfi");
+    __asm__ volatile("wfi");
     PFIC->SCTLR |= (1 << 3);
-    asm volatile("wfi");
+    __asm__ volatile("wfi");
 }
 
 /*********************************************************************

@@ -42,10 +42,10 @@ extern "C" {
 /**
  * @brief  unit of controllable power supply
  */
-#define UNIT_SYS_LSE         RB_CLK_XT32K_PON   // å¤–éƒ¨32K æ—¶é’ŸæŒ¯è¡
-#define UNIT_SYS_LSI         RB_CLK_INT32K_PON  // å†…éƒ¨32K æ—¶é’ŸæŒ¯è¡
-#define UNIT_SYS_HSE         RB_CLK_XT32M_PON   // å¤–éƒ¨32M æ—¶é’ŸæŒ¯è¡
-#define UNIT_SYS_PLL         RB_CLK_PLL_PON     // PLL æ—¶é’ŸæŒ¯è¡
+#define UNIT_SYS_LSE         RB_CLK_XT32K_PON   // Íâ²¿32K Ê±ÖÓÕñµ´
+#define UNIT_SYS_LSI         RB_CLK_INT32K_PON  // ÄÚ²¿32K Ê±ÖÓÕñµ´
+#define UNIT_SYS_HSE         RB_CLK_XT32M_PON   // Íâ²¿32M Ê±ÖÓÕñµ´
+#define UNIT_SYS_PLL         RB_CLK_PLL_PON     // PLL Ê±ÖÓÕñµ´
 
 /**
  * @brief  wakeup mode define
@@ -62,13 +62,13 @@ typedef enum
  */
 typedef enum
 {
-    /* ä¸‹é¢ç­‰çº§å°†ä½¿ç”¨é«˜ç²¾åº¦ç›‘æ§ï¼Œ210uAæ¶ˆè€— */
+    /* ÏÂÃæµÈ¼¶½«Ê¹ÓÃ¸ß¾«¶È¼à¿Ø£¬210uAÏûºÄ */
     HALevel_1V9 = 0, // 1.7-1.9
     HALevel_2V1,     // 1.9-2.1
     HALevel_2V3,     // 2.1-2.3
     HALevel_2V5,     // 2.3-2.5
 
-    /* ä¸‹é¢ç­‰çº§å°†ä½¿ç”¨ä½åŠŸè€—ç›‘æ§ï¼Œ1uAæ¶ˆè€— */
+    /* ÏÂÃæµÈ¼¶½«Ê¹ÓÃµÍ¹¦ºÄ¼à¿Ø£¬1uAÏûºÄ */
     LPLevel_1V8 = 0x80,
     LPLevel_1V9,
     LPLevel_2V0,
@@ -81,80 +81,80 @@ typedef enum
 } VolM_LevelypeDef;
 
 /**
- * @brief   å¯ç”¨å†…éƒ¨DC/DCç”µæºï¼Œç”¨äºèŠ‚çº¦ç³»ç»ŸåŠŸè€—
+ * @brief   ÆôÓÃÄÚ²¿DC/DCµçÔ´£¬ÓÃÓÚ½ÚÔ¼ÏµÍ³¹¦ºÄ
  *
- * @param   s   - æ˜¯å¦æ‰“å¼€DCDCç”µæº
+ * @param   s   - ÊÇ·ñ´ò¿ªDCDCµçÔ´
  */
 void PWR_DCDCCfg(FunctionalState s);
 
 /**
- * @brief   å¯æ§å•å…ƒæ¨¡å—çš„ç”µæºæ§åˆ¶
+ * @brief   ¿É¿Øµ¥ÔªÄ£¿éµÄµçÔ´¿ØÖÆ
  *
- * @param   s       - æ˜¯å¦æ‰“å¼€ç”µæº
+ * @param   s       - ÊÇ·ñ´ò¿ªµçÔ´
  * @param   unit    - please refer to unit of controllable power supply
  */
 void PWR_UnitModCfg(FunctionalState s, uint8_t unit);
 
 /**
- * @brief   å¤–è®¾æ—¶é’Ÿæ§åˆ¶ä½
+ * @brief   ÍâÉèÊ±ÖÓ¿ØÖÆÎ»
  *
- * @param   s       - æ˜¯å¦æ‰“å¼€å¯¹åº”å¤–è®¾æ—¶é’Ÿ
+ * @param   s       - ÊÇ·ñ´ò¿ª¶ÔÓ¦ÍâÉèÊ±ÖÓ
  * @param   perph   - please refer to Peripher CLK control bit define
  */
 void PWR_PeriphClkCfg(FunctionalState s, uint16_t perph);
 
 /**
- * @brief   ç¡çœ å”¤é†’æºé…ç½®
+ * @brief   Ë¯Ãß»½ĞÑÔ´ÅäÖÃ
  *
- * @param   s       - æ˜¯å¦æ‰“å¼€æ­¤å¤–è®¾ç¡çœ å”¤é†’åŠŸèƒ½
- * @param   perph   - éœ€è¦è®¾ç½®çš„å”¤é†’æº
- *                    RB_SLP_USB_WAKE   -  USB ä¸ºå”¤é†’æº
- *                    RB_SLP_RTC_WAKE   -  RTC ä¸ºå”¤é†’æº
- *                    RB_SLP_GPIO_WAKE  -  GPIO ä¸ºå”¤é†’æº
- *                    RB_SLP_BAT_WAKE   -  BAT ä¸ºå”¤é†’æº
+ * @param   s       - ÊÇ·ñ´ò¿ª´ËÍâÉèË¯Ãß»½ĞÑ¹¦ÄÜ
+ * @param   perph   - ĞèÒªÉèÖÃµÄ»½ĞÑÔ´
+ *                    RB_SLP_USB_WAKE   -  USB Îª»½ĞÑÔ´
+ *                    RB_SLP_RTC_WAKE   -  RTC Îª»½ĞÑÔ´
+ *                    RB_SLP_GPIO_WAKE  -  GPIO Îª»½ĞÑÔ´
+ *                    RB_SLP_BAT_WAKE   -  BAT Îª»½ĞÑÔ´
  * @param   mode    - refer to WakeUP_ModeypeDef
  */
 void PWR_PeriphWakeUpCfg(FunctionalState s, uint8_t perph, WakeUP_ModeypeDef mode);
 
 /**
- * @brief   ç”µæºç›‘æ§
+ * @brief   µçÔ´¼à¿Ø
  *
- * @param   s       - æ˜¯å¦æ‰“å¼€æ­¤åŠŸèƒ½
+ * @param   s       - ÊÇ·ñ´ò¿ª´Ë¹¦ÄÜ
  * @param   vl      - refer to VolM_LevelypeDef
  */
 void PowerMonitor(FunctionalState s, VolM_LevelypeDef vl);
 
 /**
- * @brief   ä½åŠŸè€—-Idleæ¨¡å¼
+ * @brief   µÍ¹¦ºÄ-IdleÄ£Ê½
  */
 void LowPower_Idle(void);
 
 /**
- * @brief   ä½åŠŸè€—-Haltæ¨¡å¼ï¼Œæ­¤ä½åŠŸè€—åˆ‡åˆ°HSI/5æ—¶é’Ÿè¿è¡Œï¼Œå”¤é†’åéœ€è¦ç”¨æˆ·è‡ªå·±é‡æ–°é€‰æ‹©ç³»ç»Ÿæ—¶é’Ÿæº
+ * @brief   µÍ¹¦ºÄ-HaltÄ£Ê½£¬´ËµÍ¹¦ºÄÇĞµ½HSI/5Ê±ÖÓÔËĞĞ£¬»½ĞÑºóĞèÒªÓÃ»§×Ô¼ºÖØĞÂÑ¡ÔñÏµÍ³Ê±ÖÓÔ´
  */
 void LowPower_Halt(void);
 
 /**
- * @brief   ä½åŠŸè€—-Sleepæ¨¡å¼ï¼Œæ­¤ä½åŠŸè€—åˆ‡åˆ°HSI/5æ—¶é’Ÿè¿è¡Œï¼Œå”¤é†’åéœ€è¦ç”¨æˆ·è‡ªå·±é‡æ–°é€‰æ‹©ç³»ç»Ÿæ—¶é’Ÿæº
- *          @note æ³¨æ„è°ƒç”¨æ­¤å‡½æ•°ï¼ŒDCDCåŠŸèƒ½å¼ºåˆ¶å…³é—­ï¼Œå”¤é†’åå¯ä»¥æ‰‹åŠ¨å†æ¬¡æ‰“å¼€
+ * @brief   µÍ¹¦ºÄ-SleepÄ£Ê½£¬´ËµÍ¹¦ºÄÇĞµ½HSI/5Ê±ÖÓÔËĞĞ£¬»½ĞÑºóĞèÒªÓÃ»§×Ô¼ºÖØĞÂÑ¡ÔñÏµÍ³Ê±ÖÓÔ´
+ *          @note ×¢Òâµ÷ÓÃ´Ëº¯Êı£¬DCDC¹¦ÄÜÇ¿ÖÆ¹Ø±Õ£¬»½ĞÑºó¿ÉÒÔÊÖ¶¯ÔÙ´Î´ò¿ª
  *
- * @param   rm      - ä¾›ç”µæ¨¡å—é€‰æ‹©
- *                    RB_PWR_RAM2K  -   2K retention SRAM ä¾›ç”µ
- *                    RB_PWR_RAM16K -   16K main SRAM ä¾›ç”µ
- *                    RB_PWR_EXTEND -   USB å’Œ BLE å•å…ƒä¿ç•™åŒºåŸŸä¾›ç”µ
- *                    RB_PWR_XROM   -   FlashROM ä¾›ç”µ
- *                    NULL          -   ä»¥ä¸Šå•å…ƒéƒ½æ–­ç”µ
+ * @param   rm      - ¹©µçÄ£¿éÑ¡Ôñ
+ *                    RB_PWR_RAM2K  -   2K retention SRAM ¹©µç
+ *                    RB_PWR_RAM16K -   16K main SRAM ¹©µç
+ *                    RB_PWR_EXTEND -   USB ºÍ BLE µ¥Ôª±£ÁôÇøÓò¹©µç
+ *                    RB_PWR_XROM   -   FlashROM ¹©µç
+ *                    NULL          -   ÒÔÉÏµ¥Ôª¶¼¶Ïµç
  */
 void LowPower_Sleep(uint8_t rm);
 
 /**
- * @brief   ä½åŠŸè€—-Shutdownæ¨¡å¼ï¼Œæ­¤ä½åŠŸè€—åˆ‡åˆ°HSI/5æ—¶é’Ÿè¿è¡Œï¼Œå”¤é†’åéœ€è¦ç”¨æˆ·è‡ªå·±é‡æ–°é€‰æ‹©ç³»ç»Ÿæ—¶é’Ÿæº
- *          @note æ³¨æ„è°ƒç”¨æ­¤å‡½æ•°ï¼ŒDCDCåŠŸèƒ½å¼ºåˆ¶å…³é—­ï¼Œå”¤é†’åå¯ä»¥æ‰‹åŠ¨å†æ¬¡æ‰“å¼€
+ * @brief   µÍ¹¦ºÄ-ShutdownÄ£Ê½£¬´ËµÍ¹¦ºÄÇĞµ½HSI/5Ê±ÖÓÔËĞĞ£¬»½ĞÑºóĞèÒªÓÃ»§×Ô¼ºÖØĞÂÑ¡ÔñÏµÍ³Ê±ÖÓÔ´
+ *          @note ×¢Òâµ÷ÓÃ´Ëº¯Êı£¬DCDC¹¦ÄÜÇ¿ÖÆ¹Ø±Õ£¬»½ĞÑºó¿ÉÒÔÊÖ¶¯ÔÙ´Î´ò¿ª
  *
- * @param   rm      - ä¾›ç”µæ¨¡å—é€‰æ‹©
- *                    RB_PWR_RAM2K  -   2K retention SRAM ä¾›ç”µ
- *                    RB_PWR_RAM16K -   16K main SRAM ä¾›ç”µ
- *                    NULL          -   ä»¥ä¸Šå•å…ƒéƒ½æ–­ç”µ
+ * @param   rm      - ¹©µçÄ£¿éÑ¡Ôñ
+ *                    RB_PWR_RAM2K  -   2K retention SRAM ¹©µç
+ *                    RB_PWR_RAM16K -   16K main SRAM ¹©µç
+ *                    NULL          -   ÒÔÉÏµ¥Ôª¶¼¶Ïµç
  */
 void LowPower_Shutdown(uint8_t rm);
 

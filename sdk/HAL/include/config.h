@@ -33,10 +33,11 @@
 
  【SLEEP】
  HAL_SLEEP                                  - 是否开启睡眠功能 ( 默认:FALSE )
- WAKE_UP_RTC_MAX_TIME                       - 等待32M晶振稳定时间，根据不同睡眠类型取值可分为： 睡眠模式/下电模式  - 45(默认)
-                                                                                                                                        暂停模式    - 45
-                                                                                                                                       空闲模式    - 5
- 
+ SLEEP_RTC_MIN_TIME                         - 非空闲模式下睡眠的最小时间（单位：625us）
+ WAKE_UP_RTC_MAX_TIME                       - 等待32M晶振稳定时间（单位：625us）
+                                                根据不同睡眠类型取值可分为： 睡眠模式/下电模式  - 45(默认)
+                                                                          暂停模式    - 45
+                                                                          空闲模式    - 5
  【TEMPERATION】
  TEM_SAMPLE                                 - 是否打开根据温度变化校准的功能，单次校准耗时小于10ms( 默认:TRUE )
  
@@ -79,8 +80,11 @@
 #ifndef HAL_SLEEP
 #define HAL_SLEEP                           FALSE
 #endif
+#ifndef SLEEP_RTC_MIN_TIME                   
+#define SLEEP_RTC_MIN_TIME                  (30U)
+#endif
 #ifndef WAKE_UP_RTC_MAX_TIME
-#define WAKE_UP_RTC_MAX_TIME                45
+#define WAKE_UP_RTC_MAX_TIME                (45U)
 #endif
 #ifndef HAL_KEY
 #define HAL_KEY                             FALSE

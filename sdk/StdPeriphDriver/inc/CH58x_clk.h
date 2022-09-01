@@ -16,7 +16,7 @@ extern "C" {
 #endif
 
 /**
- * @brief  ç³»ç»Ÿä¸»é¢‘å®šä¹‰
+ * @brief  ÏµÍ³Ö÷Æµ¶¨Òå
  */
 typedef enum
 {
@@ -43,7 +43,7 @@ typedef enum
 } SYS_CLKTypeDef;
 
 /**
- * @brief  32Kæ—¶é’Ÿé€‰æ‹©
+ * @brief  32KÊ±ÖÓÑ¡Ôñ
  */
 typedef enum
 {
@@ -53,7 +53,7 @@ typedef enum
 } LClk32KTypeDef;
 
 /**
- * @brief  32Mæ™¶æŒ¯ç”µæµæŒ¡ä½
+ * @brief  32M¾§ÕñµçÁ÷µ²Î»
  */
 typedef enum
 {
@@ -65,7 +65,7 @@ typedef enum
 } HSECurrentTypeDef;
 
 /**
- * @brief  32Mæ™¶æŒ¯å†…éƒ¨ç”µå®¹æŒ¡ä½
+ * @brief  32M¾§ÕñÄÚ²¿µçÈİµ²Î»
  */
 typedef enum
 {
@@ -81,7 +81,7 @@ typedef enum
 } HSECapTypeDef;
 
 /**
- * @brief  32Kæ™¶æŒ¯ç”µæµæŒ¡ä½
+ * @brief  32K¾§ÕñµçÁ÷µ²Î»
  */
 typedef enum
 {
@@ -93,7 +93,7 @@ typedef enum
 } LSECurrentTypeDef;
 
 /**
- * @brief  32Kæ™¶æŒ¯å†…éƒ¨ç”µå®¹æŒ¡ä½
+ * @brief  32K¾§ÕñÄÚ²¿µçÈİµ²Î»
  */
 typedef enum
 {
@@ -130,14 +130,14 @@ typedef enum
  */
 typedef enum
 {
-    Period_0_125_S = 0, // 0.125s å‘¨æœŸ
-    Period_0_25_S,      // 0.25s å‘¨æœŸ
-    Period_0_5_S,       // 0.5s å‘¨æœŸ
-    Period_1_S,         // 1s å‘¨æœŸ
-    Period_2_S,         // 2s å‘¨æœŸ
-    Period_4_S,         // 4s å‘¨æœŸ
-    Period_8_S,         // 8s å‘¨æœŸ
-    Period_16_S,        // 16s å‘¨æœŸ
+    Period_0_125_S = 0, // 0.125s ÖÜÆÚ
+    Period_0_25_S,      // 0.25s ÖÜÆÚ
+    Period_0_5_S,       // 0.5s ÖÜÆÚ
+    Period_1_S,         // 1s ÖÜÆÚ
+    Period_2_S,         // 2s ÖÜÆÚ
+    Period_4_S,         // 4s ÖÜÆÚ
+    Period_8_S,         // 8s ÖÜÆÚ
+    Period_16_S,        // 16s ÖÜÆÚ
 } RTC_TMRCycTypeDef;
 
 /**
@@ -145,8 +145,8 @@ typedef enum
  */
 typedef enum
 {
-    RTC_TRIG_EVENT = 0, // RTC è§¦å‘äº‹ä»¶
-    RTC_TMR_EVENT,      // RTC å‘¨æœŸå®šæ—¶äº‹ä»¶
+    RTC_TRIG_EVENT = 0, // RTC ´¥·¢ÊÂ¼ş
+    RTC_TMR_EVENT,      // RTC ÖÜÆÚ¶¨Ê±ÊÂ¼ş
 
 } RTC_EVENTTypeDef;
 
@@ -155,127 +155,127 @@ typedef enum
  */
 typedef enum
 {
-    RTC_TRIG_MODE = 0, // RTC è§¦å‘æ¨¡å¼
-    RTC_TMR_MODE,      // RTC å‘¨æœŸå®šæ—¶æ¨¡å¼
+    RTC_TRIG_MODE = 0, // RTC ´¥·¢Ä£Ê½
+    RTC_TMR_MODE,      // RTC ÖÜÆÚ¶¨Ê±Ä£Ê½
 
 } RTC_MODETypeDef;
 
 typedef enum
 {
-    /* æ ¡å‡†ç²¾åº¦è¶Šé«˜ï¼Œè€—æ—¶è¶Šé•¿ */
-    Level_32 = 3, // ç”¨æ—¶ 1.2ms 1000ppm (32M ä¸»é¢‘)  1100ppm (64M ä¸»é¢‘)
-    Level_64,     // ç”¨æ—¶ 2.2ms 800ppm  (32M ä¸»é¢‘)  1000ppm (64M ä¸»é¢‘)
-    Level_128,    // ç”¨æ—¶ 4.2ms 600ppm  (32M ä¸»é¢‘)  800ppm  (64M ä¸»é¢‘)
+    /* Ğ£×¼¾«¶ÈÔ½¸ß£¬ºÄÊ±Ô½³¤ */
+    Level_32 = 3, // ÓÃÊ± 1.2ms 1000ppm (32M Ö÷Æµ)  1100ppm (64M Ö÷Æµ)
+    Level_64,     // ÓÃÊ± 2.2ms 800ppm  (32M Ö÷Æµ)  1000ppm (64M Ö÷Æµ)
+    Level_128,    // ÓÃÊ± 4.2ms 600ppm  (32M Ö÷Æµ)  800ppm  (64M Ö÷Æµ)
 
 } Cali_LevelTypeDef;
 
 /**
- * @brief   32K ä½é¢‘æ—¶é’Ÿæ¥æº
+ * @brief   32K µÍÆµÊ±ÖÓÀ´Ô´
  *
- * @param   hc  - é€‰æ‹©32Kä½¿ç”¨å†…éƒ¨è¿˜æ˜¯å¤–éƒ¨
+ * @param   hc  - Ñ¡Ôñ32KÊ¹ÓÃÄÚ²¿»¹ÊÇÍâ²¿
  */
 void LClk32K_Select(LClk32KTypeDef hc);
 
 /**
- * @brief   HSEæ™¶ä½“ åç½®ç”µæµé…ç½®
+ * @brief   HSE¾§Ìå Æ«ÖÃµçÁ÷ÅäÖÃ
  *
  * @param   c   - 75%,100%,125%,150%
  */
 void HSECFG_Current(HSECurrentTypeDef c);
 
 /**
- * @brief   HSEæ™¶ä½“ è´Ÿè½½ç”µå®¹é…ç½®
+ * @brief   HSE¾§Ìå ¸ºÔØµçÈİÅäÖÃ
  *
  * @param   c   - refer to HSECapTypeDef
  */
 void HSECFG_Capacitance(HSECapTypeDef c);
 
 /**
- * @brief   LSEæ™¶ä½“ åç½®ç”µæµé…ç½®
+ * @brief   LSE¾§Ìå Æ«ÖÃµçÁ÷ÅäÖÃ
  *
  * @param   c   - 70%,100%,140%,200%
  */
 void LSECFG_Current(LSECurrentTypeDef c);
 
 /**
- * @brief   LSEæ™¶ä½“ è´Ÿè½½ç”µå®¹é…ç½®
+ * @brief   LSE¾§Ìå ¸ºÔØµçÈİÅäÖÃ
  *
  * @param   c   - refer to LSECapTypeDef
  */
 void LSECFG_Capacitance(LSECapTypeDef c);
 
-void Calibration_LSI(Cali_LevelTypeDef cali_Lv); /* ç”¨ä¸»é¢‘æ ¡å‡†å†…éƒ¨32Kæ—¶é’Ÿ */
+void Calibration_LSI(Cali_LevelTypeDef cali_Lv); /* ÓÃÖ÷ÆµĞ£×¼ÄÚ²¿32KÊ±ÖÓ */
 
 /**
- * @brief   RTCæ—¶é’Ÿåˆå§‹åŒ–å½“å‰æ—¶é—´
+ * @brief   RTCÊ±ÖÓ³õÊ¼»¯µ±Ç°Ê±¼ä
  *
- * @param   y       - é…ç½®å¹´ï¼ŒMAX_Y = BEGYEAR + 44
- * @param   mon     - é…ç½®æœˆï¼ŒMAX_MON = 12
- * @param   d       - é…ç½®æ—¥ï¼ŒMAX_D = 31
- * @param   h       - é…ç½®å°æ—¶ï¼ŒMAX_H = 23
- * @param   m       - é…ç½®åˆ†é’Ÿï¼ŒMAX_M = 59
- * @param   s       - é…ç½®ç§’ï¼ŒMAX_S = 59
+ * @param   y       - ÅäÖÃÄê£¬MAX_Y = BEGYEAR + 44
+ * @param   mon     - ÅäÖÃÔÂ£¬MAX_MON = 12
+ * @param   d       - ÅäÖÃÈÕ£¬MAX_D = 31
+ * @param   h       - ÅäÖÃĞ¡Ê±£¬MAX_H = 23
+ * @param   m       - ÅäÖÃ·ÖÖÓ£¬MAX_M = 59
+ * @param   s       - ÅäÖÃÃë£¬MAX_S = 59
  */
 void RTC_InitTime(uint16_t y, uint16_t mon, uint16_t d, uint16_t h, uint16_t m, uint16_t s);
 
 /**
- * @brief   è·å–å½“å‰æ—¶é—´
+ * @brief   »ñÈ¡µ±Ç°Ê±¼ä
  *
- * @param   py      - è·å–åˆ°çš„å¹´ï¼ŒMAX_Y = BEGYEAR + 44
- * @param   pmon    - è·å–åˆ°çš„æœˆï¼ŒMAX_MON = 12
- * @param   pd      - è·å–åˆ°çš„æ—¥ï¼ŒMAX_D = 31
- * @param   ph      - è·å–åˆ°çš„å°æ—¶ï¼ŒMAX_H = 23
- * @param   pm      - è·å–åˆ°çš„åˆ†é’Ÿï¼ŒMAX_M = 59
- * @param   ps      - è·å–åˆ°çš„ç§’ï¼ŒMAX_S = 59
+ * @param   py      - »ñÈ¡µ½µÄÄê£¬MAX_Y = BEGYEAR + 44
+ * @param   pmon    - »ñÈ¡µ½µÄÔÂ£¬MAX_MON = 12
+ * @param   pd      - »ñÈ¡µ½µÄÈÕ£¬MAX_D = 31
+ * @param   ph      - »ñÈ¡µ½µÄĞ¡Ê±£¬MAX_H = 23
+ * @param   pm      - »ñÈ¡µ½µÄ·ÖÖÓ£¬MAX_M = 59
+ * @param   ps      - »ñÈ¡µ½µÄÃë£¬MAX_S = 59
  */
 void RTC_GetTime(uint16_t *py, uint16_t *pmon, uint16_t *pd, uint16_t *ph, uint16_t *pm, uint16_t *ps);
 
 /**
- * @brief   åŸºäºLSE/LSIæ—¶é’Ÿï¼Œé…ç½®å½“å‰RTC å‘¨æœŸæ•°
+ * @brief   »ùÓÚLSE/LSIÊ±ÖÓ£¬ÅäÖÃµ±Ç°RTC ÖÜÆÚÊı
  *
- * @param   cyc     - é…ç½®å‘¨æœŸè®¡æ•°åˆå€¼ï¼ŒMAX_CYC = 0xA8BFFFFF = 2831155199
+ * @param   cyc     - ÅäÖÃÖÜÆÚ¼ÆÊı³õÖµ£¬MAX_CYC = 0xA8BFFFFF = 2831155199
  */
 void RTC_SetCycle32k(uint32_t cyc);
 
 /**
- * @brief   åŸºäºLSE/LSIæ—¶é’Ÿï¼Œè·å–å½“å‰RTC å‘¨æœŸæ•°
+ * @brief   »ùÓÚLSE/LSIÊ±ÖÓ£¬»ñÈ¡µ±Ç°RTC ÖÜÆÚÊı
  *
- * @return  å½“å‰å‘¨æœŸæ•°ï¼ŒMAX_CYC = 0xA8BFFFFF = 2831155199
+ * @return  µ±Ç°ÖÜÆÚÊı£¬MAX_CYC = 0xA8BFFFFF = 2831155199
  */
 uint32_t RTC_GetCycle32k(void);
 
 /**
- * @brief   RTCå®šæ—¶æ¨¡å¼é…ç½®ï¼ˆæ³¨æ„å®šæ—¶åŸºå‡†å›ºå®šä¸º32768Hzï¼‰
+ * @brief   RTC¶¨Ê±Ä£Ê½ÅäÖÃ£¨×¢Òâ¶¨Ê±»ù×¼¹Ì¶¨Îª32768Hz£©
  *
  * @param   t   - refer to RTC_TMRCycTypeDef
  */
 void RTC_TRIGFunCfg(uint32_t cyc);
 
 /**
- * @brief   RTCå®šæ—¶æ¨¡å¼é…ç½®ï¼ˆæ³¨æ„å®šæ—¶åŸºå‡†å›ºå®šä¸º32768Hzï¼‰
+ * @brief   RTC¶¨Ê±Ä£Ê½ÅäÖÃ£¨×¢Òâ¶¨Ê±»ù×¼¹Ì¶¨Îª32768Hz£©
  *
  * @param   t   - refer to RTC_TMRCycTypeDef
  */
 void RTC_TMRFunCfg(RTC_TMRCycTypeDef t);
 
 /**
- * @brief   RTC æ¨¡å¼åŠŸèƒ½å…³é—­
+ * @brief   RTC Ä£Ê½¹¦ÄÜ¹Ø±Õ
  *
- * @param   m   - éœ€è¦å…³é—­çš„å½“å‰æ¨¡å¼
+ * @param   m   - ĞèÒª¹Ø±ÕµÄµ±Ç°Ä£Ê½
  */
 void RTC_ModeFunDisable(RTC_MODETypeDef m);
 
 /**
- * @brief   è·å–RTCä¸­æ–­æ ‡å¿—
+ * @brief   »ñÈ¡RTCÖĞ¶Ï±êÖ¾
  *
  * @param   f   - refer to RTC_EVENTTypeDef
  *
- * @return  ä¸­æ–­æ ‡å¿—çŠ¶æ€
+ * @return  ÖĞ¶Ï±êÖ¾×´Ì¬
  */
 uint8_t RTC_GetITFlag(RTC_EVENTTypeDef f);
 
 /**
- * @brief   æ¸…é™¤RTCä¸­æ–­æ ‡å¿—
+ * @brief   Çå³ıRTCÖĞ¶Ï±êÖ¾
  *
  * @param   f   - refer to RTC_EVENTTypeDef
  */

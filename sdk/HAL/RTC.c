@@ -3,13 +3,13 @@
  * Author             : WCH
  * Version            : V1.2
  * Date               : 2022/01/18
- * Description        : RTCÈÖçÁΩÆÂèäÂÖ∂ÂàùÂßãÂåñ
+ * Description        : RTC≈‰÷√º∞∆‰≥ı ºªØ
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  * SPDX-License-Identifier: Apache-2.0
  *******************************************************************************/
 
 /******************************************************************************/
-/* Â§¥Êñá‰ª∂ÂåÖÂê´ */
+/* Õ∑Œƒº˛∞¸∫¨ */
 #include "HAL.h"
 
 /*********************************************************************
@@ -27,25 +27,24 @@ volatile uint32_t RTCTigFlag;
 /*******************************************************************************
  * @fn      RTC_SetTignTime
  *
- * @brief   ÈÖçÁΩÆRTCËß¶ÂèëÊó∂Èó¥
+ * @brief   ≈‰÷√RTC¥•∑¢ ±º‰
  *
- * @param   time    - Ëß¶ÂèëÊó∂Èó¥.
+ * @param   time    - ¥•∑¢ ±º‰.
  *
  * @return  None.
  */
 void RTC_SetTignTime(uint32_t time)
 {
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R32_RTC_TRIG = time;
+    sys_safe_access_disable();
     RTCTigFlag = 0;
 }
 
 /*******************************************************************************
  * @fn      RTC_IRQHandler
  *
- * @brief   RTC‰∏≠Êñ≠Â§ÑÁêÜ
+ * @brief   RTC÷–∂œ¥¶¿Ì
  *
  * @param   None.
  *
@@ -62,7 +61,7 @@ void RTC_IRQHandler(void)
 /*******************************************************************************
  * @fn      HAL_Time0Init
  *
- * @brief   Á≥ªÁªüÂÆöÊó∂Âô®ÂàùÂßãÂåñ
+ * @brief   œµÕ≥∂® ±∆˜≥ı ºªØ
  *
  * @param   None.
  *
@@ -71,21 +70,18 @@ void RTC_IRQHandler(void)
 void HAL_TimeInit(void)
 {
 #if(CLK_OSC32K)
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_CK32K_CONFIG &= ~(RB_CLK_OSC32K_XT | RB_CLK_XT32K_PON);
+    sys_safe_access_enable();
     R8_CK32K_CONFIG |= RB_CLK_INT32K_PON;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
     Lib_Calibration_LSI();
 #else
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_CK32K_CONFIG |= RB_CLK_OSC32K_XT | RB_CLK_INT32K_PON | RB_CLK_XT32K_PON;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 #endif
-    RTC_InitTime(2020, 1, 1, 0, 0, 0); //RTCÊó∂ÈíüÂàùÂßãÂåñÂΩìÂâçÊó∂Èó¥
+    RTC_InitTime(2020, 1, 1, 0, 0, 0); //RTC ±÷”≥ı ºªØµ±«∞ ±º‰
     TMOS_TimerInit(0);
 }
 

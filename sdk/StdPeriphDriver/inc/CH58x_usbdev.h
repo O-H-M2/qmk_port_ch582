@@ -15,14 +15,14 @@
 extern "C" {
 #endif
 
-/* HIDç±»è¯·æ±‚ */
+/* HIDÀàÇëÇó */
 #define DEF_USB_GET_IDLE           0x02                                         /* get idle for key or mouse */
 #define DEF_USB_GET_PROTOCOL       0x03                                         /* get protocol for bios type */
 #define DEF_USB_SET_REPORT         0x09                                         /* set report for key */
 #define DEF_USB_SET_IDLE           0x0A                                         /* set idle for key or mouse */
 #define DEF_USB_SET_PROTOCOL       0x0B                                         /* set protocol for bios type */
 
-/* ä»¥ä¸‹ç¼“å­˜åŒºæ˜¯USBæ¨¡å—æ”¶å‘ä½¿ç”¨çš„æ•°æ®ç¼“å†²åŒºï¼Œæ€»å…±9ä¸ªé€šé“ï¼ˆ9å—ç¼“å­˜ï¼‰ï¼Œç”¨æˆ·å¯æ ¹æ®å®é™…ä½¿ç”¨çš„é€šé“æ•°å®šä¹‰ç›¸åº”ç¼“å­˜åŒº */
+/* ÒÔÏÂ»º´æÇøÊÇUSBÄ£¿éÊÕ·¢Ê¹ÓÃµÄÊı¾İ»º³åÇø£¬×Ü¹²9¸öÍ¨µÀ£¨9¿é»º´æ£©£¬ÓÃ»§¿É¸ù¾İÊµ¼ÊÊ¹ÓÃµÄÍ¨µÀÊı¶¨ÒåÏàÓ¦»º´æÇø */
 extern uint8_t *pEP0_RAM_Addr; //ep0(64)+ep4_out(64)+ep4_in(64)
 extern uint8_t *pEP1_RAM_Addr; //ep1_out(64)+ep1_in(64)
 extern uint8_t *pEP2_RAM_Addr; //ep2_out(64)+ep2_in(64)
@@ -56,117 +56,117 @@ extern uint8_t *pU2EP3_RAM_Addr; //ep3_out(64)+ep3_in(64)
 #define pU2EP4_IN_DataBuf     (pU2EP0_RAM_Addr + 128)
 
 /**
- * @brief   USBè®¾å¤‡åŠŸèƒ½åˆå§‹åŒ–ï¼Œ4ä¸ªç«¯ç‚¹ï¼Œ8ä¸ªé€šé“ã€‚
+ * @brief   USBÉè±¸¹¦ÄÜ³õÊ¼»¯£¬4¸ö¶Ëµã£¬8¸öÍ¨µÀ¡£
  */
 void USB_DeviceInit(void);
 
 /**
- * @brief   USBè®¾å¤‡åº”ç­”ä¼ è¾“å¤„ç†
+ * @brief   USBÉè±¸Ó¦´ğ´«Êä´¦Àí
  */
 void USB_DevTransProcess(void);
 
 /**
- * @brief   ç«¯ç‚¹1ä¸‹ä¼ æ•°æ®å¤„ç†
+ * @brief   ¶Ëµã1ÏÂ´«Êı¾İ´¦Àí
  *
- * @param   l   - å¾…å¤„ç†æ•°æ®é•¿åº¦(<64B)
+ * @param   l   - ´ı´¦ÀíÊı¾İ³¤¶È(<64B)
  */
 void DevEP1_OUT_Deal(uint8_t l);
 
 /**
- * @brief   ç«¯ç‚¹2ä¸‹ä¼ æ•°æ®å¤„ç†
+ * @brief   ¶Ëµã2ÏÂ´«Êı¾İ´¦Àí
  *
- * @param   l   - å¾…å¤„ç†æ•°æ®é•¿åº¦(<64B)
+ * @param   l   - ´ı´¦ÀíÊı¾İ³¤¶È(<64B)
  */
 void DevEP2_OUT_Deal(uint8_t l);
 
 /**
- * @brief   ç«¯ç‚¹3ä¸‹ä¼ æ•°æ®å¤„ç†
+ * @brief   ¶Ëµã3ÏÂ´«Êı¾İ´¦Àí
  *
- * @param   l   - å¾…å¤„ç†æ•°æ®é•¿åº¦(<64B)
+ * @param   l   - ´ı´¦ÀíÊı¾İ³¤¶È(<64B)
  */
 void DevEP3_OUT_Deal(uint8_t l);
 
 /**
- * @brief   ç«¯ç‚¹4ä¸‹ä¼ æ•°æ®å¤„ç†
+ * @brief   ¶Ëµã4ÏÂ´«Êı¾İ´¦Àí
  *
- * @param   l   - å¾…å¤„ç†æ•°æ®é•¿åº¦(<64B)
+ * @param   l   - ´ı´¦ÀíÊı¾İ³¤¶È(<64B)
  */
 void DevEP4_OUT_Deal(uint8_t l);
 
 /**
- * @brief   ç«¯ç‚¹1æ•°æ®ä¸Šä¼ 
+ * @brief   ¶Ëµã1Êı¾İÉÏ´«
  *
- * @param   l   - ä¸Šä¼ æ•°æ®é•¿åº¦(<64B)
+ * @param   l   - ÉÏ´«Êı¾İ³¤¶È(<64B)
  */
 void DevEP1_IN_Deal(uint8_t l);
 
 /**
- * @brief   ç«¯ç‚¹2æ•°æ®ä¸Šä¼ 
+ * @brief   ¶Ëµã2Êı¾İÉÏ´«
  *
- * @param   l   - ä¸Šä¼ æ•°æ®é•¿åº¦(<64B)
+ * @param   l   - ÉÏ´«Êı¾İ³¤¶È(<64B)
  */
 void DevEP2_IN_Deal(uint8_t l);
 
 /**
- * @brief   ç«¯ç‚¹3æ•°æ®ä¸Šä¼ 
+ * @brief   ¶Ëµã3Êı¾İÉÏ´«
  *
- * @param   l   - ä¸Šä¼ æ•°æ®é•¿åº¦(<64B)
+ * @param   l   - ÉÏ´«Êı¾İ³¤¶È(<64B)
  */
 void DevEP3_IN_Deal(uint8_t l);
 
 /**
- * @brief   ç«¯ç‚¹4æ•°æ®ä¸Šä¼ 
+ * @brief   ¶Ëµã4Êı¾İÉÏ´«
  *
- * @param   l   - ä¸Šä¼ æ•°æ®é•¿åº¦(<64B)
+ * @param   l   - ÉÏ´«Êı¾İ³¤¶È(<64B)
  */
 void DevEP4_IN_Deal(uint8_t l);
 
 /**
- * @brief   æŸ¥è¯¢ç«¯ç‚¹1æ˜¯å¦ä¸Šä¼ å®Œæˆ
+ * @brief   ²éÑ¯¶Ëµã1ÊÇ·ñÉÏ´«Íê³É
  *
- * @return  0-æœªå®Œæˆ  (!0)-å·²å®Œæˆ
+ * @return  0-Î´Íê³É  (!0)-ÒÑÍê³É
  */
 #define EP1_GetINSta()    (R8_UEP1_CTRL & UEP_T_RES_NAK)
 
 /**
- * @brief   æŸ¥è¯¢ç«¯ç‚¹2æ˜¯å¦ä¸Šä¼ å®Œæˆ
+ * @brief   ²éÑ¯¶Ëµã2ÊÇ·ñÉÏ´«Íê³É
  *
- * @return  0-æœªå®Œæˆ  (!0)-å·²å®Œæˆ
+ * @return  0-Î´Íê³É  (!0)-ÒÑÍê³É
  */
 #define EP2_GetINSta()    (R8_UEP2_CTRL & UEP_T_RES_NAK)
 
 /**
- * @brief   æŸ¥è¯¢ç«¯ç‚¹3æ˜¯å¦ä¸Šä¼ å®Œæˆ
+ * @brief   ²éÑ¯¶Ëµã3ÊÇ·ñÉÏ´«Íê³É
  *
- * @return  0-æœªå®Œæˆ  (!0)-å·²å®Œæˆ
+ * @return  0-Î´Íê³É  (!0)-ÒÑÍê³É
  */
 #define EP3_GetINSta()    (R8_UEP3_CTRL & UEP_T_RES_NAK)
 
 /**
- * @brief   æŸ¥è¯¢ç«¯ç‚¹4æ˜¯å¦ä¸Šä¼ å®Œæˆ
+ * @brief   ²éÑ¯¶Ëµã4ÊÇ·ñÉÏ´«Íê³É
  *
- * @return  0-æœªå®Œæˆ  (!0)-å·²å®Œæˆ
+ * @return  0-Î´Íê³É  (!0)-ÒÑÍê³É
  */
 #define EP4_GetINSta()    (R8_UEP4_CTRL & UEP_T_RES_NAK)
 
-void USB2_DeviceInit(void);      /* USB2è®¾å¤‡åŠŸèƒ½åˆå§‹åŒ–ï¼Œ4ä¸ªç«¯ç‚¹ï¼Œ8ä¸ªé€šé“ */
-void USB2_DevTransProcess(void); /* USB2è®¾å¤‡åº”ç­”ä¼ è¾“å¤„ç† */
+void USB2_DeviceInit(void);      /* USB2Éè±¸¹¦ÄÜ³õÊ¼»¯£¬4¸ö¶Ëµã£¬8¸öÍ¨µÀ */
+void USB2_DevTransProcess(void); /* USB2Éè±¸Ó¦´ğ´«Êä´¦Àí */
 
-void U2DevEP1_OUT_Deal(uint8_t l); /* è®¾å¤‡ç«¯ç‚¹1ä¸‹ä¼ é€šé“å¤„ç† */
-void U2DevEP2_OUT_Deal(uint8_t l); /* è®¾å¤‡ç«¯ç‚¹2ä¸‹ä¼ é€šé“å¤„ç† */
-void U2DevEP3_OUT_Deal(uint8_t l); /* è®¾å¤‡ç«¯ç‚¹3ä¸‹ä¼ é€šé“å¤„ç† */
-void U2DevEP4_OUT_Deal(uint8_t l); /* è®¾å¤‡ç«¯ç‚¹4ä¸‹ä¼ é€šé“å¤„ç† */
+void U2DevEP1_OUT_Deal(uint8_t l); /* Éè±¸¶Ëµã1ÏÂ´«Í¨µÀ´¦Àí */
+void U2DevEP2_OUT_Deal(uint8_t l); /* Éè±¸¶Ëµã2ÏÂ´«Í¨µÀ´¦Àí */
+void U2DevEP3_OUT_Deal(uint8_t l); /* Éè±¸¶Ëµã3ÏÂ´«Í¨µÀ´¦Àí */
+void U2DevEP4_OUT_Deal(uint8_t l); /* Éè±¸¶Ëµã4ÏÂ´«Í¨µÀ´¦Àí */
 
-void U2DevEP1_IN_Deal(uint8_t l); /* è®¾å¤‡ç«¯ç‚¹1ä¸Šä¼ é€šé“å¤„ç† */
-void U2DevEP2_IN_Deal(uint8_t l); /* è®¾å¤‡ç«¯ç‚¹2ä¸Šä¼ é€šé“å¤„ç† */
-void U2DevEP3_IN_Deal(uint8_t l); /* è®¾å¤‡ç«¯ç‚¹3ä¸Šä¼ é€šé“å¤„ç† */
-void U2DevEP4_IN_Deal(uint8_t l); /* è®¾å¤‡ç«¯ç‚¹4ä¸Šä¼ é€šé“å¤„ç† */
+void U2DevEP1_IN_Deal(uint8_t l); /* Éè±¸¶Ëµã1ÉÏ´«Í¨µÀ´¦Àí */
+void U2DevEP2_IN_Deal(uint8_t l); /* Éè±¸¶Ëµã2ÉÏ´«Í¨µÀ´¦Àí */
+void U2DevEP3_IN_Deal(uint8_t l); /* Éè±¸¶Ëµã3ÉÏ´«Í¨µÀ´¦Àí */
+void U2DevEP4_IN_Deal(uint8_t l); /* Éè±¸¶Ëµã4ÉÏ´«Í¨µÀ´¦Àí */
 
-// 0-æœªå®Œæˆ  (!0)-å·²å®Œæˆ
-#define U2EP1_GetINSta()    (R8_U2EP1_CTRL & UEP_T_RES_NAK) /* æŸ¥è¯¢ç«¯ç‚¹1æ˜¯å¦ä¸Šä¼ å®Œæˆ */
-#define U2EP2_GetINSta()    (R8_U2EP2_CTRL & UEP_T_RES_NAK) /* æŸ¥è¯¢ç«¯ç‚¹2æ˜¯å¦ä¸Šä¼ å®Œæˆ */
-#define U2EP3_GetINSta()    (R8_U2EP3_CTRL & UEP_T_RES_NAK) /* æŸ¥è¯¢ç«¯ç‚¹3æ˜¯å¦ä¸Šä¼ å®Œæˆ */
-#define U2EP4_GetINSta()    (R8_U2EP4_CTRL & UEP_T_RES_NAK) /* æŸ¥è¯¢ç«¯ç‚¹4æ˜¯å¦ä¸Šä¼ å®Œæˆ */
+// 0-Î´Íê³É  (!0)-ÒÑÍê³É
+#define U2EP1_GetINSta()    (R8_U2EP1_CTRL & UEP_T_RES_NAK) /* ²éÑ¯¶Ëµã1ÊÇ·ñÉÏ´«Íê³É */
+#define U2EP2_GetINSta()    (R8_U2EP2_CTRL & UEP_T_RES_NAK) /* ²éÑ¯¶Ëµã2ÊÇ·ñÉÏ´«Íê³É */
+#define U2EP3_GetINSta()    (R8_U2EP3_CTRL & UEP_T_RES_NAK) /* ²éÑ¯¶Ëµã3ÊÇ·ñÉÏ´«Íê³É */
+#define U2EP4_GetINSta()    (R8_U2EP4_CTRL & UEP_T_RES_NAK) /* ²éÑ¯¶Ëµã4ÊÇ·ñÉÏ´«Íê³É */
 
 #ifdef __cplusplus
 }

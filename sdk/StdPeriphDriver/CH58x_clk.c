@@ -13,32 +13,34 @@
 /*********************************************************************
  * @fn      LClk32K_Select
  *
- * @brief   32K ä½é¢‘æ—¶é’Ÿæ¥æº
+ * @brief   32K µÍÆµÊ±ÖÓÀ´Ô´
  *
- * @param   hc  - é€‰æ‹©32Kä½¿ç”¨å†…éƒ¨è¿˜æ˜¯å¤–éƒ¨
+ * @param   hc  - Ñ¡Ôñ32KÊ¹ÓÃÄÚ²¿»¹ÊÇÍâ²¿
  *
  * @return  none
  */
 void LClk32K_Select(LClk32KTypeDef hc)
 {
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    uint8_t cfg = R8_CK32K_CONFIG;
+
     if(hc == Clk32K_LSI)
     {
-        R8_CK32K_CONFIG &= ~RB_CLK_OSC32K_XT;
+        cfg &= ~RB_CLK_OSC32K_XT;
     }
     else
     {
-        R8_CK32K_CONFIG |= RB_CLK_OSC32K_XT;
+        cfg |= RB_CLK_OSC32K_XT;
     }
-    R8_SAFE_ACCESS_SIG = 0;
+
+    sys_safe_access_enable();
+    R8_CK32K_CONFIG = cfg;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      HSECFG_Current
  *
- * @brief   HSEæ™¶ä½“ åç½®ç”µæµé…ç½®
+ * @brief   HSE¾§Ìå Æ«ÖÃµçÁ÷ÅäÖÃ
  *
  * @param   c   - 75%,100%,125%,150%
  *
@@ -51,17 +53,15 @@ void HSECFG_Current(HSECurrentTypeDef c)
     x32M_c = R8_XT32M_TUNE;
     x32M_c = (x32M_c & 0xfc) | (c & 0x03);
 
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_XT32M_TUNE = x32M_c;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      HSECFG_Capacitance
  *
- * @brief   HSEæ™¶ä½“ è´Ÿè½½ç”µå®¹é…ç½®
+ * @brief   HSE¾§Ìå ¸ºÔØµçÈİÅäÖÃ
  *
  * @param   c   - refer to HSECapTypeDef
  *
@@ -74,17 +74,15 @@ void HSECFG_Capacitance(HSECapTypeDef c)
     x32M_c = R8_XT32M_TUNE;
     x32M_c = (x32M_c & 0x8f) | (c << 4);
 
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_XT32M_TUNE = x32M_c;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      LSECFG_Current
  *
- * @brief   LSEæ™¶ä½“ åç½®ç”µæµé…ç½®
+ * @brief   LSE¾§Ìå Æ«ÖÃµçÁ÷ÅäÖÃ
  *
  * @param   c   - 70%,100%,140%,200%
  *
@@ -97,17 +95,15 @@ void LSECFG_Current(LSECurrentTypeDef c)
     x32K_c = R8_XT32K_TUNE;
     x32K_c = (x32K_c & 0xfc) | (c & 0x03);
 
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_XT32K_TUNE = x32K_c;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      LSECFG_Capacitance
  *
- * @brief   LSEæ™¶ä½“ è´Ÿè½½ç”µå®¹é…ç½®
+ * @brief   LSE¾§Ìå ¸ºÔØµçÈİÅäÖÃ
  *
  * @param   c   - refer to LSECapTypeDef
  *
@@ -120,21 +116,19 @@ void LSECFG_Capacitance(LSECapTypeDef c)
     x32K_c = R8_XT32K_TUNE;
     x32K_c = (x32K_c & 0x0f) | (c << 4);
 
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_XT32K_TUNE = x32K_c;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      Calibration_LSI
  *
- * @brief   æ ¡å‡†å†…éƒ¨32Kæ—¶é’Ÿ
+ * @brief   Ğ£×¼ÄÚ²¿32KÊ±ÖÓ
  *
- * @param   cali_Lv - æ ¡å‡†ç­‰çº§é€‰æ‹©    Level_32  -   ç”¨æ—¶ 1.2ms 1000ppm (32M ä¸»é¢‘)  1100ppm (60M ä¸»é¢‘)
- *                              Level_64  -   ç”¨æ—¶ 2.2ms 800ppm  (32M ä¸»é¢‘)  1000ppm (60M ä¸»é¢‘)
- *                              Level_128 -   ç”¨æ—¶ 4.2ms 600ppm  (32M ä¸»é¢‘)  800ppm  (60M ä¸»é¢‘)
+ * @param   cali_Lv - Ğ£×¼µÈ¼¶Ñ¡Ôñ    Level_32  -   ÓÃÊ± 1.2ms 1000ppm (32M Ö÷Æµ)  1100ppm (60M Ö÷Æµ)
+ *                              Level_64  -   ÓÃÊ± 2.2ms 800ppm  (32M Ö÷Æµ)  1000ppm (60M Ö÷Æµ)
+ *                              Level_128 -   ÓÃÊ± 4.2ms 600ppm  (32M Ö÷Æµ)  800ppm  (60M Ö÷Æµ)
  *
  * @return  none
  */
@@ -146,69 +140,57 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
     INT32  freq_sys;
 
     freq_sys = GetSysClock();
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+
+    sys_safe_access_enable();
     R8_CK32K_CONFIG |= RB_CLK_OSC32K_FILT;
     R8_CK32K_CONFIG &= ~RB_CLK_OSC32K_FILT;
+    sys_safe_access_enable();
     R8_XT32K_TUNE &= ~3;
     R8_XT32K_TUNE |= 1;
 
-    // ç²—è°ƒ
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    // ´Öµ÷
+    sys_safe_access_enable();
     R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
     R8_OSC_CAL_CTRL |= 1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
     R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
     while( (R8_OSC_CAL_CTRL&RB_OSC_CNT_EN)!= RB_OSC_CNT_EN )
     {
-        R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-        R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-        SAFEOPERATE;
+        sys_safe_access_enable();
         R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
     }
     while(1)
     {
         while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
-        i = R16_OSC_CAL_CNT; // ç”¨äºä¸¢å¼ƒ
+        i = R16_OSC_CAL_CNT; // ÓÃÓÚ¶ªÆú
         while(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT);
         R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
         while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
-        i = R16_OSC_CAL_CNT; // å®æ—¶æ ¡å‡†åé‡‡æ ·å€¼
+        i = R16_OSC_CAL_CNT; // ÊµÊ±Ğ£×¼ºó²ÉÑùÖµ
         cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF - 2000 * (freq_sys / 1000) / CAB_LSIFQ;
         if(((cnt_offset > -37 * (freq_sys / 1000) / CAB_LSIFQ) && (cnt_offset < 37 * (freq_sys / 1000) / CAB_LSIFQ)) || retry > 2)
             break;
         retry++;
         cnt_offset = (cnt_offset > 0) ? (((cnt_offset * 2) / (37 * (freq_sys / 1000) / CAB_LSIFQ)) + 1) / 2 : (((cnt_offset * 2) / (37 * (freq_sys / 1000) / CAB_LSIFQ)) - 1) / 2;
-        R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-        R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-        SAFEOPERATE;
+        sys_safe_access_enable();
         R16_INT32K_TUNE += cnt_offset;
     }
 
-    // ç»†è°ƒ
-    // é…ç½®ç»†è°ƒå‚æ•°åï¼Œä¸¢å¼ƒ2æ¬¡æ•è·å€¼ï¼ˆè½¯ä»¶è¡Œä¸ºï¼‰ä¸Šåˆ¤æ–­å·²æœ‰ä¸€æ¬¡ï¼Œè¿™é‡Œåªç•™ä¸€æ¬¡
+    // Ï¸µ÷
+    // ÅäÖÃÏ¸µ÷²ÎÊıºó£¬¶ªÆú2´Î²¶»ñÖµ£¨Èí¼şĞĞÎª£©ÉÏÅĞ¶ÏÒÑÓĞÒ»´Î£¬ÕâÀïÖ»ÁôÒ»´Î
     while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
-    i = R16_OSC_CAL_CNT; // ç”¨äºä¸¢å¼ƒ
+    i = R16_OSC_CAL_CNT; // ÓÃÓÚ¶ªÆú
     R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
     R8_OSC_CAL_CTRL |= cali_Lv;
     while(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT);
     while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
-    i = R16_OSC_CAL_CNT; // å®æ—¶æ ¡å‡†åé‡‡æ ·å€¼
+    i = R16_OSC_CAL_CNT; // ÊµÊ±Ğ£×¼ºó²ÉÑùÖµ
     cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF - 4000 * (1 << cali_Lv) * (freq_sys / 1000000) / CAB_LSIFQ * 1000;
     cnt_offset = (cnt_offset > 0) ? ((((cnt_offset * (3200 / (1 << cali_Lv))) / (1366 * (freq_sys / 1000) / CAB_LSIFQ)) + 1) / 2) << 5 : ((((cnt_offset * (3200 / (1 << cali_Lv))) / (1366 * (freq_sys / 1000) / CAB_LSIFQ)) - 1) / 2) << 5;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R16_INT32K_TUNE += cnt_offset;
     R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
 }
@@ -216,14 +198,14 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
 /*********************************************************************
  * @fn      RTCInitTime
  *
- * @brief   RTCæ—¶é’Ÿåˆå§‹åŒ–å½“å‰æ—¶é—´
+ * @brief   RTCÊ±ÖÓ³õÊ¼»¯µ±Ç°Ê±¼ä
  *
- * @param   y       - é…ç½®å¹´ï¼ŒMAX_Y = BEGYEAR + 44
- * @param   mon     - é…ç½®æœˆï¼ŒMAX_MON = 12
- * @param   d       - é…ç½®æ—¥ï¼ŒMAX_D = 31
- * @param   h       - é…ç½®å°æ—¶ï¼ŒMAX_H = 23
- * @param   m       - é…ç½®åˆ†é’Ÿï¼ŒMAX_M = 59
- * @param   s       - é…ç½®ç§’ï¼ŒMAX_S = 59
+ * @param   y       - ÅäÖÃÄê£¬MAX_Y = BEGYEAR + 44
+ * @param   mon     - ÅäÖÃÔÂ£¬MAX_MON = 12
+ * @param   d       - ÅäÖÃÈÕ£¬MAX_D = 31
+ * @param   h       - ÅäÖÃĞ¡Ê±£¬MAX_H = 23
+ * @param   m       - ÅäÖÃ·ÖÖÓ£¬MAX_M = 59
+ * @param   s       - ÅäÖÃÃë£¬MAX_S = 59
  *
  * @return  none
  */
@@ -268,31 +250,27 @@ void RTC_InitTime(uint16_t y, uint16_t mon, uint16_t d, uint16_t h, uint16_t m, 
         }
     }
 
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R32_RTC_TRIG = day;
     R8_RTC_MODE_CTRL |= RB_RTC_LOAD_HI;
     while((R32_RTC_TRIG & 0x3FFF) != (R32_RTC_CNT_DAY & 0x3FFF));
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R32_RTC_TRIG = t;
     R8_RTC_MODE_CTRL |= RB_RTC_LOAD_LO;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      RTC_GetTime
  *
- * @brief   è·å–å½“å‰æ—¶é—´
+ * @brief   »ñÈ¡µ±Ç°Ê±¼ä
  *
- * @param   py      - è·å–åˆ°çš„å¹´ï¼ŒMAX_Y = BEGYEAR + 44
- * @param   pmon    - è·å–åˆ°çš„æœˆï¼ŒMAX_MON = 12
- * @param   pd      - è·å–åˆ°çš„æ—¥ï¼ŒMAX_D = 31
- * @param   ph      - è·å–åˆ°çš„å°æ—¶ï¼ŒMAX_H = 23
- * @param   pm      - è·å–åˆ°çš„åˆ†é’Ÿï¼ŒMAX_M = 59
- * @param   ps      - è·å–åˆ°çš„ç§’ï¼ŒMAX_S = 59
+ * @param   py      - »ñÈ¡µ½µÄÄê£¬MAX_Y = BEGYEAR + 44
+ * @param   pmon    - »ñÈ¡µ½µÄÔÂ£¬MAX_MON = 12
+ * @param   pd      - »ñÈ¡µ½µÄÈÕ£¬MAX_D = 31
+ * @param   ph      - »ñÈ¡µ½µÄĞ¡Ê±£¬MAX_H = 23
+ * @param   pm      - »ñÈ¡µ½µÄ·ÖÖÓ£¬MAX_M = 59
+ * @param   ps      - »ñÈ¡µ½µÄÃë£¬MAX_S = 59
  *
  * @return  none
  */
@@ -330,9 +308,9 @@ void RTC_GetTime(uint16_t *py, uint16_t *pmon, uint16_t *pd, uint16_t *ph, uint1
 /*********************************************************************
  * @fn      RTC_SetCycle32k
  *
- * @brief   åŸºäºLSE/LSIæ—¶é’Ÿï¼Œé…ç½®å½“å‰RTC å‘¨æœŸæ•°
+ * @brief   »ùÓÚLSE/LSIÊ±ÖÓ£¬ÅäÖÃµ±Ç°RTC ÖÜÆÚÊı
  *
- * @param   cyc     - é…ç½®å‘¨æœŸè®¡æ•°åˆå€¼ï¼ŒMAX_CYC = 0xA8BFFFFF = 2831155199
+ * @param   cyc     - ÅäÖÃÖÜÆÚ¼ÆÊı³õÖµ£¬MAX_CYC = 0xA8BFFFFF = 2831155199
  *
  * @return  none
  */
@@ -345,22 +323,20 @@ void RTC_SetCycle32k(uint32_t cyc)
         clk_pin = (R8_CK32K_CONFIG & RB_32K_CLK_PIN);
     } while((clk_pin != (R8_CK32K_CONFIG & RB_32K_CLK_PIN)) || (!clk_pin));
 
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R32_RTC_TRIG = cyc;
     R8_RTC_MODE_CTRL |= RB_RTC_LOAD_LO;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      RTC_GetCycle32k
  *
- * @brief   åŸºäºLSE/LSIæ—¶é’Ÿï¼Œè·å–å½“å‰RTC å‘¨æœŸæ•°
+ * @brief   »ùÓÚLSE/LSIÊ±ÖÓ£¬»ñÈ¡µ±Ç°RTC ÖÜÆÚÊı
  *
  * @param   none
  *
- * @return  å½“å‰å‘¨æœŸæ•°ï¼ŒMAX_CYC = 0xA8BFFFFF = 2831155199
+ * @return  µ±Ç°ÖÜÆÚÊı£¬MAX_CYC = 0xA8BFFFFF = 2831155199
  */
 uint32_t RTC_GetCycle32k(void)
 {
@@ -377,7 +353,7 @@ uint32_t RTC_GetCycle32k(void)
 /*********************************************************************
  * @fn      RTC_TMRFunCfg
  *
- * @brief   RTCå®šæ—¶æ¨¡å¼é…ç½®ï¼ˆæ³¨æ„å®šæ—¶åŸºå‡†å›ºå®šä¸º32768Hzï¼‰
+ * @brief   RTC¶¨Ê±Ä£Ê½ÅäÖÃ£¨×¢Òâ¶¨Ê±»ù×¼¹Ì¶¨Îª32768Hz£©
  *
  * @param   t   - refer to RTC_TMRCycTypeDef
  *
@@ -385,20 +361,19 @@ uint32_t RTC_GetCycle32k(void)
  */
 void RTC_TMRFunCfg(RTC_TMRCycTypeDef t)
 {
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_RTC_MODE_CTRL &= ~(RB_RTC_TMR_EN | RB_RTC_TMR_MODE);
+    sys_safe_access_enable();
     R8_RTC_MODE_CTRL |= RB_RTC_TMR_EN | (t);
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      RTC_TRIGFunCfg
  *
- * @brief   RTCæ—¶é—´è§¦å‘æ¨¡å¼é…ç½®
+ * @brief   RTCÊ±¼ä´¥·¢Ä£Ê½ÅäÖÃ
  *
- * @param   cyc - ç›¸å¯¹å½“å‰æ—¶é—´çš„è§¦å‘é—´éš”æ—¶é—´ï¼ŒåŸºäºLSE/LSIæ—¶é’Ÿå‘¨æœŸæ•°
+ * @param   cyc - Ïà¶Ôµ±Ç°Ê±¼äµÄ´¥·¢¼ä¸ôÊ±¼ä£¬»ùÓÚLSE/LSIÊ±ÖÓÖÜÆÚÊı
  *
  * @return  none
  */
@@ -412,20 +387,18 @@ void RTC_TRIGFunCfg(uint32_t cyc)
         t -= 0xA8C00000;
     }
 
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R32_RTC_TRIG = t;
     R8_RTC_MODE_CTRL |= RB_RTC_TRIG_EN;
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      RTC_ModeFunDisable
  *
- * @brief   RTC æ¨¡å¼åŠŸèƒ½å…³é—­
+ * @brief   RTC Ä£Ê½¹¦ÄÜ¹Ø±Õ
  *
- * @param   m   - éœ€è¦å…³é—­çš„å½“å‰æ¨¡å¼
+ * @param   m   - ĞèÒª¹Ø±ÕµÄµ±Ç°Ä£Ê½
  *
  * @return  none
  */
@@ -442,21 +415,19 @@ void RTC_ModeFunDisable(RTC_MODETypeDef m)
         i |= RB_RTC_TMR_EN;
     }
 
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;
-    R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG2;
-    SAFEOPERATE;
+    sys_safe_access_enable();
     R8_RTC_MODE_CTRL &= ~(i);
-    R8_SAFE_ACCESS_SIG = 0;
+    sys_safe_access_disable();
 }
 
 /*********************************************************************
  * @fn      RTC_GetITFlag
  *
- * @brief   è·å–RTCä¸­æ–­æ ‡å¿—
+ * @brief   »ñÈ¡RTCÖĞ¶Ï±êÖ¾
  *
  * @param   f   - refer to RTC_EVENTTypeDef
  *
- * @return  ä¸­æ–­æ ‡å¿—çŠ¶æ€
+ * @return  ÖĞ¶Ï±êÖ¾×´Ì¬
  */
 uint8_t RTC_GetITFlag(RTC_EVENTTypeDef f)
 {
@@ -473,7 +444,7 @@ uint8_t RTC_GetITFlag(RTC_EVENTTypeDef f)
 /*********************************************************************
  * @fn      RTC_ClearITFlag
  *
- * @brief   æ¸…é™¤RTCä¸­æ–­æ ‡å¿—
+ * @brief   Çå³ıRTCÖĞ¶Ï±êÖ¾
  *
  * @param   f   - refer to RTC_EVENTTypeDef
  *

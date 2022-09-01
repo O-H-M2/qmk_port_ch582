@@ -33,6 +33,9 @@ void I2C_Init(I2C_ModeTypeDef I2C_Mode, UINT32 I2C_ClockSpeed, I2C_DutyTypeDef I
     uint32_t sysClock;
     uint16_t tmpreg;
 
+    I2C_SoftwareResetCmd(ENABLE);
+    I2C_SoftwareResetCmd(DISABLE);
+
     sysClock = GetSysClock();
 
     R16_I2C_CTRL2 &= ~RB_I2C_FREQ;

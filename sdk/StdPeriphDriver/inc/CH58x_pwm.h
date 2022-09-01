@@ -18,22 +18,22 @@ extern "C" {
 /**
  * @brief  channel of PWM define
  */
-#define CH_PWM4     0x01  // PWM4 é€šé“
-#define CH_PWM5     0x02  // PWM5 é€šé“
-#define CH_PWM6     0x04  // PWM6 é€šé“
-#define CH_PWM7     0x08  // PWM7 é€šé“
-#define CH_PWM8     0x10  // PWM8 é€šé“
-#define CH_PWM9     0x20  // PWM9 é€šé“
-#define CH_PWM10    0x40  // PWM10 é€šé“
-#define CH_PWM11    0x80  // PWM11 é€šé“
+#define CH_PWM4     0x01  // PWM4 Í¨µÀ
+#define CH_PWM5     0x02  // PWM5 Í¨µÀ
+#define CH_PWM6     0x04  // PWM6 Í¨µÀ
+#define CH_PWM7     0x08  // PWM7 Í¨µÀ
+#define CH_PWM8     0x10  // PWM8 Í¨µÀ
+#define CH_PWM9     0x20  // PWM9 Í¨µÀ
+#define CH_PWM10    0x40  // PWM10 Í¨µÀ
+#define CH_PWM11    0x80  // PWM11 Í¨µÀ
 
 /**
  * @brief  channel of PWM define
  */
 typedef enum
 {
-    High_Level = 0, // é»˜è®¤ä½ç”µå¹³ï¼Œé«˜ç”µå¹³æœ‰æ•ˆ
-    Low_Level,      // é»˜è®¤é«˜ç”µå¹³ï¼Œä½ç”µå¹³æœ‰æ•ˆ
+    High_Level = 0, // Ä¬ÈÏµÍµçÆ½£¬¸ßµçÆ½ÓĞĞ§
+    Low_Level,      // Ä¬ÈÏ¸ßµçÆ½£¬µÍµçÆ½ÓĞĞ§
 } PWMX_PolarTypeDef;
 
 /**
@@ -41,88 +41,88 @@ typedef enum
  */
 typedef enum
 {
-    PWMX_Cycle_256 = 0, // 256 ä¸ªPWMXå‘¨æœŸ
-    PWMX_Cycle_255,     // 255 ä¸ªPWMXå‘¨æœŸ
-    PWMX_Cycle_128,     // 128 ä¸ªPWMXå‘¨æœŸ
-    PWMX_Cycle_127,     // 127 ä¸ªPWMXå‘¨æœŸ
-    PWMX_Cycle_64,      // 64 ä¸ªPWMXå‘¨æœŸ
-    PWMX_Cycle_63,      // 63 ä¸ªPWMXå‘¨æœŸ
-    PWMX_Cycle_32,      // 32 ä¸ªPWMXå‘¨æœŸ
-    PWMX_Cycle_31,      // 31 ä¸ªPWMXå‘¨æœŸ
+    PWMX_Cycle_256 = 0, // 256 ¸öPWMXÖÜÆÚ
+    PWMX_Cycle_255,     // 255 ¸öPWMXÖÜÆÚ
+    PWMX_Cycle_128,     // 128 ¸öPWMXÖÜÆÚ
+    PWMX_Cycle_127,     // 127 ¸öPWMXÖÜÆÚ
+    PWMX_Cycle_64,      // 64 ¸öPWMXÖÜÆÚ
+    PWMX_Cycle_63,      // 63 ¸öPWMXÖÜÆÚ
+    PWMX_Cycle_32,      // 32 ¸öPWMXÖÜÆÚ
+    PWMX_Cycle_31,      // 31 ¸öPWMXÖÜÆÚ
 } PWMX_CycleTypeDef;
 
 /**
- * @brief   PWM4-PWM11 é€šé“åŸºå‡†æ—¶é’Ÿé…ç½®
+ * @brief   PWM4-PWM11 Í¨µÀ»ù×¼Ê±ÖÓÅäÖÃ
  *
- * @param   d   - é€šé“åŸºå‡†æ—¶é’Ÿ = d*Tsys
+ * @param   d   - Í¨µÀ»ù×¼Ê±ÖÓ = d*Tsys
  */
 #define PWMX_CLKCfg(d)    (R8_PWM_CLOCK_DIV = d)
 
 /**
- * @brief   PWM4-PWM11åŸºå‡†æ—¶é’Ÿé…ç½®
+ * @brief   PWM4-PWM11»ù×¼Ê±ÖÓÅäÖÃ
  *
  * @param   cyc - refer to PWMX_CycleTypeDef
  */
 void PWMX_CycleCfg(PWMX_CycleTypeDef cyc);
 
 /**
- * @brief   è®¾ç½® PWM4 æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @brief   ÉèÖÃ PWM4 ÓĞĞ§Êı¾İÂö¿í
  *
- * @param   d   - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d   - ÓĞĞ§Êı¾İÂö¿í
  */
 #define PWM4_ActDataWidth(d)     (R8_PWM4_DATA = d)
 
 /**
- * @brief   è®¾ç½® PWM5 æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @brief   ÉèÖÃ PWM5 ÓĞĞ§Êı¾İÂö¿í
  *
- * @param   d   - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d   - ÓĞĞ§Êı¾İÂö¿í
  */
 #define PWM5_ActDataWidth(d)     (R8_PWM5_DATA = d)
 
 /**
- * @brief   è®¾ç½® PWM6 æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @brief   ÉèÖÃ PWM6 ÓĞĞ§Êı¾İÂö¿í
  *
- * @param   d   - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d   - ÓĞĞ§Êı¾İÂö¿í
  */
 #define PWM6_ActDataWidth(d)     (R8_PWM6_DATA = d)
 
 /**
- * @brief   è®¾ç½® PWM7 æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @brief   ÉèÖÃ PWM7 ÓĞĞ§Êı¾İÂö¿í
  *
- * @param   d   - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d   - ÓĞĞ§Êı¾İÂö¿í
  */
 #define PWM7_ActDataWidth(d)     (R8_PWM7_DATA = d)
 
 /**
- * @brief   è®¾ç½® PWM8 æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @brief   ÉèÖÃ PWM8 ÓĞĞ§Êı¾İÂö¿í
  *
- * @param   d   - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d   - ÓĞĞ§Êı¾İÂö¿í
  */
 #define PWM8_ActDataWidth(d)     (R8_PWM8_DATA = d)
 
 /**
- * @brief   è®¾ç½® PWM9 æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @brief   ÉèÖÃ PWM9 ÓĞĞ§Êı¾İÂö¿í
  *
- * @param   d   - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d   - ÓĞĞ§Êı¾İÂö¿í
  */
 #define PWM9_ActDataWidth(d)     (R8_PWM9_DATA = d)
 
 /**
- * @brief   è®¾ç½® PWM10 æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @brief   ÉèÖÃ PWM10 ÓĞĞ§Êı¾İÂö¿í
  *
- * @param   d   - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d   - ÓĞĞ§Êı¾İÂö¿í
  */
 #define PWM10_ActDataWidth(d)    (R8_PWM10_DATA = d)
 
 /**
- * @brief   è®¾ç½® PWM11 æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @brief   ÉèÖÃ PWM11 ÓĞĞ§Êı¾İÂö¿í
  *
- * @param   d   - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d   - ÓĞĞ§Êı¾İÂö¿í
  */
 #define PWM11_ActDataWidth(d)    (R8_PWM11_DATA = d)
 
 /**
- * @brief   PWM4-PWM11é€šé“è¾“å‡ºæ³¢å½¢é…ç½®
+ * @brief   PWM4-PWM11Í¨µÀÊä³ö²¨ĞÎÅäÖÃ
  *
  * @param   ch      - select channel of pwm, refer to channel of PWM define
  * @param   da      - effective pulse width
@@ -132,13 +132,13 @@ void PWMX_CycleCfg(PWMX_CycleTypeDef cyc);
 void PWMX_ACTOUT(uint8_t ch, uint8_t da, PWMX_PolarTypeDef pr, FunctionalState s);
 
 /**
- * @brief   PWM äº¤æ›¿è¾“å‡ºæ¨¡å¼é…ç½®
+ * @brief   PWM ½»ÌæÊä³öÄ£Ê½ÅäÖÃ
  *
  * @param   ch      - select group of PWM alternate output
- *                    RB_PWM4_5_STAG_EN     -  PWM4 å’Œ PWM5 é€šé“äº¤æ›¿è¾“å‡º
- *                    RB_PWM6_7_STAG_EN     -  PWM6 å’Œ PWM7 é€šé“äº¤æ›¿è¾“å‡º
- *                    RB_PWM8_9_STAG_EN     -  PWM8 å’Œ PWM9 é€šé“äº¤æ›¿è¾“å‡º
- *                    RB_PWM10_11_STAG_EN   -  PWM10 å’Œ PWM11 é€šé“äº¤æ›¿è¾“å‡º
+ *                    RB_PWM4_5_STAG_EN     -  PWM4 ºÍ PWM5 Í¨µÀ½»ÌæÊä³ö
+ *                    RB_PWM6_7_STAG_EN     -  PWM6 ºÍ PWM7 Í¨µÀ½»ÌæÊä³ö
+ *                    RB_PWM8_9_STAG_EN     -  PWM8 ºÍ PWM9 Í¨µÀ½»ÌæÊä³ö
+ *                    RB_PWM10_11_STAG_EN   -  PWM10 ºÍ PWM11 Í¨µÀ½»ÌæÊä³ö
  * @param   s       - control pwmx function, ENABLE or DISABLE
  */
 void PWMX_AlterOutCfg(uint8_t ch, FunctionalState s);

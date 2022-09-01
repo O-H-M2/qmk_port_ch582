@@ -38,12 +38,12 @@ extern tmosTaskID halTaskID;
  */
 
 /**
- * @brief   ç¡¬ä»¶åˆå§‹åŒ–
+ * @brief   Ó²¼ş³õÊ¼»¯
  */
 extern void HAL_Init(void);
 
 /**
- * @brief   ç¡¬ä»¶å±‚äº‹åŠ¡å¤„ç†
+ * @brief   Ó²¼ş²ãÊÂÎñ´¦Àí
  *
  * @param   task_id - The TMOS assigned task ID.
  * @param   events - events to process.  This is a bit map and can
@@ -52,19 +52,19 @@ extern void HAL_Init(void);
 extern tmosEvents HAL_ProcessEvent(tmosTaskID task_id, tmosEvents events);
 
 /**
- * @brief   BLE åº“åˆå§‹åŒ–
+ * @brief   BLE ¿â³õÊ¼»¯
  */
 extern void CH58X_BLEInit(void);
 
 /**
- * @brief   è·å–å†…éƒ¨æ¸©æ„Ÿé‡‡æ ·å€¼ï¼Œå¦‚æœä½¿ç”¨äº†ADCä¸­æ–­é‡‡æ ·ï¼Œéœ€åœ¨æ­¤å‡½æ•°ä¸­æš‚æ—¶å±è”½ä¸­æ–­.
+ * @brief   »ñÈ¡ÄÚ²¿ÎÂ¸Ğ²ÉÑùÖµ£¬Èç¹ûÊ¹ÓÃÁËADCÖĞ¶Ï²ÉÑù£¬ĞèÔÚ´Ëº¯ÊıÖĞÔİÊ±ÆÁ±ÎÖĞ¶Ï.
  *
- * @return  å†…éƒ¨æ¸©æ„Ÿé‡‡æ ·å€¼.
+ * @return  ÄÚ²¿ÎÂ¸Ğ²ÉÑùÖµ.
  */
 extern uint16_t HAL_GetInterTempValue(void);
 
 /**
- * @brief   å†…éƒ¨32kæ ¡å‡†
+ * @brief   ÄÚ²¿32kĞ£×¼
  */
 extern void Lib_Calibration_LSI(void);
 

@@ -13,25 +13,25 @@
 /*********************************************************************
  * @fn      ADC_DataCalib_Rough
  *
- * @brief   é‡‡æ ·æ•°æ®ç²—è°ƒ,è·å–åå·®å€¼,å¿…é¡»å…ˆé…ç½®ADCåè°ƒç”¨æ­¤å‡½æ•°è·å–æ ¡å‡†å€¼
+ * @brief   ²ÉÑùÊı¾İ´Öµ÷,»ñÈ¡Æ«²îÖµ,±ØĞëÏÈÅäÖÃADCºóµ÷ÓÃ´Ëº¯Êı»ñÈ¡Ğ£×¼Öµ
  *
  * @param   none
  *
- * @return  åå·®
+ * @return  Æ«²î
  */
-signed short ADC_DataCalib_Rough(void) // é‡‡æ ·æ•°æ®ç²—è°ƒ,è·å–åå·®å€¼
+signed short ADC_DataCalib_Rough(void) // ²ÉÑùÊı¾İ´Öµ÷,»ñÈ¡Æ«²îÖµ
 {
     uint16_t i;
     uint32_t sum = 0;
-    uint8_t  ch = 0;   // å¤‡ä»½é€šé“
-    uint8_t  ctrl = 0; // å¤‡ä»½æ§åˆ¶å¯„å­˜å™¨
+    uint8_t  ch = 0;   // ±¸·İÍ¨µÀ
+    uint8_t  ctrl = 0; // ±¸·İ¿ØÖÆ¼Ä´æÆ÷
 
     ch = R8_ADC_CHANNEL;
     ctrl = R8_ADC_CFG;
     R8_ADC_CFG = 0;
 
-    ADC_ChannelCfg(1);                                          // ADCæ ¡å‡†é€šé“è¯·é€‰æ‹©é€šé“1
-    R8_ADC_CFG |= RB_ADC_OFS_TEST | RB_ADC_POWER_ON | (2 << 4); // è¿›å…¥æµ‹è¯•æ¨¡å¼
+    ADC_ChannelCfg(1);                                          // ADCĞ£×¼Í¨µÀÇëÑ¡ÔñÍ¨µÀ1
+    R8_ADC_CFG |= RB_ADC_OFS_TEST | RB_ADC_POWER_ON | (2 << 4); // ½øÈë²âÊÔÄ£Ê½
     R8_ADC_CONVERT = RB_ADC_START;
     while(R8_ADC_CONVERT & RB_ADC_START);
     for(i = 0; i < 16; i++)
@@ -41,7 +41,7 @@ signed short ADC_DataCalib_Rough(void) // é‡‡æ ·æ•°æ®ç²—è°ƒ,è·å–åå·®å€¼
         sum += (~R16_ADC_DATA) & RB_ADC_DATA;
     }
     sum = (sum + 8) >> 4;
-    R8_ADC_CFG &= ~RB_ADC_OFS_TEST; // å…³é—­æµ‹è¯•æ¨¡å¼
+    R8_ADC_CFG &= ~RB_ADC_OFS_TEST; // ¹Ø±Õ²âÊÔÄ£Ê½
 
     R8_ADC_CHANNEL = ch;
     R8_ADC_CFG = ctrl;
@@ -51,7 +51,7 @@ signed short ADC_DataCalib_Rough(void) // é‡‡æ ·æ•°æ®ç²—è°ƒ,è·å–åå·®å€¼
 /*********************************************************************
  * @fn      ADC_ExtSingleChSampInit
  *
- * @brief   å¤–éƒ¨ä¿¡å·å•é€šé“é‡‡æ ·åˆå§‹åŒ–
+ * @brief   Íâ²¿ĞÅºÅµ¥Í¨µÀ²ÉÑù³õÊ¼»¯
  *
  * @param   sp  - refer to ADC_SampClkTypeDef
  * @param   ga  - refer to ADC_SignalPGATypeDef
@@ -67,7 +67,7 @@ void ADC_ExtSingleChSampInit(ADC_SampClkTypeDef sp, ADC_SignalPGATypeDef ga)
 /*********************************************************************
  * @fn      ADC_ExtDiffChSampInit
  *
- * @brief   å¤–éƒ¨ä¿¡å·å·®åˆ†é€šé“é‡‡æ ·åˆå§‹åŒ–
+ * @brief   Íâ²¿ĞÅºÅ²î·ÖÍ¨µÀ²ÉÑù³õÊ¼»¯
  *
  * @param   sp  - refer to ADC_SampClkTypeDef
  * @param   ga  - refer to ADC_SignalPGATypeDef
@@ -83,7 +83,7 @@ void ADC_ExtDiffChSampInit(ADC_SampClkTypeDef sp, ADC_SignalPGATypeDef ga)
 /*********************************************************************
  * @fn      ADC_InterTSSampInit
  *
- * @brief   å†…ç½®æ¸©åº¦ä¼ æ„Ÿå™¨é‡‡æ ·åˆå§‹åŒ–
+ * @brief   ÄÚÖÃÎÂ¶È´«¸ĞÆ÷²ÉÑù³õÊ¼»¯
  *
  * @param   none
  *
@@ -100,7 +100,7 @@ void ADC_InterTSSampInit(void)
 /*********************************************************************
  * @fn      ADC_InterBATSampInit
  *
- * @brief   å†…ç½®ç”µæ± ç”µå‹é‡‡æ ·åˆå§‹åŒ–
+ * @brief   ÄÚÖÃµç³ØµçÑ¹²ÉÑù³õÊ¼»¯
  *
  * @param   none
  *
@@ -110,13 +110,13 @@ void ADC_InterBATSampInit(void)
 {
     R8_TKEY_CFG &= ~RB_TKEY_PWR_ON;
     R8_ADC_CHANNEL = CH_INTE_VBAT;
-    R8_ADC_CFG = RB_ADC_POWER_ON | RB_ADC_BUF_EN | (0 << 4); // ä½¿ç”¨-12dBæ¨¡å¼ï¼Œ
+    R8_ADC_CFG = RB_ADC_POWER_ON | RB_ADC_BUF_EN | (0 << 4); // Ê¹ÓÃ-12dBÄ£Ê½£¬
 }
 
 /*********************************************************************
  * @fn      TouchKey_ChSampInit
  *
- * @brief   è§¦æ‘¸æŒ‰é”®é€šé“é‡‡æ ·åˆå§‹åŒ–
+ * @brief   ´¥Ãş°´¼üÍ¨µÀ²ÉÑù³õÊ¼»¯
  *
  * @param   none
  *
@@ -131,11 +131,11 @@ void TouchKey_ChSampInit(void)
 /*********************************************************************
  * @fn      ADC_ExcutSingleConver
  *
- * @brief   ADCæ‰§è¡Œå•æ¬¡è½¬æ¢
+ * @brief   ADCÖ´ĞĞµ¥´Î×ª»»
  *
  * @param   none
  *
- * @return  ADCè½¬æ¢åçš„æ•°æ®
+ * @return  ADC×ª»»ºóµÄÊı¾İ
  */
 uint16_t ADC_ExcutSingleConver(void)
 {
@@ -148,12 +148,12 @@ uint16_t ADC_ExcutSingleConver(void)
 /*********************************************************************
  * @fn      TouchKey_ExcutSingleConver
  *
- * @brief   TouchKeyè½¬æ¢åæ•°æ®
+ * @brief   TouchKey×ª»»ºóÊı¾İ
  *
- * @param   charg   - Touchkeyå……ç”µæ—¶é—´,5bitsæœ‰æ•ˆ, t=charg*Tadc
- * @param   disch   - Touchkeyæ”¾ç”µæ—¶é—´,3bitsæœ‰æ•ˆ, t=disch*Tadc
+ * @param   charg   - Touchkey³äµçÊ±¼ä,5bitsÓĞĞ§, t=charg*Tadc
+ * @param   disch   - Touchkey·ÅµçÊ±¼ä,3bitsÓĞĞ§, t=disch*Tadc
  *
- * @return  å½“å‰TouchKeyç­‰æ•ˆæ•°æ®
+ * @return  µ±Ç°TouchKeyµÈĞ§Êı¾İ
  */
 uint16_t TouchKey_ExcutSingleConver(uint8_t charg, uint8_t disch)
 {
@@ -166,9 +166,9 @@ uint16_t TouchKey_ExcutSingleConver(uint8_t charg, uint8_t disch)
 /*********************************************************************
  * @fn      ADC_AutoConverCycle
  *
- * @brief   è®¾ç½®è¿ç»­ ADCçš„å‘¨æœŸ
+ * @brief   ÉèÖÃÁ¬Ğø ADCµÄÖÜÆÚ
  *
- * @param   cycle   - é‡‡æ ·å‘¨æœŸè®¡ç®—æ–¹æ³•ä¸º(256-cycle)*16*Tsys
+ * @param   cycle   - ²ÉÑùÖÜÆÚ¼ÆËã·½·¨Îª(256-cycle)*16*Tsys
  *
  * @return  none
  */
@@ -180,12 +180,12 @@ void ADC_AutoConverCycle(uint8_t cycle)
 /*********************************************************************
  * @fn      ADC_DMACfg
  *
- * @brief   é…ç½®DMAåŠŸèƒ½
+ * @brief   ÅäÖÃDMA¹¦ÄÜ
  *
- * @param   s           - æ˜¯å¦æ‰“å¼€DMAåŠŸèƒ½
- * @param   startAddr   - DMA èµ·å§‹åœ°å€
- * @param   endAddr     - DMA ç»“æŸåœ°å€
- * @param   m           - é…ç½®DMAæ¨¡å¼
+ * @param   s           - ÊÇ·ñ´ò¿ªDMA¹¦ÄÜ
+ * @param   startAddr   - DMA ÆğÊ¼µØÖ·
+ * @param   endAddr     - DMA ½áÊøµØÖ·
+ * @param   m           - ÅäÖÃDMAÄ£Ê½
  *
  * @return  none
  */
