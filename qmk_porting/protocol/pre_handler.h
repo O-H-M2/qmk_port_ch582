@@ -10,13 +10,9 @@
 #ifndef HAL_SLEEP
 #define HAL_SLEEP 1
 #endif
-#ifndef DCDC_ENABLE
-#define DCDC_ENABLE 1
-#endif
-#else
-#ifdef BLE_MATRIX_ENHANCE
-#undef BLE_MATRIX_ENHANCE
-#endif
+// #ifndef DCDC_ENABLE
+// #define DCDC_ENABLE 1
+// #endif
 #endif
 
 #ifndef EXTRAKEY_ENABLE

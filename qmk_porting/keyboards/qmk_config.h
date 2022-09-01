@@ -2,11 +2,10 @@
 
 //* platform settings
 // #define DEBUG       1
-#define DCDC_ENABLE 1
-#define Fsys        CLK_SOURCE_PLL_20MHz
+// #define DCDC_ENABLE 1
+#define Fsys        CLK_SOURCE_PLL_40MHz
 // #define LSE_FREQ    32768
 // #define CH58xBLE_ROM
-// #define BLE_MATRIX_ENHANCE        1
 #define BLE_TX_NUM_EVENT          4
 #define PERIPHERAL_MAX_CONNECTION 2
 #define CENTRAL_MAX_CONNECTION    0

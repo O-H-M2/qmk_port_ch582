@@ -103,10 +103,8 @@ void platform_setup_ble()
     pin_a &= ~GPIO_Pin_11;
 #endif
 #endif
-#if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
     GPIOA_ModeCfg(pin_a, GPIO_ModeIN_PU);
     GPIOB_ModeCfg(pin_b, GPIO_ModeIN_PU);
-#endif
     CH58X_BLEInit();
     HAL_Init();
     GAPRole_PeripheralInit();
@@ -114,7 +112,6 @@ void platform_setup_ble()
 
 __INTERRUPT __HIGH_CODE void GPIOA_IRQHandler()
 {
-    PRINT("GPIOA Int. %x.\n", R16_PA_INT_IF & R16_PA_INT_EN);
     PFIC_DisableIRQ(GPIO_A_IRQn);
     PFIC_DisableIRQ(GPIO_B_IRQn);
     R16_PA_INT_IF = R16_PA_INT_IF;
@@ -124,7 +121,6 @@ __INTERRUPT __HIGH_CODE void GPIOA_IRQHandler()
 
 __INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
 {
-    PRINT("GPIOB Int. %x.\r\n", R16_PB_INT_IF & R16_PB_INT_EN);
     PFIC_DisableIRQ(GPIO_A_IRQn);
     PFIC_DisableIRQ(GPIO_B_IRQn);
     R16_PA_INT_IF = R16_PA_INT_IF;
