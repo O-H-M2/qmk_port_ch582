@@ -67,5 +67,10 @@
         "ble.h": "c",
         "gpio.h": "c"
     },
-    "cmake.configureOnOpen": true
+    "cmake.configureOnOpen": true,
+    "C_Cpp.files.exclude": {
+        "**/.vscode": true,
+        "**/.vs": true,
+        "**/build": true
+    }
 }

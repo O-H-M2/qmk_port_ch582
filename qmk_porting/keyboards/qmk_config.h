@@ -1,9 +1,9 @@
 #pragma once
 
 //* platform settings
-// #define DEBUG       1
+#define DEBUG       1
 // #define DCDC_ENABLE 1
-#define Fsys        CLK_SOURCE_PLL_40MHz
+#define FREQ_SYS 60000000
 // #define LSE_FREQ    32768
 // #define CH58xBLE_ROM
 #define BLE_TX_NUM_EVENT          4

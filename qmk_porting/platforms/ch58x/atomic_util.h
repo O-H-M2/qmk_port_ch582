@@ -21,6 +21,14 @@
 
 // Macro to help make GPIO and other controls atomic.
 
+#if defined BLE_ENABLE || defined ESB_ENABLE
+
+#define ATOMIC_BLOCK              for (uint8_t __ToDo = 1; __ToDo; __ToDo = 0)
+#define ATOMIC_BLOCK_RESTORESTATE ATOMIC_BLOCK
+#define ATOMIC_BLOCK_FORCEON      ATOMIC_BLOCK
+
+#else
+
 static uint32_t irq_status;
 
 static __inline__ uint8_t __interrupt_disable__(void)
@@ -43,3 +51,5 @@ static __inline__ void __interrupt_enable__(const uint8_t *__s)
 
 #define ATOMIC_BLOCK_RESTORESTATE _Static_assert(0, "ATOMIC_BLOCK_RESTORESTATE not implemented")
 #define ATOMIC_BLOCK_FORCEON      ATOMIC_BLOCK(ATOMIC_FORCEON)
+
+#endif

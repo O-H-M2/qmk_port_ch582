@@ -6,13 +6,43 @@
 #define NO_PRINT
 #endif
 
+// #ifndef ENABLE_INTERRUPT_NEST
+// #define ENABLE_INTERRUPT_NEST 0
+// #endif
+
 #ifdef BLE_ENABLE
 #ifndef HAL_SLEEP
 #define HAL_SLEEP 1
 #endif
-// #ifndef DCDC_ENABLE
-// #define DCDC_ENABLE 1
-// #endif
+#ifdef DCDC_ENABLE
+#undef DCDC_ENABLE
+#endif
+#endif
+
+#if FREQ_SYS == 80000000
+#define Fsys CLK_SOURCE_PLL_80MHz
+#elif FREQ_SYS == 60000000
+#define Fsys CLK_SOURCE_PLL_60MHz
+#elif FREQ_SYS == 48000000
+#define Fsys CLK_SOURCE_PLL_48MHz
+#elif FREQ_SYS == 40000000
+#define Fsys CLK_SOURCE_PLL_40MHz
+#elif FREQ_SYS == 32000000
+#define Fsys CLK_SOURCE_PLL_32MHz
+#elif FREQ_SYS == 24000000
+#define Fsys CLK_SOURCE_PLL_24MHz
+#elif FREQ_SYS == 16000000
+#define Fsys CLK_SOURCE_HSE_16MHz
+#elif FREQ_SYS == 8000000
+#define Fsys CLK_SOURCE_HSE_8MHz
+#elif FREQ_SYS == 4000000
+#define Fsys CLK_SOURCE_HSE_4MHz
+#elif FREQ_SYS == 2000000
+#define Fsys CLK_SOURCE_HSE_2MHz
+#elif FREQ_SYS == 1000000
+#define Fsys CLK_SOURCE_HSE_1MHz
+#else
+#error "Illegal Fsys!"
 #endif
 
 #ifndef EXTRAKEY_ENABLE
