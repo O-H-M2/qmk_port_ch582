@@ -2,7 +2,7 @@
 #include "quantum_keycodes.h"
 
 volatile uint8_t kbd_protocol_type = 0;
-extern volatile uint8_t GPIOTigFlag;
+volatile uint8_t GPIOTigFlag;
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 
 #if (defined(BLE_MAC)) && (BLE_MAC == TRUE)
@@ -82,48 +82,62 @@ void platform_setup()
 
 void platform_setup_ble()
 {
-    //     uint32_t pin_a = GPIO_Pin_All, pin_b = GPIO_Pin_All;
+    uint32_t pin_a = GPIO_Pin_All, pin_b = GPIO_Pin_All;
 
-    // #ifdef PLF_DEBUG
-    //     pin_a &= ~GPIO_Pin_8;
-    //     pin_a &= ~GPIO_Pin_9;
-    // #endif
-    // #ifdef LSE_FREQ
-    //     pin_a &= ~GPIO_Pin_10;
-    //     pin_a &= ~GPIO_Pin_11;
-    // #endif
-    // #ifdef WS2812_DRIVER_SPI
-    //     pin_a &= ~GPIO_Pin_14;
-    // #elif defined WS2812_DRIVER_PWM
-    // #if WS2812_PWM_DRIVER == 1
-    //     pin_a &= ~GPIO_Pin_10;
-    // #elif WS2812_PWM_DRIVER == 2
-    //     pin_a &= ~GPIO_Pin_11;
-    // #endif
-    // #endif
-    //     GPIOA_ModeCfg(pin_a, GPIO_ModeIN_PU);
-    //     GPIOB_ModeCfg(pin_b, GPIO_ModeIN_PU);
+#ifdef PLF_DEBUG
+    pin_a &= ~bTXD1;
+    pin_a &= ~bRXD1;
+#endif
+#ifdef LSE_FREQ
+    pin_a &= ~bX32KI;
+    pin_a &= ~bX32KO;
+#endif
+#ifdef WS2812_DRIVER_SPI
+    pin_a &= ~bMOSI;
+#elif defined WS2812_DRIVER_PWM
+#if WS2812_PWM_DRIVER == 1
+    pin_a &= ~bTMR1;
+#elif WS2812_PWM_DRIVER == 2
+    pin_a &= ~bTMR2;
+#endif
+#endif
+    pin_b &= ~bUDP;
+    pin_b &= ~bUDM;
+    pin_b &= ~bU2DP;
+    pin_b &= ~bU2DM;
+    GPIOA_ModeCfg(pin_a, GPIO_ModeIN_PU);
+    GPIOB_ModeCfg(pin_b, GPIO_ModeIN_PU);
+
+    // clock gate for unused peripherals
+    sys_safe_access_enable();
+    R8_SLP_CLK_OFF0 |= RB_SLP_CLK_UART3 | RB_SLP_CLK_UART2 | RB_SLP_CLK_UART0;
+    sys_safe_access_enable();
+#ifndef PLF_DEBUG
+    R8_SLP_CLK_OFF0 |= RB_SLP_CLK_UART1;
+#endif
+    sys_safe_access_enable();
+    R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR3 | RB_SLP_CLK_TMR0;
+    sys_safe_access_enable();
+    R8_SLP_CLK_OFF1 |= RB_SLP_CLK_USB | RB_SLP_CLK_USB2 | RB_SLP_CLK_I2C;
+    sys_safe_access_enable();
+    R8_SLP_CLK_OFF1 |= RB_SLP_CLK_PWMX;
+#if WS2812_PWM_DRIVER != 1
+    sys_safe_access_enable();
+    R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR1;
+#endif
+#if WS2812_PWM_DRIVER != 2
+    sys_safe_access_enable();
+    R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR2;
+#endif
+#ifndef WS2812_DRIVER_SPI
+    sys_safe_access_enable();
+    R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;
+#endif
+    sys_safe_access_disable();
+
     CH58X_BLEInit();
     HAL_Init();
     GAPRole_PeripheralInit();
-}
-
-__INTERRUPT __HIGH_CODE void GPIOA_IRQHandler()
-{
-    R16_PA_INT_EN = 0;
-    R16_PB_INT_EN = 0;
-    R16_PA_INT_IF = R16_PA_INT_IF;
-    R16_PB_INT_IF = R16_PB_INT_IF;
-    GPIOTigFlag = 1;
-}
-
-__INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
-{
-    R16_PA_INT_EN = 0;
-    R16_PB_INT_EN = 0;
-    R16_PA_INT_IF = R16_PA_INT_IF;
-    R16_PB_INT_IF = R16_PB_INT_IF;
-    GPIOTigFlag = 1;
 }
 
 #endif

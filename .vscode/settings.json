@@ -65,7 +65,9 @@
         "printf.h": "c",
         "hidkbdservice.h": "c",
         "ble.h": "c",
-        "gpio.h": "c"
+        "gpio.h": "c",
+        "usb_util.h": "c",
+        "sleep.h": "c"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.files.exclude": {

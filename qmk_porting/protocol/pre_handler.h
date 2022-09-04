@@ -14,9 +14,9 @@
 #ifndef HAL_SLEEP
 #define HAL_SLEEP 1
 #endif
-#ifdef DCDC_ENABLE
-#undef DCDC_ENABLE
-#endif
+// #ifdef DCDC_ENABLE
+// #undef DCDC_ENABLE
+// #endif
 #endif
 
 #if FREQ_SYS == 80000000
