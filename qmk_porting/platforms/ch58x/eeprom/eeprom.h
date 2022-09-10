@@ -31,4 +31,6 @@ void eeprom_update_block(const void *__src, void *__dst, size_t __n);
 #elif defined(EEPROM_WEAR_LEVELING)
 #include "wear_leveling_ch58x_config.h"
 #define TOTAL_EEPROM_BYTE_COUNT (WEAR_LEVELING_LOGICAL_SIZE)
+#else
+#error "No available EEPROM driver!"
 #endif
