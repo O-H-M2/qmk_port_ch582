@@ -67,12 +67,13 @@
         "ble.h": "c",
         "gpio.h": "c",
         "usb_util.h": "c",
-        "sleep.h": "c"
+        "sleep.h": "c",
+        "CH58xBLE_LIB.H": "c"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.files.exclude": {
-        "**/.vscode": true,
-        "**/.vs": true,
-        "**/build": true
+        "${workspaceFolder}/.vscode": true,
+        "${workspaceFolder}/.vs": true,
+        "${workspaceFolder}/build": true
     }
 }

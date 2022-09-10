@@ -6,6 +6,14 @@
 #define KC_VENDOR_BT4       (__UINT16_MAX__ - 1)
 #define KC_VENDOR_BT_UNPAIR (__UINT16_MAX__)
 
+// #define CH58xBLE_ROM
+#define BLE_TX_NUM_EVENT          4
+#define PERIPHERAL_MAX_CONNECTION 2
+#define CENTRAL_MAX_CONNECTION    0
+#define BLE_BUFF_MAX_LEN          48
+// #define BLE_MEMHEAP_SIZE          (1024 * 7)
+// #define BLE_BUFF_NUM              10
+
 // Battery measurement period in (625us)
 #define DEFAULT_BATT_PERIOD SYS_TICK_MS(9375)
 
@@ -16,6 +24,12 @@
 #define HID_HIGH_ADV_INT_MAX    SYS_TICK_MS(20)
 #define HID_LOW_ADV_INT_MIN     SYS_TICK_MS(211.25)
 #define HID_LOW_ADV_INT_MAX     SYS_TICK_MS(211.25)
+
+#if defined RGBLIGHT_ENABLE || defined RGB_MATRIX_ENABLE
+#define QMK_TASK_INTERVAL 2
+#else
+#define QMK_TASK_INTERVAL SYS_TICK_MS(15)
+#endif
 
 // Advertising timeouts in sec
 #define HID_INITIAL_ADV_TIMEOUT 60

@@ -2,7 +2,6 @@
 #include "quantum_keycodes.h"
 
 volatile uint8_t kbd_protocol_type = 0;
-volatile uint8_t GPIOTigFlag;
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 
 #if (defined(BLE_MAC)) && (BLE_MAC == TRUE)
@@ -54,12 +53,14 @@ void platform_setup()
 
     PRINT("Chip start, %s\n", VER_LIB);
 
+#ifdef BLE_ENABLE
     if (KC_VENDOR_BT1 < SAFE_RANGE) {
         // keycode violation
         PRINT("Error: overlap detected between QMK and Vendor defined keycodes!\n");
         DelayMs(1000);
         SYS_ResetExecute();
     }
+#endif
 
 #if 0
     PRINT("EEPROM dump: \n");

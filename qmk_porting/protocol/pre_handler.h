@@ -6,13 +6,13 @@
 #define NO_PRINT
 #endif
 
-// #ifndef ENABLE_INTERRUPT_NEST
-// #define ENABLE_INTERRUPT_NEST 0
-// #endif
-
 #ifdef BLE_ENABLE
 #ifndef HAL_SLEEP
+#if defined RGBLIGHT_ENABLE || defined RGB_MATRIX_ENABLE
+#define HAL_SLEEP 0
+#else
 #define HAL_SLEEP 1
+#endif
 #endif
 // #ifdef DCDC_ENABLE
 // #undef DCDC_ENABLE
