@@ -7,16 +7,27 @@
 #endif
 
 #ifdef BLE_ENABLE
-#ifndef HAL_SLEEP
 #if defined RGBLIGHT_ENABLE || defined RGB_MATRIX_ENABLE
-#define HAL_SLEEP 0
+#ifdef HAL_SLEEP
+#undef HAL_SLEEP
+#endif
+#ifdef QMK_TASK_INTERVAL
+#undef QMK_TASK_INTERVAL
+#endif
+#ifdef DCDC_ENABLE
+#undef DCDC_ENABLE
+#endif
+#define HAL_SLEEP         0
+#define QMK_TASK_INTERVAL 2
+#define DCDC_ENABLE       1
 #else
+#ifndef HAL_SLEEP
 #define HAL_SLEEP 1
 #endif
+#ifndef QMK_TASK_INTERVAL
+#define QMK_TASK_INTERVAL SYS_TICK_MS(15)
 #endif
-// #ifdef DCDC_ENABLE
-// #undef DCDC_ENABLE
-// #endif
+#endif
 #endif
 
 #if FREQ_SYS == 80000000
@@ -115,3 +126,7 @@ enum {
     kbd_protocol_esb,
 #endif
 };
+
+_Static_assert(USER_EEPROM_START_POSITION % 0x100 == 0, "EEPROM: User data sector not aligned!");
+_Static_assert(QMK_EEPROM_START_POSITION % 0x100 == 0, "EEPROM: QMK data sector not aligned!");
+_Static_assert(BLE_SNV_ADDR % 0x100 == 0, "EEPROM: BLE data sector not aligned!");

@@ -25,12 +25,6 @@
 #define HID_LOW_ADV_INT_MIN     SYS_TICK_MS(211.25)
 #define HID_LOW_ADV_INT_MAX     SYS_TICK_MS(211.25)
 
-#if defined RGBLIGHT_ENABLE || defined RGB_MATRIX_ENABLE
-#define QMK_TASK_INTERVAL 2
-#else
-#define QMK_TASK_INTERVAL SYS_TICK_MS(15)
-#endif
-
 // Advertising timeouts in sec
 #define HID_INITIAL_ADV_TIMEOUT 60
 #define HID_HIGH_ADV_TIMEOUT    5
