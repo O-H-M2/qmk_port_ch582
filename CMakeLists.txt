@@ -1,82 +1,94 @@
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_VERSION 1)
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 cmake_minimum_required(VERSION 3.20)
+
+# 工具链设置
+set(TOOLPATH /Users/huckies/wch-toolchain/wch-riscv-gnu-toolchain/bin/riscv-none-embed-)
+
+if(WIN32)
+    MESSAGE(STATUS "Now is windows!")
+    set(CMAKE_C_COMPILER ${TOOLPATH}gcc.exe)
+    set(CMAKE_CXX_COMPILER ${TOOLPATH}g++.exe)
+    set(CMAKE_ASM_COMPILER ${TOOLPATH}gcc.exe)
+    set(CMAKE_AR ${TOOLPATH}ar.exe)
+    set(CMAKE_OBJCOPY ${TOOLPATH}objcopy.exe)
+    set(CMAKE_OBJDUMP ${TOOLPATH}objdump.exe)
+    set(SIZE ${TOOLPATH}size.exe)
+elseif(UNIX)
+    MESSAGE(STATUS "Now is UNIX-like OS!")
+    set(CMAKE_C_COMPILER ${TOOLPATH}gcc)
+    set(CMAKE_CXX_COMPILER ${TOOLPATH}g++)
+    set(CMAKE_ASM_COMPILER ${TOOLPATH}gcc)
+    set(CMAKE_AR ${TOOLPATH}ar)
+    set(CMAKE_OBJCOPY ${TOOLPATH}objcopy)
+    set(CMAKE_OBJDUMP ${TOOLPATH}objdump)
+    set(SIZE ${TOOLPATH}size)
+else()
+    MESSAGE(STATUS "Unsupported system!")
+endif()
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
 # 项目设置
-project(qmk_port_ch582 C CXX ASM)
+project(ch582-ninja C CXX ASM)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
 # 编译参数 一般不用改
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
-add_compile_options(-Wall -Wno-comment)
-
-# add_compile_options(-Wno-unused-function -Wno-unused-variable -Wno-type-limits)
-add_compile_options(-fdiagnostics-color=always)
 
 # 编译等级
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    message(STATUS "Maximum optimization for speed")
-    add_compile_options(-Ofast)
-elseif("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-    message(STATUS "Maximum optimization for speed, debug info included")
-    add_compile_options(-Ofast -g)
-elseif("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
-    message(STATUS "Maximum optimization for size")
-    add_compile_options(-Os)
-else()
-    message(STATUS "Minimal optimization, debug info included")
-    add_compile_options(-Og -g)
-endif()
+add_compile_options(-O3)
 
-function(include_sub_directories_recursively root_dir)
-    if(IS_DIRECTORY ${root_dir})
-        include_directories(${root_dir})
-    endif()
+# 编译信息等级
 
-    file(GLOB ALL_SUB RELATIVE ${root_dir} ${root_dir}/*)
-
-    foreach(sub ${ALL_SUB})
-        if(IS_DIRECTORY ${root_dir}/${sub})
-            include_sub_directories_recursively(${root_dir}/${sub})
-        endif()
-    endforeach()
-endfunction()
-
-include(qmk_porting/keyboards/rules.cmake)
-include(qmk_porting/qmk_porting.cmake)
-include(qmk_porting/quantum.cmake)
-include(sdk/riscv.cmake)
-include(CherryUSB_porting/CherryUSB.cmake)
-include(qmk_porting/tmk_core.cmake)
-include(qmk_porting/common_features.cmake)
-
-# get_property(dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-# message("include_dirs=${dirs}")
-
-# 宏定义
-# add_definitions(-include qmk_config.h)
-
-# 源码文件
-file(GLOB SOURCES
-    ${CH582_SOURCES}
-    ${CherryUSB_SOURCES}
-    ${quantum_SOURCES}
-    ${tmk_core_SOURCES}
-    ${QMK_PORTING_SOURCES}
+# 头文件路径
+include_directories(BLE_LIB
+    USB_LIB
+    RVMSIS
+    StdPeriphDriver/inc
+    printf
+    APP/include
+    HAL/include
+    Profile/include
 )
 
-# message("include_dirs=${SOURCES}")
+# 宏定义
+add_definitions(-DDEBUG=1 -DHAL_SLEEP=1)
+
+# 源码文件
+file(GLOB_RECURSE SOURCES
+    "Startup/*.S"
+    "USB_LIB/*.c"
+    "RVMSIS/*.c"
+    "StdPeriphDriver/*.c"
+    "printf/printf.c"
+    "APP/*.c"
+    "HAL/*.c"
+    "Profile/*.c")
+
+# 链接参数
+set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/Ld/Link.ld)
+add_link_options(-nostartfiles
+    -Xlinker --gc-sections
+    -Wl,--print-memory-usage
+    -Wl,-Map,${PROJECT_NAME}.map
+    --specs=nano.specs
+    --specs=nosys.specs)
+add_link_options(-T ${LINKER_SCRIPT})
 
 # 编译可执行文件
 add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
-target_precompile_headers(${PROJECT_NAME}.elf PUBLIC ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/qmk_config.h)
+
+target_precompile_headers(${PROJECT_NAME}.elf PUBLIC ${PROJECT_SOURCE_DIR}/printf/printf.h)
 
 # 链接静态库
-target_link_libraries(${PROJECT_NAME}.elf ${CH582_LIB})
+target_link_libraries(${PROJECT_NAME}.elf
+    ${CMAKE_SOURCE_DIR}/StdPeriphDriver/libISP583.a
+    ${CMAKE_SOURCE_DIR}/BLE_LIB/LIBCH58xBLE.a
+    ${CMAKE_SOURCE_DIR}/USB_LIB/libRV3UFI.a)
 
 # 输出hex和bin
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
