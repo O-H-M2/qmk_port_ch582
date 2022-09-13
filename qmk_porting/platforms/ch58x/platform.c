@@ -35,15 +35,14 @@ void platform_setup()
     GPIOA_ModeCfg(GPIO_Pin_8, GPIO_ModeIN_PU);
     GPIOA_ModeCfg(GPIO_Pin_9, GPIO_ModeOut_PP_5mA);
     UART1_DefInit();
+    UART1_BaudRateCfg(460800);
 #endif
 #ifdef LSE_FREQ
     sys_safe_access_enable();
-    SAFEOPERATE;
     R8_CK32K_CONFIG |= RB_CLK_OSC32K_XT | RB_CLK_INT32K_PON | RB_CLK_XT32K_PON;
     sys_safe_access_disable();
 #else
     sys_safe_access_enable();
-    SAFEOPERATE;
     R8_CK32K_CONFIG &= ~(RB_CLK_OSC32K_XT | RB_CLK_XT32K_PON);
     R8_CK32K_CONFIG |= RB_CLK_INT32K_PON;
     sys_safe_access_disable();
@@ -52,15 +51,27 @@ void platform_setup()
     // TODO: set some GPIO for mode decision
 
     PRINT("Chip start, %s\n", VER_LIB);
-
-#ifdef BLE_ENABLE
-    if (KC_VENDOR_BT1 < SAFE_RANGE) {
-        // keycode violation
-        PRINT("Error: overlap detected between QMK and Vendor defined keycodes!\n");
-        DelayMs(1000);
-        SYS_ResetExecute();
+    PRINT("Reason of last reset:  ");
+    switch (R8_RESET_STATUS & RB_RESET_FLAG) {
+        case 0b000:
+            PRINT("Software\n");
+            break;
+        case 0b001:
+            PRINT("Power on\n");
+            break;
+        case 0b010:
+            PRINT("Watchdog timeout\n");
+            break;
+        case 0b011:
+            PRINT("Manual\n");
+            break;
+        case 0b101:
+            PRINT("Wake from shutdown\n");
+            break;
+        default:
+            PRINT("Wake from sleep\n");
+            break;
     }
-#endif
 
 #if 0
     PRINT("EEPROM dump: \n");
@@ -83,6 +94,8 @@ void platform_setup()
 
 void platform_setup_ble()
 {
+    _Static_assert(KC_VENDOR_BT1 >= SAFE_RANGE, "Error: overlap detected between QMK and Vendor defined keycodes!");
+
     uint32_t pin_a = GPIO_Pin_All, pin_b = GPIO_Pin_All;
 
 #ifdef PLF_DEBUG

@@ -1,11 +1,5 @@
 #pragma once
 
-#define KC_VENDOR_BT1       (__UINT16_MAX__ - 4)
-#define KC_VENDOR_BT2       (__UINT16_MAX__ - 3)
-#define KC_VENDOR_BT3       (__UINT16_MAX__ - 2)
-#define KC_VENDOR_BT4       (__UINT16_MAX__ - 1)
-#define KC_VENDOR_BT_UNPAIR (__UINT16_MAX__)
-
 // #define CH58xBLE_ROM
 #define BLE_TX_NUM_EVENT          4
 #define PERIPHERAL_MAX_CONNECTION 2
@@ -13,6 +7,8 @@
 #define BLE_BUFF_MAX_LEN          48
 // #define BLE_MEMHEAP_SIZE          (1024 * 7)
 // #define BLE_BUFF_NUM              10
+
+#define BLE_SLOT_NUM 8
 
 // Battery measurement period in (625us)
 #define DEFAULT_BATT_PERIOD SYS_TICK_MS(9375)
@@ -28,7 +24,7 @@
 // Advertising timeouts in sec
 #define HID_INITIAL_ADV_TIMEOUT 60
 #define HID_HIGH_ADV_TIMEOUT    5
-#define HID_LOW_ADV_TIMEOUT     0
+#define HID_LOW_ADV_TIMEOUT     30
 
 // Param update delay
 #define START_PARAM_UPDATE_EVT_DELAY SYS_TICK_MS(2000)

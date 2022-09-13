@@ -160,13 +160,13 @@ void protocol_post_init()
     host_set_driver(&ch582_driver);
 }
 
-void protocol_pre_task()
-{
-}
+// void protocol_pre_task()
+// {
+// }
 
-void protocol_post_task()
-{
-}
+// void protocol_post_task()
+// {
+// }
 
 __HIGH_CODE void protocol_task()
 {

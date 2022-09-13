@@ -34,6 +34,7 @@ static void ws2812_init()
     R8_SPI0_CTRL_CFG |= RB_SPI_AUTO_IF;
     R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
     PFIC_EnableIRQ(SPI0_IRQn);
+    ws2812_inited = true;
 }
 
 __INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
@@ -115,7 +116,6 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
 {
     if (!ws2812_inited) {
         ws2812_init();
-        ws2812_inited = true;
     }
 
     for (uint8_t i = 0; i < leds; i++) {
@@ -127,8 +127,12 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     SPI0_StartDMA(txbuf, sizeof(txbuf) / sizeof(txbuf[0]));
 }
 
-void ws2812_deinit()
+__HIGH_CODE void ws2812_deinit()
 {
+    if (!ws2812_inited) {
+        return;
+    }
+
 #if WS2812_EN_LEVEL
     setPinInputLow(WS2812_EN_PIN);
 #else

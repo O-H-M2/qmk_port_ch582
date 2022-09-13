@@ -251,6 +251,7 @@ static void ws2812_init(void)
     WS2812_PWM_CNT_END_REG = WS2812_PWM_PERIOD;
     WS2812_DMA_CONFIG(ENABLE, ws2812_frame_buffer[0], ws2812_frame_buffer[WS2812_BIT_N + 1]);
     WS2812_PWM_INIT(High_Level);
+    ws2812_inited = true;
 }
 
 void ws2812_write_led(uint16_t led_number, uint8_t r, uint8_t g, uint8_t b)
@@ -280,7 +281,6 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
 {
     if (!ws2812_inited) {
         ws2812_init();
-        ws2812_inited = true;
     }
 
     for (uint16_t i = 0; i < leds; i++) {
@@ -292,8 +292,12 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     }
 }
 
-void ws2812_deinit()
+__HIGH_CODE void ws2812_deinit()
 {
+    if (!ws2812_inited) {
+        return;
+    }
+
 #if WS2812_EN_LEVEL
     setPinInputLow(WS2812_EN_PIN);
 #else

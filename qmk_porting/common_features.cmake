@@ -14,7 +14,7 @@ endif()
 
 # NKRO_ENABLE
 if(NKRO_ENABLE)
-    add_definitions(-DNKRO_ENABLE)
+    add_definitions(-DNKRO_ENABLE -DFORCE_NKRO)
     message(STATUS "NKRO_ENABLE")
     list(APPEND quantum_SOURCES
     )

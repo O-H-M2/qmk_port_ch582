@@ -68,7 +68,13 @@
         "gpio.h": "c",
         "usb_util.h": "c",
         "sleep.h": "c",
-        "CH58xBLE_LIB.H": "c"
+        "CH58xBLE_LIB.H": "c",
+        "quantum_keycodes.h": "c",
+        "rgb_led.h": "c",
+        "hogphandler.h": "c",
+        "CH58xBLE_ROM.H": "c",
+        "battservice.h": "c",
+        "whitelist.h": "c"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.files.exclude": {

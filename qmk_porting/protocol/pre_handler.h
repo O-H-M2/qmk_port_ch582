@@ -18,7 +18,7 @@
 #undef DCDC_ENABLE
 #endif
 #define HAL_SLEEP         0
-#define QMK_TASK_INTERVAL 2
+#define QMK_TASK_INTERVAL 5
 #define DCDC_ENABLE       1
 #else
 #ifndef HAL_SLEEP
@@ -27,6 +27,9 @@
 #ifndef QMK_TASK_INTERVAL
 #define QMK_TASK_INTERVAL SYS_TICK_MS(15)
 #endif
+#endif
+#ifndef BLE_SLOT_NUM
+#define BLE_SLOT_NUM 4
 #endif
 #endif
 
@@ -127,6 +130,13 @@ enum {
 #endif
 };
 
+#if BLE_SLOT_NUM > 8
+#error "Too many BLE slots! Cap: 8"
+#endif
+
+_Static_assert(WHITELIST_EEPROM_START_POSITION >= 0x400, "EEPROM: Reserve area too small!");
+_Static_assert(WHITELIST_EEPROM_START_POSITION % 0x100 == 0, "EEPROM: Whitelist data sector not aligned!");
+_Static_assert(USER_EEPROM_START_POSITION - WHITELIST_EEPROM_START_POSITION == 0x100, "EEPROM: Whitelist sector should be exactly 256-byte large!");
 _Static_assert(USER_EEPROM_START_POSITION % 0x100 == 0, "EEPROM: User data sector not aligned!");
 _Static_assert(QMK_EEPROM_START_POSITION % 0x100 == 0, "EEPROM: QMK data sector not aligned!");
 _Static_assert(BLE_SNV_ADDR % 0x100 == 0, "EEPROM: BLE data sector not aligned!");

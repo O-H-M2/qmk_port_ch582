@@ -16,6 +16,7 @@
 #pragma once
 
 #include "color.h"
+#include "CH58x_common.h"
 
 /*
  * The WS2812 datasheets define T1H 900ns, T0H 350ns, T1L 350ns, T0L 900ns. Hence, by default, these
