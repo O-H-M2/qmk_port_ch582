@@ -5,7 +5,7 @@
 #define DCDC_ENABLE 1
 #define FREQ_SYS    60000000
 // #define LSE_FREQ    32768
-// #define SLEEP_RTC_MIN_TIME        50
+#define SLEEP_RTC_MIN_TIME        40
 // #define WAKE_UP_RTC_MAX_TIME      50
 
 #define QMK_TASK_INTERVAL SYS_TICK_MS(15)

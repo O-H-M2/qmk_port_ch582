@@ -2,7 +2,7 @@
 
 static uint32_t ticks_offset = 0;
 
-void timer_init(void)
+inline void timer_init(void)
 {
     timer_clear();
 }
@@ -12,7 +12,7 @@ inline uint16_t timer_read()
     return (uint16_t)(timer_read32() & 0xFFFF);
 }
 
-inline uint32_t timer_read32()
+__HIGH_CODE uint32_t timer_read32()
 {
     uint32_t tick;
 
