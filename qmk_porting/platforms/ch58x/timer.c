@@ -7,12 +7,12 @@ inline void timer_init(void)
     timer_clear();
 }
 
-inline uint16_t timer_read()
+inline uint16_t timer_read(void)
 {
     return (uint16_t)(timer_read32() & 0xFFFF);
 }
 
-__HIGH_CODE uint32_t timer_read32()
+__HIGH_CODE uint32_t timer_read32(void)
 {
     uint32_t tick;
 
@@ -41,4 +41,15 @@ inline uint32_t timer_elapsed32(uint32_t tlast)
 void timer_clear(void)
 {
     ticks_offset = timer_read32();
+}
+
+__HIGH_CODE uint32_t timer_readraw(void)
+{
+    uint32_t i;
+
+    do {
+        i = R32_RTC_CNT_32K;
+    } while (i != R32_RTC_CNT_32K);
+
+    return (i);
 }
