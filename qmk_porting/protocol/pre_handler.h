@@ -25,7 +25,7 @@
 #define HAL_SLEEP 1
 #endif
 #ifndef QMK_TASK_INTERVAL
-#define QMK_TASK_INTERVAL SYS_TICK_MS(15)
+#define QMK_TASK_INTERVAL QMK_TASK_INTERVAL_MAX
 #endif
 #endif
 #ifndef BLE_SLOT_NUM

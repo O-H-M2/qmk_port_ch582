@@ -8,7 +8,8 @@
 // #define BLE_MEMHEAP_SIZE          (1024 * 7)
 // #define BLE_BUFF_NUM              10
 
-#define BLE_SLOT_NUM 8
+#define BLE_SLOT_NUM          8
+#define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(15)
 
 // Battery measurement period in (625us)
 #define DEFAULT_BATT_PERIOD SYS_TICK_MS(9375)
