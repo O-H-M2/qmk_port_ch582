@@ -37,6 +37,8 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 
 #endif
 
+#if !defined ESB_ENABLE || ESB_ENABLE != 2
+
 __HIGH_CODE int main()
 {
     extern void protocol_setup();
@@ -47,20 +49,24 @@ __HIGH_CODE int main()
     platform_setup();
 
     // TODO: implement the mode select conditions
-    if (0) {
+#ifdef USB_ENABLE
+    if (1) {
         // cable mode
+        platform_setup_usb();
         kbd_protocol_type = kbd_protocol_usb;
     }
+#endif
 #ifdef BLE_ENABLE
-    else if (1) {
+    if (1) {
         // bluetooth mode
         platform_setup_ble();
         kbd_protocol_type = kbd_protocol_ble;
     }
 #endif
 #ifdef ESB_ENABLE
-    else {
+    if (1) {
         // 2.4g mode
+        platform_setup_esb();
         kbd_protocol_type = kbd_protocol_esb;
     }
 #endif
@@ -77,3 +83,18 @@ __HIGH_CODE int main()
         // housekeeping_task();
     }
 }
+
+#else
+
+__HIGH_CODE int main()
+{
+    platform_setup();
+
+    for (;;) {
+        TMOS_SystemProcess();
+
+        // housekeeping_task();
+    }
+}
+
+#endif

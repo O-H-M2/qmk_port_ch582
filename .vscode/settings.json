@@ -74,7 +74,7 @@
         "hogphandler.h": "c",
         "CH58xBLE_ROM.H": "c",
         "battservice.h": "c",
-        "whitelist.h": "c"
+        "ble_whitelist.h": "c"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.files.exclude": {

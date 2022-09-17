@@ -63,7 +63,6 @@ include(qmk_porting/common_features.cmake)
 # 源码文件
 file(GLOB SOURCES
     ${CH582_SOURCES}
-    ${CherryUSB_SOURCES}
     ${quantum_SOURCES}
     ${tmk_core_SOURCES}
     ${QMK_PORTING_SOURCES}

@@ -145,36 +145,52 @@ if(WS2812_REQUIRED)
     endif()
 endif()
 
+# USB_ENABLE
+if(USB_ENABLE)
+    add_definitions(-DUSB_ENABLE)
+    message(STATUS "USB_ENABLE")
+    list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/core/usbd_core.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/port/ch32/usb_dc_ch58x.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/class/hid/usbd_hid.c"
+    )
+endif()
+
 # BLE_ENABLE
 if(BLE_ENABLE)
     add_definitions(-DBLE_ENABLE)
     message(STATUS "BLE_ENABLE")
     list(APPEND QMK_PORTING_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
+        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
+        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/ble/*.c"
     )
-
-    # if(NOT CUSTOM_MATRIX)
-    # message(FATAL_ERROR "Custom matrix is required with Bluetooth LE enabled!")
-    # endif()
 endif()
 
 # ESB_ENABLE
 if(ESB_ENABLE)
-    add_definitions(-DESB_ENABLE)
-    message(STATUS "ESB_ENABLE")
-    list(APPEND QMK_PORTING_SOURCES
-
-        # "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/ble/*.c"
-    )
-
-    # if(NOT CUSTOM_MATRIX)
-    # message(FATAL_ERROR "Custom matrix is required with ESB enabled!")
-    # endif()
+    if(ESB_ROLE STREQUAL "keyboard")
+        message(STATUS "ESB_ENABLE")
+        add_definitions(-DESB_ENABLE=1)
+        message(STATUS "ESB_ROLE = keyboard")
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"
+        )
+    elseif(ESB_ROLE STREQUAL "receiver")
+        message(STATUS "ESB_ENABLE")
+        add_definitions(-DESB_ENABLE=2)
+        message(STATUS "ESB_ROLE = receiver")
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"
+        )
+    endif()
 endif()
 
+# CUSTOM_MATRIX
 if(CUSTOM_MATRIX)
     add_definitions(-DCUSTOM_MATRIX)
-    message(STATUS "CUSTOM_MATRIX")
+    message(STATUS "CUSTOM_MATRIX: ${CUSTOM_MATRIX}")
     list(APPEND QMK_PORTING_SOURCES
         "${CUSTOM_MATRIX}"
     )

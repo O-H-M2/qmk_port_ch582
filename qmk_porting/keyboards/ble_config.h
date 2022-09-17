@@ -37,10 +37,10 @@
 #define DEFAULT_HID_IDLE_TIMEOUT 0
 
 // Minimum connection interval (units of 1.25ms)
-#define DEFAULT_DESIRED_MIN_CONN_INTERVAL MS_UNIT_1_25(15)
+#define DEFAULT_DESIRED_MIN_CONN_INTERVAL MS_UNIT_1_25(12)
 
 // Maximum connection interval (units of 1.25ms)
-#define DEFAULT_DESIRED_MAX_CONN_INTERVAL MS_UNIT_1_25(45)
+#define DEFAULT_DESIRED_MAX_CONN_INTERVAL MS_UNIT_1_25(30)
 
 // Slave latency to use if parameter update request
 #define DEFAULT_DESIRED_SLAVE_LATENCY 6

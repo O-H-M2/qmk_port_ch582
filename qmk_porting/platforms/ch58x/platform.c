@@ -30,7 +30,7 @@ void platform_setup()
     SetSysClock(Fsys);
     DelayMs(5);
     PowerMonitor(ENABLE, HALevel_2V1);
-#ifdef DEBUG
+#ifdef PLF_DEBUG
     GPIOA_SetBits(GPIO_Pin_9);
     GPIOA_ModeCfg(GPIO_Pin_8, GPIO_ModeIN_PU);
     GPIOA_ModeCfg(GPIO_Pin_9, GPIO_ModeOut_PP_5mA);
@@ -90,12 +90,10 @@ void platform_setup()
 #endif
 }
 
-#ifdef BLE_ENABLE
+#if defined BLE_ENABLE || defined ESB_ENABLE
 
-void platform_setup_ble()
+void gpio_pullup()
 {
-    _Static_assert(KC_VENDOR_BT1 >= SAFE_RANGE, "Error: overlap detected between QMK and Vendor defined keycodes!");
-
     uint32_t pin_a = GPIO_Pin_All, pin_b = GPIO_Pin_All;
 
 #ifdef PLF_DEBUG
@@ -121,7 +119,10 @@ void platform_setup_ble()
     pin_b &= ~bU2DM;
     GPIOA_ModeCfg(pin_a, GPIO_ModeIN_PU);
     GPIOB_ModeCfg(pin_b, GPIO_ModeIN_PU);
+}
 
+void peripheral_gating()
+{
     // clock gate for unused peripherals
     sys_safe_access_enable();
     R8_SLP_CLK_OFF0 |= RB_SLP_CLK_UART3 | RB_SLP_CLK_UART2 | RB_SLP_CLK_UART0;
@@ -148,10 +149,47 @@ void platform_setup_ble()
     R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;
 #endif
     sys_safe_access_disable();
+}
+
+#endif
+
+#ifdef USB_ENABLE
+
+void platform_setup_usb()
+{
+}
+
+#endif
+
+#ifdef BLE_ENABLE
+
+void platform_setup_ble()
+{
+    _Static_assert(KC_VENDOR_BT1 >= SAFE_RANGE, "Error: overlap detected between QMK and Vendor defined keycodes!");
+
+    lowpower_init();
+    gpio_pullup();
+    peripheral_gating();
 
     CH58X_BLEInit();
     HAL_Init();
     GAPRole_PeripheralInit();
+}
+
+#endif
+
+#ifdef ESB_ENABLE
+
+void platform_setup_esb()
+{
+    lowpower_init();
+    gpio_pullup();
+    peripheral_gating();
+
+    CH58X_BLEInit();
+    HAL_Init();
+    RF_RoleInit();
+    RF_Init();
 }
 
 #endif

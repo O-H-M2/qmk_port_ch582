@@ -6,6 +6,10 @@
 #define NO_PRINT
 #endif
 
+#if defined RGBLIGHT_ENABLE && defined RGB_MATRIX_ENABLE
+#error "RGB_LIGHT can not be used with RGB_MATRIX simultaneously"
+#endif
+
 #ifdef BLE_ENABLE
 #if defined RGBLIGHT_ENABLE || defined RGB_MATRIX_ENABLE
 #ifdef HAL_SLEEP
@@ -121,13 +125,17 @@
 #define MS_UNIT_1_25(x) ((int)(x / 1.25))
 
 enum {
-    kbd_protocol_usb = 1,
+    kbd_protocol_start = 0,
+#ifdef USB_ENABLE
+    kbd_protocol_usb,
+#endif
 #ifdef BLE_ENABLE
     kbd_protocol_ble,
 #endif
 #ifdef ESB_ENABLE
     kbd_protocol_esb,
 #endif
+    kbd_protocol_max,
 };
 
 #if BLE_SLOT_NUM > 8
@@ -140,3 +148,4 @@ _Static_assert(USER_EEPROM_START_POSITION - WHITELIST_EEPROM_START_POSITION == 0
 _Static_assert(USER_EEPROM_START_POSITION % 0x100 == 0, "EEPROM: User data sector not aligned!");
 _Static_assert(QMK_EEPROM_START_POSITION % 0x100 == 0, "EEPROM: QMK data sector not aligned!");
 _Static_assert(BLE_SNV_ADDR % 0x100 == 0, "EEPROM: BLE data sector not aligned!");
+_Static_assert(kbd_protocol_max > 1, "No interface enabled!");
