@@ -46,3 +46,19 @@ uint8_t keymap_layer_count()
 {
     return ((uint8_t)(sizeof(keymaps) / ((MATRIX_ROWS) * (MATRIX_COLS) * sizeof(uint16_t))));
 }
+
+#ifdef ENCODER_MAP_ENABLE
+
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
+    [0] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [1] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [2] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [3] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+};
+
+uint8_t encodermap_layer_count()
+{
+    return ((uint8_t)(sizeof(encoder_map) / ((NUM_ENCODERS) * (2) * sizeof(uint16_t))));
+}
+
+#endif
