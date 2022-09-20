@@ -9,7 +9,6 @@ file(GLOB_RECURSE quantum_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/debounce/sym_eager_pk.c"
 
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/debounce/asym_eager_defer_pk.c"
-    # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/encoder/*.c"
     "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/keymap_extras/*.c"
 
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/led_matrix/*.c"

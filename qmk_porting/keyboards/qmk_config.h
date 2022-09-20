@@ -35,10 +35,19 @@
 #define BOOTMAGIC_LITE_ROW    1
 #define BOOTMAGIC_LITE_COLUMN 1
 
-#define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
+#ifdef ENCODER_ENABLE
+#define ENCODERS_PAD_A \
+    {                  \
+        A10            \
+    }
+#define ENCODERS_PAD_B \
+    {                  \
+        A11            \
+    }
+#define ENCODER_RESOLUTION 4
+#endif
 
-// #define ENCODERS_PAD_A A10
-// #define ENCODERS_PAD_B A11
+#define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
 #define WS2812_EN_PIN   B22
 #define WS2812_EN_LEVEL 1

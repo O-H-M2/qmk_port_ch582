@@ -37,6 +37,17 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 
 #endif
 
+#ifdef ENCODER_MAP_ENABLE
+
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
+    [0] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [1] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [2] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [3] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+};
+
+#endif
+
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
 
 __HIGH_CODE int main()
