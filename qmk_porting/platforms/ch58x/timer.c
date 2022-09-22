@@ -14,13 +14,7 @@ inline uint16_t timer_read(void)
 
 __HIGH_CODE uint32_t timer_read32(void)
 {
-    uint32_t tick;
-
-    do {
-        tick = R32_RTC_CNT_32K;
-    } while (tick != R32_RTC_CNT_32K);
-
-    return SYS_TO_MS(tick - ticks_offset);
+    return SYS_TO_MS(timer_readraw() - ticks_offset);
 }
 
 inline uint64_t timer_read64(void)

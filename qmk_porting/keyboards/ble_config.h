@@ -7,9 +7,7 @@
 #define BLE_BUFF_MAX_LEN          48
 // #define BLE_MEMHEAP_SIZE          (1024 * 7)
 // #define BLE_BUFF_NUM              10
-
-#define BLE_SLOT_NUM          8
-#define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(15)
+#define BLE_SLOT_NUM 8
 
 // Battery measurement period in (625us)
 #define DEFAULT_BATT_PERIOD SYS_TICK_MS(9375)
@@ -37,16 +35,16 @@
 #define DEFAULT_HID_IDLE_TIMEOUT 0
 
 // Minimum connection interval (units of 1.25ms)
-#define DEFAULT_DESIRED_MIN_CONN_INTERVAL MS_UNIT_1_25(12)
+#define DEFAULT_DESIRED_MIN_CONN_INTERVAL MS_UNIT_1_25(7.5)
 
 // Maximum connection interval (units of 1.25ms)
-#define DEFAULT_DESIRED_MAX_CONN_INTERVAL MS_UNIT_1_25(30)
+#define DEFAULT_DESIRED_MAX_CONN_INTERVAL MS_UNIT_1_25(11.25)
 
 // Slave latency to use if parameter update request
-#define DEFAULT_DESIRED_SLAVE_LATENCY 6
+#define DEFAULT_DESIRED_SLAVE_LATENCY 44
 
 // Supervision timeout value (units of 10ms)
-#define DEFAULT_DESIRED_CONN_TIMEOUT 500
+#define DEFAULT_DESIRED_CONN_TIMEOUT 300
 
 // Default passcode
 #define DEFAULT_PASSCODE 0

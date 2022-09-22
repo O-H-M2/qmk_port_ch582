@@ -167,7 +167,6 @@ void platform_setup_ble()
 {
     _Static_assert(KC_VENDOR_BT1 >= SAFE_RANGE, "Error: overlap detected between QMK and Vendor defined keycodes!");
 
-    lowpower_init();
     gpio_pullup();
     peripheral_gating();
 
@@ -182,7 +181,6 @@ void platform_setup_ble()
 
 void platform_setup_esb()
 {
-    lowpower_init();
     gpio_pullup();
     peripheral_gating();
 
