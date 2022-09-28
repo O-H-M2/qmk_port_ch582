@@ -187,10 +187,10 @@ if(ESB_ENABLE)
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"
         )
-    elseif(ESB_ROLE STREQUAL "receiver")
+    elseif(ESB_ROLE STREQUAL "dongle")
         message(STATUS "ESB_ENABLE")
         add_definitions(-DESB_ENABLE=2)
-        message(STATUS "ESB_ROLE = receiver")
+        message(STATUS "ESB_ROLE = dongle")
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"

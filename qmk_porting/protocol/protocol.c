@@ -6,6 +6,7 @@
 #include "keycode_config.h"
 #ifdef USB_ENABLE
 #include "usb_main.h"
+#include "printf.h"
 #endif
 #ifdef BLE_ENABLE
 #include "ble.h"

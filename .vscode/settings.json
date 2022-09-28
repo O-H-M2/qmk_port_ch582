@@ -76,7 +76,8 @@
         "battservice.h": "c",
         "ble_whitelist.h": "c",
         "esb_pair.h": "c",
-        "esb.h": "c"
+        "esb.h": "c",
+        "esb_config.h": "c"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.files.exclude": {

@@ -139,4 +139,8 @@
 #include "ble_config.h"
 #endif
 
+#ifdef ESB_ENABLE
+#include "esb_config.h"
+#endif
+
 #include "pre_handler.h"

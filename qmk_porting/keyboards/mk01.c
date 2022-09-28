@@ -89,6 +89,8 @@ __HIGH_CODE int main()
 __HIGH_CODE int main()
 {
     platform_setup();
+    platform_setup_esb();
+    kbd_protocol_type = kbd_protocol_esb;
 
     for (;;) {
         TMOS_SystemProcess();
