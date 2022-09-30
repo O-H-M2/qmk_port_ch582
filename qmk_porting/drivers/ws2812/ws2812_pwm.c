@@ -52,7 +52,7 @@
 #define WS2812_COLOR_BIT_N (RGBLED_NUM * WS2812_COLOR_BITS)          /**< Number of data bits */
 #define WS2812_BIT_N       (WS2812_COLOR_BIT_N + WS2812_RESET_BIT_N) /**< Total number of bits in a frame */
 
-static volatile bool ws2812_inited = false;
+static volatile bool ws2812_inited = false, ws2812_powered_on = false;
 
 /**
  * @brief   High period for a zero, in ticks
@@ -282,6 +282,9 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     if (!ws2812_inited) {
         ws2812_init();
     }
+    if (!ws2812_powered_on) {
+        ws2812_power_toggle(true);
+    }
 
     for (uint16_t i = 0; i < leds; i++) {
 #ifdef RGBW
@@ -292,16 +295,21 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     }
 }
 
-__HIGH_CODE void ws2812_deinit()
+__HIGH_CODE void ws2812_power_toggle(bool status)
 {
-    if (!ws2812_inited) {
+    if (ws2812_powered_on == status) {
         return;
     }
 
+    if (status) {
+        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
+        setPinOutput(WS2812_EN_PIN);
+    } else {
 #if WS2812_EN_LEVEL
-    setPinInputLow(WS2812_EN_PIN);
+        setPinInputLow(WS2812_EN_PIN);
 #else
-    setPinInputHigh(WS2812_EN_PIN);
+        setPinInputHigh(WS2812_EN_PIN);
 #endif
-    ws2812_inited = false;
+    }
+    ws2812_powered_on = status;
 }

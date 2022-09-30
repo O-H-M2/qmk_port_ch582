@@ -2,6 +2,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#ifdef WS2812
+#include "ws2812.h"
+#endif
 
 __attribute__((always_inline)) inline bool rgbled_status_check()
 {
@@ -19,9 +22,9 @@ __attribute__((always_inline)) inline bool rgbled_status_check()
 __attribute__((always_inline)) inline void rgbled_power_check()
 {
     // power off rgb leds or the controller when led is toggled off
-    if (rgbled_status_check()) {
+    if (!rgbled_status_check()) {
 #ifdef WS2812
-        ws2812_deinit();
+        ws2812_power_toggle(false);
 #endif
     }
 }

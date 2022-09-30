@@ -77,7 +77,8 @@
         "ble_whitelist.h": "c",
         "esb_pair.h": "c",
         "esb.h": "c",
-        "esb_config.h": "c"
+        "esb_config.h": "c",
+        "esb_address.h": "c"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.files.exclude": {

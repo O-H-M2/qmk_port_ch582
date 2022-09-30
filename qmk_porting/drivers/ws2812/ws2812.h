@@ -69,4 +69,4 @@
  *         - Wait 50us to reset the LEDs
  */
 void ws2812_setleds(LED_TYPE *ledarray, uint16_t number_of_leds);
-void ws2812_deinit();
+void ws2812_power_toggle(bool status);

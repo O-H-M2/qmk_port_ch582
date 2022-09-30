@@ -11,26 +11,19 @@
 #endif
 
 #ifdef BLE_ENABLE
-#if defined RGBLIGHT_ENABLE || defined RGB_MATRIX_ENABLE
-#ifdef HAL_SLEEP
-#undef HAL_SLEEP
-#endif
-#ifdef QMK_TASK_INTERVAL
-#undef QMK_TASK_INTERVAL
-#endif
 #ifdef DCDC_ENABLE
 #undef DCDC_ENABLE
 #endif
-#define HAL_SLEEP         0
-#define QMK_TASK_INTERVAL 5
-#define DCDC_ENABLE       1
-#else
-#ifndef HAL_SLEEP
-#define HAL_SLEEP 1
+#ifdef HAL_SLEEP
+#undef HAL_SLEEP
 #endif
+#define DCDC_ENABLE 1
+#define HAL_SLEEP   1
 #ifndef QMK_TASK_INTERVAL
 #define QMK_TASK_INTERVAL QMK_TASK_INTERVAL_MAX
 #endif
+#ifndef QMK_TASK_INTERVAL_LED
+#define QMK_TASK_INTERVAL_LED SYS_TICK_MS(5)
 #endif
 #ifndef BLE_SLOT_NUM
 #define BLE_SLOT_NUM 4
@@ -38,27 +31,24 @@
 #endif
 
 #ifdef ESB_ENABLE
-#if defined RGBLIGHT_ENABLE || defined RGB_MATRIX_ENABLE
+#ifdef DCDC_ENABLE
+#undef DCDC_ENABLE
+#endif
 #ifdef HAL_SLEEP
 #undef HAL_SLEEP
 #endif
 #ifdef QMK_TASK_INTERVAL
 #undef QMK_TASK_INTERVAL
 #endif
-#ifdef DCDC_ENABLE
-#undef DCDC_ENABLE
-#endif
-#define HAL_SLEEP         0
-#define QMK_TASK_INTERVAL 5
 #define DCDC_ENABLE       1
-#else
-#ifndef HAL_SLEEP
-#define HAL_SLEEP 1
-#endif
-#ifndef QMK_TASK_INTERVAL
-#define QMK_TASK_INTERVAL QMK_TASK_INTERVAL_MAX
-#endif
-#endif
+#define HAL_SLEEP         1
+#define QMK_TASK_INTERVAL 5
+// #ifndef HAL_SLEEP
+// #define HAL_SLEEP 1
+// #endif
+// #ifndef QMK_TASK_INTERVAL
+// #define QMK_TASK_INTERVAL QMK_TASK_INTERVAL_MAX
+// #endif
 #endif
 
 #if FREQ_SYS == 80000000

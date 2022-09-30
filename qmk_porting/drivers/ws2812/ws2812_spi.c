@@ -18,15 +18,13 @@
 #define PREAMBLE_SIZE 4
 
 __attribute__((aligned(4))) static uint8_t txbuf[PREAMBLE_SIZE + DATA_SIZE + RESET_SIZE] = { 0 };
-static volatile bool ws2812_inited = false;
+static volatile bool ws2812_inited = false, ws2812_powered_on = false;
 static volatile uint8_t spi_transfering = false;
 
 static void ws2812_init()
 {
     // we have only one spi controller
     setPinOutput(RGB_DI_PIN);
-    writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
-    setPinOutput(WS2812_EN_PIN);
 
     R8_SPI0_CLOCK_DIV = WS2812_SPI_DIVISOR;
     R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
@@ -117,6 +115,9 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     if (!ws2812_inited) {
         ws2812_init();
     }
+    if (!ws2812_powered_on) {
+        ws2812_power_toggle(true);
+    }
 
     for (uint8_t i = 0; i < leds; i++) {
         set_led_color_rgb(ledarray[i], i);
@@ -127,16 +128,21 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     SPI0_StartDMA(txbuf, sizeof(txbuf) / sizeof(txbuf[0]));
 }
 
-__HIGH_CODE void ws2812_deinit()
+__HIGH_CODE void ws2812_power_toggle(bool status)
 {
-    if (!ws2812_inited) {
+    if (ws2812_powered_on == status) {
         return;
     }
 
+    if (status) {
+        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
+        setPinOutput(WS2812_EN_PIN);
+    } else {
 #if WS2812_EN_LEVEL
-    setPinInputLow(WS2812_EN_PIN);
+        setPinInputLow(WS2812_EN_PIN);
 #else
-    setPinInputHigh(WS2812_EN_PIN);
+        setPinInputHigh(WS2812_EN_PIN);
 #endif
-    ws2812_inited = false;
+    }
+    ws2812_powered_on = status;
 }
