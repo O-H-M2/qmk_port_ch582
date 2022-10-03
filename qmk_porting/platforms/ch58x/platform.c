@@ -24,6 +24,8 @@ void _putchar(char character)
 
 void platform_setup()
 {
+    _Static_assert(kbd_protocol_max > 1, "No interface enabled!");
+
 #if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
     PWR_DCDCCfg(ENABLE);
 #endif

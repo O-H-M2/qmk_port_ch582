@@ -173,5 +173,3 @@ enum {
 #if BLE_SLOT_NUM > 8
 #error "Too many BLE slots! Cap: 8"
 #endif
-
-_Static_assert(kbd_protocol_max > 1, "No interface enabled!");
