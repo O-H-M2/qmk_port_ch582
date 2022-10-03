@@ -78,7 +78,8 @@
         "esb_pair.h": "c",
         "esb.h": "c",
         "esb_config.h": "c",
-        "esb_address.h": "c"
+        "esb_address.h": "c",
+        "wireless.h": "c"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.files.exclude": {

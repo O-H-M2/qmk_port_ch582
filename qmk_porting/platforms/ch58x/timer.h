@@ -25,11 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "CH58x_common.h"
 #include "CH583SFR.h"
 
-#define TIMER_DIFF(a, b, max) ((max == UINT8_MAX) ? ((uint8_t)((a) - (b))) : ((max == UINT16_MAX) ? ((uint16_t)((a) - (b))) : ((max == UINT32_MAX) ? ((uint32_t)((a) - (b))) : ((a) >= (b) ? (a) - (b) : (max) + 1 - (b) + (a)))))
-#define TIMER_DIFF_8(a, b)    TIMER_DIFF(a, b, UINT8_MAX)
-#define TIMER_DIFF_16(a, b)   TIMER_DIFF(a, b, UINT16_MAX)
-#define TIMER_DIFF_32(a, b)   TIMER_DIFF(a, b, UINT32_MAX)
-#define TIMER_DIFF_RAW(a, b)  TIMER_DIFF_8(a, b)
+#define TIMER_DIFF(a, b, max)           ((max == UINT8_MAX) ? ((uint8_t)((a) - (b))) : ((max == UINT16_MAX) ? ((uint16_t)((a) - (b))) : ((max == UINT32_MAX) ? ((uint32_t)((a) - (b))) : ((a) >= (b) ? (a) - (b) : (max) + 1 - (b) + (a)))))
+#define TIMER_DIFF_8(a, b)              TIMER_DIFF(a, b, UINT8_MAX)
+#define TIMER_DIFF_16(a, b)             TIMER_DIFF(a, b, UINT16_MAX)
+#define TIMER_DIFF_32(a, b)             TIMER_DIFF(a, b, UINT32_MAX)
+#define TIMER_DIFF_RAW(a, b)            TIMER_DIFF_8(a, b)
+#define TIMER_DIFF_RTC(_past, _current) ((_current > _past) ? (_current - _past) : (_current + RTC_TIMER_MAX_VALUE - _past))
 
 #define CLK_PER_US (1.0 / ((1.0 / FREQ_RTC) * 1000 * 1000)) // 0.032 clk/us
 #define CLK_PER_MS (CLK_PER_US * 1000)                      // 32clk/ms

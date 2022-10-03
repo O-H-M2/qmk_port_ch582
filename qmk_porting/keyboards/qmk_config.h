@@ -77,7 +77,9 @@
 #endif
 
 #ifdef RGB_MATRIX_ENABLE
-#define WS2812_PWM_DRIVER             1
+#ifdef WS2812_DRIVER_PWM
+#define WS2812_PWM_DRIVER 1
+#endif
 #define RGBLED_NUM                    61
 #define DRIVER_LED_TOTAL              RGBLED_NUM
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 128

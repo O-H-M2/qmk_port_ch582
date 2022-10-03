@@ -1,5 +1,9 @@
 #pragma once
 
+#if !defined(UINT32_MAX)
+#define UINT32_MAX ((uint32_t)-1)
+#endif
+
 #ifdef DEBUG
 #define PLF_DEBUG DEBUG
 #else
@@ -31,6 +35,9 @@
 #endif
 
 #ifdef ESB_ENABLE
+#ifdef LSE_FREQ
+#undef LSE_FREQ
+#endif
 #ifdef DCDC_ENABLE
 #undef DCDC_ENABLE
 #endif
@@ -40,9 +47,16 @@
 #ifdef QMK_TASK_INTERVAL
 #undef QMK_TASK_INTERVAL
 #endif
+#if ESB_ENABLE == 1
+#define LSE_FREQ          32768
 #define DCDC_ENABLE       1
 #define HAL_SLEEP         1
 #define QMK_TASK_INTERVAL 5
+#elif ESB_ENABLE == 2
+#define DCDC_ENABLE 0
+#define HAL_SLEEP   0
+#endif
+
 // #ifndef HAL_SLEEP
 // #define HAL_SLEEP 1
 // #endif
@@ -107,8 +121,12 @@
 #undef WS2812_PWM_DRIVER
 #endif
 #else
-#define FREQ_RTC   32000
+#define FREQ_RTC 32000
+#if ESB_ENABLE == 2
+#define CLK_OSC32K 0x81
+#else
 #define CLK_OSC32K 1
+#endif
 #endif
 
 #ifndef WS2812
