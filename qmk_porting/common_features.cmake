@@ -189,6 +189,7 @@ if(ESB_ENABLE)
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"
         )
+        add_subdirectory(lwrb)
     elseif(ESB_ROLE STREQUAL "dongle")
         message(STATUS "ESB_ENABLE")
         add_definitions(-DESB_ENABLE=2)
@@ -197,6 +198,7 @@ if(ESB_ENABLE)
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"
         )
+        add_subdirectory(lwrb)
     endif()
 endif()
 

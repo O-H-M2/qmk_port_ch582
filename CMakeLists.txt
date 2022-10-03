@@ -77,6 +77,10 @@ target_precompile_headers(${PROJECT_NAME}.elf PUBLIC ${PROJECT_SOURCE_DIR}/qmk_p
 # 链接静态库
 target_link_libraries(${PROJECT_NAME}.elf ${CH582_LIB})
 
+if(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle")))
+    target_link_libraries(${PROJECT_NAME}.elf lwrb)
+endif()
+
 # 输出hex和bin
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)
