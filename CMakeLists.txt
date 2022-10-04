@@ -77,7 +77,8 @@ target_precompile_headers(${PROJECT_NAME}.elf PUBLIC ${PROJECT_SOURCE_DIR}/qmk_p
 # 链接静态库
 target_link_libraries(${PROJECT_NAME}.elf ${CH582_LIB})
 
-if(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle")))
+if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
+    add_subdirectory(lwrb)
     target_link_libraries(${PROJECT_NAME}.elf lwrb)
 endif()
 

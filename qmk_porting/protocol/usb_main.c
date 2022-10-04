@@ -126,20 +126,15 @@ void hid_exkey_send_report(uint8_t *data, uint8_t len)
     }
 }
 
-static void hid_custom_send_report(uint8_t *data, uint8_t len)
+void hid_custom_send_report(uint8_t *data, uint8_t len)
 {
+    if (len != HIDRAW_IN_SIZE) {
+        return;
+    }
     if (usb_device_is_configured()) {
         if (custom_state == HID_STATE_IDLE) {
             custom_state = HID_STATE_BUSY;
             usbd_ep_write(HIDRAW_IN_EP, data, len, NULL);
         }
     }
-}
-
-void raw_hid_send(uint8_t *data, uint8_t length)
-{
-    if (length != HIDRAW_IN_SIZE) {
-        return;
-    }
-    hid_custom_send_report(data, length);
 }

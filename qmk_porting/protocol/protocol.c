@@ -37,7 +37,8 @@ void send_keyboard(report_keyboard_t *report)
 #endif
 #ifdef BLE_ENABLE
         if (kbd_protocol_type == kbd_protocol_ble) {
-            HidDev_Report(BLE_REPORT_ID_KEYBOARD, HID_REPORT_TYPE_INPUT, KEYBOARD_REPORT_BITS + 1, (uint8_t *)report + 1);
+            // there is a report id we don't want to have
+            wireless_ringbuffer_write(BLE_REPORT_ID_KEYBOARD, (uint8_t *)report + 1);
         }
 #endif
 #ifdef ESB_ENABLE
@@ -81,7 +82,7 @@ void send_mouse(report_mouse_t *report)
 #endif
 #ifdef BLE_ENABLE
     if (kbd_protocol_type == kbd_protocol_ble) {
-        HidDev_Report(BLE_REPORT_ID_MOUSE, HID_REPORT_TYPE_INPUT, 5, (uint8_t *)report);
+        wireless_ringbuffer_write(BLE_REPORT_ID_MOUSE, (uint8_t *)report);
     }
 #endif
 #ifdef ESB_ENABLE
@@ -106,7 +107,7 @@ void send_system(uint16_t data)
     if (kbd_protocol_type == kbd_protocol_ble) {
         uint16_t data_to_send = data;
 
-        HidDev_Report(BLE_REPORT_ID_SYSTEM, HID_REPORT_TYPE_INPUT, 2, (uint8_t *)&data_to_send);
+        wireless_ringbuffer_write(BLE_REPORT_ID_SYSTEM, (uint8_t *)&data_to_send);
     }
 #endif
 #ifdef ESB_ENABLE
@@ -130,7 +131,7 @@ void send_consumer(uint16_t data)
     if (kbd_protocol_type == kbd_protocol_ble) {
         uint16_t data_to_send = data;
 
-        HidDev_Report(BLE_REPORT_ID_CONSUMER, HID_REPORT_TYPE_INPUT, 2, (uint8_t *)&data_to_send);
+        wireless_ringbuffer_write(BLE_REPORT_ID_CONSUMER, (uint8_t *)&data_to_send);
     }
 #endif
 #ifdef ESB_ENABLE
@@ -148,6 +149,24 @@ void send_digitizer(report_digitizer_t *report)
 }
 
 host_driver_t ch582_driver = { keyboard_leds, send_keyboard, send_mouse, send_system, send_consumer, send_programmable_button };
+
+void raw_hid_send(uint8_t *data, uint8_t length)
+{
+#ifdef USB_ENABLE
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        hid_custom_send_report(data, length);
+    }
+#endif
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type == kbd_protocol_ble) {
+        wireless_ringbuffer_write(BLE_REPORT_ID_CUSTOM, data);
+    }
+#endif
+#ifdef ESB_ENABLE
+    if (kbd_protocol_type == kbd_protocol_esb) {
+    }
+#endif
+}
 
 void protocol_setup()
 {

@@ -54,3 +54,4 @@ void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len);
 void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len);
 void raw_hid_send(uint8_t *data, uint8_t length);
 void hid_exkey_send_report(uint8_t *data, uint8_t len);
+void hid_custom_send_report(uint8_t *data, uint8_t len);
