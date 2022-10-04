@@ -1,10 +1,11 @@
 #include "usb_main.h"
 #include "usb_descriptors.h"
+#if ESB_ENABLE == 2
+#include "esb.h"
+#endif
 
 uint8_t keyboard_protocol = 1;
 uint8_t keyboard_idle = 0;
-extern uint8_t keyboard_led_state;
-
 static usbd_class_t hid_class;
 static usbd_interface_t hid_intf_1;
 static usbd_interface_t hid_intf_2;
@@ -26,7 +27,11 @@ void usbd_hid_kbd_out_callback(uint8_t ep)
     uint8_t led_state;
 
     usbd_ep_read(ep, &led_state, KBD_OUT_EP_SIZE, NULL);
+#if ESB_ENABLE == 2
+    wireless_ringbuffer_write(KBD_OUT_EP_SIZE, REPORT_ID_KEYBOARD, &led_state);
+#else
     keyboard_led_state = led_state;
+#endif
 }
 
 __attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length)
@@ -44,9 +49,13 @@ void usbd_hid_custom_in_callback(uint8_t ep)
 void usbd_hid_custom_out_callback(uint8_t ep)
 {
     uint8_t custom_data[HIDRAW_OUT_EP_SIZE];
-    usbd_ep_read(HIDRAW_OUT_EP, custom_data, HIDRAW_OUT_EP_SIZE, NULL);
 
+    usbd_ep_read(HIDRAW_OUT_EP, custom_data, HIDRAW_OUT_EP_SIZE, NULL);
+#if ESB_ENABLE == 2
+    wireless_ringbuffer_write(HIDRAW_OUT_EP_SIZE, REPORT_ID_CUSTOM, custom_data);
+#else
     raw_hid_receive(custom_data, HIDRAW_OUT_EP_SIZE);
+#endif
 }
 
 void usbd_hid_exkey_in_callback(uint8_t ep)

@@ -51,7 +51,7 @@
 #define LSE_FREQ          32768
 #define DCDC_ENABLE       1
 #define HAL_SLEEP         1
-#define QMK_TASK_INTERVAL 5
+#define QMK_TASK_INTERVAL SYS_TICK_MS(1)
 #elif ESB_ENABLE == 2
 #define DCDC_ENABLE 0
 #define HAL_SLEEP   0

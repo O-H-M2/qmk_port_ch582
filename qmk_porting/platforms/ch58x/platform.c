@@ -121,6 +121,10 @@ void platform_setup_esb()
     HAL_Init();
     RF_RoleInit();
     RF_Init();
+#if ESB_ENABLE == 2
+    init_usb_driver();
+    kbd_protocol_type = kbd_protocol_esb;
+#endif
 }
 
 #endif

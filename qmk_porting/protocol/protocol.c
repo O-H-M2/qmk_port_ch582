@@ -29,20 +29,18 @@ void send_keyboard(report_keyboard_t *report)
     if (keymap_config.nkro) {
 #ifdef USB_ENABLE
         if (kbd_protocol_type == kbd_protocol_usb) {
-            uint8_t report_to_send[EXKEY_IN_EP_SIZE];
-
-            memcpy(report_to_send, &report->nkro, sizeof(report_to_send));
-            hid_nkro_keyboard_send_report(report_to_send, sizeof(report_to_send));
+            hid_nkro_keyboard_send_report((uint8_t *)&report->nkro, EXKEY_IN_EP_SIZE);
         }
 #endif
 #ifdef BLE_ENABLE
         if (kbd_protocol_type == kbd_protocol_ble) {
             // there is a report id we don't want to have
-            wireless_ringbuffer_write(BLE_REPORT_ID_KEYBOARD, (uint8_t *)report + 1);
+            wireless_ringbuffer_write(KEYBOARD_REPORT_BITS + 1, BLE_REPORT_ID_KEYBOARD, (uint8_t *)report + 1);
         }
 #endif
 #ifdef ESB_ENABLE
         if (kbd_protocol_type == kbd_protocol_esb) {
+            wireless_ringbuffer_write(EXKEY_IN_EP_SIZE, REPORT_ID_NKRO, (uint8_t *)&report->nkro);
         }
 #endif
     } else
@@ -50,10 +48,7 @@ void send_keyboard(report_keyboard_t *report)
     {
 #ifdef USB_ENABLE
         if (kbd_protocol_type == kbd_protocol_usb) {
-            uint8_t report_to_send[KEYBOARD_REPORT_SIZE];
-
-            memcpy(report_to_send, report, sizeof(report_to_send));
-            hid_bios_keyboard_send_report(report_to_send, sizeof(report_to_send));
+            hid_bios_keyboard_send_report((uint8_t *)report, KEYBOARD_REPORT_SIZE);
         }
 #endif
 #ifdef BLE_ENABLE
@@ -63,6 +58,7 @@ void send_keyboard(report_keyboard_t *report)
 #endif
 #ifdef ESB_ENABLE
         if (kbd_protocol_type == kbd_protocol_esb) {
+            wireless_ringbuffer_write(KEYBOARD_REPORT_SIZE, REPORT_ID_KEYBOARD, (uint8_t *)report);
         }
 #endif
     }
@@ -82,11 +78,12 @@ void send_mouse(report_mouse_t *report)
 #endif
 #ifdef BLE_ENABLE
     if (kbd_protocol_type == kbd_protocol_ble) {
-        wireless_ringbuffer_write(BLE_REPORT_ID_MOUSE, (uint8_t *)report);
+        wireless_ringbuffer_write(5, BLE_REPORT_ID_MOUSE, (uint8_t *)report);
     }
 #endif
 #ifdef ESB_ENABLE
     if (kbd_protocol_type == kbd_protocol_esb) {
+        wireless_ringbuffer_write(5, REPORT_ID_MOUSE, (uint8_t *)report);
     }
 #endif
 #endif
@@ -107,11 +104,14 @@ void send_system(uint16_t data)
     if (kbd_protocol_type == kbd_protocol_ble) {
         uint16_t data_to_send = data;
 
-        wireless_ringbuffer_write(BLE_REPORT_ID_SYSTEM, (uint8_t *)&data_to_send);
+        wireless_ringbuffer_write(2, BLE_REPORT_ID_SYSTEM, (uint8_t *)&data_to_send);
     }
 #endif
 #ifdef ESB_ENABLE
     if (kbd_protocol_type == kbd_protocol_esb) {
+        uint16_t data_to_send = data;
+
+        wireless_ringbuffer_write(2, REPORT_ID_SYSTEM, (uint8_t *)&data_to_send);
     }
 #endif
 }
@@ -131,11 +131,14 @@ void send_consumer(uint16_t data)
     if (kbd_protocol_type == kbd_protocol_ble) {
         uint16_t data_to_send = data;
 
-        wireless_ringbuffer_write(BLE_REPORT_ID_CONSUMER, (uint8_t *)&data_to_send);
+        wireless_ringbuffer_write(2, BLE_REPORT_ID_CONSUMER, (uint8_t *)&data_to_send);
     }
 #endif
 #ifdef ESB_ENABLE
     if (kbd_protocol_type == kbd_protocol_esb) {
+        uint16_t data_to_send = data;
+
+        wireless_ringbuffer_write(2, REPORT_ID_CONSUMER, (uint8_t *)&data_to_send);
     }
 #endif
 }
@@ -159,11 +162,12 @@ void raw_hid_send(uint8_t *data, uint8_t length)
 #endif
 #ifdef BLE_ENABLE
     if (kbd_protocol_type == kbd_protocol_ble) {
-        wireless_ringbuffer_write(BLE_REPORT_ID_CUSTOM, data);
+        wireless_ringbuffer_write(length, BLE_REPORT_ID_CUSTOM, data);
     }
 #endif
 #ifdef ESB_ENABLE
     if (kbd_protocol_type == kbd_protocol_esb) {
+        wireless_ringbuffer_write(length, REPORT_ID_CUSTOM, data);
     }
 #endif
 }

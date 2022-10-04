@@ -197,6 +197,10 @@ if(ESB_ENABLE)
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"
         )
+
+        if(NOT USB_ENABLE)
+            message(FATAL_ERROR "ESB_ROLE: dongle requires USB_ENABLE.")
+        endif()
     endif()
 endif()
 
