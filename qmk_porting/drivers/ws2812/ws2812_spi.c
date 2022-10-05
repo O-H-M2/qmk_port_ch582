@@ -112,6 +112,10 @@ static void set_led_color_rgb(LED_TYPE color, int pos)
 
 void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
 {
+    if (!rgbled_status_check()) {
+        return;
+    }
+
     if (!ws2812_inited) {
         ws2812_init();
     }
@@ -137,12 +141,16 @@ __HIGH_CODE void ws2812_power_toggle(bool status)
     if (status) {
         writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
         setPinOutput(WS2812_EN_PIN);
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF1 &= ~RB_SLP_CLK_SPI0;
     } else {
 #if WS2812_EN_LEVEL
         setPinInputLow(WS2812_EN_PIN);
 #else
         setPinInputHigh(WS2812_EN_PIN);
 #endif
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;
     }
     ws2812_powered_on = status;
 }

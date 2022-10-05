@@ -279,6 +279,10 @@ void ws2812_write_led_rgbw(uint16_t led_number, uint8_t r, uint8_t g, uint8_t b,
 // Setleds for standard RGB
 void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
 {
+    if (!rgbled_status_check()) {
+        return;
+    }
+
     if (!ws2812_inited) {
         ws2812_init();
     }
@@ -304,11 +308,25 @@ __HIGH_CODE void ws2812_power_toggle(bool status)
     if (status) {
         writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
         setPinOutput(WS2812_EN_PIN);
+        sys_safe_access_enable();
+#if WS2812_PWM_DRIVER == 1
+        R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR1;
+#endif
+#if WS2812_PWM_DRIVER == 2
+        R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR2;
+#endif
     } else {
 #if WS2812_EN_LEVEL
         setPinInputLow(WS2812_EN_PIN);
 #else
         setPinInputHigh(WS2812_EN_PIN);
+#endif
+        sys_safe_access_enable();
+#if WS2812_PWM_DRIVER == 1
+        R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR1;
+#endif
+#if WS2812_PWM_DRIVER == 2
+        R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR2;
 #endif
     }
     ws2812_powered_on = status;
