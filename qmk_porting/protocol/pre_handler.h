@@ -23,11 +23,11 @@
 #endif
 #define DCDC_ENABLE 1
 #define HAL_SLEEP   1
-#ifndef QMK_TASK_INTERVAL
-#define QMK_TASK_INTERVAL QMK_TASK_INTERVAL_MAX
+#ifndef QMK_TASK_INTERVAL_MAX
+#define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(15)
 #endif
 #ifndef QMK_TASK_INTERVAL_LED
-#define QMK_TASK_INTERVAL_LED SYS_TICK_MS(5)
+#define QMK_TASK_INTERVAL_LED SYS_TICK_MS(3)
 #endif
 #ifndef BLE_SLOT_NUM
 #define BLE_SLOT_NUM 4
@@ -44,25 +44,18 @@
 #ifdef HAL_SLEEP
 #undef HAL_SLEEP
 #endif
-#ifdef QMK_TASK_INTERVAL
-#undef QMK_TASK_INTERVAL
+#ifdef QMK_TASK_INTERVAL_MAX
+#undef QMK_TASK_INTERVAL_MAX
 #endif
 #if ESB_ENABLE == 1
-#define LSE_FREQ          32768
-#define DCDC_ENABLE       1
-#define HAL_SLEEP         1
-#define QMK_TASK_INTERVAL SYS_TICK_MS(1)
+#define LSE_FREQ              32768
+#define DCDC_ENABLE           1
+#define HAL_SLEEP             1
+#define QMK_TASK_INTERVAL_MAX 2 // 1.25ms
 #elif ESB_ENABLE == 2
 #define DCDC_ENABLE 0
 #define HAL_SLEEP   0
 #endif
-
-// #ifndef HAL_SLEEP
-// #define HAL_SLEEP 1
-// #endif
-// #ifndef QMK_TASK_INTERVAL
-// #define QMK_TASK_INTERVAL QMK_TASK_INTERVAL_MAX
-// #endif
 #endif
 
 #if FREQ_SYS == 80000000
