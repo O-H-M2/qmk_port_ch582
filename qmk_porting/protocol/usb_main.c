@@ -115,7 +115,15 @@ void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
     if (usb_device_is_configured()) {
         if (keyboard_state == HID_STATE_IDLE) {
             keyboard_state = HID_STATE_BUSY;
-            usbd_ep_write(KBD_IN_EP, data, len, NULL);
+            if (len == KBD_IN_EP_SIZE) {
+                usbd_ep_write(KBD_IN_EP, data, len, NULL);
+            } else {
+                uint8_t reconstruct[KBD_IN_EP_SIZE];
+
+                memcpy(reconstruct, data, len);
+                memset(reconstruct + len, 0x00, KBD_IN_EP_SIZE - len);
+                usbd_ep_write(KBD_IN_EP, reconstruct, KBD_IN_EP_SIZE, NULL);
+            }
         }
     }
 }
@@ -130,20 +138,33 @@ void hid_exkey_send_report(uint8_t *data, uint8_t len)
     if (usb_device_is_configured()) {
         if (exkey_state == HID_STATE_IDLE) {
             exkey_state = HID_STATE_BUSY;
-            usbd_ep_write(EXKEY_IN_EP, data, len, NULL);
+            if (len == EXKEY_IN_EP_SIZE) {
+                usbd_ep_write(EXKEY_IN_EP, data, len, NULL);
+            } else {
+                uint8_t reconstruct[EXKEY_IN_EP_SIZE];
+
+                memcpy(reconstruct, data, len);
+                memset(reconstruct + len, 0x00, EXKEY_IN_EP_SIZE - len);
+                usbd_ep_write(EXKEY_IN_EP, reconstruct, EXKEY_IN_EP_SIZE, NULL);
+            }
         }
     }
 }
 
 void hid_custom_send_report(uint8_t *data, uint8_t len)
 {
-    if (len != HIDRAW_IN_SIZE) {
-        return;
-    }
     if (usb_device_is_configured()) {
         if (custom_state == HID_STATE_IDLE) {
             custom_state = HID_STATE_BUSY;
-            usbd_ep_write(HIDRAW_IN_EP, data, len, NULL);
+            if (len == HIDRAW_IN_SIZE) {
+                usbd_ep_write(HIDRAW_IN_EP, data, len, NULL);
+            } else {
+                uint8_t reconstruct[HIDRAW_IN_SIZE];
+
+                memcpy(reconstruct, data, len);
+                memset(reconstruct + len, 0x00, HIDRAW_IN_SIZE - len);
+                usbd_ep_write(HIDRAW_IN_EP, reconstruct, HIDRAW_IN_SIZE, NULL);
+            }
         }
     }
 }
