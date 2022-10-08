@@ -2,11 +2,9 @@
 #include "host.h"
 #include "usb_device_state.h"
 #include "print.h"
-#include "CH58x_common.h"
 #include "keycode_config.h"
 #ifdef USB_ENABLE
 #include "usb_main.h"
-#include "printf.h"
 #endif
 #ifdef BLE_ENABLE
 #include "ble.h"
@@ -17,6 +15,11 @@
 
 uint8_t keyboard_led_state;
 extern volatile uint8_t kbd_protocol_type;
+
+__attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length)
+{
+    // placeholder in case VIA is disabled
+}
 
 uint8_t keyboard_leds()
 {
@@ -232,7 +235,7 @@ __HIGH_CODE void protocol_task()
 
 void keyboard_post_init_user(void)
 {
-#ifdef DEBUG
+#ifdef PLF_DEBUG
     print("Set log output for QMK.\n");
 #endif
 }

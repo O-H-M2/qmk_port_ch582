@@ -5,18 +5,18 @@
 
 /* USB common Configuration */
 #ifndef CONFIG_USB_DBG_LEVEL
-#define CONFIG_USB_DBG_LEVEL USB_DBG_INFO
+#define CONFIG_USB_DBG_LEVEL USB_DBG_ERROR
 #endif
 
 #ifndef CONFIG_USB_PRINTF
-#if defined DEBUG
+#ifdef DEBUG
 #define CONFIG_USB_PRINTF printf
 #else
 #define CONFIG_USB_PRINTF(...)
 #endif
 #endif
 
-#define CONFIG_USB_PRINTF_COLOR_ENABLE
+// #define CONFIG_USB_PRINTF_COLOR_ENABLE
 
 /* USB DEVICE Configuration */
 /* core */
@@ -28,8 +28,8 @@
 #define CONFIG_USBDEV_DESC_CHECK 0
 #endif
 
-#ifndef CONFIG_USBDEV_TEST_MODE
-#define CONFIG_USBDEV_TEST_MODE 0
+#ifndef CONFIG_USB_ALIGN_SIZE
+#define CONFIG_USB_ALIGN_SIZE 4
 #endif
 
 /* msc class */

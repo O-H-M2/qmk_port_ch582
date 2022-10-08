@@ -1,10 +1,10 @@
 #pragma once
 
 //* platform settings
-#define DEBUG       1
-#define DCDC_ENABLE 1
-#define FREQ_SYS    60000000
-// #define LSE_FREQ    32768
+#define DEBUG              1
+#define DCDC_ENABLE        1
+#define FREQ_SYS           60000000
+#define LSE_FREQ           32768
 #define SLEEP_RTC_MIN_TIME 45
 // #define WAKE_UP_RTC_MAX_TIME      50
 
@@ -32,8 +32,8 @@
         A4, A5, A6, A0, A1, A3, B17, B5, B4, B3, B2, B1, B0, B21 \
     }
 #define DIODE_DIRECTION       COL2ROW
-#define BOOTMAGIC_LITE_ROW    1
-#define BOOTMAGIC_LITE_COLUMN 1
+#define BOOTMAGIC_LITE_ROW    0
+#define BOOTMAGIC_LITE_COLUMN 0
 
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \

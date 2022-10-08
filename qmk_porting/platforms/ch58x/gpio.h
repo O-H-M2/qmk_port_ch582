@@ -1,7 +1,5 @@
 #pragma once
 
-#include "CH58x_common.h"
-#include "core_riscv.h"
 #include "pin_defs.h"
 
 typedef uint32_t pin_t;

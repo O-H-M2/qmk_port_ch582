@@ -21,19 +21,10 @@ list(REMOVE_ITEM CH582_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/HAL/SLEEP.c"
 )
 
-set(LINKER_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/Ld/Link.ld)
+set(LINKER_SCRIPT_APP ${CMAKE_CURRENT_LIST_DIR}/Ld/Link_APP.ld)
+set(LINKER_SCRIPT_IAP ${CMAKE_CURRENT_LIST_DIR}/Ld/Link_IAP.ld)
 set(CH582_LIB
     ${CMAKE_CURRENT_LIST_DIR}/StdPeriphDriver/libISP583.a
     ${CMAKE_CURRENT_LIST_DIR}/BLE_LIB/LIBCH58xBLE.a
     ${CMAKE_CURRENT_LIST_DIR}/USB_LIB/libRV3UFI.a
 )
-
-add_link_options(
-    -nostartfiles
-    -Xlinker --gc-sections
-    -Wl,--print-memory-usage
-    -Wl,-Map,${PROJECT_NAME}.map
-    --specs=nano.specs
-    --specs=nosys.specs
-)
-add_link_options(-T ${LINKER_SCRIPT})

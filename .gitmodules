@@ -7,6 +7,3 @@
 [submodule "qmk_porting/platforms/ch58x/wireless"]
 	path = qmk_porting/platforms/ch58x/wireless
 	url = https://github.com/Huckies/ch582_wireless.git
-[submodule "lwrb"]
-	path = lwrb
-	url = https://github.com/MaJerle/lwrb.git

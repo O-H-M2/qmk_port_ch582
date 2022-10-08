@@ -16,7 +16,6 @@
 #pragma once
 
 #include <inttypes.h>
-#include "CH58x_common.h"
 
 #ifdef __cplusplus
 extern "C" {

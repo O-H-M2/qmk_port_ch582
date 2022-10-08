@@ -15,14 +15,17 @@
  */
 #pragma once
 
-#include "CH58x_common.h"
-#include "printf.h"
 #include "HAL.h"
+#include "print.h"
+#include "eeprom_reserved.h"
 #ifdef BLE_ENABLE
 #include "ble.h"
 #endif
 #ifdef ESB_ENABLE
 #include "esb.h"
+#endif
+#if !defined BLE_ENABLE && !defined ESB_ENABLE
+#include "rgb_led.h"
 #endif
 
 void platform_setup();

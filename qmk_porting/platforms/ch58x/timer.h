@@ -21,10 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // The platform is 32-bit, so prefer 32-bit timers to avoid overflow
 #define FAST_TIMER_T_SIZE 32
 
-#include <stdint.h>
-#include "CH58x_common.h"
-#include "CH583SFR.h"
-
 #define TIMER_DIFF(a, b, max)           ((max == UINT8_MAX) ? ((uint8_t)((a) - (b))) : ((max == UINT16_MAX) ? ((uint16_t)((a) - (b))) : ((max == UINT32_MAX) ? ((uint32_t)((a) - (b))) : ((a) >= (b) ? (a) - (b) : (max) + 1 - (b) + (a)))))
 #define TIMER_DIFF_8(a, b)              TIMER_DIFF(a, b, UINT8_MAX)
 #define TIMER_DIFF_16(a, b)             TIMER_DIFF(a, b, UINT16_MAX)

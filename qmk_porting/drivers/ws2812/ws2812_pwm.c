@@ -11,20 +11,47 @@
 
 #ifndef WS2812_PWM_DRIVER
 #define WS2812_PWM_DRIVER 1 // TMR1
+#define RGB_DI_PIN        A10
 #endif
+
+static volatile bool ws2812_inited = false, ws2812_powered_on = false, ws2812_need_power_off = false;
 
 #if WS2812_PWM_DRIVER == 1
 #define WS2812_PWM_CNT_END_REG R32_TMR1_CNT_END
 #define WS2812_DMA_CONFIG(en, start, end)       \
     TMR1_DMACfg(en, (uint16_t)(uint32_t)&start, \
                 (uint16_t)(uint32_t)&end, Mode_LOOP)
-#define WS2812_PWM_INIT(level) TMR1_PWMInit(level, PWM_Times_1)
+#define WS2812_PWM_INIT(level)          TMR1_PWMInit(level, PWM_Times_1);
+#define WS2812_PWM_DMA_INTERRUPT_ENABLE PFIC_EnableIRQ(TMR1_IRQn);
+#define WS2812_PWM_DMA_INTERRUPT_SET    TMR1_ITCfg(ENABLE, RB_TMR_IE_DMA_END);
+
+__INTERRUPT __HIGH_CODE void TMR1_IRQHandler()
+{
+    R8_TMR1_INTER_EN = 0;
+    TMR1_ClearITFlag(RB_TMR_IF_DMA_END);
+    if (ws2812_need_power_off) {
+        ws2812_need_power_off = false;
+        ws2812_power_toggle(false);
+    }
+}
 #elif WS2812_PWM_DRIVER == 2
 #define WS2812_PWM_CNT_END_REG R32_TMR2_CNT_END
 #define WS2812_DMA_CONFIG(en, start, end)       \
     TMR2_DMACfg(en, (uint16_t)(uint32_t)&start, \
                 (uint16_t)(uint32_t)&end, Mode_LOOP)
-#define WS2812_PWM_INIT(level) TMR2_PWMInit(level, PWM_Times_1)
+#define WS2812_PWM_INIT(level)          TMR2_PWMInit(level, PWM_Times_1);
+#define WS2812_PWM_DMA_INTERRUPT_ENABLE PFIC_EnableIRQ(TMR2_IRQn);
+#define WS2812_PWM_DMA_INTERRUPT_SET    TMR2_ITCfg(ENABLE, RB_TMR_IE_DMA_END);
+
+__INTERRUPT __HIGH_CODE void TMR2_IRQHandler()
+{
+    R8_TMR2_INTER_EN = 0;
+    TMR2_ClearITFlag(RB_TMR_IF_DMA_END);
+    if (ws2812_need_power_off) {
+        ws2812_need_power_off = false;
+        ws2812_power_toggle(false);
+    }
+}
 #else
 // Only TMR1 and TMR2 support DMA and PWM
 // Only pins A10, A11. B10, B11 is used for USB.
@@ -51,8 +78,6 @@
 #define WS2812_RESET_BIT_N (1000 * WS2812_TRST_US / WS2812_TIMING)
 #define WS2812_COLOR_BIT_N (RGBLED_NUM * WS2812_COLOR_BITS)          /**< Number of data bits */
 #define WS2812_BIT_N       (WS2812_COLOR_BIT_N + WS2812_RESET_BIT_N) /**< Total number of bits in a frame */
-
-static volatile bool ws2812_inited = false, ws2812_powered_on = false;
 
 /**
  * @brief   High period for a zero, in ticks
@@ -239,6 +264,7 @@ static void ws2812_init(void)
 {
     // Initialize led frame buffer
     uint32_t i;
+
     for (i = 0; i < WS2812_COLOR_BIT_N; i++)
         ws2812_frame_buffer[i] = WS2812_DUTYCYCLE_0; // All color bits are zero duty cycle
     for (i = 0; i < WS2812_RESET_BIT_N; i++)
@@ -251,6 +277,7 @@ static void ws2812_init(void)
     WS2812_PWM_CNT_END_REG = WS2812_PWM_PERIOD;
     WS2812_DMA_CONFIG(ENABLE, ws2812_frame_buffer[0], ws2812_frame_buffer[WS2812_BIT_N + 1]);
     WS2812_PWM_INIT(High_Level);
+    WS2812_PWM_DMA_INTERRUPT_ENABLE;
     ws2812_inited = true;
 }
 
@@ -279,10 +306,6 @@ void ws2812_write_led_rgbw(uint16_t led_number, uint8_t r, uint8_t g, uint8_t b,
 // Setleds for standard RGB
 void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
 {
-    if (!rgbled_status_check()) {
-        return;
-    }
-
     if (!ws2812_inited) {
         ws2812_init();
     }
@@ -290,6 +313,9 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
         ws2812_power_toggle(true);
     }
 
+    if (!rgbled_status_check()) {
+        ws2812_need_power_off = true;
+    }
     for (uint16_t i = 0; i < leds; i++) {
 #ifdef RGBW
         ws2812_write_led_rgbw(i, ledarray[i].r, ledarray[i].g, ledarray[i].b, ledarray[i].w);
@@ -297,6 +323,7 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
         ws2812_write_led(i, ledarray[i].r, ledarray[i].g, ledarray[i].b);
 #endif
     }
+    WS2812_PWM_DMA_INTERRUPT_SET;
 }
 
 __HIGH_CODE void ws2812_power_toggle(bool status)
@@ -311,10 +338,10 @@ __HIGH_CODE void ws2812_power_toggle(bool status)
         sys_safe_access_enable();
 #if WS2812_PWM_DRIVER == 1
         R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR1;
-#endif
-#if WS2812_PWM_DRIVER == 2
+#elif WS2812_PWM_DRIVER == 2
         R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR2;
 #endif
+        sys_safe_access_disable();
     } else {
 #if WS2812_EN_LEVEL
         setPinInputLow(WS2812_EN_PIN);
@@ -324,10 +351,10 @@ __HIGH_CODE void ws2812_power_toggle(bool status)
         sys_safe_access_enable();
 #if WS2812_PWM_DRIVER == 1
         R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR1;
-#endif
-#if WS2812_PWM_DRIVER == 2
+#elif WS2812_PWM_DRIVER == 2
         R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR2;
 #endif
+        sys_safe_access_disable();
     }
     ws2812_powered_on = status;
 }

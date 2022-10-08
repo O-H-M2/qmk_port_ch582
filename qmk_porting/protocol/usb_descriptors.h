@@ -269,27 +269,39 @@ const uint8_t hid_descriptor[] = {
     ///////////////////////////////////////
     /// string1 descriptor
     ///////////////////////////////////////
-    0x16,                       /* bLength */
+    0x10,                       /* bLength */
     USB_DESCRIPTOR_TYPE_STRING, /* bDescriptorType */
-    'O', 0x00,                  /* wcChar0 */
-    'c', 0x00,                  /* wcChar1 */
-    't', 0x00,                  /* wcChar2 */
-    'o', 0x00,                  /* wcChar3 */
-    'c', 0x00,                  /* wcChar4 */
-    'K', 0x00,                  /* wcChar5 */
-    'i', 0x00,                  /* wcChar6 */
-    'e', 0x00,                  /* wcChar7 */
-    's', 0x00,                  /* wcChar8 */
-    'Z', 0x00,                  /* wcChar9 */
+    'H', 0x00,                  /* wcChar0 */
+    'u', 0x00,                  /* wcChar1 */
+    'c', 0x00,                  /* wcChar2 */
+    'k', 0x00,                  /* wcChar3 */
+    'i', 0x00,                  /* wcChar4 */
+    'e', 0x00,                  /* wcChar5 */
+    's', 0x00,                  /* wcChar6 */
     ///////////////////////////////////////
     /// string2 descriptor
     ///////////////////////////////////////
-    0x0A,                       /* bLength */
+    0x28,                       /* bLength */
     USB_DESCRIPTOR_TYPE_STRING, /* bDescriptorType */
-    'm', 0x00,                  /* wcChar0 */
-    'k', 0x00,                  /* wcChar1 */
-    '0', 0x00,                  /* wcChar2 */
-    '1', 0x00,                  /* wcChar3 */
+    'M', 0x00,                  /* wcChar0 */
+    'e', 0x00,                  /* wcChar1 */
+    'c', 0x00,                  /* wcChar2 */
+    'h', 0x00,                  /* wcChar3 */
+    'a', 0x00,                  /* wcChar4 */
+    'n', 0x00,                  /* wcChar5 */
+    'i', 0x00,                  /* wcChar6 */
+    'c', 0x00,                  /* wcChar7 */
+    'a', 0x00,                  /* wcChar8 */
+    'l', 0x00,                  /* wcChar9 */
+    ' ', 0x00,                  /* wcChar10 */
+    'k', 0x00,                  /* wcChar11 */
+    'e', 0x00,                  /* wcChar12 */
+    'y', 0x00,                  /* wcChar13 */
+    'b', 0x00,                  /* wcChar14 */
+    'o', 0x00,                  /* wcChar15 */
+    'a', 0x00,                  /* wcChar16 */
+    'r', 0x00,                  /* wcChar17 */
+    'd', 0x00,                  /* wcChar18 */
     ///////////////////////////////////////
     /// string3 descriptor//serial for vial
     ///////////////////////////////////////

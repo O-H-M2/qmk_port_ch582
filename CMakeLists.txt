@@ -9,6 +9,18 @@ project(qmk_port_ch582 C CXX ASM)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
+set(keyboard "mk01" CACHE STRING "QMK" FORCE)
+
+if(NOT keyboard)
+    message(FATAL_ERROR "You must select a keyboard!")
+endif()
+
+# add_definitions(-DQMK_KEYBOARD_H="${keyboard}.h")
+if(NOT keymap)
+    message(WARNING "No keymap defined, will use default.")
+    set(keymap "default" CACHE STRING "QMK" FORCE)
+endif()
+
 # 编译参数 一般不用改
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
@@ -46,7 +58,7 @@ function(include_sub_directories_recursively root_dir)
     endforeach()
 endfunction()
 
-include(qmk_porting/keyboards/rules.cmake)
+include(qmk_porting/keyboards/${keyboard}/rules.cmake)
 include(qmk_porting/qmk_porting.cmake)
 include(qmk_porting/quantum.cmake)
 include(sdk/riscv.cmake)
@@ -61,31 +73,67 @@ include(qmk_porting/common_features.cmake)
 # add_definitions(-include qmk_config.h)
 
 # 源码文件
-file(GLOB SOURCES
+file(GLOB APP_SOURCES
     ${CH582_SOURCES}
     ${quantum_SOURCES}
     ${tmk_core_SOURCES}
     ${QMK_PORTING_SOURCES}
 )
-
-# message("include_dirs=${SOURCES}")
+file(GLOB IAP_SOURCES
+    ${CH582_SOURCES}
+    ${CH582_IAP_SOURCES}
+)
 
 # 编译可执行文件
-add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
-target_precompile_headers(${PROJECT_NAME}.elf PUBLIC ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/qmk_config.h)
+add_executable(${keyboard}.elf ${APP_SOURCES} ${LINKER_SCRIPT_APP})
+add_executable(${keyboard}_IAP.elf ${IAP_SOURCES} ${LINKER_SCRIPT_IAP})
+
+target_link_options(${keyboard}.elf PRIVATE
+    -nostartfiles
+    -Xlinker --gc-sections
+    -Wl,--print-memory-usage
+    -Wl,-Map,${keyboard}.map
+    --specs=nano.specs
+    --specs=nosys.specs
+    -T ${LINKER_SCRIPT_APP}
+)
+target_link_options(${keyboard}_IAP.elf PRIVATE
+    -nostartfiles
+    -Xlinker --gc-sections
+    -Wl,--print-memory-usage
+    -Wl,-Map,${keyboard}_IAP.map
+    --specs=nano.specs
+    --specs=nosys.specs
+    -T ${LINKER_SCRIPT_IAP}
+)
+
+target_precompile_headers(${keyboard}.elf PRIVATE
+    ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
+)
+target_precompile_headers(${keyboard}_IAP.elf PRIVATE
+    ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
+)
 
 # 链接静态库
-target_link_libraries(${PROJECT_NAME}.elf ${CH582_LIB})
+target_link_libraries(${keyboard}.elf ${CH582_LIB})
+target_link_libraries(${keyboard}_IAP.elf ${CH582_LIB})
 
 if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-    add_subdirectory(lwrb)
-    target_link_libraries(${PROJECT_NAME}.elf lwrb)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/lwrb)
+    target_link_libraries(${keyboard}.elf lwrb)
+    target_link_libraries(${keyboard}_IAP.elf lwrb)
 endif()
 
 # 输出hex和bin
-set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
-set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)
-add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
-    COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}.elf> ${HEX_FILE}
-    COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
+set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
+set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
+add_custom_command(TARGET ${keyboard}.elf POST_BUILD
+    COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}.elf> ${HEX_FILE_APP}
+    COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}.elf> ${BIN_FILE_APP}
+)
+set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
+set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
+add_custom_command(TARGET ${keyboard}_IAP.elf POST_BUILD
+    COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}_IAP.elf> ${HEX_FILE_IAP}
+    COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}_IAP.elf> ${BIN_FILE_IAP}
 )

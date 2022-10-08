@@ -8,12 +8,6 @@ __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 const uint8_t MacAddr[6] = { 0x84, 0xC2, 0xE4, 0x03, 0x02, 0x02 };
 #endif
 
-/* we have already set the correct _putchar() function 
- * disable this to avoid further modification */
-void print_set_sendchar(sendchar_func_t func)
-{
-}
-
 #ifndef PLF_DEBUG
 /* platform uart log output is disabled
  * so we fake a _putchar() to avoid link error */
@@ -22,59 +16,22 @@ void _putchar(char character)
 }
 #endif
 
+int8_t sendchar(uint8_t c)
+{
+    _putchar(c);
+    return 0;
+}
+
 void platform_setup()
 {
     _Static_assert(kbd_protocol_max > 1, "No interface enabled!");
 
-#if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
-    PWR_DCDCCfg(ENABLE);
-#endif
+#if FREQ_SYS != 60000000
     SetSysClock(Fsys);
+#endif
     DelayMs(5);
     PowerMonitor(ENABLE, HALevel_2V1);
-#ifdef PLF_DEBUG
-    GPIOA_SetBits(GPIO_Pin_9);
-    GPIOA_ModeCfg(GPIO_Pin_8, GPIO_ModeIN_PU);
-    GPIOA_ModeCfg(GPIO_Pin_9, GPIO_ModeOut_PP_5mA);
-    UART1_DefInit();
-    UART1_BaudRateCfg(460800);
-#endif
-#ifdef LSE_FREQ
-    sys_safe_access_enable();
-    R8_CK32K_CONFIG |= RB_CLK_OSC32K_XT | RB_CLK_INT32K_PON | RB_CLK_XT32K_PON;
-    sys_safe_access_disable();
-#else
-    sys_safe_access_enable();
-    R8_CK32K_CONFIG &= ~(RB_CLK_OSC32K_XT | RB_CLK_XT32K_PON);
-    R8_CK32K_CONFIG |= RB_CLK_INT32K_PON;
-    sys_safe_access_disable();
-    Calibration_LSI(Level_64);
-#endif
-    // TODO: set some GPIO for mode decision
-
-    PRINT("Chip start, %s\n", VER_LIB);
-    PRINT("Reason of last reset:  ");
-    switch (R8_RESET_STATUS & RB_RESET_FLAG) {
-        case 0b000:
-            PRINT("Software\n");
-            break;
-        case 0b001:
-            PRINT("Power on\n");
-            break;
-        case 0b010:
-            PRINT("Watchdog timeout\n");
-            break;
-        case 0b011:
-            PRINT("Manual\n");
-            break;
-        case 0b101:
-            PRINT("Wake from shutdown\n");
-            break;
-        default:
-            PRINT("Wake from sleep\n");
-            break;
-    }
-
+    UserOptionByteConfig(ENABLE, ENABLE, DISABLE, 112);
 #if 0
     PRINT("EEPROM dump: \n");
     for (uint8_t i = 0; i < 8; i++) {
@@ -96,6 +53,7 @@ void platform_setup()
 
 void platform_setup_usb()
 {
+    Calibration_LSI(Level_64);
 }
 
 #endif

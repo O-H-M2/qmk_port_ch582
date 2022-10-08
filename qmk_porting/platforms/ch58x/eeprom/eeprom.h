@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "print.h"
-#include "CH58x_common.h"
 
 // Start address of eeprom for qmk
 #ifndef QMK_EEPROM_START_POSITION

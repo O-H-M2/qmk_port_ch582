@@ -118,13 +118,13 @@ if(EEPROM_ENABLE)
     if(EEPROM_DRIVER STREQUAL "custom")
         add_definitions(-DEEPROM_CUSTOM)
         include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/eeprom)
-        list(APPEND QMK_PORTING_SOURCES
+        list(APPEND CH582_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_ch58x_custom.c"
         )
     elseif(EEPROM_DRIVER STREQUAL "wear_leveling")
         add_definitions(-DEEPROM_WEAR_LEVELING)
         include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/eeprom)
-        list(APPEND QMK_PORTING_SOURCES
+        list(APPEND CH582_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_wear_leveling.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/wear_leveling_ch58x.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/wear_leveling.c"
@@ -158,11 +158,11 @@ endif()
 
 # USB_ENABLE
 if(USB_ENABLE)
-    add_definitions(-DUSB_ENABLE)
+    add_definitions(-DUSB_ENABLE -DEP_NUMS=8)
     message(STATUS "USB_ENABLE")
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/core/usbd_core.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/port/ch32/usb_dc_ch58x.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/port/ch32/usb_ch58x_dc_usbfs.c"
         "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/class/hid/usbd_hid.c"
     )
 endif()

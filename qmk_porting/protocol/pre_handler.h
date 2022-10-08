@@ -1,10 +1,13 @@
 #pragma once
 
+#include "CH58x_common.h"
+
 #if !defined(UINT32_MAX)
 #define UINT32_MAX ((uint32_t)-1)
 #endif
 
 #ifdef DEBUG
+#include "printf.h"
 #define PLF_DEBUG DEBUG
 #else
 #define NO_PRINT
@@ -15,14 +18,15 @@
 #endif
 
 #ifdef BLE_ENABLE
-#ifdef DCDC_ENABLE
-#undef DCDC_ENABLE
-#endif
-#ifdef HAL_SLEEP
-#undef HAL_SLEEP
-#endif
+#ifndef DCDC_ENABLE
 #define DCDC_ENABLE 1
-#define HAL_SLEEP   1
+#endif
+#ifndef HAL_SLEEP
+#define HAL_SLEEP 1
+#endif
+#ifndef LSE_FREQ
+#define LSE_FREQ 32768
+#endif
 #ifndef QMK_TASK_INTERVAL_MAX
 #define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(15)
 #endif
@@ -35,26 +39,29 @@
 #endif
 
 #ifdef ESB_ENABLE
-#ifdef LSE_FREQ
-#undef LSE_FREQ
-#endif
-#ifdef DCDC_ENABLE
-#undef DCDC_ENABLE
-#endif
-#ifdef HAL_SLEEP
-#undef HAL_SLEEP
-#endif
-#ifdef QMK_TASK_INTERVAL_MAX
-#undef QMK_TASK_INTERVAL_MAX
-#endif
 #if ESB_ENABLE == 1
-#define LSE_FREQ              32768
-#define DCDC_ENABLE           1
-#define HAL_SLEEP             1
+#ifndef DCDC_ENABLE
+#define DCDC_ENABLE 1
+#endif
+#ifndef HAL_SLEEP
+#define HAL_SLEEP 1
+#endif
+#ifndef LSE_FREQ
+#define LSE_FREQ 32768
+#endif
+#ifndef QMK_TASK_INTERVAL_MAX
 #define QMK_TASK_INTERVAL_MAX 2 // 1.25ms
+#endif
+#ifndef QMK_TASK_INTERVAL_LED
+#define QMK_TASK_INTERVAL_LED QMK_TASK_INTERVAL_MAX
+#endif
 #elif ESB_ENABLE == 2
+#ifndef DCDC_ENABLE
 #define DCDC_ENABLE 0
-#define HAL_SLEEP   0
+#endif
+#ifndef HAL_SLEEP
+#define HAL_SLEEP 0
+#endif
 #endif
 #endif
 

@@ -51,7 +51,3 @@ file(GLOB_RECURSE quantum_SOURCES
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/velocikey.c"
     # "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/wpm.c"
 )
-
-list(REMOVE_ITEM quantum_SOURCES
-    "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/logging/print.c"
-)

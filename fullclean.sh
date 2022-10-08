@@ -10,4 +10,5 @@ rm build.ninja
 rm cmake_install.cmake
 rm CMakeCache.txt
 rm Makefile
-rm qmk_port_ch582.*
+rm *.bin
+rm *.hex

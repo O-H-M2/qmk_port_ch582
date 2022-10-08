@@ -1,19 +1,19 @@
 #include "bootloader.h"
+#include "eeprom_reserved.h"
+#include "eeprom_driver.h"
 
-__HIGH_CODE
-void bootloader_jump()
+void bootmagic_lite_reset_eeprom(void)
 {
-    FLASH_ROM_ERASE(0, 4096);
-    sys_safe_access_enable();
-    R16_INT32K_TUNE = 0xFFFF;
-    R8_RST_WDOG_CTRL |= RB_SOFTWARE_RESET;
-    sys_safe_access_disable();
-    while (1) {
-        ;
-    }
 }
 
-void mcu_reset()
+void bootloader_jump()
 {
-    SYS_ResetExecute();
+}
+
+__HIGH_CODE void mcu_reset()
+{
+    FLASH_ROM_SW_RESET();
+    sys_safe_access_enable();
+    R8_RST_WDOG_CTRL |= RB_SOFTWARE_RESET;
+    sys_safe_access_disable();
 }

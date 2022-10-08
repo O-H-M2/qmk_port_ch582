@@ -17,9 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "CH583SFR.h"
-#include "CH58x_common.h"
-
 /* give code for your bootloader to come up if needed */
 void bootloader_jump(void);
 void mcu_reset(void);

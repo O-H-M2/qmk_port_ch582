@@ -25,6 +25,15 @@ const uint8_t hidReportMap[] = {
     0x19, 0x00,                                  //   Usage Minimum (0),
     0x29, (KEYBOARD_REPORT_BITS * 8 - 1) & 0xFF, //   Usage Maximum (),
     0x81, 0x02,                                  //   Input (Data, Variable, Absolute),
+    0x05, 0x08,                                  //   Usage Page (LED)
+    0x19, 0x01,                                  //   Usage Minimum (Num Lock)
+    0x29, 0x05,                                  //   Usage Maximum (Kana)
+    0x95, 0x05,                                  //   Report Count (5)
+    0x75, 0x01,                                  //   Report Size (1)
+    0x91, 0x02,                                  //   Output (Data, Variable, Absolute)
+    0x95, 0x01,                                  //   Report Count (1)
+    0x75, 0x03,                                  //   Report Size (3)
+    0x91, 0x03,                                  //   Output (Constant)
     0xC0,                                        // End Collection
 #ifdef MOUSE_ENABLE
     0x05, 0x01,                // Usage Page (Generic Desktop)
