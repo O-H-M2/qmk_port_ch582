@@ -134,7 +134,7 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     SPI0_StartDMA(txbuf, sizeof(txbuf) / sizeof(txbuf[0]));
 }
 
-__HIGH_CODE void ws2812_power_toggle(bool status)
+void ws2812_power_toggle(bool status)
 {
     if (ws2812_powered_on == status) {
         return;

@@ -326,7 +326,7 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     WS2812_PWM_DMA_INTERRUPT_SET;
 }
 
-__HIGH_CODE void ws2812_power_toggle(bool status)
+void ws2812_power_toggle(bool status)
 {
     if (ws2812_powered_on == status) {
         return;

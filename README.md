@@ -80,7 +80,7 @@ Currently you could use the official [flasing utility](http://www.wch.cn/downloa
 **无线部分子仓库未完成，可以通过从.gitmodules移除相关仓库来克隆并编译有线部分**
 
 然后，下载`riscv-none-embed-gcc`编译器，并将它加入环境变量。
-- 你可以使用[公版编译器](https://github.com/riscv-collab/riscv-gnu-toolchain)，但我更推荐使用WCH提供的版本，它支持一些独有的特性，比方说硬件压栈。
+- 你可以使用[公版编译器](https://github.com/riscv-collab/riscv-gnu-toolchain)，但我更推荐使用[WCH提供的版本](http://www.mounriver.com/download)，它支持一些独有的特性，比方说硬件压栈。
 - *如果你一定要头铁，在主CMakeLists.txt里加一个全局的宏定义`INT_SOFT`，否则会报编译警告，并且中断回调很可能无法正常工作。*
 
 再安装`CMake`和`Ninja`. 同时我推荐使用`VS Code`及其Cmake扩展，配置完工具链后就可以使用图形界面了。
