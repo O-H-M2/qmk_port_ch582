@@ -17,7 +17,6 @@
 
 #include "HAL.h"
 #include "print.h"
-#include "eeprom_reserved.h"
 #ifdef BLE_ENABLE
 #include "ble.h"
 #endif

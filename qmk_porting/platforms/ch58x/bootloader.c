@@ -1,5 +1,4 @@
 #include "bootloader.h"
-#include "eeprom_reserved.h"
 #include "eeprom_driver.h"
 
 void bootmagic_lite_reset_eeprom(void)

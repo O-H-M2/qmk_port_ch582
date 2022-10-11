@@ -1,7 +1,9 @@
 #pragma once
 
-#include "eeprom_reserved.h"
+#include <stdint.h>
+#include <stdbool.h>
 #include "gpio.h"
+#include "eeprom_driver.h"
 
 /* you can change the following definitions below, just keep them same in app and iap. */
 #define APP_CODE_START_ADDR 0x00007000
