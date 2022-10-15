@@ -23,6 +23,21 @@ SECTIONS
         *(.vector);
     } >FLASH AT>FLASH */
     
+    .highcodecopylalign : 
+    {       
+        . = ALIGN(4);
+        PROVIDE(_highcode_copy_lma = .); 
+    } >FLASH AT>FLASH 
+    
+    .highcode_copy :
+    {
+        . = ALIGN(4);
+        PROVIDE(_highcode_copy_start = .);
+        *(.highcode_copy);
+		*(.highcode_copy.*);
+        PROVIDE(_highcode_copy_end = .);
+    } >RAM AT>FLASH
+    
     .highcodelalign : 
     {       
         . = ALIGN(4);
@@ -49,7 +64,7 @@ SECTIONS
 		*(.text.*)
 		*(.rodata)
 		*(.rodata*)
-  *(.sdata2.*)
+  		*(.sdata2.*)
 		*(.glue_7)
 		*(.glue_7t)
 		*(.gnu.linkonce.t.*)
@@ -121,7 +136,7 @@ SECTIONS
 
 	.dalign    : 
 	{
-		. = ORIGIN(RAM) + MAX(0x800 , SIZEOF(.highcode));
+		. = ORIGIN(RAM) + MAX(0x800, SIZEOF(.highcode) + SIZEOF(.highcode_copy));
 	} >RAM AT>FLASH	
 
 	.dlalign :

@@ -1,15 +1,25 @@
 #include "iap.h"
 
-/*********************************************************************
- * @fn      SetSysClock
- *
- * @brief   配置系统运行时钟60Mhz, 0x48
- *
- * @param   sc      - 系统时钟源选择 refer to SYS_CLKTypeDef
- *
- * @return  none
- */
-__HIGH_CODE void mySetSysClock()
+__attribute__((section(".highcode_copy"))) static void __attribute__((noinline)) copy_section(uint32_t *p_load, uint32_t *p_vma, uint32_t *p_vma_end)
+{
+    while (p_vma <= p_vma_end) {
+        *p_vma = *p_load;
+        ++p_load;
+        ++p_vma;
+    }
+}
+
+__attribute__((section(".highcode_copy"))) static void __attribute__((noinline)) zero_section(uint32_t *start, uint32_t *end)
+{
+    uint32_t *p_zero = start;
+
+    while (p_zero <= end) {
+        *p_zero = 0;
+        ++p_zero;
+    }
+}
+
+__attribute__((section(".highcode_copy"))) void mySystemInit()
 {
     sys_safe_access_enable();
     R8_PLL_CONFIG &= ~(1 << 5); //
@@ -37,6 +47,15 @@ __HIGH_CODE void mySetSysClock()
     sys_safe_access_enable();
     R8_PLL_CONFIG |= 1 << 7;
     sys_safe_access_disable();
+
+    copy_section(&_highcode_lma, &_highcode_vma_start, &_highcode_vma_end);
+    copy_section(&_data_lma, &_data_vma, &_edata);
+    zero_section(&_sbss, &_ebss);
+}
+
+void SystemInit()
+{
+    mySystemInit();
 }
 
 /*********************************************************************
@@ -63,7 +82,7 @@ __HIGH_CODE void Main_Circulation()
         g_tcnt++;
         if (g_tcnt > 3000000) {
             //1分钟没有操作，进入app
-            jumpAppPre;
+            jumpPre;
             jumpApp();
         }
     }
@@ -92,8 +111,6 @@ int main()
     R16_POWER_PLAN |= RB_PWR_DCDC_EN;
     sys_safe_access_disable();
 #endif
-    mySetSysClock(); //为了精简程序体积，该函数比普通库的初始化函数有修改，只可以将时钟设置为60M
-    DelayMs(5);
 #ifdef PLF_DEBUG
     GPIOA_SetBits(GPIO_Pin_9);
     GPIOA_ModeCfg(GPIO_Pin_8, GPIO_ModeIN_PU);
@@ -127,7 +144,6 @@ int main()
 
 #ifdef BOOTMAGIC_ENABLE
     PRINT("Bootmagic!\n");
-
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
     bool jump_app = false;
     pin_t rows[] = MATRIX_ROW_PINS;

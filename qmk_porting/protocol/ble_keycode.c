@@ -1,4 +1,5 @@
 #include "ble_keycode.h"
+#include "quantum.h"
 
 #ifdef BLE_ENABLE
 

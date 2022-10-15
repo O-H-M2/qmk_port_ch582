@@ -17,24 +17,6 @@
 
 #include "HAL.h"
 #include "print.h"
-#ifdef BLE_ENABLE
-#include "ble.h"
-#endif
-#ifdef ESB_ENABLE
-#include "esb.h"
-#endif
-#if !defined BLE_ENABLE && !defined ESB_ENABLE
-#include "rgb_led.h"
-#endif
+#include "eventhandler.h"
 
 void platform_setup();
-
-#ifdef USB_ENABLE
-void platform_setup_usb();
-#endif
-#ifdef BLE_ENABLE
-void platform_setup_ble();
-#endif
-#ifdef ESB_ENABLE
-void platform_setup_esb();
-#endif

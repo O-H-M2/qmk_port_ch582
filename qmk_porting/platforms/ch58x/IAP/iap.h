@@ -7,18 +7,20 @@
 #include "config.h"
 
 /* you can change the following definitions below, just keep them same in app and iap. */
+#define IAP_CODE_START_ADDR 0x00000000
 #define APP_CODE_START_ADDR 0x00007000
 #define APP_CODE_END_ADDR   0x00070000
 
 #define USE_EEPROM_FLAG 1
 
-#define jumpAppPre                                            \
+#define jumpPre                                               \
     PRINT("Leaving DFU...\n");                                \
     R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU); \
     R32_USB_CONTROL = 0;                                      \
     R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;           \
     DelayMs(10);                                              \
     R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+#define jumpIAP ((void (*)(void))((int *)IAP_CODE_START_ADDR))
 #define jumpApp ((void (*)(void))((int *)APP_CODE_START_ADDR))
 
 #define FLAG_USER_CALL_IAP 0x55
@@ -70,6 +72,17 @@ extern uint8_t EP1_Databuf[64 + 64];      //ep1_out(64)+ep1_in(64)
 extern uint8_t EP2_Databuf[64 + 64];      //ep2_out(64)+ep2_in(64)
 extern uint8_t EP3_Databuf[64 + 64];      //ep3_out(64)+ep3_in(64)
 extern uint32_t g_tcnt;
+
+extern uint32_t _highcode_lma;
+extern uint32_t _highcode_vma_start;
+extern uint32_t _highcode_vma_end;
+
+extern uint32_t _data_lma;
+extern uint32_t _data_vma;
+extern uint32_t _edata;
+
+extern uint32_t _sbss;
+extern uint32_t _ebss;
 
 void myDevEP2_IN_Deal(uint8_t s);
 void myDevEP2_OUT_Deal(uint8_t l);

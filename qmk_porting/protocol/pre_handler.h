@@ -157,6 +157,16 @@
 #define MS_UNIT_1_25(x) ((int)(x / 1.25))
 
 enum {
+    PLATFORM_EVENT_MODE_SELECT = 1,
+    PLATFORM_EVENT_INITIALIZE,
+    PROTOCOL_EVENT_PRE_INIT,
+    PROTOCOL_EVENT_RUN,
+    USB_EVENT_START_INDEX = 10,
+    BLE_EVENT_START_INDEX = 20,
+    ESB_EVENT_START_INDEX = 30,
+};
+
+enum {
     kbd_protocol_start = 0,
 #ifdef USB_ENABLE
     kbd_protocol_usb,

@@ -350,7 +350,7 @@ __HIGH_CODE void myDevEP2_OUT_Deal(uint8_t l)
             break;
         case CMD_IAP_END:
             /*结束升级，复位USB，跳转到app*/
-            jumpAppPre;
+            jumpPre;
             jumpApp();
             break;
         default:

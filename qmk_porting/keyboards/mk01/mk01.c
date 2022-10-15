@@ -44,32 +44,8 @@ __HIGH_CODE int main()
     extern void protocol_setup();
     extern void protocol_init();
     extern void protocol_task();
-    extern volatile uint8_t kbd_protocol_type;
 
     platform_setup();
-
-    // TODO: implement the mode select conditions
-#ifdef USB_ENABLE
-    if (1) {
-        // cable mode
-        platform_setup_usb();
-        kbd_protocol_type = kbd_protocol_usb;
-    }
-#endif
-#ifdef BLE_ENABLE
-    if (1) {
-        // bluetooth mode
-        platform_setup_ble();
-        kbd_protocol_type = kbd_protocol_ble;
-    }
-#endif
-#ifdef ESB_ENABLE
-    if (1) {
-        // 2.4g mode
-        platform_setup_esb();
-        kbd_protocol_type = kbd_protocol_esb;
-    }
-#endif
 
     protocol_setup();
     keyboard_setup();

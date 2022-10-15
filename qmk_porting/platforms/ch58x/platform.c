@@ -47,42 +47,6 @@ void platform_setup()
     }
     PRINT("End of EEPROM dump.\n\n");
 #endif
+    event_propagate(PLATFORM_EVENT_MODE_SELECT, NULL);
+    event_propagate(PLATFORM_EVENT_INITIALIZE, NULL);
 }
-
-#ifdef USB_ENABLE
-
-void platform_setup_usb()
-{
-    Calibration_LSI(Level_64);
-}
-
-#endif
-
-#ifdef BLE_ENABLE
-
-void platform_setup_ble()
-{
-    _Static_assert(KC_VENDOR_BT1 >= SAFE_RANGE, "Error: overlap detected between QMK and Vendor defined keycodes!");
-
-    CH58X_BLEInit();
-    HAL_Init();
-    GAPRole_PeripheralInit();
-}
-
-#endif
-
-#ifdef ESB_ENABLE
-
-void platform_setup_esb()
-{
-    CH58X_BLEInit();
-    HAL_Init();
-    RF_RoleInit();
-    RF_Init();
-#if ESB_ENABLE == 2
-    init_usb_driver();
-    kbd_protocol_type = kbd_protocol_esb;
-#endif
-}
-
-#endif

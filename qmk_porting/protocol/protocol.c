@@ -1,20 +1,10 @@
 #include "host_driver.h"
 #include "host.h"
 #include "usb_device_state.h"
-#include "print.h"
 #include "keycode_config.h"
-#ifdef USB_ENABLE
-#include "usb_main.h"
-#endif
-#ifdef BLE_ENABLE
-#include "ble.h"
-#endif
-#ifdef ESB_ENABLE
-#include "esb.h"
-#endif
+#include "platform_deps.h"
 
 uint8_t keyboard_led_state;
-extern volatile uint8_t kbd_protocol_type;
 
 __attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length)
 {
@@ -182,21 +172,7 @@ void protocol_setup()
 
 void protocol_pre_init()
 {
-#ifdef USB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_usb) {
-        init_usb_driver();
-    }
-#endif
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        HidDev_Init();
-        hogp_init();
-    }
-#endif
-#ifdef ESB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_esb) {
-    }
-#endif
+    event_propagate(PROTOCOL_EVENT_PRE_INIT, NULL);
 }
 
 void protocol_post_init()
@@ -214,28 +190,17 @@ void protocol_post_init()
 
 __HIGH_CODE void protocol_task()
 {
-    extern void keyboard_task();
-
-#ifdef USB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_usb) {
-        keyboard_task();
-    }
-#endif
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        TMOS_SystemProcess();
-    }
-#endif
-#ifdef ESB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_esb) {
-        TMOS_SystemProcess();
-    }
-#endif
+    event_propagate(PROTOCOL_EVENT_RUN, NULL);
 }
 
-void keyboard_post_init_user(void)
+void keyboard_post_init_user()
 {
 #ifdef PLF_DEBUG
     print("Set log output for QMK.\n");
 #endif
+}
+
+void shutdown_user()
+{
+    rgbled_power_off();
 }

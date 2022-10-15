@@ -118,13 +118,22 @@ if(EEPROM_ENABLE)
     if(EEPROM_DRIVER STREQUAL "custom")
         add_definitions(-DEEPROM_CUSTOM)
         include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/eeprom)
-        list(APPEND CH582_SOURCES
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_ch58x_custom.c"
+        )
+        list(APPEND QMK_PORTING_IAP_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_ch58x_custom.c"
         )
     elseif(EEPROM_DRIVER STREQUAL "wear_leveling")
         add_definitions(-DEEPROM_WEAR_LEVELING)
         include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/eeprom)
-        list(APPEND CH582_SOURCES
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_wear_leveling.c"
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/wear_leveling_ch58x.c"
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/wear_leveling.c"
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/fnv/*.c"
+        )
+        list(APPEND QMK_PORTING_IAP_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_wear_leveling.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/wear_leveling_ch58x.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/wear_leveling.c"
@@ -193,6 +202,12 @@ if(ESB_ENABLE)
         message(STATUS "ESB_ENABLE")
         add_definitions(-DESB_ENABLE=2)
         message(STATUS "ESB_ROLE = dongle")
+
+        if(BLE_ENABLE)
+            remove_definitions(-DBLE_ENABLE)
+            message(WARNING "Removed BLE_ENABLE")
+        endif()
+
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"

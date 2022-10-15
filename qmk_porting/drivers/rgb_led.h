@@ -19,12 +19,10 @@ __attribute__((always_inline)) inline bool rgbled_status_check()
 #endif
 }
 
-__attribute__((always_inline)) inline void rgbled_power_check()
+__attribute__((always_inline)) inline void rgbled_power_off()
 {
-    // power off rgb leds or the controller when led is toggled off
-    if (!rgbled_status_check()) {
+    // power off rgb leds or the controller
 #ifdef WS2812
-        ws2812_power_toggle(false);
+    ws2812_power_toggle(false);
 #endif
-    }
 }

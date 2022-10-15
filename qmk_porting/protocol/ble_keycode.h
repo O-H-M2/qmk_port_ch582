@@ -1,10 +1,8 @@
 #pragma once
 
-#include <stdint.h>
 #ifdef DEBUG
 #undef DEBUG
 #endif
-#include "quantum.h"
 #include "quantum_keycodes.h"
 
 enum {
