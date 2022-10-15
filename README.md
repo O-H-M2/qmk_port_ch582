@@ -6,7 +6,7 @@ This is a porting of QMK keyboard firmware for CH58x series, currently support C
 
 ## Directory Structure
 
-- CherryUSB, lwrb, qmk_firmware: Components introduced as submodules, **NO any file** is modified. 
+- CherryUSB, qmk_firmware: Components introduced as submodules, **NO any file** is modified. 
 
   *The qmk_firmware submodule should be able to keep up with upstream.*
 - CherryUSB porting: Files used to add CherryUSB submodule into the building system.
@@ -50,7 +50,7 @@ Currently you could use the official [flasing utility](http://www.wch.cn/downloa
 
 ## 目录结构
 
-- CherryUSB, lwrb, qmk_firmware: 子仓库，**没有修改任何代码**。
+- CherryUSB, qmk_firmware: 子仓库，**没有修改任何代码**。
 
   *其中，QMK固件应当能够随上游仓库随时更新。*
 - CherryUSB porting: CherryUSB的配置文件。
