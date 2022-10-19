@@ -198,6 +198,5 @@ void keyboard_post_init_user()
 {
 #ifdef PLF_DEBUG
     print("Set log output for QMK.\n");
-    PRINT("Build on %s %s\n", __DATE__, __TIME__);
 #endif
 }

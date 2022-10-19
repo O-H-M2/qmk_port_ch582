@@ -1,5 +1,6 @@
+include_directories(${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard})
+include_directories(${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard}/keymaps/${keymap})
 include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/drivers)
-include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard})
 include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/platforms)
 include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/protocol)
 

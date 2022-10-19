@@ -1,12 +1,14 @@
 #pragma once
 
 //* platform settings
-#define DEBUG              1
-#define DCDC_ENABLE        0
-#define FREQ_SYS           60000000
-#define LSE_FREQ           32768
-#define SLEEP_RTC_MIN_TIME 45
-// #define WAKE_UP_RTC_MAX_TIME      50
+#define DEBUG                1
+#define DCDC_ENABLE          0
+#define FREQ_SYS             60000000
+#define LSE_ENABLE           1
+#define SLEEP_RTC_MIN_TIME   45
+// #define WAKE_UP_RTC_MAX_TIME 50
+// #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
+// #define LSE_LOAD_CAPACITANCE 7   // in pF unit
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE

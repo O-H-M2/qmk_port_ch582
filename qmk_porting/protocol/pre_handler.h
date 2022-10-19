@@ -33,8 +33,8 @@
 #ifndef HAL_SLEEP
 #define HAL_SLEEP 1
 #endif
-#ifndef LSE_FREQ
-#define LSE_FREQ 32768
+#ifndef LSE_ENABLE
+#define LSE_ENABLE 1
 #endif
 #ifndef QMK_TASK_INTERVAL_MAX
 #define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(15)
@@ -55,8 +55,8 @@
 #ifndef HAL_SLEEP
 #define HAL_SLEEP 1
 #endif
-#ifndef LSE_FREQ
-#define LSE_FREQ 32768
+#ifndef LSE_ENABLE
+#define LSE_ENABLE 1
 #endif
 #ifndef QMK_TASK_INTERVAL_MAX
 #define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(20) // 1.25ms
@@ -71,8 +71,9 @@
 #ifndef HAL_SLEEP
 #define HAL_SLEEP 0
 #endif
-#ifdef LSE_FREQ
-#undef LSE_FREQ
+#if LSE_ENABLE
+#undef LSE_ENABLE
+#define LSE_ENABLE 0
 #endif
 #endif
 #endif
@@ -125,8 +126,8 @@
 #endif
 #endif
 
-#ifdef LSE_FREQ
-#define FREQ_RTC   LSE_FREQ
+#if defined LSE_ENABLE && LSE_ENABLE
+#define FREQ_RTC   32768
 #define CLK_OSC32K 0
 #ifdef WS2812_DRIVER_PWM
 #warning "WS2812 PWM driver can not be used with LSE!"
@@ -137,6 +138,9 @@
 #undef WS2812_PWM_DRIVER
 #endif
 #else
+#ifdef LSE_LOAD_CAPACITANCE
+#undef LSE_LOAD_CAPACITANCE
+#endif
 #define FREQ_RTC 32000
 #if ESB_ENABLE == 2
 #define CLK_OSC32K 0x81

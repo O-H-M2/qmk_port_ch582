@@ -282,6 +282,43 @@ __HIGH_CODE void Main_Circulation()
 
 int main()
 {
+#ifdef HSE_LOAD_CAPACITANCE
+    {
+        uint8_t capacitance = HSE_LOAD_CAPACITANCE;
+
+        switch (capacitance) {
+            case 10:
+                HSECFG_Capacitance(HSECap_10p);
+                break;
+            case 12:
+                HSECFG_Capacitance(HSECap_12p);
+                break;
+            case 14:
+                HSECFG_Capacitance(HSECap_14p);
+                break;
+            case 16:
+                HSECFG_Capacitance(HSECap_16p);
+                break;
+            case 18:
+                HSECFG_Capacitance(HSECap_18p);
+                break;
+            case 20:
+                HSECFG_Capacitance(HSECap_20p);
+                break;
+            case 22:
+                HSECFG_Capacitance(HSECap_22p);
+                break;
+            case 24:
+                HSECFG_Capacitance(HSECap_24p);
+                break;
+            default:
+                PRINT("Fatal: Invalid HSE capacitance!\n");
+                while (1) {
+                    __nop();
+                }
+        }
+    }
+#endif
 #if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
     uint16_t adj = R16_AUX_POWER_ADJ;
     uint16_t plan = R16_POWER_PLAN;
@@ -304,6 +341,7 @@ int main()
     UART1_BaudRateCfg(460800);
 #endif
     PRINT("Chip start, %s\n", VER_LIB);
+    PRINT("Build on %s %s - " MACRO2STR(__GIT_VERSION__) "\n", __DATE__, __TIME__);
     PRINT("Reason of last reset:  ");
     switch (R8_RESET_STATUS & RB_RESET_FLAG) {
         case 0b000:

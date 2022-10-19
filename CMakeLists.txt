@@ -20,7 +20,14 @@ if(NOT keymap)
     set(keymap "default" CACHE STRING "QMK" FORCE)
 endif()
 
+execute_process(COMMAND git rev-parse --short HEAD
+    TIMEOUT 5
+    OUTPUT_VARIABLE GIT_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 add_definitions(-DKEYMAP_C="keymap.c")
+add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
 
 # 编译参数 一般不用改
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)

@@ -4,7 +4,7 @@
 #define DEBUG              1
 #define DCDC_ENABLE        0
 #define FREQ_SYS           40000000
-#define LSE_FREQ           32768
+#define LSE_ENABLE         1
 #define SLEEP_RTC_MIN_TIME 45
 // #define WAKE_UP_RTC_MAX_TIME      50
 
