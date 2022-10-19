@@ -174,18 +174,27 @@ if(USB_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/port/ch32/usb_ch58x_dc_usbfs.c"
         "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/class/hid/usbd_hid.c"
     )
+    list(APPEND QMK_PORTING_IAP_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/core/usbd_core.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/port/ch32/usb_ch58x_dc_usbfs.c"
+        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/class/msc/usbd_msc.c"
+    )
 endif()
 
 # BLE_ENABLE
 if(BLE_ENABLE)
-    add_definitions(-DBLE_ENABLE)
-    message(STATUS "BLE_ENABLE: Nkro is forced enable")
-    add_definitions(-DNKRO_ENABLE -DFORCE_NKRO)
+    if(ESB_ENABLE AND ESB_ROLE STREQUAL "dongle")
+        message(STATUS "Dongle should have BLE_ENABLE, ignore")
+    else()
+        add_definitions(-DBLE_ENABLE)
+        message(STATUS "BLE_ENABLE: Nkro is forced enable")
+        add_definitions(-DNKRO_ENABLE -DFORCE_NKRO)
 
-    list(APPEND QMK_PORTING_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
-        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/ble/*.c"
-    )
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/ble/*.c"
+        )
+    endif()
 endif()
 
 # ESB_ENABLE
@@ -202,11 +211,6 @@ if(ESB_ENABLE)
         message(STATUS "ESB_ENABLE")
         add_definitions(-DESB_ENABLE=2)
         message(STATUS "ESB_ROLE = dongle")
-
-        if(BLE_ENABLE)
-            remove_definitions(-DBLE_ENABLE)
-            message(WARNING "Removed BLE_ENABLE")
-        endif()
 
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"

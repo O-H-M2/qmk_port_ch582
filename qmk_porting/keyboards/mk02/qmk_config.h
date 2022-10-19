@@ -3,7 +3,7 @@
 //* platform settings
 #define DEBUG              1
 #define DCDC_ENABLE        0
-#define FREQ_SYS           40000000
+#define FREQ_SYS           60000000
 #define LSE_FREQ           32768
 #define SLEEP_RTC_MIN_TIME 45
 // #define WAKE_UP_RTC_MAX_TIME      50
@@ -13,21 +13,21 @@
 #define PRODUCT_ID   0x0B91
 #define DEVICE_VER   0x0001
 #define MANUFACTURER OctocKiesZ
-#define PRODUCT      mk01
+#define PRODUCT      mk02
 
 #define QMK_VERSION    "0.0.1"
 #define QMK_BUILDDATE  __DATE__
-#define QMK_KEYBOARD_H "mk01.h"
+#define QMK_KEYBOARD_H "mk02.h"
 
 #define MATRIX_ROWS 5
-#define MATRIX_COLS 14
+#define MATRIX_COLS 4
 #define MATRIX_ROW_PINS      \
     {                        \
         B9, A7, B8, B16, B18 \
     }
-#define MATRIX_COL_PINS                                          \
-    {                                                            \
-        A4, A5, A6, A0, A1, A3, B17, B5, B4, B3, B2, B1, B0, B21 \
+#define MATRIX_COL_PINS \
+    {                   \
+        A4, A5, A6, A0  \
     }
 #define DIODE_DIRECTION       COL2ROW
 #define BOOTMAGIC_LITE_ROW    0
@@ -47,11 +47,11 @@
 
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
-#define WS2812_EN_PIN   B22
+#define WS2812_EN_PIN   B6
 #define WS2812_EN_LEVEL 1
 
 #ifdef RGBLIGHT_ENABLE
-#define RGBLED_NUM        61
+#define RGBLED_NUM        17
 #define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_RGB
 // #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_EFFECT_BREATHING
@@ -78,7 +78,7 @@
 #ifdef WS2812_DRIVER_PWM
 #define WS2812_PWM_DRIVER 1
 #endif
-#define RGBLED_NUM                    61
+#define RGBLED_NUM                    17
 #define DRIVER_LED_TOTAL              RGBLED_NUM
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 128
 #define RGB_DISABLE_WHEN_USB_SUSPENDED

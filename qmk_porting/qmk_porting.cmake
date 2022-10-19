@@ -1,8 +1,10 @@
-include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR})
+include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/drivers)
+include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard})
+include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/platforms)
+include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/protocol)
 
 file(GLOB QMK_PORTING_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard}/*.c"
-    "${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard}/keymaps/${keymap}/*.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/bootloader.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/platform.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/suspend.c"
@@ -13,7 +15,3 @@ file(GLOB QMK_PORTING_SOURCES
 file(GLOB_RECURSE QMK_PORTING_IAP_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/IAP/*.c"
 )
-
-# list(APPEND CH582_SOURCES
-#     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/platform.c"
-# )

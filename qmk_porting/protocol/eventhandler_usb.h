@@ -8,7 +8,7 @@ enum {
 };
 
 extern void keyboard_task();
-extern void init_usb_driver();
+extern void housekeeping_task();
 
 __attribute__((always_inline)) inline void event_handler_usb(uint8_t event, void *param)
 {
@@ -21,6 +21,7 @@ __attribute__((always_inline)) inline void event_handler_usb(uint8_t event, void
             break;
         case PROTOCOL_EVENT_RUN:
             keyboard_task();
+            housekeeping_task();
             break;
         default:
             PRINT("Unhandled usb event: %d\n", event);

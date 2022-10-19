@@ -1,6 +1,19 @@
 #pragma once
 
 #include "CH58x_common.h"
+#include "eeprom_partition_table.h"
+
+#ifdef BLE_ENABLE
+#include "ble_config.h"
+#endif
+
+#ifdef ESB_ENABLE
+#include "esb_config.h"
+#endif
+
+#if !defined(UINT8_MAX)
+#define UINT8_MAX ((uint8_t)-1)
+#endif
 
 #if !defined(UINT32_MAX)
 #define UINT32_MAX ((uint32_t)-1)
@@ -11,10 +24,6 @@
 #define PLF_DEBUG DEBUG
 #else
 #define NO_PRINT
-#endif
-
-#if defined RGBLIGHT_ENABLE && defined RGB_MATRIX_ENABLE
-#error "RGB_LIGHT can not be used with RGB_MATRIX simultaneously"
 #endif
 
 #ifdef BLE_ENABLE
@@ -50,7 +59,7 @@
 #define LSE_FREQ 32768
 #endif
 #ifndef QMK_TASK_INTERVAL_MAX
-#define QMK_TASK_INTERVAL_MAX 2 // 1.25ms
+#define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(20) // 1.25ms
 #endif
 #ifndef QMK_TASK_INTERVAL_LED
 #define QMK_TASK_INTERVAL_LED QMK_TASK_INTERVAL_MAX
@@ -61,6 +70,9 @@
 #endif
 #ifndef HAL_SLEEP
 #define HAL_SLEEP 0
+#endif
+#ifdef LSE_FREQ
+#undef LSE_FREQ
 #endif
 #endif
 #endif
@@ -88,7 +100,11 @@
 #elif FREQ_SYS == 1000000
 #define Fsys CLK_SOURCE_HSE_1MHz
 #else
-#error "Illegal Fsys!"
+#error "Illegal CPU clock!"
+#endif
+
+#if (defined RGBLIGHT_ENABLE || defined RGB_MATRIX_ENABLE) && FREQ_SYS <= 32000000
+#error "CPU clock speed too low!"
 #endif
 
 #ifndef EXTRAKEY_ENABLE

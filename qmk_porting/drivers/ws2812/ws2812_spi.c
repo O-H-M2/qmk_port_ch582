@@ -3,7 +3,7 @@
 
 // Define SPI config speed
 #ifndef WS2812_SPI_DIVISOR
-#define WS2812_SPI_DIVISOR FREQ_SYS / 1000000 / 3.2 + 1 //target 3.2MHz
+#define WS2812_SPI_DIVISOR FREQ_SYS / 3200000 + (FREQ_SYS % 3200000 ? 1 : 0) //target 3.2MHz
 #endif
 
 #define BYTES_FOR_LED_BYTE 4

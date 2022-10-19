@@ -39,7 +39,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
 
-__HIGH_CODE int main()
+int main()
 {
     extern void protocol_setup();
     extern void protocol_init();
@@ -55,8 +55,7 @@ __HIGH_CODE int main()
     /* Main loop */
     for (;;) {
         protocol_task();
-
-        // housekeeping_task();
+        //! housekeeping_task() is handled by platform
     }
 }
 
@@ -65,12 +64,9 @@ __HIGH_CODE int main()
 __HIGH_CODE int main()
 {
     platform_setup();
-    platform_setup_esb();
 
     for (;;) {
         TMOS_SystemProcess();
-
-        // housekeeping_task();
     }
 }
 

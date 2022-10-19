@@ -18,6 +18,9 @@
 
 // #define CONFIG_USB_PRINTF_COLOR_ENABLE
 
+#define USB_NOCACHE_RAM_SECTION __attribute__((section(".noncacheable")))
+#define USB_NUM_BIDIR_ENDPOINTS 8
+
 /* USB DEVICE Configuration */
 /* core */
 #ifndef CONFIG_USBDEV_REQUEST_BUFFER_LEN
@@ -33,6 +36,10 @@
 #endif
 
 /* msc class */
+#ifndef CONFIG_USBDEV_MSC_BLOCK_SIZE
+#define CONFIG_USBDEV_MSC_BLOCK_SIZE 512
+#endif
+
 #ifndef CONFIG_USBDEV_MSC_MANUFACTURER_STRING
 #define CONFIG_USBDEV_MSC_MANUFACTURER_STRING ""
 #endif

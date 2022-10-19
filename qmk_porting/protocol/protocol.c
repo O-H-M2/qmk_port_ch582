@@ -1,4 +1,3 @@
-#include "host_driver.h"
 #include "host.h"
 #include "usb_device_state.h"
 #include "keycode_config.h"
@@ -33,7 +32,7 @@ void send_keyboard(report_keyboard_t *report)
 #endif
 #ifdef ESB_ENABLE
         if (kbd_protocol_type == kbd_protocol_esb) {
-            wireless_ringbuffer_write(EXKEY_IN_EP_SIZE, REPORT_ID_NKRO, (uint8_t *)&report->nkro);
+            esb_send_report(REPORT_ID_NKRO, (uint8_t *)&report->nkro, EXKEY_IN_EP_SIZE);
         }
 #endif
     } else
@@ -51,7 +50,7 @@ void send_keyboard(report_keyboard_t *report)
 #endif
 #ifdef ESB_ENABLE
         if (kbd_protocol_type == kbd_protocol_esb) {
-            wireless_ringbuffer_write(KEYBOARD_REPORT_SIZE, REPORT_ID_KEYBOARD, (uint8_t *)report);
+            esb_send_report(REPORT_ID_KEYBOARD, (uint8_t *)report, KEYBOARD_REPORT_SIZE);
         }
 #endif
     }
@@ -76,7 +75,7 @@ void send_mouse(report_mouse_t *report)
 #endif
 #ifdef ESB_ENABLE
     if (kbd_protocol_type == kbd_protocol_esb) {
-        wireless_ringbuffer_write(5, REPORT_ID_MOUSE, (uint8_t *)report);
+        esb_send_report(REPORT_ID_MOUSE, (uint8_t *)report, 5);
     }
 #endif
 #endif
@@ -104,7 +103,7 @@ void send_system(uint16_t data)
     if (kbd_protocol_type == kbd_protocol_esb) {
         uint16_t data_to_send = data;
 
-        wireless_ringbuffer_write(2, REPORT_ID_SYSTEM, (uint8_t *)&data_to_send);
+        esb_send_report(REPORT_ID_SYSTEM, (uint8_t *)&data_to_send, 2);
     }
 #endif
 }
@@ -131,7 +130,7 @@ void send_consumer(uint16_t data)
     if (kbd_protocol_type == kbd_protocol_esb) {
         uint16_t data_to_send = data;
 
-        wireless_ringbuffer_write(2, REPORT_ID_CONSUMER, (uint8_t *)&data_to_send);
+        esb_send_report(REPORT_ID_CONSUMER, (uint8_t *)&data_to_send, 2);
     }
 #endif
 }
@@ -160,7 +159,7 @@ void raw_hid_send(uint8_t *data, uint8_t length)
 #endif
 #ifdef ESB_ENABLE
     if (kbd_protocol_type == kbd_protocol_esb) {
-        wireless_ringbuffer_write(length, REPORT_ID_CUSTOM, data);
+        esb_send_report(REPORT_ID_CUSTOM, data, length);
     }
 #endif
 }
@@ -190,17 +189,15 @@ void protocol_post_init()
 
 __HIGH_CODE void protocol_task()
 {
-    event_propagate(PROTOCOL_EVENT_RUN, NULL);
+    for (;;) {
+        event_propagate(PROTOCOL_EVENT_RUN, NULL);
+    }
 }
 
 void keyboard_post_init_user()
 {
 #ifdef PLF_DEBUG
     print("Set log output for QMK.\n");
+    PRINT("Build on %s %s\n", __DATE__, __TIME__);
 #endif
-}
-
-void shutdown_user()
-{
-    rgbled_power_off();
 }

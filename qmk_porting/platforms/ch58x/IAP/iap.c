@@ -1,394 +1,380 @@
 #include "iap.h"
 
-#undef pSetupReqPak /* 解决和外设库头文件冲突  */
-#define pSetupReqPak ((PUSB_SETUP_REQ)EP0_Databuf)
+static volatile uint16_t usb_counter = 0;
+static uint8_t msc_ram_descriptor[] = {
+    USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, 0x0200, 0x01),
+    USB_CONFIG_DESCRIPTOR_INIT(USB_CONFIG_SIZE, 0x01, 0x01, USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
+    MSC_DESCRIPTOR_INIT(0x00, MSC_OUT_EP, MSC_IN_EP, 0x02),
+    ///////////////////////////////////////
+    /// string0 descriptor
+    ///////////////////////////////////////
+    USB_LANGID_INIT(USBD_LANGID_STRING),
+    ///////////////////////////////////////
+    /// string1 descriptor
+    ///////////////////////////////////////
+    0x10,                       /* bLength */
+    USB_DESCRIPTOR_TYPE_STRING, /* bDescriptorType */
+    'H', 0x00,                  /* wcChar0 */
+    'u', 0x00,                  /* wcChar1 */
+    'c', 0x00,                  /* wcChar2 */
+    'k', 0x00,                  /* wcChar3 */
+    'i', 0x00,                  /* wcChar4 */
+    'e', 0x00,                  /* wcChar5 */
+    's', 0x00,                  /* wcChar6 */
+    ///////////////////////////////////////
+    /// string2 descriptor
+    ///////////////////////////////////////
+    0x18,                       /* bLength */
+    USB_DESCRIPTOR_TYPE_STRING, /* bDescriptorType */
+    'H', 0x00,                  /* wcChar0 */
+    'u', 0x00,                  /* wcChar1 */
+    'c', 0x00,                  /* wcChar2 */
+    'K', 0x00,                  /* wcChar3 */
+    'e', 0x00,                  /* wcChar4 */
+    'y', 0x00,                  /* wcChar5 */
+    's', 0x00,                  /* wcChar6 */
+    ' ', 0x00,                  /* wcChar7 */
+    'D', 0x00,                  /* wcChar8 */
+    'F', 0x00,                  /* wcChar9 */
+    'U', 0x00,                  /* wcChar10 */
+    ///////////////////////////////////////
+    /// string3 descriptor
+    ///////////////////////////////////////
+    0x02,                       /* bLength */
+    USB_DESCRIPTOR_TYPE_STRING, /* bDescriptorType */
+    // '2', 0x00,                  /* wcChar0 */
 
-#define DevEP0SIZE 64
-
-// device descriptor
-const uint8_t MyDevDescr[] = {
-    0x12,       /* bLength */
-    0x01,       /* bDescriptorType */
-    0x10, 0x01, /* bcdUSB */
-    0xFF,       /* bDeviceClass */
-    0x80,       /* bDeviceSubClass */
-    0x55,       /* bDeviceProtocol */
-    DevEP0SIZE, /* bMaxPacketSize */
-    0x48, 0x43, /* idVendor */
-    0xe0, 0x55, /* idProduct */
-    0x00, 0x01, /* bcdDevice */
-    0x01,       /* iManufacturer */
-    0x02,       /* iProduct */
-    0x00,       /* iSerial */
-    0x01        /* bNumConfigurations */
+    0x00
 };
-// configuration descriptor
-const uint8_t MyCfgDescr[] = {
-    0x09,       /* bLength */
-    0x02,       /* bDescriptorType */
-    0x20, 0x00, /* wTotalLength */
-    0x01,       /* bNumInterfaces */
-    0x01,       /* bConfigurationValue */
-    0x00,       /* iConfiguration */
-    0x80,       /* bmAttributes */
-    0x39,       /* bMaxPower */
+static WriteState _wr_state = { 0 };
 
-    0x09, /* bLength */
-    0x04, /* bDescriptorType */
-    0x00, /* bInterfaceNumber */
-    0x00, /* bAlternateSetting */
-    0x02, /* bNumEndpoints */
-    0xFF, /* bInterfaceClass */
-    0x80, /* bInterfaceSubClass */
-    0x55, /* nInterfaceProtocol */
-    0x00, /* iInterface: Index of string descriptor */
+/**
+ * Use a dedicate section to reconstruct the start up sequence
+*/
+#if 1
+extern uint32_t _highcode_lma;
+extern uint32_t _highcode_vma_start;
+extern uint32_t _highcode_vma_end;
 
-    0x07,       /* bLength */
-    0x05,       /* bDescriptorType */
-    0x82,       /* bEndpointAddress */
-    0x02,       /* bmAttributes */
-    0x40, 0x00, /* wMaxPacketSize */
-    0x00,       /* bInterval */
+extern uint32_t _data_lma;
+extern uint32_t _data_vma;
+extern uint32_t _edata;
 
-    0x07,       /* bLength */
-    0x05,       /* bDescriptorType */
-    0x02,       /* bEndpointAddress */
-    0x02,       /* bmAttributes */
-    0x40, 0x00, /* wMaxPacketSize */
-    0x00        /* bInterval */
-};
-const uint8_t MyLangDescr[] = { 0x04, 0x03, 0x09, 0x04 };
-const uint8_t MyManuInfo[] = { 0x10, 0x03, 'H', 0, 'u', 0, 'c', 0, 'k', 0, 'i', 0, 'e', 0, 's', 0 };
-const uint8_t MyProdInfo[] = { 0x12, 0x03, 'D', 0, 'F', 0, 'U', 0, ' ', 0, 'M', 0, 'o', 0, 'd', 0, 'e', 0 };
+extern uint32_t _sbss;
+extern uint32_t _ebss;
 
-uint8_t DevConfig;
-uint8_t SetupReqCode;
-uint16_t SetupReqLen;
-const uint8_t *pDescr;
-
-__attribute__((aligned(4))) uint8_t EP0_Databuf[64 + 64 + 64]; //ep0(64)+ep4_out(64)+ep4_in(64)
-__attribute__((aligned(4))) uint8_t EP1_Databuf[64 + 64];      //ep1_out(64)+ep1_in(64)
-__attribute__((aligned(4))) uint8_t EP2_Databuf[64 + 64];      //ep2_out(64)+ep2_in(64)
-__attribute__((aligned(4))) uint8_t EP3_Databuf[64 + 64];      //ep3_out(64)+ep3_in(64)
-
-__attribute__((aligned(4))) uint8_t g_write_buf[256 + 64]; //每次满256字节再写flash，提升速度
-
-volatile uint32_t g_buf_write_ptr = 0;
-volatile uint32_t g_flash_write_ptr = 0;
-uint32_t g_tcnt;
-__attribute__((aligned(4))) iap_cmd_t g_iap_cmd;
-
-/*********************************************************************
- * @fn      USB_DevTransProcess
- *
- * @brief   IAP USB主循环,程序放ram中运行，提升速度.
- *
- * @param   None.
- *
- * @return  None.
- */
-__HIGH_CODE void USB_DevTransProcess(void)
+__attribute__((section(".highcode_copy"))) static void __attribute__((noinline)) copy_section(uint32_t *p_load, uint32_t *p_vma, uint32_t *p_vma_end)
 {
-    uint8_t len, chtype;
-    uint8_t intflag, errflag = 0;
-
-    intflag = R8_USB_INT_FG;
-    if (intflag & RB_UIF_TRANSFER) {
-        g_tcnt = 0; //USB有数据，清空超时计数
-        if (intflag & RB_U_IS_NAK) {
-        } else {
-            // 分析操作令牌和端点号
-            switch (R8_USB_INT_ST & (MASK_UIS_TOKEN | MASK_UIS_ENDP)) {
-                case UIS_TOKEN_IN | 2:
-                    R8_UEP2_CTRL = (R8_UEP2_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_NAK;
-                    break;
-                case UIS_TOKEN_OUT | 2: {
-                    if (R8_USB_INT_ST & RB_UIS_TOG_OK) {
-                        // 不同步的数据包将丢弃
-                        len = R8_USB_RX_LEN;
-                        my_memcpy(g_iap_cmd.other.buf, EP2_Databuf, len);
-                        myDevEP2_OUT_Deal(len);
-                    }
-                } break;
-
-                case UIS_TOKEN_IN | 1:
-                    R8_UEP1_CTRL = (R8_UEP1_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_NAK;
-                    break;
-
-                case UIS_TOKEN_IN: {
-                    switch (SetupReqCode) {
-                        case USB_GET_DESCRIPTOR:
-                            len = SetupReqLen >= DevEP0SIZE ? DevEP0SIZE : SetupReqLen; // 本次传输长度
-                            my_memcpy(EP0_Databuf, pDescr, len);                        /* 加载上传数据 */
-                            SetupReqLen -= len;
-                            pDescr += len;
-                            R8_UEP0_T_LEN = len;
-                            R8_UEP0_CTRL ^= RB_UEP_T_TOG; // 翻转
-                            break;
-                        case USB_SET_ADDRESS:
-                            R8_USB_DEV_AD = (R8_USB_DEV_AD & RB_UDA_GP_BIT) | SetupReqLen;
-                            R8_UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
-                            break;
-                        default:
-                            R8_UEP0_T_LEN = 0; // 状态阶段完成中断或者是强制上传0长度数据包结束控制传输
-                            R8_UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
-                            break;
-                    }
-                } break;
-
-                case UIS_TOKEN_OUT:
-                    //len = R8_USB_RX_LEN;
-                    R8_UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
-                    break;
-                default:
-                    break;
-            }
-            R8_USB_INT_FG = RB_UIF_TRANSFER;
-        }
-        if (R8_USB_INT_ST & RB_UIS_SETUP_ACT) // Setup包处理
-        {
-            R8_UEP0_CTRL = RB_UEP_R_TOG | RB_UEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_NAK;
-            SetupReqLen = pSetupReqPak->wLength;
-            SetupReqCode = pSetupReqPak->bRequest;
-            chtype = pSetupReqPak->bRequestType;
-
-            len = 0;
-            errflag = 0;
-            if ((pSetupReqPak->bRequestType & USB_REQ_TYP_MASK) != USB_REQ_TYP_STANDARD) {
-                errflag = 0xFF; /* 非标准请求 */
-            } else              /* 标准请求 */
-            {
-                switch (SetupReqCode) {
-                    case USB_GET_DESCRIPTOR: {
-                        switch (((pSetupReqPak->wValue) >> 8)) {
-                            case USB_DESCR_TYP_DEVICE: {
-                                pDescr = MyDevDescr;
-                                len = MyDevDescr[0];
-                            } break;
-
-                            case USB_DESCR_TYP_CONFIG: {
-                                pDescr = MyCfgDescr;
-                                len = MyCfgDescr[2];
-                            } break;
-
-                            case USB_DESCR_TYP_STRING: {
-                                switch ((pSetupReqPak->wValue) & 0xff) {
-                                    case 1:
-                                        pDescr = MyManuInfo;
-                                        len = MyManuInfo[0];
-                                        break;
-                                    case 2:
-                                        pDescr = MyProdInfo;
-                                        len = MyProdInfo[0];
-                                        break;
-                                    case 0:
-                                        pDescr = MyLangDescr;
-                                        len = MyLangDescr[0];
-                                        break;
-                                    default:
-                                        errflag = 0xFF; // 不支持的字符串描述符
-                                        break;
-                                }
-                            } break;
-
-                            default:
-                                errflag = 0xff;
-                                break;
-                        }
-                        if (SetupReqLen > len) {
-                            SetupReqLen = len; //实际需上传总长度
-                        }
-                        len = (SetupReqLen >= DevEP0SIZE) ? DevEP0SIZE : SetupReqLen;
-                        my_memcpy(EP0_Databuf, pDescr, len);
-                        pDescr += len;
-                    } break;
-
-                    case USB_SET_ADDRESS:
-                        SetupReqLen = (pSetupReqPak->wValue) & 0xff;
-                        break;
-
-                    case USB_GET_CONFIGURATION:
-                        EP0_Databuf[0] = DevConfig;
-                        if (SetupReqLen > 1) {
-                            SetupReqLen = 1;
-                        }
-                        break;
-
-                    case USB_SET_CONFIGURATION:
-                        DevConfig = (pSetupReqPak->wValue) & 0xff;
-                        break;
-
-                    case USB_CLEAR_FEATURE: {
-                        if ((pSetupReqPak->bRequestType & USB_REQ_RECIP_MASK) == USB_REQ_RECIP_ENDP) // 端点
-                        {
-                            switch ((pSetupReqPak->wIndex) & 0xff) {
-                                case 0x82:
-                                    R8_UEP2_CTRL = (R8_UEP2_CTRL & ~(RB_UEP_T_TOG | MASK_UEP_T_RES)) | UEP_T_RES_NAK;
-                                    break;
-                                case 0x02:
-                                    R8_UEP2_CTRL = (R8_UEP2_CTRL & ~(RB_UEP_R_TOG | MASK_UEP_R_RES)) | UEP_R_RES_ACK;
-                                    break;
-                                case 0x81:
-                                    R8_UEP1_CTRL = (R8_UEP1_CTRL & ~(RB_UEP_T_TOG | MASK_UEP_T_RES)) | UEP_T_RES_NAK;
-                                    break;
-                                case 0x01:
-                                    R8_UEP1_CTRL = (R8_UEP1_CTRL & ~(RB_UEP_R_TOG | MASK_UEP_R_RES)) | UEP_R_RES_ACK;
-                                    break;
-                                default:
-                                    errflag = 0xFF; // 不支持的端点
-                                    break;
-                            }
-                        } else {
-                            errflag = 0xFF;
-                        }
-                    } break;
-
-                    case USB_GET_INTERFACE:
-                        EP0_Databuf[0] = 0x00;
-                        if (SetupReqLen > 1) {
-                            SetupReqLen = 1;
-                        }
-                        break;
-
-                    case USB_GET_STATUS:
-                        EP0_Databuf[0] = 0x00;
-                        EP0_Databuf[1] = 0x00;
-                        if (SetupReqLen > 2) {
-                            SetupReqLen = 2;
-                        }
-                        break;
-
-                    default:
-                        errflag = 0xff;
-                        break;
-                }
-            }
-            if (errflag == 0xff) // 错误或不支持
-            {
-                //                  SetupReqCode = 0xFF;
-                R8_UEP0_CTRL = RB_UEP_R_TOG | RB_UEP_T_TOG | UEP_R_RES_STALL | UEP_T_RES_STALL; // STALL
-            } else {
-                if (chtype & 0x80) // 上传
-                {
-                    len = (SetupReqLen > DevEP0SIZE) ? DevEP0SIZE : SetupReqLen;
-                    SetupReqLen -= len;
-                } else {
-                    len = 0; // 下传
-                }
-                R8_UEP0_T_LEN = len;
-                R8_UEP0_CTRL = RB_UEP_R_TOG | RB_UEP_T_TOG | UEP_R_RES_ACK | UEP_T_RES_ACK; // 默认数据包是DATA1
-            }
-        }
-        R8_USB_INT_FG = RB_UIF_TRANSFER;
-    } else if (intflag & RB_UIF_BUS_RST) {
-        R8_USB_DEV_AD = 0;
-        R8_UEP0_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK;
-        R8_UEP1_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK | RB_UEP_AUTO_TOG;
-        R8_UEP2_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK | RB_UEP_AUTO_TOG;
-        R8_UEP3_CTRL = UEP_R_RES_ACK | UEP_T_RES_NAK | RB_UEP_AUTO_TOG;
-        R8_USB_INT_FG = RB_UIF_BUS_RST;
-    } else if (intflag & RB_UIF_SUSPEND) {
-        // 唤醒
-        R8_USB_INT_FG = RB_UIF_SUSPEND;
-    } else {
-        R8_USB_INT_FG = intflag;
+    while (p_vma <= p_vma_end) {
+        *p_vma = *p_load;
+        ++p_load;
+        ++p_vma;
     }
 }
 
-/*********************************************************************
- * @fn      myDevEP2_OUT_Deal
- *
- * @brief   IAP USB数据处理函数，放入ram中运行提升速度.
- *
- * @param   None.
- *
- * @return  None.
- */
-__HIGH_CODE void myDevEP2_OUT_Deal(uint8_t l)
+__attribute__((section(".highcode_copy"))) static void __attribute__((noinline)) zero_section(uint32_t *start, uint32_t *end)
 {
-    /* 用户可自定义 */
-    uint8_t s = 0;
-    uint32_t addr;
+    uint32_t *p_zero = start;
 
-    switch (g_iap_cmd.other.buf[0]) {
-        case CMD_IAP_PROM:
-            if (g_iap_cmd.program.len == 0) {
-                if (g_buf_write_ptr != 0) {
-                    g_buf_write_ptr = ((g_buf_write_ptr + 3) & (~3)); //四字节对齐
-                    s = FLASH_ROM_WRITE(g_flash_write_ptr, (PUINT32)g_write_buf, g_buf_write_ptr);
-                    g_buf_write_ptr = 0;
-                }
-            } else {
-                my_memcpy(g_write_buf + g_buf_write_ptr, g_iap_cmd.program.buf, g_iap_cmd.program.len);
-                g_buf_write_ptr += g_iap_cmd.program.len;
-                if (g_buf_write_ptr >= 256) {
-                    s = FLASH_ROM_WRITE(g_flash_write_ptr, (PUINT32)g_write_buf, 256);
-                    g_flash_write_ptr += 256;
-                    g_buf_write_ptr = g_buf_write_ptr - 256;                    //超出的长度
-                    my_memcpy(g_write_buf, g_write_buf + 256, g_buf_write_ptr); //保存剩下的iap_cmd.program.buf + g_iap_cmd.program.len - g_buf_write_ptr
-                }
-            }
-            myDevEP2_IN_Deal(s);
-            break;
-        case CMD_IAP_ERASE:
-            //这里可以添加地址判断，也可以直接擦除指定位置
-            addr = (g_iap_cmd.erase.addr[0] | (uint32_t)g_iap_cmd.erase.addr[1] << 8 | (uint32_t)g_iap_cmd.erase.addr[2] << 16 | (uint32_t)g_iap_cmd.erase.addr[3] << 24);
-            if (addr == APP_CODE_START_ADDR) {
-                s = FLASH_ROM_ERASE(APP_CODE_START_ADDR, APP_CODE_END_ADDR - APP_CODE_START_ADDR);
-                g_buf_write_ptr = 0; //计数清零
-                g_flash_write_ptr = APP_CODE_START_ADDR;
-            } else {
-                s = 0xfe;
-            }
-            myDevEP2_IN_Deal(s);
-            break;
-        case CMD_IAP_VERIFY:
-            my_memcpy(g_write_buf, g_iap_cmd.verify.buf, g_iap_cmd.verify.len);
-            addr = (g_iap_cmd.verify.addr[0] | (uint32_t)g_iap_cmd.verify.addr[1] << 8 | (uint32_t)g_iap_cmd.verify.addr[2] << 16 | (uint32_t)g_iap_cmd.verify.addr[3] << 24);
-            s = FLASH_ROM_VERIFY(addr, g_write_buf, g_iap_cmd.verify.len);
-            myDevEP2_IN_Deal(s);
-            break;
-        case CMD_IAP_END:
-            /*结束升级，复位USB，跳转到app*/
-            jumpPre;
-            jumpApp();
-            break;
-        default:
-            myDevEP2_IN_Deal(0xfe);
-            break;
+    while (p_zero <= end) {
+        *p_zero = 0;
+        ++p_zero;
     }
 }
 
-/*******************************************************************************
- * Function Name  : myDevEP2_IN_Deal
- * Description    : 端点2数据上传
- * Input          : l: 上传数据长度(<64B)
- * Return         : None
- *******************************************************************************/
-__HIGH_CODE void myDevEP2_IN_Deal(uint8_t s)
+__attribute__((section(".highcode_copy"))) void mySystemInit()
 {
-    EP2_Databuf[64] = s;
-    EP2_Databuf[65] = 0;
-    R8_UEP2_T_LEN = 2;
-    R8_UEP2_CTRL = (R8_UEP2_CTRL & ~MASK_UEP_T_RES) | UEP_T_RES_ACK; //enable send
+    sys_safe_access_enable();
+    R8_PLL_CONFIG &= ~(1 << 5); //
+    sys_safe_access_disable();
+    // PLL div
+    if (!(R8_HFCK_PWR_CTRL & RB_CLK_PLL_PON)) {
+        sys_safe_access_enable();
+        R8_HFCK_PWR_CTRL |= RB_CLK_PLL_PON; // PLL power on
+        for (uint32_t i = 0; i < 2000; i++) {
+            __nop();
+            __nop();
+        }
+    }
+    sys_safe_access_enable();
+    R16_CLK_SYS_CFG = (1 << 6) | (CLK_SOURCE_PLL_60MHz & 0x1f);
+    __nop();
+    __nop();
+    __nop();
+    __nop();
+    sys_safe_access_disable();
+    sys_safe_access_enable();
+    R8_FLASH_CFG = 0X52;
+    sys_safe_access_disable();
+    //更改FLASH clk的驱动能力
+    sys_safe_access_enable();
+    R8_PLL_CONFIG |= 1 << 7;
+    sys_safe_access_disable();
+
+    copy_section(&_highcode_lma, &_highcode_vma_start, &_highcode_vma_end);
+    copy_section(&_data_lma, &_data_vma, &_edata);
+    zero_section(&_sbss, &_ebss);
 }
 
-/*********************************************************************
- * @fn      my_memcpy
- *
- * @brief   数据拷贝函数,程序放ram中运行，提升速度
- *
- * @param   None.
- *
- * @return  None.
- */
+void SystemInit()
+{
+    mySystemInit();
+}
+#endif
+
+/**
+ * "Reload" two basic functions into IRAM to increase speed
+*/
+#if 1
+__HIGH_CODE void my_delay_us(uint16_t t)
+{
+    uint32_t i = t * 15;
+
+    do {
+        __nop();
+    } while (--i);
+}
+
+__HIGH_CODE void my_delay_ms(uint16_t t)
+{
+    for (uint16_t i = 0; i < t; i++) {
+        my_delay_us(1000);
+    }
+}
+
 __HIGH_CODE void my_memcpy(void *dst, const void *src, uint32_t l)
 {
     uint32_t len = l;
-    PUINT8 pdst = (PUINT8)dst;
-    PUINT8 psrc = (PUINT8)src;
+
+    uint8_t *pdst = (uint8_t *)dst;
+    uint8_t *psrc = (uint8_t *)src;
     while (len) {
         *pdst++ = *psrc++;
         len--;
     }
+}
+
+__HIGH_CODE void my_memset(void *dst, int c, uint32_t n)
+{
+    for (uint32_t i = 0; i < n; i++) {
+        *((uint8_t *)dst + i) = c;
+    }
+}
+#endif
+
+/**
+ * Flash APIs for uf2 library
+*/
+#if 1
+__HIGH_CODE void board_flash_init()
+{
+    PRINT("Erasing application...\n");
+    FLASH_ROM_ERASE(APP_CODE_START_ADDR, APP_CODE_END_ADDR - APP_CODE_START_ADDR);
+}
+
+__HIGH_CODE uint32_t board_flash_size()
+{
+    return (APP_CODE_END_ADDR - APP_CODE_START_ADDR);
+}
+
+__HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
+{
+    PRINT("Reading flash address 0x%04x...\n", addr);
+    usb_counter = 0;
+    my_memset(buffer, 0xFF, len);
+}
+
+__HIGH_CODE void board_flash_flush()
+{
+    PRINT("Flashing done.\n");
+    usb_counter = 58000;
+}
+
+__HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len)
+{
+    if (addr < APP_CODE_START_ADDR || addr % EEPROM_PAGE_SIZE != 0) {
+        PRINT("Flash violation.\n");
+        return;
+    }
+
+    PRINT("Writing flash address 0x%04x... ", addr);
+    usb_counter = 0;
+    for (;;) {
+        FLASH_ROM_WRITE(addr, (void *)data, len);
+        if (FLASH_ROM_VERIFY(addr, (void *)data, len) == SUCCESS) {
+            PRINT("done\n");
+            break;
+        }
+        PRINT("fail\n");
+        my_delay_ms(10);
+        PRINT("Retry... ");
+    }
+}
+#endif
+
+__HIGH_CODE void usbd_configure_done_callback(void)
+{
+    /* do nothing */
+}
+
+__HIGH_CODE void usb_dc_low_level_init()
+{
+    my_delay_ms(100);
+    PFIC_EnableIRQ(USB_IRQn);
+}
+
+__HIGH_CODE void usbd_msc_get_cap(uint8_t lun, uint32_t *block_num, uint16_t *block_size)
+{
+    *block_num = MAX_BLOCKS; // bluffing
+    *block_size = 512;
+}
+
+__HIGH_CODE int usbd_msc_sector_read(uint32_t sector, uint8_t *buffer, uint32_t length)
+{
+    uint32_t count = 0;
+
+    my_memset(buffer, 0x00, length);
+    while (count < length) {
+        uf2_read_block(sector, buffer);
+        buffer += 512;
+        count += 512;
+    }
+    return 0;
+}
+
+__HIGH_CODE int usbd_msc_sector_write(uint32_t sector, uint8_t *buffer, uint32_t length)
+{
+    uint32_t count = 0;
+
+    while (count < length) {
+        // Consider non-uf2 block write as successful
+        // only break if write_block is busy with flashing (return 0)
+        if (0 == uf2_write_block(sector, buffer, &_wr_state)) {
+            PRINT("Flash busy.\n");
+            break;
+        }
+        buffer += 512;
+        count += 512;
+    }
+    return 0;
+}
+
+__HIGH_CODE void Main_Circulation()
+{
+    static uint8_t second = 0;
+
+    for (;;) {
+        my_delay_ms(1);
+        usb_counter++;
+        if (usb_counter / 1000 > second) {
+            second = usb_counter / 1000;
+            PRINT("Exiting DFU in %d seconds...\n", 60 - second);
+        } else if (usb_counter / 1000 < second) {
+            PRINT("Fatal: Operation interrupted.\n");
+            second = 0;
+        }
+        if (second >= 60) {
+            jumpPre;
+            jumpApp();
+        }
+    }
+}
+
+int main()
+{
+#if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
+    uint16_t adj = R16_AUX_POWER_ADJ;
+    uint16_t plan = R16_POWER_PLAN;
+
+    adj |= RB_DCDC_CHARGE;
+    plan |= RB_PWR_DCDC_PRE;
+    sys_safe_access_enable();
+    R16_AUX_POWER_ADJ = adj;
+    R16_POWER_PLAN = plan;
+    my_delay_us(10);
+    sys_safe_access_enable();
+    R16_POWER_PLAN |= RB_PWR_DCDC_EN;
+    sys_safe_access_disable();
+#endif
+#ifdef PLF_DEBUG
+    GPIOA_SetBits(GPIO_Pin_9);
+    GPIOA_ModeCfg(GPIO_Pin_8, GPIO_ModeIN_PU);
+    GPIOA_ModeCfg(GPIO_Pin_9, GPIO_ModeOut_PP_5mA);
+    UART1_DefInit();
+    UART1_BaudRateCfg(460800);
+#endif
+    PRINT("Chip start, %s\n", VER_LIB);
+    PRINT("Reason of last reset:  ");
+    switch (R8_RESET_STATUS & RB_RESET_FLAG) {
+        case 0b000:
+            PRINT("Software\n");
+            break;
+        case 0b001:
+            PRINT("Power on\n");
+            break;
+        case 0b010:
+            PRINT("Watchdog timeout\n");
+            break;
+        case 0b011:
+            PRINT("Manual\n");
+            break;
+        case 0b101:
+            PRINT("Wake from shutdown\n");
+            break;
+        default:
+            PRINT("Wake from sleep\n");
+            break;
+    }
+
+#ifdef BOOTMAGIC_ENABLE
+    PRINT("Bootmagic!\n");
+#if !defined ESB_ENABLE || ESB_ENABLE != 2
+    bool jump_app = false;
+    pin_t rows[] = MATRIX_ROW_PINS;
+    pin_t cols[] = MATRIX_COL_PINS;
+
+#if DIODE_DIRECTION == COL2ROW
+    pin_t input_pin = cols[BOOTMAGIC_LITE_COLUMN];
+    pin_t output_pin = rows[BOOTMAGIC_LITE_ROW];
+#else
+    pin_t input_pin = rows[BOOTMAGIC_LITE_ROW];
+    pin_t output_pin = cols[BOOTMAGIC_LITE_COLUMN];
+#endif
+    setPinInputHigh(input_pin);
+    writePinLow(output_pin);
+    setPinOutput(output_pin);
+    do {
+        if (readPin(input_pin)) {
+            jump_app = true;
+            break;
+        }
+        my_delay_ms(DEBOUNCE * 3);
+        if (readPin(input_pin)) {
+            jump_app = true;
+            break;
+        }
+    } while (0);
+    if (jump_app) {
+        PRINT("Entering APP...\n");
+        jumpApp();
+    } else {
+        PRINT("Entering DFU...\n");
+        eeprom_driver_erase();
+    }
+#else
+    // TODO: implement judging condition for 2.4g dongle
+    jumpApp();
+#endif
+#else
+    PRINT("Entering APP...\n");
+    jumpApp();
+#endif
+
+    uf2_init();
+
+    usbd_desc_register(msc_ram_descriptor);
+    usbd_add_interface(usbd_msc_alloc_intf(MSC_OUT_EP, MSC_IN_EP));
+    usbd_initialize();
+
+    Main_Circulation();
 }

@@ -9,17 +9,18 @@ project(qmk_port_ch582 C CXX ASM)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
-set(keyboard "mk01" CACHE STRING "QMK" FORCE)
+set(keyboard "mk02" CACHE STRING "QMK" FORCE)
 
 if(NOT keyboard)
     message(FATAL_ERROR "You must select a keyboard!")
 endif()
 
-# add_definitions(-DQMK_KEYBOARD_H="${keyboard}.h")
 if(NOT keymap)
     message(WARNING "No keymap defined, will use default.")
     set(keymap "default" CACHE STRING "QMK" FORCE)
 endif()
+
+add_definitions(-DKEYMAP_C="keymap.c")
 
 # 编译参数 一般不用改
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)

@@ -1,12 +1,13 @@
 #include "platform_deps.h"
 #include "quantum_keycodes.h"
 
-volatile uint8_t kbd_protocol_type = 0;
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 
 #if (defined(BLE_MAC)) && (BLE_MAC == TRUE)
 const uint8_t MacAddr[6] = { 0x84, 0xC2, 0xE4, 0x03, 0x02, 0x02 };
 #endif
+
+volatile uint8_t kbd_protocol_type = 0;
 
 #ifndef PLF_DEBUG
 /* platform uart log output is disabled
@@ -22,14 +23,22 @@ int8_t sendchar(uint8_t c)
     return 0;
 }
 
+void shutdown_user()
+{
+    rgbled_power_off();
+}
+
 void platform_setup()
 {
     _Static_assert(kbd_protocol_max > 1, "No interface enabled!");
 
 #if FREQ_SYS != 60000000
     SetSysClock(Fsys);
-#endif
     DelayMs(5);
+#ifdef PLF_DEBUG
+    UART1_BaudRateCfg(460800);
+#endif
+#endif
     PowerMonitor(ENABLE, HALevel_2V1);
     UserOptionByteConfig(ENABLE, ENABLE, DISABLE, 112);
 #if 0
