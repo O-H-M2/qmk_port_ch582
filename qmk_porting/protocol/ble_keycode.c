@@ -24,7 +24,7 @@ bool process_record_ble_keycode(uint16_t keycode, keyrecord_t *record)
                 }
                 return false;
             case KC_VENDOR_BT_UNPAIR_ALL:
-                tmos_set_event(hogpTaskId, WIPE_ALL_BONDS_EVT);
+                hogp_slot_switch(-1);
                 return false;
             default:
                 break;
