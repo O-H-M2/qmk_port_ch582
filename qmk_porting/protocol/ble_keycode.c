@@ -3,8 +3,7 @@
 
 #ifdef BLE_ENABLE
 
-// process_record_kb() is used
-bool process_record_user(uint16_t keycode, keyrecord_t *record)
+bool process_record_ble_keycode(uint16_t keycode, keyrecord_t *record)
 {
     if (record->event.pressed) {
         switch (keycode) {
@@ -31,7 +30,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
                 break;
         }
     }
-    return true;
+    return process_record_user(keycode, record);
 }
 
 #endif
