@@ -27,7 +27,7 @@ void send_keyboard(report_keyboard_t *report)
 #ifdef BLE_ENABLE
         if (kbd_protocol_type == kbd_protocol_ble) {
             // there is a report id we don't want to have
-            wireless_ringbuffer_write(KEYBOARD_REPORT_BITS + 1, BLE_REPORT_ID_KEYBOARD, (uint8_t *)report + 1);
+            ble_send_report(BLE_REPORT_ID_KEYBOARD, (uint8_t *)report + 1, KEYBOARD_REPORT_BITS + 1);
         }
 #endif
 #ifdef ESB_ENABLE
@@ -70,7 +70,7 @@ void send_mouse(report_mouse_t *report)
 #endif
 #ifdef BLE_ENABLE
     if (kbd_protocol_type == kbd_protocol_ble) {
-        wireless_ringbuffer_write(5, BLE_REPORT_ID_MOUSE, (uint8_t *)report);
+        ble_send_report(BLE_REPORT_ID_MOUSE, (uint8_t *)report, 5);
     }
 #endif
 #ifdef ESB_ENABLE
@@ -96,7 +96,7 @@ void send_system(uint16_t data)
     if (kbd_protocol_type == kbd_protocol_ble) {
         uint16_t data_to_send = data;
 
-        wireless_ringbuffer_write(2, BLE_REPORT_ID_SYSTEM, (uint8_t *)&data_to_send);
+        ble_send_report(BLE_REPORT_ID_SYSTEM, (uint8_t *)&data_to_send, 2);
     }
 #endif
 #ifdef ESB_ENABLE
@@ -123,7 +123,7 @@ void send_consumer(uint16_t data)
     if (kbd_protocol_type == kbd_protocol_ble) {
         uint16_t data_to_send = data;
 
-        wireless_ringbuffer_write(2, BLE_REPORT_ID_CONSUMER, (uint8_t *)&data_to_send);
+        ble_send_report(BLE_REPORT_ID_CONSUMER, (uint8_t *)&data_to_send, 2);
     }
 #endif
 #ifdef ESB_ENABLE
@@ -154,7 +154,7 @@ void raw_hid_send(uint8_t *data, uint8_t length)
 #endif
 #ifdef BLE_ENABLE
     if (kbd_protocol_type == kbd_protocol_ble) {
-        wireless_ringbuffer_write(length, BLE_REPORT_ID_CUSTOM, data);
+        ble_send_report(BLE_REPORT_ID_CUSTOM, data, length);
     }
 #endif
 #ifdef ESB_ENABLE
