@@ -6,16 +6,18 @@
 #include "quantum_keycodes.h"
 
 enum {
-    KC_VENDOR_BT1 = SAFE_RANGE + 1,
-    KC_VENDOR_BT2,
-    KC_VENDOR_BT3,
-    KC_VENDOR_BT4,
-    KC_VENDOR_BT5,
-    KC_VENDOR_BT6,
-    KC_VENDOR_BT7,
-    KC_VENDOR_BT8,
-    KC_VENDOR_BT_UNPAIR_ALL,
-    MK01_SAFE_RANGE,
+    BLE_SLOT= 0x5F80,
+    BLE_SLOT0 = 0x5F80,
+    BLE_SLOT1,
+    BLE_SLOT2,
+    BLE_SLOT3,
+    BLE_SLOT4,
+    BLE_SLOT5,
+    BLE_SLOT6,
+    BLE_SLOT7,
+    BLE_SLOT_MAX = 0x5F87,
+    BLE_SLOT_Del = 0x5F88,
+    USB_SLOT,
 };
 
 // #undef SAFE_RANGE
