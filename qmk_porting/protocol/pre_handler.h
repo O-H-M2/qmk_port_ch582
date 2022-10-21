@@ -2,6 +2,7 @@
 
 #include "CH58x_common.h"
 #include "eeprom_partition_table.h"
+#include "partition_table.h"
 
 #ifdef BLE_ENABLE
 #include "ble_config.h"

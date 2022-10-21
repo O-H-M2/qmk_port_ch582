@@ -9,29 +9,22 @@ project(qmk_port_ch582 C CXX ASM)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
-set(keyboard "mk02" CACHE STRING "QMK" FORCE)
-
-if(NOT keyboard)
-    message(FATAL_ERROR "You must select a keyboard!")
-endif()
-
-if(NOT keymap)
-    message(WARNING "No keymap defined, will use default.")
-    set(keymap "default" CACHE STRING "QMK" FORCE)
-endif()
-
 execute_process(COMMAND git rev-parse --short HEAD
     TIMEOUT 5
     OUTPUT_VARIABLE GIT_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+include(qmk_porting/keyboards/keyboard_target.cmake)
+
 add_definitions(-DKEYMAP_C="keymap.c")
 add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
+add_definitions(-D__KEY__=${keyboard}_key.h)
 
 # 编译参数 一般不用改
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
+add_compile_options(--param highcode-gen-section-name=1)
 add_compile_options(-Wall -Wno-comment -Wno-enum-compare)
 
 # add_compile_options(-Wno-unused-function -Wno-unused-variable -Wno-type-limits)
@@ -73,6 +66,14 @@ include(sdk/riscv.cmake)
 include(CherryUSB_porting/CherryUSB.cmake)
 include(qmk_porting/tmk_core.cmake)
 include(qmk_porting/common_features.cmake)
+
+if(NOT keyboard)
+    message(FATAL_ERROR "You must select a keyboard!")
+endif()
+
+if(NOT keymap)
+    message(FATAL_ERROR "You must select a keymap!")
+endif()
 
 # get_property(dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 # message("include_dirs=${dirs}")
@@ -127,9 +128,10 @@ target_link_libraries(${keyboard}.elf ${CH582_LIB})
 target_link_libraries(${keyboard}_IAP.elf ${CH582_LIB})
 
 if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-    add_subdirectory(${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/lwrb)
-    target_link_libraries(${keyboard}.elf lwrb)
-    target_link_libraries(${keyboard}_IAP.elf lwrb)
+    add_subdirectory(${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless)
+    target_link_libraries(${keyboard}.elf wireless)
+
+    # target_link_libraries(${keyboard}_IAP.elf wireless)
 endif()
 
 # 输出hex和bin
@@ -138,10 +140,19 @@ set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
 add_custom_command(TARGET ${keyboard}.elf POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}.elf> ${HEX_FILE_APP}
     COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}.elf> ${BIN_FILE_APP}
+    COMMAND cp ${HEX_FILE_APP} ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.hex
 )
 set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
 set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
 add_custom_command(TARGET ${keyboard}_IAP.elf POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}_IAP.elf> ${HEX_FILE_IAP}
     COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}_IAP.elf> ${BIN_FILE_IAP}
+    COMMAND cp ${HEX_FILE_IAP} ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_IAP.hex
+)
+add_custom_target(post_build ALL
+    COMMAND mergehex --merge ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.hex ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_IAP.hex --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
+    COMMAND ${CMAKE_CURRENT_LIST_DIR}/utils/uf2conv.py ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.hex -c -f 0x1aa143c7 -o ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2
+    COMMAND rm ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_IAP.hex
+    COMMAND rm ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.hex
+    DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
 )

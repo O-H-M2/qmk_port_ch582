@@ -14,3 +14,4 @@ CMakeCache.txt
 .ninja_log
 build.ninja
 _Summary
+build.sh

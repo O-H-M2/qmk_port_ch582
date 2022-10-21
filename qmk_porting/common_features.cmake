@@ -189,11 +189,6 @@ if(BLE_ENABLE)
         add_definitions(-DBLE_ENABLE)
         message(STATUS "BLE_ENABLE: Nkro is forced enable")
         add_definitions(-DNKRO_ENABLE -DFORCE_NKRO)
-
-        list(APPEND QMK_PORTING_SOURCES
-            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
-            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/ble/*.c"
-        )
     endif()
 endif()
 
@@ -203,19 +198,10 @@ if(ESB_ENABLE)
         message(STATUS "ESB_ENABLE")
         add_definitions(-DESB_ENABLE=1)
         message(STATUS "ESB_ROLE = keyboard")
-        list(APPEND QMK_PORTING_SOURCES
-            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
-            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"
-        )
     elseif(ESB_ROLE STREQUAL "dongle")
         message(STATUS "ESB_ENABLE")
         add_definitions(-DESB_ENABLE=2)
         message(STATUS "ESB_ROLE = dongle")
-
-        list(APPEND QMK_PORTING_SOURCES
-            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/*.c"
-            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/wireless/esb/*.c"
-        )
 
         if(NOT USB_ENABLE)
             message(FATAL_ERROR "ESB_ROLE: dongle requires USB_ENABLE.")

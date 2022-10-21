@@ -9,10 +9,7 @@ void bootloader_jump()
 {
 }
 
-__HIGH_CODE void mcu_reset()
+void mcu_reset()
 {
-    FLASH_ROM_SW_RESET();
-    sys_safe_access_enable();
-    R8_RST_WDOG_CTRL |= RB_SOFTWARE_RESET;
-    sys_safe_access_disable();
+    SYS_ResetExecute();
 }

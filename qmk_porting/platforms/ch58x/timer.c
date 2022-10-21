@@ -12,7 +12,7 @@ inline uint16_t timer_read(void)
     return (uint16_t)(timer_read32() & 0xFFFF);
 }
 
-__HIGH_CODE uint32_t timer_read32(void)
+uint32_t timer_read32(void)
 {
     return SYS_TO_MS(timer_readraw() - ticks_offset);
 }

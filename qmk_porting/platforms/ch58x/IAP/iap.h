@@ -14,18 +14,13 @@
 #include "usbd_msc.h"
 #include "uf2.h"
 
-/* you can change the following definitions below, just keep them same in app and iap. */
-#define IAP_CODE_START_ADDR 0x00000000
-#define APP_CODE_START_ADDR 0x0000C000
-#define APP_CODE_END_ADDR   0x00070000
-
 #define jumpPre                                               \
     PRINT("Leaving DFU...\n");                                \
     PFIC_DisableIRQ(USB_IRQn);                                \
     R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU); \
     R32_USB_CONTROL = 0;                                      \
     R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;           \
-    my_delay_ms(10);                                              \
+    my_delay_ms(10);                                          \
     R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
 #define jumpIAP ((void (*)(void))((int *)IAP_CODE_START_ADDR))
 #define jumpApp ((void (*)(void))((int *)APP_CODE_START_ADDR))
