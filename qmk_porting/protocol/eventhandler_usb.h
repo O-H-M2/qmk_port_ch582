@@ -4,7 +4,8 @@
 #include "usb_main.h"
 
 enum {
-    USB_EVENT_CONNECT = USB_EVENT_START_INDEX + 1,
+    USB_EVENT_CONNECT = USB_EVENT_START_INDEX,
+    USB_EVENT_MAX,
 };
 
 extern void keyboard_task();

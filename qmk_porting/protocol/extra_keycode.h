@@ -6,8 +6,8 @@
 #include "quantum_keycodes.h"
 
 enum {
-    BLE_SLOT= 0x5F80,
-    BLE_SLOT0 = 0x5F80,
+    USB_MODE = 0x5F80,
+    BLE_SLOT0,
     BLE_SLOT1,
     BLE_SLOT2,
     BLE_SLOT3,
@@ -15,9 +15,8 @@ enum {
     BLE_SLOT5,
     BLE_SLOT6,
     BLE_SLOT7,
-    BLE_SLOT_MAX = 0x5F87,
-    BLE_SLOT_Del = 0x5F88,
-    USB_SLOT,
+    BLE_ALL_CLEAR,
+    ESB_MODE,
 };
 
 // #undef SAFE_RANGE

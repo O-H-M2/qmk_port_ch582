@@ -30,8 +30,6 @@ void shutdown_user()
 
 void platform_setup()
 {
-    _Static_assert(kbd_protocol_max > 1, "No interface enabled!");
-
 #if FREQ_SYS != 60000000
     SetSysClock(Fsys);
     DelayMs(5);
@@ -40,7 +38,6 @@ void platform_setup()
 #endif
 #endif
     PowerMonitor(ENABLE, HALevel_2V1);
-    UserOptionByteConfig(ENABLE, ENABLE, DISABLE, 112);
 #if 0
     PRINT("EEPROM dump: \n");
     for (uint8_t i = 0; i < 8; i++) {

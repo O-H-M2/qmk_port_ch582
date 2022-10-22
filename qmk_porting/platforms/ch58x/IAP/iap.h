@@ -14,6 +14,8 @@
 #include "usbd_msc.h"
 #include "uf2.h"
 
+#define USE_EEPROM_FLAG 0
+
 #define jumpPre                                               \
     PRINT("Leaving DFU...\n");                                \
     PFIC_DisableIRQ(USB_IRQn);                                \
@@ -22,7 +24,10 @@
     R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;           \
     my_delay_ms(10);                                          \
     R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
-#define jumpIAP ((void (*)(void))((int *)IAP_CODE_START_ADDR))
+#if USE_EEPROM_FLAG
+// TODO: implement this
+#define jumpIAP
+#endif
 #define jumpApp ((void (*)(void))((int *)APP_CODE_START_ADDR))
 
 #define MSC_IN_EP          0x81

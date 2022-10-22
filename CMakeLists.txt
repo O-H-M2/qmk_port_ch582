@@ -20,6 +20,7 @@ include(qmk_porting/keyboards/keyboard_target.cmake)
 add_definitions(-DKEYMAP_C="keymap.c")
 add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
 add_definitions(-D__KEY__=${keyboard}_key.h)
+add_definitions(-D__ADDR__=${keyboard}_address.h)
 
 # 编译参数 一般不用改
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
@@ -140,19 +141,15 @@ set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
 add_custom_command(TARGET ${keyboard}.elf POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}.elf> ${HEX_FILE_APP}
     COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}.elf> ${BIN_FILE_APP}
-    COMMAND cp ${HEX_FILE_APP} ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.hex
+    COMMAND ${CMAKE_CURRENT_LIST_DIR}/utils/uf2conv.py ${HEX_FILE_APP} -c -f 0x1aa143c7 -o ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2
 )
 set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
 set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
 add_custom_command(TARGET ${keyboard}_IAP.elf POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}_IAP.elf> ${HEX_FILE_IAP}
     COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}_IAP.elf> ${BIN_FILE_IAP}
-    COMMAND cp ${HEX_FILE_IAP} ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_IAP.hex
 )
 add_custom_target(post_build ALL
-    COMMAND mergehex --merge ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.hex ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_IAP.hex --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
-    COMMAND ${CMAKE_CURRENT_LIST_DIR}/utils/uf2conv.py ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.hex -c -f 0x1aa143c7 -o ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2
-    COMMAND rm ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_IAP.hex
-    COMMAND rm ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.hex
+    COMMAND mergehex --merge ${HEX_FILE_APP} ${HEX_FILE_IAP} --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
     DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
 )

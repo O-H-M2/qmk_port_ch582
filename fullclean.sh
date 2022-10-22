@@ -12,3 +12,4 @@ rm CMakeCache.txt
 rm Makefile
 rm *.bin
 rm *.hex
+rm *.uf2

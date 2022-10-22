@@ -1,6 +1,7 @@
 #pragma once
 
 #include "quantum.h"
+#include "extra_keycode.h"
 
 // clang-format off
 #define LAYOUT_all(         \

@@ -95,6 +95,7 @@ void CH58X_BLEInit(void)
     cfg.TxPower = (uint32_t)BLE_TX_POWER;
 #if(defined(BLE_SNV)) && (BLE_SNV == TRUE)
     cfg.SNVAddr = (uint32_t)BLE_SNV_ADDR;
+    cfg.SNVNum = (uint32_t)((EEPROM_MAX_SIZE - BLE_SNV_ADDR) / EEPROM_PAGE_SIZE);
     cfg.readFlashCB = Lib_Read_Flash;
     cfg.writeFlashCB = Lib_Write_Flash;
 #endif

@@ -189,18 +189,16 @@ enum {
 
 enum {
     kbd_protocol_start = 0,
-#ifdef USB_ENABLE
     kbd_protocol_usb,
-#endif
-#ifdef BLE_ENABLE
     kbd_protocol_ble,
-#endif
-#ifdef ESB_ENABLE
     kbd_protocol_esb,
-#endif
     kbd_protocol_max,
 };
 
-#if BLE_SLOT_NUM > 8
-#error "Too many BLE slots! Cap: 8"
+#if BLE_SLOT_NUM > 16
+#error "Too many BLE slots! Cap: 16"
+#endif
+
+#if !defined USB_ENABLE && !defined BLE_ENABLE && !defined ESB_ENABLE
+#error "No interface enabled!"
 #endif
