@@ -40,9 +40,25 @@ And then, get `riscv-none-embed-gcc` prepared, it should be added to your `PATH`
 
 Then install `CMake` and `Ninja`. I also recommend you to use `VS Code` with its cmake extension as they provide a GUI over the command line interface.
 
+- If you choose to use `VS Code` the work can be done by simply specify the toolchain to `GCC 8.2.0 riscv-none-embed-gcc` and click `Build`, the extension will do the rest.
+
+- Or you'll can try running
+
+``` 
+cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER:FILEPATH=riscv-none-embed-gcc -DCMAKE_CXX_COMPILER:FILEPATH=riscv-none-embed-g++ -S. -B./build -G Ninja
+
+cmake --build ./build --config Release --target all -- -j 4
+```
+
+The executable file will be generated to the root directory of this repo.
+
+**For end users, use the .uf2 file with bootmagic only or you're under the risk of bricking your keyboard.**
+
 ## Flashing
 
-Currently you could use the official [flasing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html).
+Developers：You may use the [flashing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html).
+
+End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite) only.
 
 ## 概述
 
@@ -84,12 +100,26 @@ Currently you could use the official [flasing utility](http://www.wch.cn/downloa
 - *如果你一定要头铁，在主CMakeLists.txt里加一个全局的宏定义`INT_SOFT`，否则会报编译警告，并且中断回调很可能无法正常工作。*
 
 再安装`CMake`和`Ninja`. 同时我推荐使用`VS Code`及其Cmake扩展，配置完工具链后就可以使用图形界面了。
+- 如果你是用的是`VS Code`，那么只需要在下面的状态栏把工具链配置成`GCC 8.2.0 riscv-none-embed-gcc`并按下边上的`Build`
+- 如果你坚持使用CLI，试着敲
+
+```
+cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER:FILEPATH=riscv-none-embed-gcc -DCMAKE_CXX_COMPILER:FILEPATH=riscv-none-embed-g++ -S. -B./build -G Ninja
+
+cmake --build ./build --config Release --target all -- -j 4
+```
+
+固件会生成在本仓库的根目录下。
 
 Windows下推荐使用MSYS2搭配官方的windows工具链，**不要使用WSL和Linux工具链**。
 
+**对于用户而言，只可搭配bootmagic使用.uf2文件来升级，否则你很有可能把键盘刷成砖。**
+
 ### 烧录
 
-目前推荐使用[WCH提供的工具](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html)。
+开发者：推荐使用[WCH提供的工具](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html)。
+
+最终用户：不要使用除[Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite)以外的方式。
 
 ### 详细教程
 
