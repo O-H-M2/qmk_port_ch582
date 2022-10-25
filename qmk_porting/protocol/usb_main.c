@@ -125,6 +125,8 @@ void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
                 memset(reconstruct + len, 0x00, KBD_IN_EP_SIZE - len);
                 usbd_ep_start_write(KBD_IN_EP, reconstruct, KBD_IN_EP_SIZE);
             }
+        } else {
+            hid_bios_keyboard_send_report(data, len);
         }
     }
 }
@@ -148,6 +150,8 @@ void hid_exkey_send_report(uint8_t *data, uint8_t len)
                 memset(reconstruct + len, 0x00, EXKEY_IN_EP_SIZE - len);
                 usbd_ep_start_write(EXKEY_IN_EP, reconstruct, EXKEY_IN_EP_SIZE);
             }
+        } else {
+            hid_exkey_send_report(data, len);
         }
     }
 }
@@ -166,6 +170,8 @@ void hid_custom_send_report(uint8_t *data, uint8_t len)
                 memset(reconstruct + len, 0x00, HIDRAW_IN_SIZE - len);
                 usbd_ep_start_write(HIDRAW_IN_EP, reconstruct, HIDRAW_IN_SIZE);
             }
+        } else {
+            hid_custom_send_report(data, len);
         }
     }
 }
