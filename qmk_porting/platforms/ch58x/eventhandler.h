@@ -2,16 +2,15 @@
 
 #ifdef USB_ENABLE
 #include "eventhandler_usb.h"
+_Static_assert(BLE_EVENT_START_INDEX > USB_EVENT_MAX, "");
 #endif
 #ifdef BLE_ENABLE
 #include "eventhandler_ble.h"
+_Static_assert(ESB_EVENT_START_INDEX > BLE_EVENT_MAX, "");
 #endif
 #ifdef ESB_ENABLE
 #include "eventhandler_esb.h"
 #endif
-
-_Static_assert(BLE_EVENT_START_INDEX > USB_EVENT_MAX, "");
-_Static_assert(ESB_EVENT_START_INDEX > BLE_EVENT_MAX, "");
 
 extern volatile uint8_t kbd_protocol_type;
 
