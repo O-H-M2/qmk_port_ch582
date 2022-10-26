@@ -37,7 +37,10 @@ void platform_setup()
     UART1_BaudRateCfg(460800);
 #endif
 #endif
-    PowerMonitor(ENABLE, HALevel_2V1);
+#if LSE_ENABLE
+    R16_PIN_ANALOG_IE |= RB_PIN_XT32K_IE;
+#endif
+    // PowerMonitor(ENABLE, HALevel_2V1);
 #if 0
     PRINT("EEPROM dump: \n");
     for (uint8_t i = 0; i < 8; i++) {

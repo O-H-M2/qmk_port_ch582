@@ -1,11 +1,11 @@
 #pragma once
 
 //* platform settings
-#define DEBUG                1
-#define DCDC_ENABLE          0
-#define FREQ_SYS             60000000
-#define LSE_ENABLE           1
-#define SLEEP_RTC_MIN_TIME   45
+#define DEBUG              1
+#define DCDC_ENABLE        1
+#define FREQ_SYS           40000000
+#define LSE_ENABLE         0
+#define SLEEP_RTC_MIN_TIME 30
 // #define WAKE_UP_RTC_MAX_TIME 50
 // #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
 // #define LSE_LOAD_CAPACITANCE 7   // in pF unit
@@ -51,6 +51,9 @@
 
 #define WS2812_EN_PIN   B6
 #define WS2812_EN_LEVEL 1
+
+#define BATTERY_MEASURE_CALIBRATION_PIN A2
+#define BATTERY_MEASURE_PIN             A2
 
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        17

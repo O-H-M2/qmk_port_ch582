@@ -5,6 +5,7 @@ include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/platforms)
 include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/protocol)
 
 file(GLOB QMK_PORTING_SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/drivers/battery_measure.c"
     "${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard}/*.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/bootloader.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/platform.c"
