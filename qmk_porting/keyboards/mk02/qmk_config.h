@@ -69,7 +69,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_EN_PIN   B6
 #define WS2812_EN_LEVEL 1
 
-#define BATTERY_MEASURE_CALIBRATION_PIN A2
 #define BATTERY_MEASURE_PIN             A2
 
 #ifdef RGBLIGHT_ENABLE

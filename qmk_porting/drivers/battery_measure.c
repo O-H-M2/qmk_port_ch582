@@ -78,34 +78,34 @@ static inline void battery_config_channel(pin_t pin)
     }
 }
 
-static int16_t battery_measure_calibrate()
-{
-    uint32_t sum = 0;
-    uint8_t ch = R8_ADC_CHANNEL;
-    uint8_t ctrl = R8_ADC_CFG;
+// static int16_t battery_measure_calibrate()
+// {
+//     uint32_t sum = 0;
+//     uint8_t ch = R8_ADC_CHANNEL;
+//     uint8_t ctrl = R8_ADC_CFG;
 
-    R8_ADC_CFG = 0;
-    battery_config_channel(BATTERY_MEASURE_CALIBRATION_PIN);
+//     R8_ADC_CFG = 0;
+//     battery_config_channel(BATTERY_MEASURE_CALIBRATION_PIN);
 
-    R8_ADC_CFG |= RB_ADC_OFS_TEST | RB_ADC_POWER_ON | (2 << 4); // 进入测试模式
-    R8_ADC_CONVERT = RB_ADC_START;
-    while (R8_ADC_CONVERT & RB_ADC_START) {
-        ;
-    }
-    for (uint16_t i = 0; i < 16; i++) {
-        R8_ADC_CONVERT = RB_ADC_START;
-        while (R8_ADC_CONVERT & RB_ADC_START) {
-            ;
-        }
-        sum += (~R16_ADC_DATA) & RB_ADC_DATA;
-    }
-    sum = (sum + 8) >> 4;
-    R8_ADC_CFG &= ~RB_ADC_OFS_TEST; // 关闭测试模式
+//     R8_ADC_CFG |= RB_ADC_OFS_TEST | RB_ADC_POWER_ON | (2 << 4); // 进入测试模式
+//     R8_ADC_CONVERT = RB_ADC_START;
+//     while (R8_ADC_CONVERT & RB_ADC_START) {
+//         ;
+//     }
+//     for (uint16_t i = 0; i < 16; i++) {
+//         R8_ADC_CONVERT = RB_ADC_START;
+//         while (R8_ADC_CONVERT & RB_ADC_START) {
+//             ;
+//         }
+//         sum += (~R16_ADC_DATA) & RB_ADC_DATA;
+//     }
+//     sum = (sum + 8) >> 4;
+//     R8_ADC_CFG &= ~RB_ADC_OFS_TEST; // 关闭测试模式
 
-    R8_ADC_CHANNEL = ch;
-    R8_ADC_CFG = ctrl;
-    return (2048 - sum);
-}
+//     R8_ADC_CHANNEL = ch;
+//     R8_ADC_CFG = ctrl;
+//     return (2048 - sum);
+// }
 
 uint16_t battery_get_min()
 {
@@ -119,7 +119,6 @@ uint16_t battery_get_max()
 
 void battery_init()
 {
-    setPinInput(BATTERY_MEASURE_CALIBRATION_PIN);
     setPinInput(BATTERY_MEASURE_PIN);
     ADC_ExtSingleChSampInit(SampleFreq_3_2, ADC_PGA_2);
 }
@@ -127,10 +126,9 @@ void battery_init()
 uint16_t battery_measure()
 {
     uint16_t abcBuff[15];
-    int16_t RoughCalib_Value = battery_measure_calibrate();
+    int16_t RoughCalib_Value = ADC_DataCalib_Rough();
 
     battery_config_channel(BATTERY_MEASURE_PIN);
-
     for (uint8_t i = 0; i < 15; i++) {
         abcBuff[i] = ADC_ExcutSingleConver() + RoughCalib_Value;
     }

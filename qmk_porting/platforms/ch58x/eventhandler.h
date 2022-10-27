@@ -40,21 +40,23 @@ __attribute__((always_inline)) inline void event_propagate(uint8_t event, void *
             if (0) {
                 // cable mode
                 kbd_protocol_type = kbd_protocol_usb;
+                return;
             }
 #endif
 #ifdef BLE_ENABLE
             if (1) {
                 // bluetooth mode
                 kbd_protocol_type = kbd_protocol_ble;
+                return;
             }
 #endif
 #ifdef ESB_ENABLE
             if (0) {
                 // 2.4g mode
                 kbd_protocol_type = kbd_protocol_esb;
+                return;
             }
 #endif
-            return;
     }
 #ifdef USB_ENABLE
     if (kbd_protocol_type == kbd_protocol_usb) {
