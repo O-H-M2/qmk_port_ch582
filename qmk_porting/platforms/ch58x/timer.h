@@ -1,6 +1,5 @@
 /*
-Copyright 2011 Jun Wako <wakojun@gmail.com>
-Copyright 2021 Simon Arlott
+Copyright 2022 Huckies <https://github.com/Huckies>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
