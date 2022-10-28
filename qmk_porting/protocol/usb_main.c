@@ -128,17 +128,8 @@ void init_usb_driver()
 
 void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
 {
-    int ret;
+    int ret = usbd_ep_start_write(KBD_IN_EP, data, len);
 
-    if (len == KBD_IN_EP_SIZE) {
-        ret = usbd_ep_start_write(KBD_IN_EP, data, len);
-    } else {
-        uint8_t reconstruct[KBD_IN_EP_SIZE];
-
-        memcpy(reconstruct, data, len);
-        memset(reconstruct + len, 0x00, KBD_IN_EP_SIZE - len);
-        ret = usbd_ep_start_write(KBD_IN_EP, reconstruct, KBD_IN_EP_SIZE);
-    }
     if (ret < 0) {
         return;
     }
@@ -152,17 +143,8 @@ void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len)
 
 void hid_exkey_send_report(uint8_t *data, uint8_t len)
 {
-    int ret;
+    int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
 
-    if (len == EXKEY_IN_EP_SIZE) {
-        ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
-    } else {
-        uint8_t reconstruct[EXKEY_IN_EP_SIZE];
-
-        memcpy(reconstruct, data, len);
-        memset(reconstruct + len, 0x00, EXKEY_IN_EP_SIZE - len);
-        ret = usbd_ep_start_write(EXKEY_IN_EP, reconstruct, EXKEY_IN_EP_SIZE);
-    }
     if (ret < 0) {
         return;
     }
@@ -171,17 +153,8 @@ void hid_exkey_send_report(uint8_t *data, uint8_t len)
 
 void hid_custom_send_report(uint8_t *data, uint8_t len)
 {
-    int ret;
+    int ret = usbd_ep_start_write(HIDRAW_IN_EP, data, len);
 
-    if (len == HIDRAW_IN_SIZE) {
-        ret = usbd_ep_start_write(HIDRAW_IN_EP, data, len);
-    } else {
-        uint8_t reconstruct[HIDRAW_IN_SIZE];
-
-        memcpy(reconstruct, data, len);
-        memset(reconstruct + len, 0x00, HIDRAW_IN_SIZE - len);
-        ret = usbd_ep_start_write(HIDRAW_IN_EP, reconstruct, HIDRAW_IN_SIZE);
-    }
     if (ret < 0) {
         return;
     }

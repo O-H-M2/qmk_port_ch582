@@ -9,7 +9,7 @@
             "macFrameworkPath": [
                 "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
             ],
-            "compilerPath": "${workspaceFolder}/utils/riscv-none-embed-gcc/bin/riscv-none-embed-gcc",
+            "compilerPath": "${workspaceFolder}/utils/toolchain/macOS/bin/riscv-none-embed-gcc",
             "cStandard": "c17",
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-arm",

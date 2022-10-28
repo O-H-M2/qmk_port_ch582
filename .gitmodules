@@ -4,9 +4,9 @@
 [submodule "CherryUSB"]
 	path = CherryUSB
 	url = https://github.com/sakumisu/CherryUSB.git
-[submodule "utils/riscv-none-embed-gcc"]
-	path = utils/riscv-none-embed-gcc
-	url = https://github.com/Huckies/riscv-none-embed-gcc.git
 [submodule "qmk_porting/platforms/ch58x/wireless"]
 	path = qmk_porting/platforms/ch58x/wireless
 	url = https://github.com/Huckies/ch582_wireless.git
+[submodule "utils/toolchain"]
+	path = utils/toolchain
+	url = https://github.com/Huckies/riscv-none-embed-gcc.git

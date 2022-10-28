@@ -4,7 +4,38 @@ cmake_minimum_required(VERSION 3.20)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
-# 项目设置
+if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Darwin")
+    message(STATUS "Platform: Darwin")
+    set(TOOLCHAIN_PATH ${CMAKE_CURRENT_LIST_DIR}/utils/toolchain/macOS/bin/riscv-none-embed-)
+    set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}gcc)
+    set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}g++)
+    set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PATH}gcc)
+    set(CMAKE_AR ${TOOLCHAIN_PATH}ar)
+    set(CMAKE_OBJCOPY ${TOOLCHAIN_PATH}objcopy)
+    set(CMAKE_OBJDUMP ${TOOLCHAIN_PATH}objdump)
+    set(SIZE ${TOOLCHAIN_PATH}size)
+elseif("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "")
+    message(STATUS "Platform: Linux")
+    set(TOOLCHAIN_PATH ${CMAKE_CURRENT_LIST_DIR}/utils/toolchain/Linux/bin/riscv-none-embed-)
+    set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}gcc)
+    set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}g++)
+    set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PATH}gcc)
+    set(CMAKE_AR ${TOOLCHAIN_PATH}ar)
+    set(CMAKE_OBJCOPY ${TOOLCHAIN_PATH}objcopy)
+    set(CMAKE_OBJDUMP ${TOOLCHAIN_PATH}objdump)
+    set(SIZE ${TOOLCHAIN_PATH}size)
+elseif("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "")
+    message(STATUS "Platform: Windows")
+    set(TOOLCHAIN_PATH ${CMAKE_CURRENT_LIST_DIR}/utils/toolchain/Windows/bin/riscv-none-embed-)
+    set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}gcc.exe)
+    set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}g++.exe)
+    set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PATH}gcc.exe)
+    set(CMAKE_AR ${TOOLCHAIN_PATH}ar.exe)
+    set(CMAKE_OBJCOPY ${TOOLCHAIN_PATH}objcopy.exe)
+    set(CMAKE_OBJDUMP ${TOOLCHAIN_PATH}objdump.exe)
+    set(SIZE ${TOOLCHAIN_PATH}size.exe)
+endif()
+
 project(qmk_port_ch582 C CXX ASM)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
@@ -22,7 +53,6 @@ add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
 add_definitions(-D__KEY__=${keyboard}_key.h)
 add_definitions(-D__ADDR__=${keyboard}_address.h)
 
-# 编译参数 一般不用改
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
 add_compile_options(--param highcode-gen-section-name=1)
@@ -31,7 +61,6 @@ add_compile_options(-Wall -Wno-comment -Wno-enum-compare)
 # add_compile_options(-Wno-unused-function -Wno-unused-variable -Wno-type-limits)
 add_compile_options(-fdiagnostics-color=always)
 
-# 编译等级
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     message(STATUS "Maximum optimization for speed")
     add_compile_options(-Ofast)
@@ -78,11 +107,6 @@ endif()
 
 # get_property(dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 # message("include_dirs=${dirs}")
-
-# 宏定义
-# add_definitions(-include qmk_config.h)
-
-# 源码文件
 file(GLOB APP_SOURCES
     ${CH582_SOURCES}
     ${quantum_SOURCES}
@@ -94,7 +118,6 @@ file(GLOB IAP_SOURCES
     ${QMK_PORTING_IAP_SOURCES}
 )
 
-# 编译可执行文件
 add_executable(${keyboard}.elf ${APP_SOURCES} ${LINKER_SCRIPT_APP})
 add_executable(${keyboard}_IAP.elf ${IAP_SOURCES} ${LINKER_SCRIPT_IAP})
 
@@ -124,7 +147,6 @@ target_precompile_headers(${keyboard}_IAP.elf PRIVATE
     ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
 )
 
-# 链接静态库
 target_link_libraries(${keyboard}.elf ${CH582_LIB})
 target_link_libraries(${keyboard}_IAP.elf ${CH582_LIB})
 
@@ -135,7 +157,6 @@ if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQ
     # target_link_libraries(${keyboard}_IAP.elf wireless)
 endif()
 
-# 输出hex和bin
 set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
 set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
 add_custom_command(TARGET ${keyboard}.elf POST_BUILD
