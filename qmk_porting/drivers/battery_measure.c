@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "platform_deps.h"
+#include "gpio.h"
 
 static const uint16_t battery_map[100] = {
     2515, 2528, 2541, 2554, 2567, 2580, 2593, 2606, 2619, 2632,

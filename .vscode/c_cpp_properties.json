@@ -14,6 +14,22 @@
             "cppStandard": "c++17",
             "intelliSenseMode": "gcc-arm",
             "configurationProvider": "ms-vscode.cmake-tools"
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:\\msys64\\mingw64\\bin\\gcc.exe",
+            "cStandard": "gnu17",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "windows-gcc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4
