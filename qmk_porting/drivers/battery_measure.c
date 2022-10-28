@@ -107,23 +107,23 @@ static inline void battery_config_channel(pin_t pin)
 //     return (2048 - sum);
 // }
 
-uint16_t battery_get_min()
+__attribute__((weak)) uint16_t battery_get_min()
 {
     return battery_map[0];
 }
 
-uint16_t battery_get_max()
+__attribute__((weak)) uint16_t battery_get_max()
 {
     return battery_map[sizeof(battery_map) - 1];
 }
 
-void battery_init()
+__attribute__((weak)) void battery_init()
 {
     setPinInput(BATTERY_MEASURE_PIN);
     ADC_ExtSingleChSampInit(SampleFreq_3_2, ADC_PGA_2);
 }
 
-uint16_t battery_measure()
+__attribute__((weak)) uint16_t battery_measure()
 {
     uint16_t abcBuff[15];
     int16_t RoughCalib_Value = ADC_DataCalib_Rough();
@@ -142,7 +142,7 @@ uint16_t battery_measure()
     return ((adc_data * 10 / 4096 + 0.5 * 100) * 105 * 3);
 }
 
-uint8_t battery_calculate(uint16_t adcVal)
+__attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
 {
     for (uint8_t i = 0; i < 100; i++) {
         if (adcVal < battery_map[i] * 10) {

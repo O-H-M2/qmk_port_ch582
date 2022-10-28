@@ -24,10 +24,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, RSFT_T(KC_UP),
                      KC_LCTL, KC_LGUI, KC_LALT, KC_SPC, KC_RALT, LT(1, KC_LEFT), LT(2, KC_DOWN), RCTL_T(KC_RIGHT)),
     [1] = LAYOUT_all(/* 1: fn */
-                     KC_GRV, RGB_VAD, RGB_VAI, RGB_SAD, RGB_SAI, RGB_HUD, RGB_HUI, RGB_MODE_REVERSE, RGB_MODE_FORWARD, RGB_TOG, _______, _______, _______, KC_DELETE,
-                     _______, _______, KC_UP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-                     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+                     KC_GRV, BLE_SLOT0, BLE_SLOT1, BLE_SLOT2, BLE_SLOT3, BLE_ALL_CLEAR, _______, _______, _______, _______, _______, RGB_MODE_REVERSE, RGB_MODE_FORWARD, KC_DELETE,
+                     _______, _______, KC_UP, _______, _______, _______, _______, _______, _______, RGB_HUD, RGB_HUI, _______, _______, _______,
+                     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, _______, RGB_SAD, RGB_SAI, _______, _______, RGB_TOG,
+                     _______, _______, _______, _______, _______, _______, RGB_VAD, RGB_VAI, _______, _______, _______, _______,
                      _______, _______, _______, _______, _______, _______, _______, _______),
     [2] = LAYOUT_all(/* 2: fn */
                      KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_DELETE,

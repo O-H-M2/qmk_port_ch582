@@ -18,12 +18,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 //* platform settings
-#define DEBUG              1
+// #define DEBUG              1
 #define DCDC_ENABLE        0
 #define FREQ_SYS           40000000
 #define LSE_ENABLE         1
-#define SLEEP_RTC_MIN_TIME 45
-// #define WAKE_UP_RTC_MAX_TIME      50
+#define SLEEP_RTC_MIN_TIME 30
+// #define WAKE_UP_RTC_MAX_TIME 50
+// #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
+// #define LSE_LOAD_CAPACITANCE 7   // in pF unit
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE
@@ -66,6 +68,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define WS2812_EN_PIN   B22
 #define WS2812_EN_LEVEL 1
+
+#define BATTERY_MEASURE_PIN A2
 
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        61
