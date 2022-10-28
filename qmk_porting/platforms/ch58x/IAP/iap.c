@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "iap.h"
 
+static struct usbd_interface intf0;
 static volatile uint16_t usb_counter = 0;
 static uint8_t msc_ram_descriptor[] = {
     USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, 0x0200, 0x01),
@@ -428,7 +429,7 @@ int main()
     uf2_init();
 
     usbd_desc_register(msc_ram_descriptor);
-    usbd_add_interface(usbd_msc_alloc_intf(MSC_OUT_EP, MSC_IN_EP));
+    usbd_add_interface(usbd_msc_init_intf(&intf0, MSC_OUT_EP, MSC_IN_EP));
     usbd_initialize();
 
     Main_Circulation();
