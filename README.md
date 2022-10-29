@@ -64,13 +64,14 @@ Install [CMake](https://cmake.org/download/), [ninja](https://github.com/ninja-b
 ### Compiling
 
 1. Open this repository with VS Code.
-2. Check CMake configurations on status bar which you can find at the bottom of you GUI:
+2. Install extension `CMake` and `Cmake Tools`.
+3. Check CMake configurations on status bar which you can find at the bottom of you GUI:
 
 - Check `build type` to `Release`
 - Check `active kit` to `No active kit` if you are using the WCH toolchain, or to the corresponding toolchain you have downloaded.
 
-3. Click the `Build` button.
-4. Firmwares will be generated to the root directory in the name of your keyboard. **Choose `xxx_upgrade.uf2` if you are the end user, `xxx_factory.hex` is for developers only.**
+4. Click the `Build` button.
+5. Firmwares will be generated to the root directory in the name of your keyboard. **Choose `xxx_upgrade.uf2` if you are the end user, `xxx_factory.hex` is for developers only.**
 
 ## Flashing
 
@@ -109,29 +110,48 @@ End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=boot
 
 ## 编译
 
-首先克隆本仓库以及所有子仓库`git clone --recursive https://github.com/Huckies/qmk_port_ch582.git`
+克隆我的仓库，使用`git clone --recursive https://github.com/Huckies/qmk_port_ch582.git`
 
 **无线部分子仓库未完成，可以通过从.gitmodules移除相关仓库来克隆并编译有线部分**
 
-然后，下载`riscv-none-embed-gcc`编译器，并将它加入环境变量。
-- 你可以使用[公版编译器](https://xpack.github.io/blog/2019/07/31/riscv-none-embed-gcc-v8-2-0-3-1-released)，但我更推荐使用[WCH提供的版本](http://www.mounriver.com/download)，它支持一些独有的特性，比方说硬件压栈。
-- *如果你一定要头铁，在主CMakeLists.txt里加一个全局的宏定义`INT_SOFT`，否则会报编译警告，并且中断回调很可能无法正常工作。*
+- WCH的工具链已经随附，当然你也可以选择使用[公版编译器](https://xpack.github.io/blog/2019/07/31/riscv-none-embed-gcc-v8-2-0-3-1-released). 但需要你自行加进环境变量。
+- *如果你确定要头铁，加一个全局宏定义`INT_SOFT`，否则中断很有可能不会正常工作*
 
-再安装`CMake`和`Ninja`. 同时我推荐使用`VS Code`及其Cmake扩展，配置完工具链后就可以使用图形界面了。
-- 如果你是用的是`VS Code`，那么只需要在下面的状态栏把工具链配置成`GCC 8.2.0 riscv-none-embed-gcc`并按下边上的`Build`
-- 如果你坚持使用CLI，试着敲
+### 环境配置
+
+#### macOS
+
+1. 安装`Homebrew`
+2. 打开终端，运行
 
 ```
-cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER:FILEPATH=riscv-none-embed-gcc -DCMAKE_CXX_COMPILER:FILEPATH=riscv-none-embed-g++ -S. -B./build -G Ninja
-
-cmake --build ./build --config Release --target all -- -j 4
+brew install cmake ninja
 ```
 
-固件会生成在本仓库的根目录下。
+3. 安装[VS Code](https://code.visualstudio.com/#alt-downloads)
 
-Windows下推荐使用MSYS2搭配官方的windows工具链，**不要使用WSL和Linux工具链**。
+#### Linux
 
-**对于用户而言，只可搭配bootmagic使用.uf2文件来升级，否则你很有可能把键盘刷成砖。**
+TODO
+
+#### Windows
+
+如果你很熟悉`MSYS2`(或者`Cygwin`, **WSL2除外**)，你应该可以轻易配好环境，需要安装的东西包括`ninja`，`cmake`和`python`，注意msys2里的cmake版本很老，请百度解决方法。
+
+新手上路：安装[CMake](https://cmake.org/download/)，[ninja](https://github.com/ninja-build/ninja/releases)，[Python 3](https://www.python.org/getit/)和[VS Code](https://code.visualstudio.com/#alt-downloads)。其中ninja只需要把其所在的目录添加进环境变量即可。
+
+### 编译
+
+1. 在VS Code里打开本仓库的文件夹
+2. 安装插件`CMake`和`Cmake Tools`
+3. 在底部状态栏上寻找
+
+- `build type` 并将其设置为 `Release`
+- `active kit` 并将其设置为 `No active kit`
+- *如果你选择了公版编译器，需要找到对应的名字并选择*
+
+3. 点击 `Build` .
+4. 固件会以你键盘的名字命名并生成在本仓库的根目录下。 **对于用户来说，强烈推荐使用xxx_upgrade.uf2，否则你很有可能把键盘刷成砖。**
 
 ### 烧录
 
