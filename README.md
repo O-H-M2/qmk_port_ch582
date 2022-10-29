@@ -1,6 +1,6 @@
 # QMK
 
-`with wireless support in a single chip.
+with wireless support in a single chip.
 
 ## Overview
 
