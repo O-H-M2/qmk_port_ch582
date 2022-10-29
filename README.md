@@ -59,7 +59,8 @@ TODO
 
 If you are familiar enough with the `MSYS2` subsystem (or `Cygwin`, but **NO WSL2**), you should be able to figure it out without many efforts. I'm only leaving a simple tutorial here.
 
-Install [CMake](https://cmake.org/download/), [ninja](https://github.com/ninja-build/ninja/releases), [Python 3](https://www.python.org/getit/) and [VS Code](https://code.visualstudio.com/#alt-downloads).
+1. Install [CMake](https://cmake.org/download/), [ninja](https://github.com/ninja-build/ninja/releases), [Python 3](https://www.python.org/getit/) and [VS Code](https://code.visualstudio.com/#alt-downloads).
+2. Rename `python.exe` to `python3.exe`
 
 ### Compiling
 
@@ -138,7 +139,9 @@ TODO
 
 如果你很熟悉`MSYS2`(或者`Cygwin`, **WSL2除外**)，你应该可以轻易配好环境，需要安装的东西包括`ninja`，`cmake`和`python`，注意msys2里的cmake版本很老，请百度解决方法。
 
-新手上路：安装[CMake](https://cmake.org/download/)，[ninja](https://github.com/ninja-build/ninja/releases)，[Python 3](https://www.python.org/getit/)和[VS Code](https://code.visualstudio.com/#alt-downloads)。其中ninja只需要把其所在的目录添加进环境变量即可。
+新手上路：
+1. 安装[CMake](https://cmake.org/download/)，[ninja](https://github.com/ninja-build/ninja/releases)，[Python 3](https://www.python.org/getit/)和[VS Code](https://code.visualstudio.com/#alt-downloads)。其中ninja只需要把其所在的目录添加进环境变量即可。
+2. 将`python.exe`重命名为`python3.exe`
 
 ### 编译
 
