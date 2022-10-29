@@ -1,4 +1,6 @@
-# qmk_port_ch582
+# QMK
+
+`with wireless support in a single chip.
 
 ## Overview
 
@@ -29,36 +31,52 @@ This is a porting of QMK keyboard firmware for CH58x series, currently support C
 
 Currently only CH582M is tested.
 
-## Compile
+## Building
 
-Firstly, clone this repo recursively using `git clone --recursive https://github.com/Huckies/qmk_port_ch582.git`
+First of all, clone this repo recursively using `git clone --recursive https://github.com/Huckies/qmk_port_ch582.git`
 
-And then, get `riscv-none-embed-gcc` prepared, it should be added to your `PATH` environment variable. 
+- A WCH-specified toolchain is provided in this repo, if you want to use the public version, you may find it [here](https://xpack.github.io/blog/2019/07/31/riscv-none-embed-gcc-v8-2-0-3-1-released). Note that you need to add it to your `PATH` environment variable manually.
+- *A global defination `INT_SOFT` is needed or the ISR handlers might not working properly.*
 
-- While you can use the official toolchain from [here](https://xpack.github.io/blog/2019/07/31/riscv-none-embed-gcc-v8-2-0-3-1-released), the WCH version is recommended so you can benefit from hardware features like fast interrupt which can be downloaded from [here](http://www.mounriver.com/download).
-- *If you insist on using the official one, add a global macro `INT_SOFT` or ISR handlers might not working properly.*
+### Environment setup
 
-Then install `CMake` and `Ninja`. I also recommend you to use `VS Code` with its cmake extension as they provide a GUI over the command line interface.
+#### macOS
 
-- If you choose to use `VS Code` the work can be done by simply specify the toolchain to `GCC 8.2.0 riscv-none-embed-gcc` and click `Build`, the extension will do the rest.
+1. Install `Homebrew` if you haven't.
+2. Open your terminal and run
 
-- Or you'll can try running
-
-``` 
-cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_C_COMPILER:FILEPATH=riscv-none-embed-gcc -DCMAKE_CXX_COMPILER:FILEPATH=riscv-none-embed-g++ -S. -B./build -G Ninja
-
-cmake --build ./build --config Release --target all -- -j 4
+```
+brew install cmake ninja
 ```
 
-The executable file will be generated to the root directory of this repo.
+3. Install [VS Code](https://code.visualstudio.com/#alt-downloads)
 
-**For end users, use the .uf2 file with bootmagic only or you're under the risk of bricking your keyboard.**
+#### Linux
+
+TODO
+
+#### Windows
+
+If you are familiar enough with the `MSYS2` subsystem (or `Cygwin`, but **NO WSL2**), you should be able to figure it out without many efforts. I'm only leaving a simple tutorial here.
+
+Install [CMake](https://cmake.org/download/), [ninja](https://github.com/ninja-build/ninja/releases), [Python 3](https://www.python.org/getit/) and [VS Code](https://code.visualstudio.com/#alt-downloads).
+
+### Compiling
+
+1. Open this repository with VS Code.
+2. Check CMake configurations on status bar which you can find at the bottom of you GUI:
+
+- Check `build type` to `Release`
+- Check `active kit` to `No active kit` if you are using the WCH toolchain, or to the corresponding toolchain you have downloaded.
+
+3. Click the `Build` button.
+4. Firmwares will be generated to the root directory in the name of your keyboard. **Choose `xxx_upgrade.uf2` if you are the end user, `xxx_factory.hex` is for developers only.**
 
 ## Flashing
 
 Developers：You may use the [flashing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html).
 
-End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite) only.
+End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite) with `.uf2` only, or take your own risk of bricking your keyboard.
 
 ## 概述
 
