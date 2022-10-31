@@ -162,6 +162,6 @@ TODO
 
 最终用户：不要使用除[Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite)以外的方式。
 
-### 详细教程
+### 还不会？
 
-项目尚未完工，详细的步骤之后再补，这有个交流群：860356332，随缘解答。
+这有个交流群：860356332，欢迎加入。
