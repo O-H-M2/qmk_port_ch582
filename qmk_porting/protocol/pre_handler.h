@@ -58,7 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(15)
 #endif
 #ifndef QMK_TASK_INTERVAL_LED
-#define QMK_TASK_INTERVAL_LED SYS_TICK_MS(3)
+#define QMK_TASK_INTERVAL_LED SYS_TICK_MS(2)
 #endif
 #ifndef BLE_SLOT_NUM
 #define BLE_SLOT_NUM 4
