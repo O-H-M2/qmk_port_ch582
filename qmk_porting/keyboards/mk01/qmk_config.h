@@ -19,11 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 //* platform settings
 // #define DEBUG              1
-#define DCDC_ENABLE        0
-#define FREQ_SYS           40000000
-#define LSE_ENABLE         1
-#define SLEEP_RTC_MIN_TIME 30
-// #define WAKE_UP_RTC_MAX_TIME 50
+#define DCDC_ENABLE  0
+#define FREQ_SYS     40000000
+#define LSE_ENABLE   1
+#define BLE_SLOT_NUM 8
 // #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
 // #define LSE_LOAD_CAPACITANCE 7   // in pF unit
 
