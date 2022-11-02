@@ -133,6 +133,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
 #endif
 
+#ifdef AW20216
+#define DRIVER_1_CS A12
+#define DRIVER_2_CS A11
+#define DRIVER_1_EN A10
+#define DRIVER_2_EN A10
+
+#define DRIVER_COUNT       2
+#define DRIVER_1_LED_TOTAL 17
+#define DRIVER_2_LED_TOTAL 0
+#define DRIVER_LED_TOTAL   (DRIVER_1_LED_TOTAL + DRIVER_2_LED_TOTAL)
+#endif
+
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 

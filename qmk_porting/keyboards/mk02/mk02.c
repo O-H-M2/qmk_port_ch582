@@ -43,6 +43,26 @@ led_config_t g_led_config = {
 		4, 4, 4,
 	}
 };
+
+const aw_led g_aw_leds[DRIVER_LED_TOTAL] = {
+    {0, CS1_SW1, CS2_SW1, CS3_SW1},        //  0, ESC, k13
+    {0, CS4_SW1, CS5_SW1, CS6_SW1},        //  1, ~, k16
+    {0, CS7_SW1, CS8_SW1, CS9_SW1},        //  2, Tab, k11
+    {0, CS10_SW1, CS11_SW1, CS12_SW1},     //  3, Caps, k21
+    {0, CS13_SW1, CS14_SW1, CS15_SW1},     //  4, Sh_L, k00
+    {0, CS16_SW1, CS17_SW1, CS18_SW1},     //  5, Ct_L, k06
+    {0, CS1_SW2, CS2_SW2, CS3_SW2},        //  6, F1, k26
+    {0, CS4_SW2, CS5_SW2, CS6_SW2},        //  7, 1, k17
+    {0, CS7_SW2, CS8_SW2, CS9_SW2},        //  8, Q, k10
+    {0, CS10_SW2, CS11_SW2, CS12_SW2},     //  9, A, k12
+    {0, CS13_SW2, CS14_SW2, CS15_SW2},     //  10, Z, k14
+    {0, CS16_SW2, CS17_SW2, CS18_SW2},     //  11, Win_L, k90
+    {0, CS1_SW3, CS2_SW3, CS3_SW3},        //  12, F2, k36
+    {0, CS4_SW3, CS5_SW3, CS6_SW3},        //  13, 2, k27
+    {0, CS7_SW3, CS8_SW3, CS9_SW3},        //  14, W, k20
+    {0, CS10_SW3, CS11_SW3, CS12_SW3},     //  15, S, k22
+    {0, CS13_SW3, CS14_SW3, CS15_SW3},     //  16, X, k24
+};
 /* clang-format on */
 
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)

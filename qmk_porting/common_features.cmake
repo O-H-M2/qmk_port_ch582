@@ -1,6 +1,3 @@
-# default values
-set(WS2812_REQUIRED OFF CACHE BOOL "QMK" FORCE)
-
 # MOUSE_ENABLE
 if(MOUSE_ENABLE)
     add_definitions(-DMOUSE_ENABLE -DMOUSEKEY_ENABLE)
@@ -74,10 +71,14 @@ endif()
 # RGBLIGHT_ENABLE
 if(RGBLIGHT_ENABLE)
     add_definitions(-DRGBLIGHT_ENABLE)
-
-    # add_definitions(-DUSE_CIE1931_CURVE)
     set(EEPROM_ENABLE ON CACHE BOOL "QMK" FORCE)
-    set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
+
+    if(RGBLIGHT_DRIVER STREQUAL "WS2812")
+        set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
+    elseif(RGBLIGHT_DRIVER STREQUAL "AW20216")
+        set(AW20216_REQUIRED ON CACHE BOOL "QMK" FORCE)
+    endif()
+
     message(STATUS "RGBLIGHT_ENABLE")
     list(APPEND quantum_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/rgblight/*.c"
@@ -90,10 +91,14 @@ endif()
 # RGB_MATRIX_ENABLE
 if(RGB_MATRIX_ENABLE)
     add_definitions(-DRGB_MATRIX_ENABLE)
-
-    # add_definitions(-DUSE_CIE1931_CURVE)
     set(EEPROM_ENABLE ON CACHE BOOL "QMK" FORCE)
-    set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
+
+    if(RGB_MATRIX_DRIVER STREQUAL "WS2812")
+        set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
+    elseif(RGB_MATRIX_DRIVER STREQUAL "AW20216")
+        set(AW20216_REQUIRED ON CACHE BOOL "QMK" FORCE)
+    endif()
+
     message(STATUS "RGB_MATRIX_ENABLE")
     include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/lib8tion)
     list(APPEND quantum_SOURCES
@@ -103,6 +108,12 @@ if(RGB_MATRIX_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/lib8tion/*.c"
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/led_tables.c"
     )
+endif()
+
+# CIE1931_CURVE
+if(CIE1931_CURVE)
+    add_definitions(-DCIE1931_CURVE)
+    message(STATUS "CIE1931_CURVE")
 endif()
 
 # EEPROM_ENABLE
@@ -163,6 +174,19 @@ if(WS2812_REQUIRED)
     else()
         message(FATAL_ERROR "Unsupported WS2812 Driver!")
     endif()
+endif()
+
+# AW20216 REQUIRED
+if(AW20216_REQUIRED)
+    add_definitions(-DAW20216)
+    message(STATUS "AW20216_REQUIRED")
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/led)
+    list(APPEND quantum_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/led/aw20216.c"
+    )
+    list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
+    )
 endif()
 
 # USB_ENABLE

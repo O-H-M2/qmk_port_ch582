@@ -168,6 +168,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #endif
 
+#ifdef AW20216
+#define AW_SPI_DIVISOR FREQ_SYS / 10000000
+#endif
+
 #ifndef WS2812
 #ifdef WS2812_EN_PIN
 #undef WS2812_EN_PIN

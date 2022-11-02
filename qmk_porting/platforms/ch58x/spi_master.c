@@ -24,11 +24,13 @@ void spi_init()
 #if SPI_ALTER
     R16_PIN_ALTERNATE |= RB_PIN_SPI0;
     setPinInput(B12);
-    setPinOutput(B13 | B14);
+    setPinOutput(B13);
+    setPinOutput(B14);
 #else
     R16_PIN_ALTERNATE &= ~RB_PIN_SPI0;
     setPinInput(A12);
-    setPinOutput(A13 | A14);
+    setPinOutput(A13);
+    setPinOutput(A14);
 #endif
     spi_stop();
     R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE | RB_SPI_SCK_OE;
@@ -195,7 +197,9 @@ void spi_stop()
         // unload all the data from fifo
         R8_SPI0_CTRL_MOD |= RB_SPI_FIFO_DIR;
         while (R8_SPI0_FIFO_COUNT) {
-            uint8_t discard = R8_SPI0_FIFO;
+            volatile uint8_t discard = R8_SPI0_FIFO;
+
+            (void)discard;
         }
         R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
 
