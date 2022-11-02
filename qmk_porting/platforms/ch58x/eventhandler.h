@@ -37,7 +37,7 @@ __attribute__((always_inline)) inline void event_propagate(uint8_t event, void *
         case PLATFORM_EVENT_MODE_SELECT:
             // TODO: implement the mode select conditions
 #ifdef USB_ENABLE
-            if (0) {
+            if (1) {
                 // cable mode
                 kbd_protocol_type = kbd_protocol_usb;
                 return;

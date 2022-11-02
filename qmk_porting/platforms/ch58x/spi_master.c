@@ -1,17 +1,13 @@
 #include "quantum.h"
 #include "spi_master.h"
 
-static volatile bool spi_transfering = false;
 static pin_t currentSlavePin = NO_PIN;
 
 __INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
 {
     R8_SPI0_INTER_EN = 0;
-    if (R8_SPI0_INT_FLAG & RB_SPI_IF_CNT_END) {
-        R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
-        R8_SPI0_INT_FLAG |= RB_SPI_IF_CNT_END;
-        spi_transfering = false;
-    }
+    R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
+    R8_SPI0_INT_FLAG |= RB_SPI_IF_CNT_END;
 }
 
 void spi_init()
@@ -67,6 +63,7 @@ bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
                 R8_SPI0_CTRL_MOD &= ~RB_SPI_MST_SCK_MOD;
                 R8_SPI0_CTRL_CFG &= ~RB_SPI_BIT_ORDER;
             }
+            break;
         case 1:
             PRINT("Unsupported SPI mode: %d\n", mode);
             return false;
@@ -83,6 +80,7 @@ bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
                 R8_SPI0_CTRL_MOD |= RB_SPI_MST_SCK_MOD;
                 R8_SPI0_CTRL_CFG &= ~RB_SPI_BIT_ORDER;
             }
+            break;
         default:
             PRINT("Unsupported SPI mode: %d\n", mode);
             return false;
@@ -97,6 +95,7 @@ bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
 
     writePinLow(currentSlavePin);
     setPinOutput(currentSlavePin);
+
     return true;
 }
 
@@ -112,7 +111,7 @@ spi_status_t spi_write(uint8_t data)
     uint16_t timeout_timer = timer_read();
 
     while (!(R8_SPI0_INT_FLAG & RB_SPI_FREE)) {
-        if ((timer_read() - timeout_timer) >= SPI_TIMEOUT) {
+        if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             return SPI_STATUS_TIMEOUT;
         }
     }
@@ -132,7 +131,7 @@ spi_status_t spi_read()
     uint16_t timeout_timer = timer_read();
 
     while (!(R8_SPI0_INT_FLAG & RB_SPI_FREE)) {
-        if ((timer_read() - timeout_timer) >= SPI_TIMEOUT) {
+        if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             return SPI_STATUS_TIMEOUT;
         }
     }
@@ -145,22 +144,21 @@ spi_status_t spi_transmit(const uint8_t *data, uint16_t length)
     if (length > 4095) {
         return SPI_STATUS_ERROR;
     }
-    if (!spi_transfering) {
-        spi_transfering = true;
-        R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
-
-        R16_SPI0_DMA_BEG = (uint32_t)data;
-        R16_SPI0_DMA_END = (uint32_t)(data + length);
-        R16_SPI0_TOTAL_CNT = length;
-        R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END | RB_SPI_IF_DMA_END;
-
-        R8_SPI0_INTER_EN |= RB_SPI_IF_CNT_END;
-        R8_SPI0_CTRL_CFG |= RB_SPI_DMA_ENABLE;
-
-        return SPI_STATUS_SUCCESS;
-    } else {
-        return SPI_STATUS_ERROR;
+    if (length == 1) {
+        return spi_write(data[0]);
     }
+
+    R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
+
+    R16_SPI0_DMA_BEG = (uint32_t)data;
+    R16_SPI0_DMA_END = (uint32_t)(data + length);
+    R16_SPI0_TOTAL_CNT = length;
+    R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END | RB_SPI_IF_DMA_END;
+
+    R8_SPI0_INTER_EN |= RB_SPI_IF_CNT_END;
+    R8_SPI0_CTRL_CFG |= RB_SPI_DMA_ENABLE;
+
+    return SPI_STATUS_SUCCESS;
 }
 
 spi_status_t spi_receive(uint8_t *data, uint16_t length)
@@ -168,27 +166,41 @@ spi_status_t spi_receive(uint8_t *data, uint16_t length)
     if (length > 4095) {
         return SPI_STATUS_ERROR;
     }
-    if (!spi_transfering) {
-        spi_transfering = true;
-        R8_SPI0_CTRL_MOD |= RB_SPI_FIFO_DIR;
+    if (length == 1) {
+        spi_status_t ret = spi_read();
 
-        R16_SPI0_DMA_BEG = (uint32_t)data;
-        R16_SPI0_DMA_END = (uint32_t)(data + length);
-        R16_SPI0_TOTAL_CNT = length;
-        R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END | RB_SPI_IF_DMA_END;
-
-        R8_SPI0_INTER_EN |= RB_SPI_IF_CNT_END;
-        R8_SPI0_CTRL_CFG |= RB_SPI_DMA_ENABLE;
-
-        return SPI_STATUS_SUCCESS;
-    } else {
-        return SPI_STATUS_ERROR;
+        if (ret > 0) {
+            data[0] = ret;
+        }
+        return ret;
     }
+
+    R8_SPI0_CTRL_MOD |= RB_SPI_FIFO_DIR;
+
+    R16_SPI0_DMA_BEG = (uint32_t)data;
+    R16_SPI0_DMA_END = (uint32_t)(data + length);
+    R16_SPI0_TOTAL_CNT = length;
+    R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END | RB_SPI_IF_DMA_END;
+
+    R8_SPI0_INTER_EN |= RB_SPI_IF_CNT_END;
+    R8_SPI0_CTRL_CFG |= RB_SPI_DMA_ENABLE;
+
+    return SPI_STATUS_SUCCESS;
 }
 
 void spi_stop()
 {
     if (currentSlavePin != NO_PIN) {
+        // check if former transfer has finished
+        if (!(R8_SPI0_INT_FLAG & RB_SPI_FREE)) {
+            uint16_t timeout_timer = timer_read();
+
+            while (!(R8_SPI0_INT_FLAG & RB_SPI_FREE)) {
+                if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
+                    break;
+                }
+            }
+        }
         setPinInputHigh(currentSlavePin);
         // disable interrupt
         R8_SPI0_INTER_EN = 0;
@@ -201,7 +213,6 @@ void spi_stop()
 
             (void)discard;
         }
-        R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
 
         sys_safe_access_enable();
         R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;

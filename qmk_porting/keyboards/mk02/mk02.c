@@ -44,6 +44,7 @@ led_config_t g_led_config = {
 	}
 };
 
+#ifdef AW20216
 const aw_led g_aw_leds[DRIVER_LED_TOTAL] = {
     {0, CS1_SW1, CS2_SW1, CS3_SW1},        //  0, ESC, k13
     {0, CS4_SW1, CS5_SW1, CS6_SW1},        //  1, ~, k16
@@ -63,6 +64,8 @@ const aw_led g_aw_leds[DRIVER_LED_TOTAL] = {
     {0, CS10_SW3, CS11_SW3, CS12_SW3},     //  15, S, k22
     {0, CS13_SW3, CS14_SW3, CS15_SW3},     //  16, X, k24
 };
+#endif
+
 /* clang-format on */
 
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
