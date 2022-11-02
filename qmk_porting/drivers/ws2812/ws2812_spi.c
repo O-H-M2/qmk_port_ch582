@@ -18,7 +18,7 @@
 #define PREAMBLE_SIZE 4
 
 __attribute__((aligned(4))) static uint8_t txbuf[PREAMBLE_SIZE + DATA_SIZE + RESET_SIZE] = { 0 };
-static volatile bool ws2812_inited = false, ws2812_powered_on = false, ws2812_need_power_off = false;
+static volatile bool ws2812_inited = false, ws2812_powered_on = false, ws2812_need_power_off = false, spi_transfering = false;
 
 static void ws2812_init()
 {

@@ -189,6 +189,9 @@ if(BLE_ENABLE)
         add_definitions(-DBLE_ENABLE)
         message(STATUS "BLE_ENABLE: Nkro is forced enable")
         add_definitions(-DNKRO_ENABLE -DFORCE_NKRO)
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/battery_measure.c"
+        )
     endif()
 endif()
 
@@ -198,6 +201,10 @@ if(ESB_ENABLE)
         message(STATUS "ESB_ENABLE")
         add_definitions(-DESB_ENABLE=1)
         message(STATUS "ESB_ROLE = keyboard")
+
+    # list(APPEND QMK_PORTING_SOURCES
+    # "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/battery_measure.c"
+    # )
     elseif(ESB_ROLE STREQUAL "dongle")
         message(STATUS "ESB_ENABLE")
         add_definitions(-DESB_ENABLE=2)
