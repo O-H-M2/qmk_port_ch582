@@ -57,8 +57,8 @@ static void SPI0_StartDMA(uint8_t *pbuf, uint16_t len)
         R16_SPI0_DMA_END = (uint32_t)(pbuf + len);
         R16_SPI0_TOTAL_CNT = len;
         R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END | RB_SPI_IF_DMA_END;
-        R8_SPI0_CTRL_CFG |= RB_SPI_DMA_ENABLE;
         R8_SPI0_INTER_EN |= RB_SPI_IF_CNT_END;
+        R8_SPI0_CTRL_CFG |= RB_SPI_DMA_ENABLE;
     }
 }
 

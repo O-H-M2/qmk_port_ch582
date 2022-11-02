@@ -15,15 +15,17 @@
 #define SPI_TIMEOUT_IMMEDIATE (0)
 #define SPI_TIMEOUT_INFINITE  (0xFFFF)
 
-typedef int8_t spi_status_t;
+#ifndef SPI_TIMEOUT
+#define SPI_TIMEOUT 100
+#endif
+
+typedef int16_t spi_status_t;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern spi_status_t spi_status;
-
-void spi_init(bool pin_alter);
+void spi_init();
 bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor);
 spi_status_t spi_write(uint8_t data);
 spi_status_t spi_read();
