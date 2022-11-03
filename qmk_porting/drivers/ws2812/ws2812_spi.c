@@ -44,6 +44,9 @@ __INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
             ws2812_need_power_off = false;
             ws2812_power_toggle(false);
         }
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;
+        sys_safe_access_disable();
         spi_transfering = false;
     }
 }
@@ -52,6 +55,9 @@ static void SPI0_StartDMA(uint8_t *pbuf, uint16_t len)
 {
     if (!spi_transfering) {
         spi_transfering = true;
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF1 &= ~RB_SLP_CLK_SPI0;
+        sys_safe_access_disable();
         R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
         R16_SPI0_DMA_BEG = (uint32_t)pbuf;
         R16_SPI0_DMA_END = (uint32_t)(pbuf + len);
@@ -143,18 +149,12 @@ void ws2812_power_toggle(bool status)
     if (status) {
         writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
         setPinOutput(WS2812_EN_PIN);
-        sys_safe_access_enable();
-        R8_SLP_CLK_OFF1 &= ~RB_SLP_CLK_SPI0;
-        sys_safe_access_disable();
     } else {
 #if WS2812_EN_LEVEL
         setPinInputLow(WS2812_EN_PIN);
 #else
         setPinInputHigh(WS2812_EN_PIN);
 #endif
-        sys_safe_access_enable();
-        R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;
-        sys_safe_access_disable();
     }
     ws2812_powered_on = status;
 }
