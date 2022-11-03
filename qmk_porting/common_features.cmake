@@ -185,6 +185,7 @@ if(AW20216_REQUIRED)
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/led/aw20216.c"
     )
     list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
     )
 endif()

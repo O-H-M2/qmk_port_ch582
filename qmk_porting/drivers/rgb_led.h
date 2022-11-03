@@ -22,6 +22,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef WS2812
 #include "ws2812.h"
 #endif
+#ifdef AW20216
+#include "aw20216_supplement.h"
+#endif
 
 __attribute__((always_inline)) inline bool rgbled_status_check()
 {
@@ -41,5 +44,8 @@ __attribute__((always_inline)) inline void rgbled_power_off()
     // power off rgb leds or the controller
 #ifdef WS2812
     ws2812_power_toggle(false);
+#endif
+#ifdef AW20216
+    aw20216_power_toggle(false);
 #endif
 }
