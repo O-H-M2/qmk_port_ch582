@@ -33,6 +33,9 @@ __INTERRUPT __HIGH_CODE void TMR1_IRQHandler()
         ws2812_need_power_off = false;
         ws2812_power_toggle(false);
     }
+    sys_safe_access_enable();
+    R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR1;
+    sys_safe_access_disable();
 }
 #elif WS2812_PWM_DRIVER == 2
 #define WS2812_PWM_CNT_END_REG R32_TMR2_CNT_END
@@ -51,6 +54,9 @@ __INTERRUPT __HIGH_CODE void TMR2_IRQHandler()
         ws2812_need_power_off = false;
         ws2812_power_toggle(false);
     }
+    sys_safe_access_enable();
+    R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR2;
+    sys_safe_access_disable();
 }
 #else
 // Only TMR1 and TMR2 support DMA and PWM
@@ -281,17 +287,16 @@ static void ws2812_init(void)
     ws2812_inited = true;
 }
 
-void ws2812_write_led(uint16_t led_number, uint8_t r, uint8_t g, uint8_t b)
+static void ws2812_write_led(uint16_t led_number, uint8_t r, uint8_t g, uint8_t b, uint8_t w)
 {
-    // Write color to frame buffer
-    for (uint8_t bit = 0; bit < 8; bit++) {
-        ws2812_frame_buffer[WS2812_RED_BIT(led_number, bit)] = ((r >> bit) & 0x01) ? WS2812_DUTYCYCLE_1 : WS2812_DUTYCYCLE_0;
-        ws2812_frame_buffer[WS2812_GREEN_BIT(led_number, bit)] = ((g >> bit) & 0x01) ? WS2812_DUTYCYCLE_1 : WS2812_DUTYCYCLE_0;
-        ws2812_frame_buffer[WS2812_BLUE_BIT(led_number, bit)] = ((b >> bit) & 0x01) ? WS2812_DUTYCYCLE_1 : WS2812_DUTYCYCLE_0;
-    }
-}
-void ws2812_write_led_rgbw(uint16_t led_number, uint8_t r, uint8_t g, uint8_t b, uint8_t w)
-{
+    sys_safe_access_enable();
+#if WS2812_PWM_DRIVER == 1
+    R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR1;
+#elif WS2812_PWM_DRIVER == 2
+    R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR2;
+#endif
+    sys_safe_access_disable();
+
     // Write color to frame buffer
     for (uint8_t bit = 0; bit < 8; bit++) {
         ws2812_frame_buffer[WS2812_RED_BIT(led_number, bit)] = ((r >> bit) & 0x01) ? WS2812_DUTYCYCLE_1 : WS2812_DUTYCYCLE_0;
@@ -318,9 +323,9 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
     }
     for (uint16_t i = 0; i < leds; i++) {
 #ifdef RGBW
-        ws2812_write_led_rgbw(i, ledarray[i].r, ledarray[i].g, ledarray[i].b, ledarray[i].w);
+        ws2812_write_led(i, ledarray[i].r, ledarray[i].g, ledarray[i].b, ledarray[i].w);
 #else
-        ws2812_write_led(i, ledarray[i].r, ledarray[i].g, ledarray[i].b);
+        ws2812_write_led(i, ledarray[i].r, ledarray[i].g, ledarray[i].b, 0);
 #endif
     }
     WS2812_PWM_DMA_INTERRUPT_SET;
@@ -335,26 +340,9 @@ void ws2812_power_toggle(bool status)
     if (status) {
         writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
         setPinOutput(WS2812_EN_PIN);
-        sys_safe_access_enable();
-#if WS2812_PWM_DRIVER == 1
-        R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR1;
-#elif WS2812_PWM_DRIVER == 2
-        R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR2;
-#endif
-        sys_safe_access_disable();
     } else {
-#if WS2812_EN_LEVEL
-        setPinInputLow(WS2812_EN_PIN);
-#else
-        setPinInputHigh(WS2812_EN_PIN);
-#endif
-        sys_safe_access_enable();
-#if WS2812_PWM_DRIVER == 1
-        R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR1;
-#elif WS2812_PWM_DRIVER == 2
-        R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR2;
-#endif
-        sys_safe_access_disable();
+        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL ? 0 : 1);
+        setPinOutput(WS2812_EN_PIN);
     }
     ws2812_powered_on = status;
 }

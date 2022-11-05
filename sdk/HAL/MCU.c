@@ -106,10 +106,10 @@ void CH58X_BLEInit(void)
     cfg.srandCB = SYS_GetSysTickCnt;
 #if(defined TEM_SAMPLE) && (TEM_SAMPLE == TRUE)
     cfg.tsCB = HAL_GetInterTempValue; // 根据温度变化校准RF和内部RC( 大于7摄氏度 )
+#endif
   #if(CLK_OSC32K)
     cfg.rcCB = Lib_Calibration_LSI; // 内部32K时钟校准
   #endif
-#endif
 #if(defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
     cfg.WakeUpTime = WAKE_UP_RTC_MAX_TIME;
     cfg.sleepCB = CH58X_LowPower; // 启用睡眠

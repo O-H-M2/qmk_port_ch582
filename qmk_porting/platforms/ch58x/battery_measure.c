@@ -133,6 +133,7 @@ __attribute__((weak)) uint16_t battery_measure()
     for (uint8_t i = 0; i < 15; i++) {
         abcBuff[i] = ADC_ExcutSingleConver() + RoughCalib_Value;
     }
+    R8_ADC_CFG &= ~(RB_ADC_BUF_EN | RB_ADC_POWER_ON);
 
     uint16_t adc_data = 0;
 

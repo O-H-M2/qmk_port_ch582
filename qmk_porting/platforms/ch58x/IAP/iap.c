@@ -277,6 +277,42 @@ __HIGH_CODE int usbd_msc_sector_write(uint32_t sector, uint8_t *buffer, uint32_t
     return 0;
 }
 
+__HIGH_CODE void gpio_pullup()
+{
+    uint32_t pin_a = GPIO_Pin_All, pin_b = GPIO_Pin_All;
+
+#if defined LSE_ENABLE && LSE_ENABLE
+    pin_a &= ~bX32KI;
+    pin_a &= ~bX32KO;
+#endif
+#ifdef WS2812
+    if (WS2812_EN_PIN & 0x80000000) {
+        pin_b &= ~((WS2812_EN_PIN & 0x7FFFFFFF));
+    } else {
+        pin_a &= ~((WS2812_EN_PIN & 0x7FFFFFFF));
+    }
+#elif defined AW20216
+    if (DRIVER_1_EN & 0x80000000) {
+        pin_b &= ~((DRIVER_1_EN & 0x7FFFFFFF));
+    } else {
+        pin_a &= ~((DRIVER_1_EN & 0x7FFFFFFF));
+    }
+#ifdef DRIVER_2_EN
+    if (DRIVER_2_EN & 0x80000000) {
+        pin_b &= ~((DRIVER_2_EN & 0x7FFFFFFF));
+    } else {
+        pin_a &= ~((DRIVER_2_EN & 0x7FFFFFFF));
+    }
+#endif
+#endif
+    pin_b &= ~bUDP;
+    pin_b &= ~bUDM;
+    pin_b &= ~bU2DP;
+    pin_b &= ~bU2DM;
+    GPIOA_ModeCfg(pin_a, GPIO_ModeIN_PU);
+    GPIOB_ModeCfg(pin_b, GPIO_ModeIN_PU);
+}
+
 __HIGH_CODE void Main_Circulation()
 {
     static uint8_t second = 0;
@@ -337,6 +373,7 @@ int main()
         }
     }
 #endif
+    gpio_pullup();
 #if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
     uint16_t adj = R16_AUX_POWER_ADJ;
     uint16_t plan = R16_POWER_PLAN;

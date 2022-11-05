@@ -150,11 +150,8 @@ void ws2812_power_toggle(bool status)
         writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
         setPinOutput(WS2812_EN_PIN);
     } else {
-#if WS2812_EN_LEVEL
-        setPinInputLow(WS2812_EN_PIN);
-#else
-        setPinInputHigh(WS2812_EN_PIN);
-#endif
+        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL ? 0 : 1);
+        setPinOutput(WS2812_EN_PIN);
     }
     ws2812_powered_on = status;
 }
