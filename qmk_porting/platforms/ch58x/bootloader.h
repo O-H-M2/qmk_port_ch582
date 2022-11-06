@@ -17,6 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-/* give code for your bootloader to come up if needed */
-void bootloader_jump(void);
-void mcu_reset(void);
+enum {
+    BOOTLOADER_BOOT_MODE_IAP = 0x05,
+    BOOTLOADER_BOOT_MODE_USB = 0x0A,
+    BOOTLOADER_BOOT_MODE_BLE = 0x50,
+    BOOTLOADER_BOOT_MODE_ESB = 0xA0,
+};
+
+void bootloader_boot_mode_set(uint8_t mode);
+uint8_t bootloader_boot_mode_get();
+void bootloader_jump();
+void mcu_reset();

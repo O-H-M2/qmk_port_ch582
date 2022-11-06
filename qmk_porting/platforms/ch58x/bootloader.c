@@ -15,18 +15,88 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "bootloader.h"
 #include "eeprom_driver.h"
+#include "eventhandler.h"
 
 void bootmagic_lite_reset_eeprom(void)
 {
+    eeprom_driver_erase();
+}
+
+void bootloader_boot_mode_set(uint8_t mode)
+{
+    if (mode != BOOTLOADER_BOOT_MODE_IAP && mode != BOOTLOADER_BOOT_MODE_USB &&
+        mode != BOOTLOADER_BOOT_MODE_BLE && mode != BOOTLOADER_BOOT_MODE_ESB) {
+        PRINT("Invalid mode select, will ignore.\n");
+        return;
+    }
+    if (0
+#ifndef USB_ENABLE
+        || (mode == BOOTLOADER_BOOT_MODE_USB)
+#endif
+#ifndef BLE_ENABLE
+        || (mode == BOOTLOADER_BOOT_MODE_BLE)
+#endif
+#ifndef ESB_ENABLE
+        || (mode == BOOTLOADER_BOOT_MODE_ESB)
+#endif
+    ) {
+        PRINT("Mode %d is not enabled, will ignore.\n", mode);
+        return;
+    }
+
+    uint8_t buffer[EEPROM_PAGE_SIZE], ret;
+
+    do {
+        ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION, &buffer, sizeof(buffer));
+    } while (ret);
+    buffer[0] = mode;
+    do {
+        ret = EEPROM_ERASE(QMK_EEPROM_RESERVED_START_POSITION, EEPROM_PAGE_SIZE) ||
+              EEPROM_WRITE(QMK_EEPROM_RESERVED_START_POSITION, buffer, EEPROM_PAGE_SIZE);
+    } while (ret);
+}
+
+uint8_t bootloader_boot_mode_get()
+{
+    uint8_t buffer, ret;
+
+    do {
+        ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION, &buffer, sizeof(buffer));
+    } while (ret);
+    if (buffer == BOOTLOADER_BOOT_MODE_IAP || buffer == BOOTLOADER_BOOT_MODE_USB ||
+        buffer == BOOTLOADER_BOOT_MODE_BLE || buffer == BOOTLOADER_BOOT_MODE_ESB) {
+        return buffer;
+    } else {
+#ifdef USB_ENABLE
+        PRINT("Invalid boot mode, default to USB.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
+        return BOOTLOADER_BOOT_MODE_USB;
+#elif defined BLE_ENABLE
+        PRINT("Invalid boot mode, default to BLE.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+        return BOOTLOADER_BOOT_MODE_BLE;
+#else
+        PRINT("Invalid boot mode, default to ESB.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+        return BOOTLOADER_BOOT_MODE_ESB;
+#endif
+    }
 }
 
 void bootloader_jump()
 {
+    PRINT("Jumping IAP...\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
+    if (bootloader_boot_mode_get() == BOOTLOADER_BOOT_MODE_IAP) {
+        PRINT("Boot mode set to IAP.\n");
+        mcu_reset();
+    } else {
+        PRINT("Setting boot mode failed, abort.\n");
+    }
 }
 
 void mcu_reset()
 {
-    SYS_ResetExecute();
+    event_propagate(PLATFORM_EVENT_REBOOT, NULL);
 }

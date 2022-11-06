@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "bootloader.h"
 #include "iap.h"
 
 static struct usbd_interface intf0;
@@ -419,48 +420,15 @@ int main()
             break;
     }
 
-#ifdef BOOTMAGIC_ENABLE
-    PRINT("Bootmagic!\n");
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
-    bool jump_app = false;
-    pin_t rows[] = MATRIX_ROW_PINS;
-    pin_t cols[] = MATRIX_COL_PINS;
-
-#if DIODE_DIRECTION == COL2ROW
-    pin_t input_pin = cols[BOOTMAGIC_LITE_COLUMN];
-    pin_t output_pin = rows[BOOTMAGIC_LITE_ROW];
-#else
-    pin_t input_pin = rows[BOOTMAGIC_LITE_ROW];
-    pin_t output_pin = cols[BOOTMAGIC_LITE_COLUMN];
-#endif
-    setPinInputHigh(input_pin);
-    writePinLow(output_pin);
-    setPinOutput(output_pin);
-    do {
-        if (readPin(input_pin)) {
-            jump_app = true;
-            break;
-        }
-        my_delay_ms(DEBOUNCE * 3);
-        if (readPin(input_pin)) {
-            jump_app = true;
-            break;
-        }
-    } while (0);
-    if (jump_app) {
-        PRINT("Entering APP...\n");
+    if (bootloader_boot_mode_get() != BOOTLOADER_BOOT_MODE_IAP) {
         jumpApp();
-    } else {
-        PRINT("Entering DFU...\n");
-        eeprom_driver_erase();
     }
 #else
     // TODO: implement judging condition for 2.4g dongle
-    jumpApp();
-#endif
-#else
-    PRINT("Entering APP...\n");
-    jumpApp();
+    if (1) {
+        jumpApp();
+    }
 #endif
 
     uf2_init();
