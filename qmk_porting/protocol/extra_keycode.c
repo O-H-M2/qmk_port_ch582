@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef BLE_ENABLE
 
-bool process_record_ble_keycode(uint16_t keycode, keyrecord_t *record)
+extern bool process_ble_passcode_kb(uint16_t keycode, keyrecord_t *record);
+
+bool process_ble_keycode_kb(uint16_t keycode, keyrecord_t *record)
 {
     if (record->event.pressed) {
         switch (keycode) {
-            case USB_MODE:
-                return false;
             case BLE_SLOT0:
             case BLE_SLOT1:
             case BLE_SLOT2:
@@ -41,13 +41,66 @@ bool process_record_ble_keycode(uint16_t keycode, keyrecord_t *record)
             case BLE_ALL_CLEAR:
                 hogp_slot_clear(UINT8_MAX);
                 return false;
+            default:
+                break;
+        }
+    }
+}
+
+#endif
+
+bool process_record_kb(uint16_t keycode, keyrecord_t *record)
+{
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type == kbd_protocol_ble) {
+        bool ret = process_ble_passcode_kb(keycode, record);
+
+        if (!ret) {
+            return false;
+        }
+    }
+#endif
+
+    if (record->event.pressed) {
+        switch (keycode) {
+            case USB_MODE:
+#ifdef USB_ENABLE
+                if (kbd_protocol_type != kbd_protocol_usb) {
+                    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
+                    soft_reset_keyboard();
+                }
+#endif
+                return false;
+            case BLE_MODE:
+#ifdef BLE_ENABLE
+                if (kbd_protocol_type != kbd_protocol_ble) {
+                    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+                    soft_reset_keyboard();
+                }
+#endif
+                return false;
             case ESB_MODE:
+#ifdef ESB_ENABLE
+                if (kbd_protocol_type != kbd_protocol_esb) {
+                    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+                    soft_reset_keyboard();
+                }
+#endif
                 return false;
             default:
                 break;
         }
     }
+
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type == kbd_protocol_ble) {
+        bool ret = process_ble_keycode_kb(keycode, record);
+
+        if (!ret) {
+            return false;
+        }
+    }
+#endif
+
     return process_record_user(keycode, record);
 }
-
-#endif

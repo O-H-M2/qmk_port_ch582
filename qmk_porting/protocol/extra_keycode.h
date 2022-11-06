@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum {
     USB_MODE = 0x5F80,
+    BLE_MODE,
     BLE_SLOT0,
     BLE_SLOT1,
     BLE_SLOT2,
@@ -34,7 +35,10 @@ enum {
     BLE_SLOT7,
     BLE_ALL_CLEAR,
     ESB_MODE,
+    CUSTOM_MAX,
 };
 
 // #undef SAFE_RANGE
 // #define SAFE_RANGE MK01_SAFE_RANGE
+
+_Static_assert(CUSTOM_MAX <= 0x5F8F, "Too many custom keycodes!");
