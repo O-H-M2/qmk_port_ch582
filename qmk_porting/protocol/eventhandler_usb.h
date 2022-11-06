@@ -41,6 +41,17 @@ __attribute__((always_inline)) inline void event_handler_usb(uint8_t event, void
             keyboard_task();
             housekeeping_task();
             break;
+        case PLATFORM_EVENT_REBOOT:
+            // wait for usb sending done
+            DelayMs(10);
+            PRINT("Reboot execute.\n");
+#ifdef PLF_DEBUG
+            while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
+                __nop();
+            }
+#endif
+            SYS_ResetExecute();
+            break;
         default:
             PRINT("Unhandled usb event: %d\n", event);
             break;

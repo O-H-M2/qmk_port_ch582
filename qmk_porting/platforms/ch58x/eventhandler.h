@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include "bootloader.h"
+
 #ifdef USB_ENABLE
 #include "eventhandler_usb.h"
 _Static_assert(BLE_EVENT_START_INDEX > USB_EVENT_MAX, "");
@@ -34,29 +36,46 @@ extern volatile uint8_t kbd_protocol_type;
 __attribute__((always_inline)) inline void event_propagate(uint8_t event, void *param)
 {
     switch (event) {
-        case PLATFORM_EVENT_MODE_SELECT:
-            // TODO: implement the mode select conditions
+        case PLATFORM_EVENT_MODE_SELECT: {
+            uint8_t mode = bootloader_boot_mode_get();
+
+            if (mode == BOOTLOADER_BOOT_MODE_IAP) {
 #ifdef USB_ENABLE
-            if (1) {
+                PRINT("Successfully booted after IAP, default to USB.\n");
+                mode = BOOTLOADER_BOOT_MODE_USB;
+                bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
+#elif defined BLE_ENABLE
+                PRINT("Successfully booted after IAP, default to BLE.\n");
+                mode = BOOTLOADER_BOOT_MODE_BLE;
+                bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+#else
+                PRINT("Successfully booted after IAP, default to ESB.\n");
+                mode = BOOTLOADER_BOOT_MODE_ESB;
+                bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+#endif
+            }
+#ifdef USB_ENABLE
+            if (mode == BOOTLOADER_BOOT_MODE_USB) {
                 // cable mode
                 kbd_protocol_type = kbd_protocol_usb;
                 return;
             }
 #endif
 #ifdef BLE_ENABLE
-            if (1) {
+            if (mode == BOOTLOADER_BOOT_MODE_BLE) {
                 // bluetooth mode
                 kbd_protocol_type = kbd_protocol_ble;
                 return;
             }
 #endif
 #ifdef ESB_ENABLE
-            if (0) {
+            if (mode == BOOTLOADER_BOOT_MODE_ESB) {
                 // 2.4g mode
                 kbd_protocol_type = kbd_protocol_esb;
                 return;
             }
 #endif
+        }
     }
 #ifdef USB_ENABLE
     if (kbd_protocol_type == kbd_protocol_usb) {
