@@ -31,8 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usbd_msc.h"
 #include "uf2.h"
 
-#define USE_EEPROM_FLAG 0
-
 #define jumpPre                                               \
     PRINT("Leaving DFU...\n");                                \
     PFIC_DisableIRQ(USB_IRQn);                                \
@@ -41,10 +39,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;           \
     my_delay_ms(10);                                          \
     R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
-#if USE_EEPROM_FLAG
-// TODO: implement this
-#define jumpIAP
-#endif
 #define jumpApp ((void (*)(void))((int *)APP_CODE_START_ADDR))
 
 #define MSC_IN_EP          0x81
