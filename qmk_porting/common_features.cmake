@@ -199,11 +199,6 @@ if(USB_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/port/ch32/usb_ch58x_dc_usbfs.c"
         "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/class/hid/usbd_hid.c"
     )
-    list(APPEND QMK_PORTING_IAP_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/core/usbd_core.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/port/ch32/usb_ch58x_dc_usbfs.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/class/msc/usbd_msc.c"
-    )
 endif()
 
 # BLE_ENABLE
