@@ -83,16 +83,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define QMK_TASK_INTERVAL_LED QMK_TASK_INTERVAL_MAX
 #endif
 #elif ESB_ENABLE == 2
-#ifndef DCDC_ENABLE
-#define DCDC_ENABLE 0
+#ifdef DCDC_ENABLE
+#undef DCDC_ENABLE
 #endif
-#ifndef HAL_SLEEP
-#define HAL_SLEEP 0
+#ifdef HAL_SLEEP
+#undef HAL_SLEEP
 #endif
-#if LSE_ENABLE
+#ifdef LSE_ENABLE
 #undef LSE_ENABLE
-#define LSE_ENABLE 0
 #endif
+#define DCDC_ENABLE 0
+#define HAL_SLEEP   0
+#define LSE_ENABLE  0
 #endif
 #endif
 

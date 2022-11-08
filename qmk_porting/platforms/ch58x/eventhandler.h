@@ -35,48 +35,67 @@ extern volatile uint8_t kbd_protocol_type;
 
 __attribute__((always_inline)) inline void event_propagate(uint8_t event, void *param)
 {
-    switch (event) {
-        case PLATFORM_EVENT_MODE_SELECT: {
-            uint8_t mode = bootloader_boot_mode_get();
+    if (event == PLATFORM_EVENT_MODE_SELECT) {
+        uint8_t mode = bootloader_boot_mode_get();
 
-            if (mode == BOOTLOADER_BOOT_MODE_IAP) {
+        if (mode == BOOTLOADER_BOOT_MODE_IAP) {
 #ifdef USB_ENABLE
-                PRINT("Successfully booted after IAP, default to USB.\n");
-                mode = BOOTLOADER_BOOT_MODE_USB;
-                bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
+            PRINT("Successfully booted after IAP, default to USB.\n");
+            mode = BOOTLOADER_BOOT_MODE_USB;
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
 #elif defined BLE_ENABLE
-                PRINT("Successfully booted after IAP, default to BLE.\n");
-                mode = BOOTLOADER_BOOT_MODE_BLE;
-                bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
-#else
-                PRINT("Successfully booted after IAP, default to ESB.\n");
-                mode = BOOTLOADER_BOOT_MODE_ESB;
-                bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
-#endif
-            }
-#ifdef USB_ENABLE
-            if (mode == BOOTLOADER_BOOT_MODE_USB) {
-                // cable mode
-                kbd_protocol_type = kbd_protocol_usb;
-                return;
-            }
-#endif
-#ifdef BLE_ENABLE
-            if (mode == BOOTLOADER_BOOT_MODE_BLE) {
-                // bluetooth mode
-                kbd_protocol_type = kbd_protocol_ble;
-                return;
-            }
-#endif
-#ifdef ESB_ENABLE
-            if (mode == BOOTLOADER_BOOT_MODE_ESB) {
-                // 2.4g mode
-                kbd_protocol_type = kbd_protocol_esb;
-                return;
-            }
+            PRINT("Successfully booted after IAP, default to BLE.\n");
+            mode = BOOTLOADER_BOOT_MODE_BLE;
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+#elif defined ESB_ENABLE
+            PRINT("Successfully booted after IAP, default to ESB.\n");
+            mode = BOOTLOADER_BOOT_MODE_ESB;
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
 #endif
         }
+
+        //! TODO: for test only!
+        mode = BOOTLOADER_BOOT_MODE_ESB;
+
+        switch (mode) {
+#ifdef USB_ENABLE
+            case BOOTLOADER_BOOT_MODE_USB:
+                // cable mode
+                kbd_protocol_type = kbd_protocol_usb;
+                break;
+#endif
+#ifdef BLE_ENABLE
+            case BOOTLOADER_BOOT_MODE_BLE:
+                // bluetooth mode
+                kbd_protocol_type = kbd_protocol_ble;
+                break;
+#endif
+#ifdef ESB_ENABLE
+            case BOOTLOADER_BOOT_MODE_ESB:
+                // 2.4g mode
+                kbd_protocol_type = kbd_protocol_esb;
+                break;
+#endif
+            default:
+                PRINT("Invalid mode record detected, ");
+                if (mode == BOOTLOADER_BOOT_MODE_IAP) {
+                    PRINT("will reside in IAP.\n");
+                } else {
+                    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
+                    mode = bootloader_boot_mode_get();
+                    PRINT("set to IAP... %s\n", mode == BOOTLOADER_BOOT_MODE_IAP ? "done" : "fail");
+                }
+                PRINT("Reboot execute.\n");
+#ifdef PLF_DEBUG
+                while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
+                    __nop();
+                }
+#endif
+                SYS_ResetExecute();
+        }
+        return;
     }
+
 #ifdef USB_ENABLE
     if (kbd_protocol_type == kbd_protocol_usb) {
         event_handler_usb(event, param);

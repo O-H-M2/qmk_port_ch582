@@ -306,6 +306,13 @@ __HIGH_CODE void gpio_pullup()
     }
 #endif
 #endif
+#ifdef BATTERY_MEASURE_PIN
+    if (BATTERY_MEASURE_PIN & 0x80000000) {
+        pin_b &= ~((BATTERY_MEASURE_PIN & 0x7FFFFFFF));
+    } else {
+        pin_a &= ~((BATTERY_MEASURE_PIN & 0x7FFFFFFF));
+    }
+#endif
     pin_b &= ~bUDP;
     pin_b &= ~bUDM;
     pin_b &= ~bU2DP;
