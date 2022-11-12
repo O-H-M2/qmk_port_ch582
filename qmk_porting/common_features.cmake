@@ -117,6 +117,15 @@ if(SPLIT_KEYBOARD)
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/split_common/split_util.c"
     )
+
+    if(NOT SPLIT_TRANSPORT STREQUAL "custom")
+        message(FATAL_ERROR "Unsupported split keyboard driver!")
+    else()
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/split/transactions.c"
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/split/transport.c"
+        )
+    endif()
 endif()
 
 # CIE1931_CURVE
@@ -160,7 +169,7 @@ if(EEPROM_ENABLE)
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/fnv/*.c"
         )
     else()
-        message(FATAL_ERROR "Unsupported EEprom Driver!")
+        message(FATAL_ERROR "Unsupported EEPROM driver!")
     endif()
 endif()
 
