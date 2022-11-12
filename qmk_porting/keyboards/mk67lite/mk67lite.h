@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Huckies <https://github.com/Huckies>
+Copyright 2022 OctopusZ <https://github.com/OctopusZ>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,6 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     { K100, K101, K102, K103, K104, K105, K106, K107, K108, K109, K110, K111,  K112,  K113,K114 }, \
     { K200, K201, K202, K203, K204, K205, K206, K207, K208, K209, K210, K211,  KC_NO, K213,K214 }, \
     { K300, K301, K302, K303, K304, K305, K306, K307, K308, K309, K310, K311,  KC_NO, K313,K314 }, \
-    { K400, K401, K402, KC_NO,KC_NO,KC_NO,K406, KC_NO,KC_NO,KC_NO,KC_NO,KC_NO, KC_NO, K413,K414 } \
+    { K400, K401, K402, KC_NO,KC_NO,KC_NO,K406, KC_NO,KC_NO,K409, K410, K411,  KC_NO, K413,K414 } \
 }
 // clang-format on

@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Huckies <https://github.com/Huckies>
+Copyright 2022 OctopusZ <https://github.com/OctopusZ>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,9 +48,9 @@ led_config_t g_led_config = {
 
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 {
-    if (host_keyboard_led_state().num_lock) {
+    if (host_keyboard_led_state().caps_lock) {
         if (g_led_config.flags[0] & LED_FLAG_KEYLIGHT) {
-            rgb_matrix_set_color(0, RGB_RED);
+            rgb_matrix_set_color(30, RGB_RED);
         }
     }
 }
