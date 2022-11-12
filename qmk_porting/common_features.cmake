@@ -3,9 +3,9 @@ if(MOUSE_ENABLE)
     add_definitions(-DMOUSE_ENABLE -DMOUSEKEY_ENABLE)
     message(STATUS "MOUSE_ENABLE")
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/mousekey.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/pointing_device_drivers.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/pointing_device.c"
+        "${QMK_BASE_DIR}/quantum/mousekey.c"
+        "${QMK_BASE_DIR}/quantum/pointing_device_drivers.c"
+        "${QMK_BASE_DIR}/quantum/pointing_device.c"
     )
 endif()
 
@@ -22,7 +22,7 @@ if(ENCODER_ENABLE)
     add_definitions(-DENCODER_ENABLE)
     message(STATUS "ENCODER_ENABLE")
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/encoder.c"
+        "${QMK_BASE_DIR}/quantum/encoder.c"
     )
 endif()
 
@@ -43,8 +43,8 @@ if(VIA_ENABLE)
     set(BOOTMAGIC_ENABLE ON CACHE BOOL "QMK" FORCE)
     message(STATUS "VIA_ENABLE")
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/dynamic_keymap.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/via.c"
+        "${QMK_BASE_DIR}/quantum/dynamic_keymap.c"
+        "${QMK_BASE_DIR}/quantum/via.c"
     )
 endif()
 
@@ -54,7 +54,7 @@ if(COMMAND_ENABLE)
     set(EEPROM_ENABLE ON CACHE BOOL "QMK" FORCE)
     message(STATUS "COMMAND_ENABLE")
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/command.c"
+        "${QMK_BASE_DIR}/quantum/command.c"
     )
 endif()
 
@@ -63,8 +63,8 @@ if(BOOTMAGIC_ENABLE)
     add_definitions(-DBOOTMAGIC_LITE -DBOOTMAGIC_ENABLE)
     message(STATUS "BOOTMAGIC_ENABLE")
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/bootmagic/magic.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/bootmagic/bootmagic_lite.c"
+        "${QMK_BASE_DIR}/quantum/bootmagic/magic.c"
+        "${QMK_BASE_DIR}/quantum/bootmagic/bootmagic_lite.c"
     )
 endif()
 
@@ -81,10 +81,10 @@ if(RGBLIGHT_ENABLE)
 
     message(STATUS "RGBLIGHT_ENABLE")
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/rgblight/*.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/color.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/process_keycode/process_rgb.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/led_tables.c"
+        "${QMK_BASE_DIR}/quantum/rgblight/*.c"
+        "${QMK_BASE_DIR}/quantum/color.c"
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_rgb.c"
+        "${QMK_BASE_DIR}/quantum/led_tables.c"
     )
 endif()
 
@@ -100,13 +100,22 @@ if(RGB_MATRIX_ENABLE)
     endif()
 
     message(STATUS "RGB_MATRIX_ENABLE")
-    include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/lib8tion)
+    include_directories(${QMK_BASE_DIR}/lib/lib8tion)
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/rgb_matrix/*.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/color.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/process_keycode/process_rgb.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/lib/lib8tion/*.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/led_tables.c"
+        "${QMK_BASE_DIR}/quantum/rgb_matrix/*.c"
+        "${QMK_BASE_DIR}/quantum/color.c"
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_rgb.c"
+        "${QMK_BASE_DIR}/lib/lib8tion/*.c"
+        "${QMK_BASE_DIR}/quantum/led_tables.c"
+    )
+endif()
+
+# RGB_MATRIX_ENABLE
+if(SPLIT_KEYBOARD)
+    add_definitions(-DSPLIT_KEYBOARD)
+    include_directories(${QMK_BASE_DIR}/quantum/split_common)
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/split_common/split_util.c"
     )
 endif()
 
@@ -122,13 +131,13 @@ if(EEPROM_ENABLE)
     message(STATUS "EEPROM_ENABLE")
     message(STATUS "EEPROM_DRIVER = ${EEPROM_DRIVER}")
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/eeprom/eeprom_driver.c"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/eeconfig.c"
+        "${QMK_BASE_DIR}/drivers/eeprom/eeprom_driver.c"
+        "${QMK_BASE_DIR}/quantum/eeconfig.c"
     )
 
     if(EEPROM_DRIVER STREQUAL "custom")
         add_definitions(-DEEPROM_CUSTOM)
-        include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/eeprom)
+        include_directories(${QMK_BASE_DIR}/drivers/eeprom)
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_ch58x_custom.c"
         )
@@ -137,7 +146,7 @@ if(EEPROM_ENABLE)
         )
     elseif(EEPROM_DRIVER STREQUAL "wear_leveling")
         add_definitions(-DEEPROM_WEAR_LEVELING)
-        include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/eeprom)
+        include_directories(${QMK_BASE_DIR}/drivers/eeprom)
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_wear_leveling.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/wear_leveling_ch58x.c"
@@ -180,9 +189,9 @@ endif()
 if(AW20216_REQUIRED)
     add_definitions(-DAW20216)
     message(STATUS "AW20216_REQUIRED")
-    include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/led)
+    include_directories(${QMK_BASE_DIR}/drivers/led)
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/led/aw20216.c"
+        "${QMK_BASE_DIR}/drivers/led/aw20216.c"
     )
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
@@ -245,6 +254,6 @@ if(CUSTOM_MATRIX)
     )
 else()
     list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/matrix.c"
+        "${QMK_BASE_DIR}/quantum/matrix.c"
     )
 endif()
