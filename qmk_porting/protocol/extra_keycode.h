@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum {
     USB_MODE = 0x5F80,
-    BLE_MODE,
     BLE_SLOT0,
     BLE_SLOT1,
     BLE_SLOT2,

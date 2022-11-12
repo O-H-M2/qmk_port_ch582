@@ -55,7 +55,7 @@ __attribute__((always_inline)) inline void event_propagate(uint8_t event, void *
         }
 
         //! TODO: for test only!
-        mode = BOOTLOADER_BOOT_MODE_ESB;
+        //mode = BOOTLOADER_BOOT_MODE_ESB;
 
         switch (mode) {
 #ifdef USB_ENABLE

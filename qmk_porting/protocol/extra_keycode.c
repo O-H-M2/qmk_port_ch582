@@ -18,36 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "extra_keycode.h"
 #include "quantum.h"
 
-#ifdef BLE_ENABLE
 
-extern bool process_ble_passcode_kb(uint16_t keycode, keyrecord_t *record);
-
-bool process_ble_keycode_kb(uint16_t keycode, keyrecord_t *record)
-{
-    if (record->event.pressed) {
-        switch (keycode) {
-            case BLE_SLOT0:
-            case BLE_SLOT1:
-            case BLE_SLOT2:
-            case BLE_SLOT3:
-            case BLE_SLOT4:
-            case BLE_SLOT5:
-            case BLE_SLOT6:
-            case BLE_SLOT7:
-                if (keycode <= BLE_SLOT0 + BLE_SLOT_NUM - 1) {
-                    hogp_slot_switch(keycode - BLE_SLOT0);
-                }
-                return false;
-            case BLE_ALL_CLEAR:
-                hogp_slot_clear(UINT8_MAX);
-                return false;
-            default:
-                break;
-        }
-    }
-}
-
-#endif
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record)
 {
@@ -71,14 +42,30 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
                 }
 #endif
                 return false;
-            case BLE_MODE:
 #ifdef BLE_ENABLE
+            case BLE_SLOT0:
+            case BLE_SLOT1:
+            case BLE_SLOT2:
+            case BLE_SLOT3:
+            case BLE_SLOT4:
+            case BLE_SLOT5:
+            case BLE_SLOT6:
+            case BLE_SLOT7:
+                if (keycode <= BLE_SLOT0 + BLE_SLOT_NUM - 1) {
+                    hogp_slot_switch(keycode - BLE_SLOT0);
+                }
                 if (kbd_protocol_type != kbd_protocol_ble) {
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
                     soft_reset_keyboard();
                 }
-#endif
                 return false;
+            case BLE_ALL_CLEAR:
+                if (kbd_protocol_type == kbd_protocol_ble) {
+                    hogp_slot_clear(UINT8_MAX);
+                }
+                return false;
+#endif
+
             case ESB_MODE:
 #ifdef ESB_ENABLE
                 if (kbd_protocol_type != kbd_protocol_esb) {
