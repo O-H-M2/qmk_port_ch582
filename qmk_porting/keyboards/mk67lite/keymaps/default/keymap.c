@@ -26,7 +26,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [1] = LAYOUT_all(/* 1: fn */
                      KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_DELETE, BLE_SLOT0,
                      _______, _______, KC_UP, _______, _______, _______, _______, KC_INSERT, KC_HOME, KC_PAGE_UP, _______, _______, _______, USB_MODE, BLE_SLOT1,
-                     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, KC_DELETE, KC_END, KC_PAGE_DOWN, _______, _______, _______, BLE_SLOT2,
+                     _______, KC_LEFT, KC_DOWN, KC_RGHT, _______, _______, _______, KC_DELETE, KC_END, KC_PAGE_DOWN, _______, _______, RGB_TOG, BLE_SLOT2,
                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, BLE_SLOT3,
                      _______, _______, _______, _______, _______, _______, _______, _______, BLE_ALL_CLEAR),
     [2] = LAYOUT_all(/* 2: fn */
