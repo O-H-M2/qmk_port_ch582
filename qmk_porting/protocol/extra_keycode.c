@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "extra_keycode.h"
 #include "quantum.h"
 
-
+#ifdef BLE_ENABLE
+extern bool process_ble_passcode_kb(uint16_t keycode, keyrecord_t *record);
+#endif
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record)
 {
@@ -31,7 +33,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
         }
     }
 #endif
-
     if (record->event.pressed) {
         switch (keycode) {
             case USB_MODE:
@@ -42,7 +43,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
                 }
 #endif
                 return false;
-#ifdef BLE_ENABLE
             case BLE_SLOT0:
             case BLE_SLOT1:
             case BLE_SLOT2:
@@ -51,6 +51,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
             case BLE_SLOT5:
             case BLE_SLOT6:
             case BLE_SLOT7:
+#ifdef BLE_ENABLE
                 if (keycode <= BLE_SLOT0 + BLE_SLOT_NUM - 1) {
                     hogp_slot_switch(keycode - BLE_SLOT0);
                 }
@@ -58,14 +59,15 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
                     soft_reset_keyboard();
                 }
+#endif
                 return false;
             case BLE_ALL_CLEAR:
+#ifdef BLE_ENABLE
                 if (kbd_protocol_type == kbd_protocol_ble) {
                     hogp_slot_clear(UINT8_MAX);
                 }
-                return false;
 #endif
-
+                return false;
             case ESB_MODE:
 #ifdef ESB_ENABLE
                 if (kbd_protocol_type != kbd_protocol_esb) {
@@ -78,16 +80,6 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
                 break;
         }
     }
-
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        bool ret = process_ble_keycode_kb(keycode, record);
-
-        if (!ret) {
-            return false;
-        }
-    }
-#endif
 
     return process_record_user(keycode, record);
 }
