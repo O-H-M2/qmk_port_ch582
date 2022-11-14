@@ -176,6 +176,23 @@ if(WS2812_REQUIRED)
     endif()
 endif()
 
+# OLED ENABLE
+if(OLED_ENABLE)
+    add_definitions(-DOLED_ENABLE)
+    if(OLED_DRIVER STREQUAL "SSD1306")
+        add_definitions(-DOLED_DRIVER)
+    endif()
+    message(STATUS "OLED_ENABLE = ${OLED_ENABLE}")
+    message(STATUS "OLED_DRIVER = ${OLED_DRIVER}")
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/oled)
+    list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/i2c_master.c"
+    )
+
+
+    
+endif()
+
 # AW20216 REQUIRED
 if(AW20216_REQUIRED)
     add_definitions(-DAW20216)
@@ -189,7 +206,6 @@ if(AW20216_REQUIRED)
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
     )
 endif()
-
 # USB_ENABLE
 if(USB_ENABLE)
     add_definitions(-DUSB_ENABLE -DEP_NUMS=8)
