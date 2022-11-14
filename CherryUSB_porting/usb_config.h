@@ -9,7 +9,7 @@
 #endif
 
 #ifndef CONFIG_USB_PRINTF
-#ifdef DEBUG
+#ifdef PLF_DEBUG
 #define CONFIG_USB_PRINTF printf
 #else
 #define CONFIG_USB_PRINTF(...)
