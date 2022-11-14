@@ -28,7 +28,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      KC_PWR, KC_SLEP, KC_MUTE,
                      BLE_SLOT3, _______, _______, RGB_MODE_FORWARD,
                      BLE_SLOT0, BLE_SLOT1, BLE_SLOT2,
-                     BLE_ALL_CLEAR, _______, _______),
+                     BLE_ALL_CLEAR, _______, USB_MODE),
     [2] = LAYOUT_all(/* 2: fn */
                      _______, _______, _______, _______,
                      _______, _______, _______,

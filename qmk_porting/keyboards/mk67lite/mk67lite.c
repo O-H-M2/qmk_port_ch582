@@ -43,7 +43,6 @@ led_config_t g_led_config = {
 	}
 };
 
-
 /* clang-format on */
 
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)

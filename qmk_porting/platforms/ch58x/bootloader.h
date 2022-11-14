@@ -28,3 +28,21 @@ void bootloader_boot_mode_set(uint8_t mode);
 uint8_t bootloader_boot_mode_get();
 void bootloader_jump();
 void mcu_reset();
+
+__attribute__((always_inline)) inline uint8_t bootloader_set_to_default_mode(const char *reason)
+{
+    PRINT("%s, ", reason);
+#ifdef USB_ENABLE
+    PRINT("default to USB.\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
+    return BOOTLOADER_BOOT_MODE_USB;
+#elif defined BLE_ENABLE
+    PRINT("default to BLE slot 0.\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE_START);
+    return BOOTLOADER_BOOT_MODE_BLE_START;
+#else
+    PRINT("default to ESB.\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+    return BOOTLOADER_BOOT_MODE_ESB;
+#endif
+}

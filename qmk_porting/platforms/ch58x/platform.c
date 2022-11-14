@@ -26,13 +26,7 @@ const uint8_t MacAddr[6] = { 0x84, 0xC2, 0xE4, 0x03, 0x02, 0x02 };
 
 volatile uint8_t kbd_protocol_type = 0;
 
-#ifndef PLF_DEBUG
-/* platform uart log output is disabled
- * so we fake a _putchar() to avoid link error */
-void _putchar(char character)
-{
-}
-#endif
+_PUTCHAR_CLAIM;
 
 int8_t sendchar(uint8_t c)
 {

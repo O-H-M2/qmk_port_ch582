@@ -38,10 +38,75 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef DEBUG
+#include <stdio.h>
 #include "printf.h"
-#define PLF_DEBUG DEBUG
+#define PRINT(X...) printf(X)
+#define PLF_DEBUG   DEBUG
+#if DEBUG == Debug_UART0
+#define WAIT_FOR_DBG                                  \
+    while ((R8_UART0_LSR & RB_LSR_TX_ALL_EMP) == 0) { \
+        __nop();                                      \
+    }
+#define _PUTCHAR_CLAIM                           \
+    void _putchar(char character)                \
+    {                                            \
+        while (R8_UART0_TFC == UART_FIFO_SIZE) { \
+            __nop();                             \
+        }                                        \
+        R8_UART0_THR = (uint8_t)character;       \
+    }
+#elif DEBUG == Debug_UART1
+#define WAIT_FOR_DBG                                  \
+    while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) { \
+        __nop();                                      \
+    }
+#define _PUTCHAR_CLAIM                           \
+    void _putchar(char character)                \
+    {                                            \
+        while (R8_UART1_TFC == UART_FIFO_SIZE) { \
+            __nop();                             \
+        }                                        \
+        R8_UART1_THR = (uint8_t)character;       \
+    }
+#elif DEBUG == Debug_UART2
+#define WAIT_FOR_DBG                                  \
+    while ((R8_UART2_LSR & RB_LSR_TX_ALL_EMP) == 0) { \
+        __nop();                                      \
+    }
+#define _PUTCHAR_CLAIM                           \
+    void _putchar(char character)                \
+    {                                            \
+        while (R8_UART2_TFC == UART_FIFO_SIZE) { \
+            __nop();                             \
+        }                                        \
+        R8_UART2_THR = (uint8_t)character;       \
+    }
+#elif DEBUG == Debug_UART3
+#define WAIT_FOR_DBG                                  \
+    while ((R8_UART3_LSR & RB_LSR_TX_ALL_EMP) == 0) { \
+        __nop();                                      \
+    }
+#define _PUTCHAR_CLAIM                           \
+    void _putchar(char character)                \
+    {                                            \
+        while (R8_UART3_TFC == UART_FIFO_SIZE) { \
+            __nop();                             \
+        }                                        \
+        R8_UART3_THR = (uint8_t)character;       \
+    }
 #else
+#error "Invalid DEBUG UART selection!"
+#endif
+#undef DEBUG
+#else
+#define PRINT(X...)
 #define NO_PRINT
+#define WAIT_FOR_DBG
+#define _PUTCHAR_CLAIM                              \
+    void _putchar(char character)                   \
+    {                                               \
+        /* set a placeholder to avoid link error */ \
+    }
 #endif
 
 #ifdef BLE_ENABLE
@@ -225,6 +290,7 @@ enum {
 #endif
 
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+#define NO_USB_STARTUP_CHECK
 #ifndef BATTERY_MEASURE_PIN
 #warning "Battery measure pin undefined."
 #endif

@@ -68,19 +68,7 @@ uint8_t bootloader_boot_mode_get()
         buffer == BOOTLOADER_BOOT_MODE_BLE || buffer == BOOTLOADER_BOOT_MODE_ESB) {
         return buffer;
     } else {
-#ifdef USB_ENABLE
-        PRINT("Invalid boot mode, default to USB.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
-        return BOOTLOADER_BOOT_MODE_USB;
-#elif defined BLE_ENABLE
-        PRINT("Invalid boot mode, default to BLE.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
-        return BOOTLOADER_BOOT_MODE_BLE;
-#else
-        PRINT("Invalid boot mode, default to ESB.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
-        return BOOTLOADER_BOOT_MODE_ESB;
-#endif
+        return bootloader_set_to_default_mode("Invalid boot mode");
     }
 }
 

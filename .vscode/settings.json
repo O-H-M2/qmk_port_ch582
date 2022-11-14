@@ -62,7 +62,10 @@
         "gpio.h": "c",
         "usb_util.h": "c",
         "quantum_keycodes.h": "c",
-        "rgb_led.h": "c"
+        "rgb_led.h": "c",
+        "ch58x_usbdev.h": "c",
+        "usb_def.h": "c",
+        "usb_config.h": "c"
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.files.exclude": {

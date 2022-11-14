@@ -3,6 +3,7 @@ set(CMAKE_SYSTEM_VERSION 1)
 cmake_minimum_required(VERSION 3.20)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(QMK_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}/qmk_firmware" CACHE STRING "ENV" FORCE)
 
 if("${CMAKE_C_COMPILER}" STREQUAL "")
     if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Darwin")
@@ -52,7 +53,6 @@ include(qmk_porting/keyboards/keyboard_target.cmake)
 
 add_definitions(-DKEYMAP_C="keymap.c")
 add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
-add_definitions(-D__ADDR__=${keyboard}_address.h)
 
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)

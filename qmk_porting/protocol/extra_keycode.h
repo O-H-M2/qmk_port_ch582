@@ -17,9 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#ifdef DEBUG
-#undef DEBUG
-#endif
 #include "quantum_keycodes.h"
 
 enum {

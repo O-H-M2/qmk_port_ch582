@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 //* platform settings
-//#define DEBUG        1
+#define DEBUG        Debug_UART1
 #define DCDC_ENABLE  1
 #define FREQ_SYS     60000000
 #define LSE_ENABLE   0
@@ -155,9 +155,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Feature disable options
  *  These options are also useful to firmware size reduction.
  */
-
-
-#define  OLED_DISPLAY_128X64
 
 /* disable debug print */
 //#define NO_DEBUG

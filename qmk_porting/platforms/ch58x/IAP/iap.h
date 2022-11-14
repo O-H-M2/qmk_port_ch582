@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usbd_core.h"
 #include "usbd_msc.h"
 #include "uf2.h"
+#include "usb_ch58x_usbfs_reg.h"
 
 #define jumpPre                                               \
     PRINT("Leaving DFU...\n");                                \

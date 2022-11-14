@@ -39,23 +39,11 @@ __attribute__((always_inline)) inline void event_propagate(uint8_t event, void *
         uint8_t mode = bootloader_boot_mode_get();
 
         if (mode == BOOTLOADER_BOOT_MODE_IAP) {
-#ifdef USB_ENABLE
-            PRINT("Successfully booted after IAP, default to USB.\n");
-            mode = BOOTLOADER_BOOT_MODE_USB;
-            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
-#elif defined BLE_ENABLE
-            PRINT("Successfully booted after IAP, default to BLE.\n");
-            mode = BOOTLOADER_BOOT_MODE_BLE;
-            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
-#elif defined ESB_ENABLE
-            PRINT("Successfully booted after IAP, default to ESB.\n");
-            mode = BOOTLOADER_BOOT_MODE_ESB;
-            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
-#endif
+            mode = bootloader_set_to_default_mode("Successfully booted from IAP");
         }
 
         //! TODO: for test only!
-        //mode = BOOTLOADER_BOOT_MODE_ESB;
+        // mode = BOOTLOADER_BOOT_MODE_BLE;
 
         switch (mode) {
 #ifdef USB_ENABLE
@@ -86,11 +74,7 @@ __attribute__((always_inline)) inline void event_propagate(uint8_t event, void *
                     PRINT("set to IAP... %s\n", mode == BOOTLOADER_BOOT_MODE_IAP ? "done" : "fail");
                 }
                 PRINT("Reboot execute.\n");
-#ifdef PLF_DEBUG
-                while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
-                    __nop();
-                }
-#endif
+                WAIT_FOR_DBG;
                 SYS_ResetExecute();
         }
         return;
