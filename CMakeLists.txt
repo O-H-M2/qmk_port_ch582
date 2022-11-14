@@ -53,7 +53,6 @@ include(qmk_porting/keyboards/keyboard_target.cmake)
 
 add_definitions(-DKEYMAP_C="keymap.c")
 add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
-add_definitions(-D__ADDR__=${keyboard}_address.h)
 
 add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
