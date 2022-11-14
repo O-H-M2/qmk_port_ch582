@@ -290,6 +290,7 @@ enum {
 #endif
 
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+#define NO_USB_STARTUP_CHECK
 #ifndef BATTERY_MEASURE_PIN
 #warning "Battery measure pin undefined."
 #endif

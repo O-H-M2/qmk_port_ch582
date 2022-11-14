@@ -1,7 +1,12 @@
 #ifndef _USB_CONFIG_H
 #define _USB_CONFIG_H
 
-#include "CH58x_usbdev.h"
+#ifdef R8_USB_RX_LEN
+#undef R8_USB_RX_LEN
+#endif
+#ifdef R16_PIN_ANALOG_IE
+#undef R16_PIN_ANALOG_IE
+#endif
 
 /* USB common Configuration */
 #ifndef CONFIG_USB_DBG_LEVEL
