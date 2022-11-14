@@ -74,11 +74,7 @@ __attribute__((always_inline)) inline void event_propagate(uint8_t event, void *
                     PRINT("set to IAP... %s\n", mode == BOOTLOADER_BOOT_MODE_IAP ? "done" : "fail");
                 }
                 PRINT("Reboot execute.\n");
-#ifdef PLF_DEBUG
-                while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
-                    __nop();
-                }
-#endif
+                WAIT_FOR_DBG;
                 SYS_ResetExecute();
         }
         return;

@@ -321,6 +321,8 @@ __HIGH_CODE void gpio_pullup()
     GPIOB_ModeCfg(pin_b, GPIO_ModeIN_PU);
 }
 
+__HIGH_CODE _PUTCHAR_CLAIM;
+
 __HIGH_CODE void Main_Circulation()
 {
     static uint8_t second = 0;
