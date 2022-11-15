@@ -16,8 +16,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "platform_deps.h"
+#include "quantum.h"
 #include "gpio.h"
 
+bool battery_indicator_enable = 0;
+uint16_t battery_indicator_timer = 0;
+#define BATTERY_INDICATOR_TIMEOUT 5000
+
+__attribute__((weak)) void battery_indicator_ON()
+{
+    battery_indicator_enable = true ;
+    battery_indicator_timer = timer_read();
+}
+__attribute__((weak)) void battery_indicator_OFF()
+{
+    battery_indicator_enable = 0;
+}
+__attribute__((weak)) bool battery_indicator_state()
+{
+    if (battery_indicator_enable)
+        return true;
+    else
+        return 0;
+}
+__attribute__((weak)) bool battery_indicator_timerout()
+{
+    if( timer_read() < battery_indicator_timer + BATTERY_INDICATOR_TIMEOUT)
+        return true;
+    else
+        return 0;
+}
 static const uint16_t battery_map[100] = {
     2515, 2528, 2541, 2554, 2567, 2580, 2593, 2606, 2619, 2632,
     2645, 2658, 2672, 2685, 2698, 2711, 2724, 2737, 2750, 2763,
