@@ -1,7 +1,10 @@
 include_directories(${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard})
 include_directories(${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard}/keymaps/${keymap})
+include_directories(${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom)
 include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/drivers)
-include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/platforms)
+
+# include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/platforms)
 include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/protocol)
 
 file(GLOB QMK_PORTING_SOURCES

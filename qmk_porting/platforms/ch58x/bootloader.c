@@ -16,7 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "eeprom_driver.h"
+#if __BUILDING_APP__
 #include "eventhandler.h"
+#endif
+#if __BUILDING_IAP__
+#include "bootloader.h"
+#endif
 
 void bootmagic_lite_reset_eeprom(void)
 {
@@ -86,5 +91,10 @@ void bootloader_jump()
 
 void mcu_reset()
 {
+#if __BUILDING_APP__
     event_propagate(PLATFORM_EVENT_REBOOT, NULL);
+#endif
+#if __BUILDING_IAP__
+    SYS_ResetExecute();
+#endif
 }

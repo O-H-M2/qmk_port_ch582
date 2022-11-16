@@ -69,8 +69,6 @@
     },
     "cmake.configureOnOpen": true,
     "C_Cpp.files.exclude": {
-        "${workspaceFolder}/.vscode": true,
-        "${workspaceFolder}/.vs": true,
-        "${workspaceFolder}/build": true
+        "**/build": true
     }
 }

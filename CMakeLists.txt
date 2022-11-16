@@ -43,6 +43,13 @@ project(qmk_port_ch582 C CXX ASM)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
+find_program(CCACHE_FOUND ccache)
+
+if(CCACHE_FOUND)
+    message(STATUS "Found ccache: ${CCACHE_FOUND}")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_FOUND}")
+endif(CCACHE_FOUND)
+
 execute_process(COMMAND git rev-parse --short HEAD
     TIMEOUT 5
     OUTPUT_VARIABLE GIT_VERSION
@@ -93,10 +100,10 @@ endfunction()
 include(qmk_porting/keyboards/${keyboard}/rules.cmake)
 include(qmk_porting/qmk_porting.cmake)
 include(qmk_porting/quantum.cmake)
-include(sdk/riscv.cmake)
 include(CherryUSB_porting/CherryUSB.cmake)
 include(qmk_porting/tmk_core.cmake)
 include(qmk_porting/common_features.cmake)
+add_subdirectory(sdk)
 
 if(NOT keyboard)
     message(FATAL_ERROR "You must select a keyboard!")
@@ -109,18 +116,22 @@ endif()
 # get_property(dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 # message("include_dirs=${dirs}")
 file(GLOB APP_SOURCES
-    ${CH582_SOURCES}
     ${quantum_SOURCES}
     ${tmk_core_SOURCES}
     ${QMK_PORTING_SOURCES}
 )
 file(GLOB IAP_SOURCES
-    ${CH582_IAP_SOURCES}
     ${QMK_PORTING_IAP_SOURCES}
 )
 
-add_executable(${keyboard}.elf ${APP_SOURCES} ${LINKER_SCRIPT_APP})
-add_executable(${keyboard}_IAP.elf ${IAP_SOURCES} ${LINKER_SCRIPT_IAP})
+add_executable(${keyboard}.elf ${APP_SOURCES})
+add_executable(${keyboard}_IAP.elf ${IAP_SOURCES})
+
+target_link_libraries(${keyboard}.elf PRIVATE CH582_APP)
+target_link_libraries(${keyboard}_IAP.elf PRIVATE CH582_IAP)
+
+target_compile_definitions(${keyboard}.elf PRIVATE __BUILDING_APP__=1)
+target_compile_definitions(${keyboard}_IAP.elf PRIVATE __BUILDING_IAP__=1)
 
 target_link_options(${keyboard}.elf PRIVATE
     -nostartfiles
@@ -129,7 +140,6 @@ target_link_options(${keyboard}.elf PRIVATE
     -Wl,-Map,${keyboard}.map
     --specs=nano.specs
     --specs=nosys.specs
-    -T ${LINKER_SCRIPT_APP}
 )
 target_link_options(${keyboard}_IAP.elf PRIVATE
     -nostartfiles
@@ -138,22 +148,18 @@ target_link_options(${keyboard}_IAP.elf PRIVATE
     -Wl,-Map,${keyboard}_IAP.map
     --specs=nano.specs
     --specs=nosys.specs
-    -T ${LINKER_SCRIPT_IAP}
 )
 
-target_precompile_headers(${keyboard}.elf PRIVATE
+target_precompile_headers(${keyboard}.elf PUBLIC
     ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
 )
-target_precompile_headers(${keyboard}_IAP.elf PRIVATE
+target_precompile_headers(${keyboard}_IAP.elf PUBLIC
     ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
 )
-
-target_link_libraries(${keyboard}.elf ${CH582_LIB})
-target_link_libraries(${keyboard}_IAP.elf ${CH582_LIB})
 
 if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
     add_subdirectory(${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless)
-    target_link_libraries(${keyboard}.elf wireless)
+    target_link_libraries(${keyboard}.elf PRIVATE wireless)
 endif()
 
 set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)

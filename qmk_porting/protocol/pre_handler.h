@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "eeprom_partition_table.h"
 #include "partition_table.h"
 
-#ifdef BLE_ENABLE
+#if __BUILDING_APP__ && defined BLE_ENABLE
 #include "ble_config.h"
 #endif
 
-#ifdef ESB_ENABLE
+#if __BUILDING_APP__ && defined ESB_ENABLE
 #include "esb_config.h"
 #endif
 
@@ -214,7 +214,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #if defined LSE_ENABLE && LSE_ENABLE
 #define FREQ_RTC   32768
 #define CLK_OSC32K 0
-#define TEM_SAMPLE FALSE
 #ifdef WS2812_DRIVER_PWM
 #warning "WS2812 PWM driver can not be used with LSE!"
 #undef WS2812_DRIVER_PWM

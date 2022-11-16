@@ -278,7 +278,7 @@ __HIGH_CODE int usbd_msc_sector_write(uint32_t sector, uint8_t *buffer, uint32_t
     return 0;
 }
 
-__HIGH_CODE void gpio_pulldown()
+__HIGH_CODE void gpio_strap()
 {
     uint32_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
 
@@ -383,7 +383,7 @@ int main()
         }
     }
 #endif
-    gpio_pulldown();
+    gpio_strap();
 #if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
     uint16_t adj = R16_AUX_POWER_ADJ;
     uint16_t plan = R16_POWER_PLAN;
