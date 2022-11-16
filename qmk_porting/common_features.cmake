@@ -203,6 +203,7 @@ if(OLED_ENABLE)
         add_definitions(-DOLED_DRIVER)
     endif()
     add_definitions(-DOLED_DRIVER_SSD1306)
+    add_definitions(-DI2C_IO_REMAPPING)
     message(STATUS "OLED_ENABLE = ${OLED_ENABLE}")
     message(STATUS "OLED_DRIVER = ${OLED_DRIVER}")
 
@@ -217,6 +218,17 @@ if(OLED_ENABLE)
     )
 
 endif()
+# WPM ENABLE
+if(WPM_ENABLE)
+    add_definitions(-DWPM_ENABLE)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum)
+    list(APPEND quantum_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/wpm.c"
+    )
+endif()
+
+
+
 # AW20216 REQUIRED
 if(AW20216_REQUIRED)
     add_definitions(-DAW20216)

@@ -27,17 +27,17 @@
 #include "i2c_master.h"
 #include "quantum.h"
 #define TxAdderss 0x52
-#ifndef I2C_IO_REMAPPING
-#define I2C_IO_REMAPPING 0
-#endif
+
 static uint8_t i2c_address;
 void i2c_init(void)
 {
 #ifndef I2C_IO_REMAPPING
-    GPIOB_ModeCfg(GPIO_Pin_21 | GPIO_Pin_20, GPIO_ModeIN_PU);
-    R16_PIN_ALTERNATE |= RB_PIN_I2C;
+    GPIOPinRemap( ENABLE , RB_PIN_I2C );//映射到PB20/PB21
+    GPIOB_ModeCfg( GPIO_Pin_20 | GPIO_Pin_21, GPIO_ModeOut_PP_5mA); //GPIO_ModeIN_PU );主机
+    I2C_Init( I2C_Mode_I2C, 400000, I2C_DutyCycle_16_9, I2C_Ack_Enable, I2C_AckAddr_7bit, TxAdderss );
 #else
     GPIOB_ModeCfg(GPIO_Pin_13 | GPIO_Pin_12, GPIO_ModeIN_PU);
+    R16_PIN_ALTERNATE |= RB_PIN_I2C;
 #endif
     I2C_Init(I2C_Mode_I2C, 400000, I2C_DutyCycle_16_9, I2C_Ack_Enable, I2C_AckAddr_7bit, TxAdderss);
 }
