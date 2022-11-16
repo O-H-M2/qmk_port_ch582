@@ -280,7 +280,7 @@ __HIGH_CODE int usbd_msc_sector_write(uint32_t sector, uint8_t *buffer, uint32_t
 
 __HIGH_CODE void gpio_pulldown()
 {
-    uint32_t pin_a = GPIO_Pin_All, pin_b = GPIO_Pin_All;
+    uint32_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
 
 #if defined LSE_ENABLE && LSE_ENABLE
     pin_a &= ~bX32KI;
@@ -317,8 +317,8 @@ __HIGH_CODE void gpio_pulldown()
     pin_b &= ~bUDM;
     pin_b &= ~bU2DP;
     pin_b &= ~bU2DM;
-    GPIOA_ModeCfg(pin_a, GPIO_ModeIN_PD);
-    GPIOB_ModeCfg(pin_b, GPIO_ModeIN_PD);
+    setPinInputLow(pin_a);
+    setPinInputLow(pin_b);
 }
 
 __HIGH_CODE _PUTCHAR_CLAIM;
