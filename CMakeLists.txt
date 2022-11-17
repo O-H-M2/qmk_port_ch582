@@ -154,8 +154,6 @@ target_link_libraries(${keyboard}_IAP.elf ${CH582_LIB})
 if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
     add_subdirectory(${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless)
     target_link_libraries(${keyboard}.elf wireless)
-
-    # target_link_libraries(${keyboard}_IAP.elf wireless)
 endif()
 
 set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)

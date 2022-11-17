@@ -50,6 +50,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DIODE_DIRECTION       COL2ROW
 #define BOOTMAGIC_LITE_ROW    0
 #define BOOTMAGIC_LITE_COLUMN 0
+// #define PERMISSIVE_HOLD
+#define HOLD_ON_OTHER_KEY_PRESS
 
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \
