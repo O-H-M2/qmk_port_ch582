@@ -148,6 +148,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
+/* define for OLED resolution  */
+#ifdef OLED_ENABLE
+    #define OLED_DISPLAY_128X64
+#endif
+
 /* Set 0 if debouncing isn't needed */
 #define DEBOUNCE 10
 
@@ -158,7 +163,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* disable debug print */
 //#define NO_DEBUG
-#define OLED_DISPLAY_128X64
 /* disable print */
 //#define NO_PRINT
 

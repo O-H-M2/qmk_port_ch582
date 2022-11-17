@@ -197,27 +197,31 @@ endif()
 # OLED ENABLE
 
 # OLED ENABLE
-if(OLED_ENABLE)
-    add_definitions(-DOLED_ENABLE)
+if(OLED_ENABLE)  
     if(OLED_DRIVER STREQUAL "SSD1306")
         add_definitions(-DOLED_DRIVER)
+        add_definitions(-DOLED_DRIVER_SSD1306)
+        add_definitions(-DOLED_ENABLE)
+        message(STATUS "OLED_ENABLE = ${OLED_ENABLE}")
+        message(STATUS "OLED_DRIVER = ${OLED_DRIVER}")
+        if(I2C_IO_REMAPPING)
+            add_definitions(-DI2C_IO_REMAPPING)
+            message(STATUS "I2C_IO_REMAPPING = ${I2C_IO_REMAPPING}")
+        endif()
+        include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/oled)
+        list(APPEND quantum_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/oled/oled_driver.h"
+            "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/oled/ssd1306_sh1106.c"
+        )
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/i2c_master.c"
+        )
+
+    else()
+        message(FATAL_ERROR "Unsupported OLED driver!")
     endif()
-    add_definitions(-DOLED_DRIVER_SSD1306)
-    add_definitions(-DI2C_IO_REMAPPING)
-    message(STATUS "OLED_ENABLE = ${OLED_ENABLE}")
-    message(STATUS "OLED_DRIVER = ${OLED_DRIVER}")
-
-    
-    include_directories(${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/oled)
-    list(APPEND quantum_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/oled/oled_driver.h"
-        "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/drivers/oled/ssd1306_sh1106.c"
-    )
-    list(APPEND QMK_PORTING_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/i2c_master.c"
-    )
-
 endif()
+
 # WPM ENABLE
 if(WPM_ENABLE)
     add_definitions(-DWPM_ENABLE)
@@ -226,8 +230,6 @@ if(WPM_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/../qmk_firmware/quantum/wpm.c"
     )
 endif()
-
-
 
 # AW20216 REQUIRED
 if(AW20216_REQUIRED)
