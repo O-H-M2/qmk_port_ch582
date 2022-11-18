@@ -31,6 +31,7 @@ enum {
     BLE_SLOT7,
     BLE_ALL_CLEAR,
     ESB_MODE,
+    BATTERY_INDICATOR,
     CUSTOM_MAX,
 };
 

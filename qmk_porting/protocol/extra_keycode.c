@@ -76,6 +76,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
                 }
 #endif
                 return false;
+            case BATTERY_INDICATOR:
+                battery_indicator_ON();
             default:
                 break;
         }
