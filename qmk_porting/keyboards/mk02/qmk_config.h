@@ -152,7 +152,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* define for OLED resolution  */
 #ifdef OLED_ENABLE
-    #define OLED_DISPLAY_128X64
+#define OLED_DISPLAY_128X64
 #endif
 
 /* Set 0 if debouncing isn't needed */
@@ -165,6 +165,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* disable debug print */
 //#define NO_DEBUG
+
 /* disable print */
 //#define NO_PRINT
 

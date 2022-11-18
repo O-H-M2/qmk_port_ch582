@@ -26,18 +26,19 @@
 
 #include "i2c_master.h"
 #include "quantum.h"
-#define TxAdderss 0x52
 
 static uint8_t i2c_address;
-void i2c_init(void)
+
+void i2c_init()
 {
-#ifndef I2C_IO_REMAPPING
-    GPIOPinRemap( ENABLE , RB_PIN_I2C );//映射到PB20/PB21
-    GPIOB_ModeCfg( GPIO_Pin_20 | GPIO_Pin_21, GPIO_ModeOut_PP_5mA); //GPIO_ModeIN_PU );主机
-    I2C_Init( I2C_Mode_I2C, 400000, I2C_DutyCycle_16_9, I2C_Ack_Enable, I2C_AckAddr_7bit, TxAdderss );
-#else
-    GPIOB_ModeCfg(GPIO_Pin_13 | GPIO_Pin_12, GPIO_ModeIN_PU);
+#if I2C_IO_REMAPPING
     R16_PIN_ALTERNATE |= RB_PIN_I2C;
+    setPinInputHigh(B20);
+    setPinInputHigh(B21);
+#else
+    R16_PIN_ALTERNATE &= ~RB_PIN_I2C;
+    setPinInputHigh(B12);
+    setPinInputHigh(B13);
 #endif
     I2C_Init(I2C_Mode_I2C, 400000, I2C_DutyCycle_16_9, I2C_Ack_Enable, I2C_AckAddr_7bit, TxAdderss);
 }
@@ -45,6 +46,7 @@ void i2c_init(void)
 i2c_status_t i2c_start(uint8_t address, uint16_t timeout)
 {
     uint16_t timeout_timer = timer_read();
+
     i2c_address = address;
     I2C_GenerateSTART(ENABLE);
 
