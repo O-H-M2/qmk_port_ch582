@@ -43,6 +43,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRINT(X...) printf(X)
 #define PLF_DEBUG   DEBUG
 #if DEBUG == Debug_UART0
+#define DBG_INIT         \
+    writePinHigh(B7);    \
+    setPinInputHigh(B4); \
+    setPinOutput(B7);    \
+    UART0_DefInit();     \
+    UART0_BaudRateCfg(460800);
 #define WAIT_FOR_DBG                                  \
     while ((R8_UART0_LSR & RB_LSR_TX_ALL_EMP) == 0) { \
         __nop();                                      \
@@ -56,6 +62,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         R8_UART0_THR = (uint8_t)character;       \
     }
 #elif DEBUG == Debug_UART1
+#define DBG_INIT         \
+    writePinHigh(A9);    \
+    setPinInputHigh(A8); \
+    setPinOutput(A9);    \
+    UART1_DefInit();     \
+    UART1_BaudRateCfg(460800);
 #define WAIT_FOR_DBG                                  \
     while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) { \
         __nop();                                      \
@@ -69,6 +81,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         R8_UART1_THR = (uint8_t)character;       \
     }
 #elif DEBUG == Debug_UART2
+#define DBG_INIT         \
+    writePinHigh(A7);    \
+    setPinInputHigh(A6); \
+    setPinOutput(A7);    \
+    UART2_DefInit();     \
+    UART2_BaudRateCfg(460800);
 #define WAIT_FOR_DBG                                  \
     while ((R8_UART2_LSR & RB_LSR_TX_ALL_EMP) == 0) { \
         __nop();                                      \
@@ -82,6 +100,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         R8_UART2_THR = (uint8_t)character;       \
     }
 #elif DEBUG == Debug_UART3
+#define DBG_INIT         \
+    writePinHigh(A5);    \
+    setPinInputHigh(A4); \
+    setPinOutput(A5);    \
+    UART3_DefInit();     \
+    UART3_BaudRateCfg(460800);
 #define WAIT_FOR_DBG                                  \
     while ((R8_UART3_LSR & RB_LSR_TX_ALL_EMP) == 0) { \
         __nop();                                      \

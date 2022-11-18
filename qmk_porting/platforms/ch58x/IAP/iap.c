@@ -399,12 +399,7 @@ int main()
     sys_safe_access_disable();
 #endif
 #ifdef PLF_DEBUG
-    GPIOA_SetBits(GPIO_Pin_9);
-    GPIOA_ModeCfg(GPIO_Pin_8, GPIO_ModeIN_PU);
-    GPIOA_ModeCfg(GPIO_Pin_9, GPIO_ModeOut_PP_5mA);
-    UART1_DefInit();
-    UART1_BaudRateCfg(460800);
-#endif
+    DBG_INIT;
     PRINT("Chip start, %s\n", VER_LIB);
     PRINT("Build on %s %s - " MACRO2STR(__GIT_VERSION__) "\n", __DATE__, __TIME__);
     PRINT("Reason of last reset:  ");
@@ -428,6 +423,28 @@ int main()
             PRINT("Wake from sleep\n");
             break;
     }
+#else
+    // manually initialize uart1 and send some debug information
+    writePinHigh(A9);
+    setPinInputHigh(A8);
+    setPinOutput(A9);
+    UART1_DefInit();
+    UART1_BaudRateCfg(460800);
+
+    char buffer[128];
+    uint8_t len = sprintf(buffer, "Chipstart, %s\nBuild on %s %s - " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", VER_LIB, __DATE__, __TIME__, R8_RESET_STATUS & RB_RESET_FLAG);
+
+    while (len) {
+        if (R8_UART1_TFC != UART_FIFO_SIZE) {
+            R8_UART1_THR = buffer[strlen(buffer) - len];
+            len--;
+        }
+    }
+    while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
+        __nop();
+    }
+    R8_UART1_IER = RB_IER_RESET;
+#endif
 
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
     if (bootloader_boot_mode_get() != BOOTLOADER_BOOT_MODE_IAP) {
