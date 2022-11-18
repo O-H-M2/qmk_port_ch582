@@ -1,5 +1,6 @@
 /*
 Copyright 2022 Huckies <https://github.com/Huckies>
+Copyright 2022 OctopusZ <https://github.com/OctopusZ>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,37 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "platform_deps.h"
-#include "quantum.h"
-#include "gpio.h"
+#include "battery_measure.h"
 
-bool battery_indicator_enable = 0;
-uint16_t battery_indicator_timer = 0;
-#define BATTERY_INDICATOR_TIMEOUT 5000
-
-__attribute__((weak)) void battery_indicator_ON()
-{
-    battery_indicator_enable = true ;
-    battery_indicator_timer = timer_read();
-}
-__attribute__((weak)) void battery_indicator_OFF()
-{
-    battery_indicator_enable = 0;
-}
-__attribute__((weak)) bool battery_indicator_state()
-{
-    if (battery_indicator_enable)
-        return true;
-    else
-        return 0;
-}
-__attribute__((weak)) bool battery_indicator_timerout()
-{
-    if( timer_read() < battery_indicator_timer + BATTERY_INDICATOR_TIMEOUT)
-        return true;
-    else
-        return 0;
-}
 static const uint16_t battery_map[100] = {
     2515, 2528, 2541, 2554, 2567, 2580, 2593, 2606, 2619, 2632,
     2645, 2658, 2672, 2685, 2698, 2711, 2724, 2737, 2750, 2763,
@@ -58,6 +30,9 @@ static const uint16_t battery_map[100] = {
     3562, 3575, 3588, 3601, 3614, 3627, 3640, 3653, 3666, 3680,
     3693, 3706, 3719, 3732, 3745, 3758, 3771, 3784, 3797, 3810
 };
+
+static bool battery_indicator_enable = 0;
+static uint16_t battery_indicator_timer = 0;
 
 static inline void battery_config_channel(pin_t pin)
 {
@@ -180,4 +155,24 @@ __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
         }
     }
     return battery_get_max();
+}
+
+void battery_indicator_toggle(bool status)
+{
+    if (status) {
+        battery_indicator_enable = true;
+        battery_indicator_timer = timer_read();
+    } else {
+        battery_indicator_enable = false;
+    }
+}
+
+bool battery_indicator_state()
+{
+    return battery_indicator_enable;
+}
+
+bool battery_indicator_timeout()
+{
+    return (timer_elapsed(battery_indicator_timer) > BATTERY_INDICATOR_TIMEOUT);
 }

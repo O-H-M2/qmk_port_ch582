@@ -1,5 +1,6 @@
 /*
 Copyright 2022 Huckies <https://github.com/Huckies>
+Copyright 2022 OctopusZ <https://github.com/OctopusZ>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -77,7 +78,17 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
 #endif
                 return false;
             case BATTERY_INDICATOR:
-                battery_indicator_ON();
+#ifdef BLE_ENABLE
+                if (kbd_protocol_type == kbd_protocol_ble) {
+                    battery_indicator_toggle(true);
+                }
+#endif
+#ifdef ESB_ENABLE
+                if (kbd_protocol_type == kbd_protocol_esb) {
+                    battery_indicator_toggle(true);
+                }
+#endif
+                break;
             default:
                 break;
         }

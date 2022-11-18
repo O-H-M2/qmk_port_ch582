@@ -45,8 +45,6 @@ led_config_t g_led_config = {
 
 /* clang-format on */
 
-// for battery indicator
-
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 {
     if (host_keyboard_led_state().caps_lock) {
@@ -54,32 +52,25 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
             rgb_matrix_set_color(30, RGB_RED);
         }
     }
-    if ( battery_indicator_state() )
-    {
-        if(battery_indicator_timerout() )
-        {
-            rgb_matrix_set_color_all(0,0,0);//turn off all leds
-            for(uint8_t i = 0;i<5;i++)
-            {
+    // battery indicator
+    if (battery_indicator_state()) {
+        if (!battery_indicator_timeout()) {
+            rgb_matrix_set_color_all(0, 0, 0); //turn off all leds
+            for (uint8_t i = 0; i < 5; i++) {
                 rgb_matrix_set_color(i, RGB_RED);
             }
+
             uint8_t battery_indicator_num = 5;
+
             battery_indicator_num = 30 / 20;
-            for(uint8_t i = 0;i<battery_indicator_num;i++)
-            {
+            for (uint8_t i = 0; i < battery_indicator_num; i++) {
                 rgb_matrix_set_color(i, RGB_GREEN);
             }
+        } else {
+            battery_indicator_toggle(false);
         }
-        else
-        {
-            battery_indicator_OFF();
-        }
-            
-            
     }
 }
-
-
 
 #endif
 
