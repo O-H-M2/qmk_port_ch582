@@ -56,7 +56,12 @@ execute_process(COMMAND git rev-parse --short HEAD
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-include(qmk_porting/keyboards/keyboard_target.cmake)
+# allow for manual override
+if(NOT keyboard OR NOT keymap)
+    include(qmk_porting/keyboards/keyboard_target.cmake)
+endif()
+
+message(STATUS "Compiling ${keyboard}:${keymap}")
 
 add_definitions(-DKEYMAP_C="keymap.c")
 add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
