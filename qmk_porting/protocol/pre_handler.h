@@ -221,6 +221,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define EXTRAKEY_ENABLE
 #endif
 
+#ifndef MAGIC_KEYCODE_ENABLE
+#define MAGIC_KEYCODE_ENABLE
+#endif
+
 #ifndef SEND_STRING_ENABLE
 #define SEND_STRING_ENABLE
 #endif
