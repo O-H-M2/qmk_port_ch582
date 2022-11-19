@@ -215,7 +215,7 @@ endif()
 # WPM ENABLE
 if(WPM_ENABLE)
     add_definitions(-DWPM_ENABLE)
-    message(STATUS "AW20216_REQUIRED")
+    message(STATUS "WPM_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/wpm.c"
     )
