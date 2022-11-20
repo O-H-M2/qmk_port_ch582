@@ -215,6 +215,7 @@ endif()
 # WPM ENABLE
 if(WPM_ENABLE)
     add_definitions(-DWPM_ENABLE)
+    message(STATUS "WPM_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/wpm.c"
     )
@@ -292,3 +293,13 @@ else()
         "${QMK_BASE_DIR}/quantum/matrix.c"
     )
 endif()
+
+# DIP_SWITCH_ENABLE
+if(DIP_SWITCH_ENABLE)
+    add_definitions(-DDIP_SWITCH_ENABLE)
+    message(STATUS "DIP_SWITCH_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/dip_switch.c"
+    )
+endif()
+    
