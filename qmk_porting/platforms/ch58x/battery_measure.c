@@ -144,7 +144,7 @@ __attribute__((weak)) uint16_t battery_measure()
         adc_data += abcBuff[i + 5];
     }
 
-    return ((adc_data * 10 / 4096 + 0.5 * 100) * 105 * 3);
+    return adc_data;
 }
 
 __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
