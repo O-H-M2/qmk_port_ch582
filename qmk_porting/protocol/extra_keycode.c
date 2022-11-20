@@ -34,49 +34,51 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
         }
     }
 #endif
+
+    bool ret = process_record_user();
+
+    if (!ret) {
+        return false;
+    }
+
     if (record->event.pressed) {
         switch (keycode) {
-            case USB_MODE:
 #ifdef USB_ENABLE
+            case USB_MODE:
                 if (kbd_protocol_type != kbd_protocol_usb) {
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
                     soft_reset_keyboard();
                 }
-#endif
                 return false;
-            case BLE_SLOT0:
-            case BLE_SLOT1:
-            case BLE_SLOT2:
-            case BLE_SLOT3:
-            case BLE_SLOT4:
-            case BLE_SLOT5:
-            case BLE_SLOT6:
-            case BLE_SLOT7:
+#endif
 #ifdef BLE_ENABLE
-                if (keycode <= BLE_SLOT0 + BLE_SLOT_NUM - 1) {
-                    hogp_slot_switch(keycode - BLE_SLOT0);
-                }
+            case BLE_SLOT0 ... BLE_SLOT3:
+                hogp_slot_switch(keycode - BLE_SLOT0);
                 if (kbd_protocol_type != kbd_protocol_ble) {
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
                     soft_reset_keyboard();
                 }
-#endif
+                return false;
+            case BLE_CLEAR_SLOT0 ... BLE_CLEAR_SLOT3:
+                if (kbd_protocol_type == kbd_protocol_ble) {
+                    hogp_slot_clear(keycode - BLE_CLEAR_SLOT0);
+                }
                 return false;
             case BLE_ALL_CLEAR:
-#ifdef BLE_ENABLE
                 if (kbd_protocol_type == kbd_protocol_ble) {
                     hogp_slot_clear(UINT8_MAX);
                 }
-#endif
                 return false;
-            case ESB_MODE:
+#endif
 #ifdef ESB_ENABLE
+            case ESB_MODE:
                 if (kbd_protocol_type != kbd_protocol_esb) {
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
                     soft_reset_keyboard();
                 }
-#endif
                 return false;
+#endif
+#if defined BLE_ENABLE || (defined ESB_ENABLE && ESB_ENABLE == 1)
             case BATTERY_INDICATOR:
 #ifdef BLE_ENABLE
                 if (kbd_protocol_type == kbd_protocol_ble) {
@@ -88,11 +90,12 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
                     battery_indicator_toggle(true);
                 }
 #endif
-                break;
+                return false;
+#endif
             default:
                 break;
         }
     }
 
-    return process_record_user(keycode, record);
+    return true;
 }

@@ -20,22 +20,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum_keycodes.h"
 
 enum {
+#ifdef USB_ENABLE
     USB_MODE = 0x5F80,
+#endif
+#ifdef BLE_ENABLE
     BLE_SLOT0,
     BLE_SLOT1,
     BLE_SLOT2,
     BLE_SLOT3,
-    BLE_SLOT4,
-    BLE_SLOT5,
-    BLE_SLOT6,
-    BLE_SLOT7,
+    BLE_CLEAR_SLOT0,
+    BLE_CLEAR_SLOT1,
+    BLE_CLEAR_SLOT2,
+    BLE_CLEAR_SLOT3,
     BLE_ALL_CLEAR,
+#endif
+#ifdef ESB_ENABLE
     ESB_MODE,
+#endif
+#if defined BLE_ENABLE || (defined ESB_ENABLE && ESB_ENABLE == 1)
     BATTERY_INDICATOR,
+#endif
     CUSTOM_MAX,
 };
 
 // #undef SAFE_RANGE
 // #define SAFE_RANGE MK01_SAFE_RANGE
-
-_Static_assert(CUSTOM_MAX <= 0x5F8F, "Too many custom keycodes!");
