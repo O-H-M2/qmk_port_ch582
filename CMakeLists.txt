@@ -58,10 +58,20 @@ execute_process(COMMAND git rev-parse --short HEAD
 
 # allow for manual override
 if(NOT keyboard OR NOT keymap)
-    include(qmk_porting/keyboards/keyboard_target.cmake)
+    include(keyboard_target.cmake)
 endif()
 
-message(STATUS "Compiling ${keyboard}:${keymap}")
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/qmk_porting/keyboards/${keyboard}/rules.cmake")
+    set(keyboard_type "public" CACHE STRING "KB" FORCE)
+    message(STATUS "Compiling ${keyboard}:${keymap}")
+    include(qmk_porting/keyboards/${keyboard}/rules.cmake)
+elseif(EXISTS "${CMAKE_CURRENT_LIST_DIR}/qmk_porting/keyboards_private/${keyboard}/rules.cmake")
+    set(keyboard_type "private" CACHE STRING "KB" FORCE)
+    message(STATUS "Compiling ${keyboard}:${keymap} from private")
+    include(qmk_porting/keyboards_private/${keyboard}/rules.cmake)
+else()
+    message(FATAL_ERROR "You must select a keyboard and its keymap!")
+endif()
 
 add_definitions(-DKEYMAP_C="keymap.c")
 add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
@@ -102,21 +112,12 @@ function(include_sub_directories_recursively root_dir)
     endforeach()
 endfunction()
 
-include(qmk_porting/keyboards/${keyboard}/rules.cmake)
 include(qmk_porting/qmk_porting.cmake)
 include(qmk_porting/quantum.cmake)
 include(CherryUSB_porting/CherryUSB.cmake)
 include(qmk_porting/tmk_core.cmake)
 include(qmk_porting/common_features.cmake)
 add_subdirectory(sdk)
-
-if(NOT keyboard)
-    message(FATAL_ERROR "You must select a keyboard!")
-endif()
-
-if(NOT keymap)
-    message(FATAL_ERROR "You must select a keymap!")
-endif()
 
 # get_property(dirs DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 # message("include_dirs=${dirs}")
@@ -155,12 +156,21 @@ target_link_options(${keyboard}_IAP.elf PRIVATE
     --specs=nosys.specs
 )
 
-target_precompile_headers(${keyboard}.elf PUBLIC
-    ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
-)
-target_precompile_headers(${keyboard}_IAP.elf PUBLIC
-    ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
-)
+if(${keyboard_type} STREQUAL "public")
+    target_precompile_headers(${keyboard}.elf PUBLIC
+        ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
+    )
+    target_precompile_headers(${keyboard}_IAP.elf PUBLIC
+        ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
+    )
+elseif(${keyboard_type} STREQUAL "private")
+    target_precompile_headers(${keyboard}.elf PUBLIC
+        ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
+    )
+    target_precompile_headers(${keyboard}_IAP.elf PUBLIC
+        ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
+    )
+endif()
 
 if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
     add_subdirectory(${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless)

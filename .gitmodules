@@ -10,3 +10,6 @@
 [submodule "qmk_porting/platforms/ch58x/wireless"]
 	path = qmk_porting/platforms/ch58x/wireless
 	url = https://github.com/Huckies/ch582_wireless.git
+[submodule "qmk_porting/keyboards_private"]
+	path = qmk_porting/keyboards_private
+	url = https://github.com/O-H-M2/keyboards_private.git
