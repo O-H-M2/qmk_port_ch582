@@ -39,13 +39,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MATRIX_ROWS 6
 #define MATRIX_COLS 21
-#define MATRIX_ROW_PINS      \
-    {                        \
-        B4,B3,B2,B1,B0,B23 \
+#define MATRIX_ROW_PINS         \
+    {                           \
+        B4, B3, B2, B1, B0, B23 \
     }
-#define MATRIX_COL_PINS \
-    {                   \
-        A4,A5,A6,A0,A1,A12,A11,A10,A7,B9,B8,B17,B16,B15,B14,B13,B12,B7,B22,B19,B18  \
+#define MATRIX_COL_PINS                                                                                \
+    {                                                                                                  \
+        A4, A5, A6, A0, A1, A12, A11, A10, A7, B9, B8, B17, B16, B15, B14, B13, B12, B7, B22, B19, B18 \
     }
 #define DIODE_DIRECTION       COL2ROW
 #define BOOTMAGIC_LITE_ROW    0
@@ -54,18 +54,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \
     {                  \
-        A10            \
+        B5             \
     }
 #define ENCODERS_PAD_B \
     {                  \
-        A11            \
+        B6             \
     }
 #define ENCODER_RESOLUTION 4
 #endif
 
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
-#define WS2812_EN_PIN   B6
+#define WS2812_EN_PIN   A3
 #define WS2812_EN_LEVEL 1
 
 #define BATTERY_MEASURE_PIN A2
@@ -150,7 +150,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* define for OLED resolution  */
 #ifdef OLED_ENABLE
-    #define OLED_DISPLAY_128X64
+#define OLED_DISPLAY_128X64
 #endif
 /* Set 0 if debouncing isn't needed */
 #define DEBOUNCE 10

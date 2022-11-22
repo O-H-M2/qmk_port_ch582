@@ -35,7 +35,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
     }
 #endif
 
-    bool ret = process_record_user();
+    bool ret = process_record_user(keycode, record);
 
     if (!ret) {
         return false;

@@ -1,4 +1,5 @@
 /* Copyright 2022 OctopusZ
+ * Copyright 2022 Huckies <https://github.com/Huckies>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the  terms of the GNU General Public License as published by
@@ -41,6 +42,9 @@ void i2c_init()
     setPinInputHigh(B13);
 #endif
     I2C_Init(I2C_Mode_I2C, 400000, I2C_DutyCycle_16_9, I2C_Ack_Enable, I2C_AckAddr_7bit, TxAdderss);
+    while (I2C_GetFlagStatus(I2C_FLAG_BUSY)) {
+        __nop();
+    }
 }
 
 i2c_status_t i2c_start(uint8_t address, uint16_t timeout)
@@ -58,18 +62,22 @@ i2c_status_t i2c_start(uint8_t address, uint16_t timeout)
     return I2C_STATUS_SUCCESS;
 }
 
-void i2c_stop(void)
+void i2c_stop()
 {
     I2C_GenerateSTOP(ENABLE);
 }
 
 i2c_status_t i2c_transmit(uint8_t address, const uint8_t *data, uint16_t length, uint16_t timeout)
 {
-    i2c_address = address;
-    i2c_status_t status = i2c_start(i2c_address, timeout);
+    i2c_status_t status = i2c_start(address, timeout);
 
-    I2C_Send7bitAddress(i2c_address, I2C_Direction_Transmitter); //发送地址+最低位0表示为“写”
+    if (status != I2C_STATUS_SUCCESS) {
+        return status;
+    }
+
     uint16_t timeout_timer = timer_read();
+
+    I2C_Send7bitAddress(i2c_address, I2C_Direction_Transmitter);
     while (!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
         if ((timer_elapsed(timeout_timer) > timeout)) {
             return I2C_STATUS_TIMEOUT;
@@ -77,212 +85,210 @@ i2c_status_t i2c_transmit(uint8_t address, const uint8_t *data, uint16_t length,
     }
 
     for (uint8_t i = 0; i < length; i++) {
-        while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) { //获取TxE的状态    数据寄存器为空标志位,可以向其中写数据
+        while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) {
             if ((timer_elapsed(timeout_timer) > timeout)) {
                 return I2C_STATUS_TIMEOUT;
             }
         }
-        I2C_SendData(data[i]); //发送数据
+        I2C_SendData(data[i]);
     }
 
-    return status;
+    while (!I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTED)) {
+        if ((timer_elapsed(timeout_timer) > timeout)) {
+            return I2C_STATUS_TIMEOUT;
+        }
+    }
+    i2c_stop();
+
+    return I2C_STATUS_SUCCESS;
 }
 
+// TODO: verify this
 i2c_status_t i2c_receive(uint8_t address, uint8_t *data, uint16_t length, uint16_t timeout)
 {
-    i2c_address = address;
-    i2c_start(i2c_address, timeout);
+    i2c_status_t status = i2c_start(address, timeout);
 
-    I2C_Send7bitAddress(i2c_address, I2C_Direction_Transmitter); //发送地址+最低位0表示为“写”
+    if (status != I2C_STATUS_SUCCESS) {
+        return status;
+    }
+
     uint16_t timeout_timer = timer_read();
-    while (!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-    for (uint8_t i = 0; i < length; i++) {
-        if (i == length - 1)
-            I2C_AcknowledgeConfig(DISABLE);
-        while (!I2C_GetFlagStatus(I2C_FLAG_RXNE)) { //获取RxEN的状态，等待收到数据
-            if ((timer_elapsed(timeout_timer) > timeout)) {
-                return I2C_STATUS_TIMEOUT;
-            }
-            data[i] = I2C_ReceiveData(); //获得从机的寄存器中的数据
-        }
 
-        I2C_GenerateSTOP(ENABLE);      //使能停止信号
-        I2C_AcknowledgeConfig(ENABLE); //传输完毕，再次打开ACK使能
-        return I2C_STATUS_SUCCESS;
-    }
-}
-i2c_status_t i2c_writeReg(uint8_t devaddr, uint8_t regaddr, const uint8_t *data, uint16_t length, uint16_t timeout)
-{
-    i2c_address = devaddr;
-    i2c_start(i2c_address, timeout);
-
-    I2C_Send7bitAddress(i2c_address, I2C_Direction_Transmitter); //发送地址+最低位0表示为“写”
-    uint16_t timeout_timer = timer_read();
-    while (!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-
-    I2C_SendData(regaddr); //发送寄存器地址
-    timeout_timer = timer_read();
-    while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) {
+    I2C_Send7bitAddress(i2c_address, I2C_Direction_Receiver);
+    while (!I2C_CheckEvent(I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED)) {
         if ((timer_elapsed(timeout_timer) > timeout)) {
             return I2C_STATUS_TIMEOUT;
         }
     }
 
     for (uint8_t i = 0; i < length; i++) {
-        while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) { //获取TxE的状态    数据寄存器为空标志位,可以向其中写数据
-            if ((timer_elapsed(timeout_timer) > timeout)) {
-                return I2C_STATUS_TIMEOUT;
-            }
-        }
-        I2C_SendData(data[i]); //发送数据
-    }
-
-    return I2C_STATUS_SUCCESS;
-}
-
-i2c_status_t i2c_writeReg16(uint8_t devaddr, uint16_t regaddr, const uint8_t *data, uint16_t length, uint16_t timeout)
-{
-    i2c_address = devaddr;
-    i2c_start(i2c_address, timeout);
-
-    I2C_Send7bitAddress(i2c_address, I2C_Direction_Transmitter); //发送地址+最低位0表示为“写”
-    uint16_t timeout_timer = timer_read();
-    while (!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-
-    I2C_SendData((uint8_t)(regaddr >> 8)); //发送寄存器地址
-    timeout_timer = timer_read();
-    while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) {
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-
-    I2C_SendData(regaddr); //发送寄存器地址
-    timeout_timer = timer_read();
-    while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) {
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-
-    for (uint8_t i = 0; i < length; i++) {
-        while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) { //获取TxE的状态    数据寄存器为空标志位,可以向其中写数据
-            if ((timer_elapsed(timeout_timer) > timeout)) {
-                return I2C_STATUS_TIMEOUT;
-            }
-        }
-        I2C_SendData(data[i]); //发送数据
-    }
-
-    return I2C_STATUS_SUCCESS;
-}
-
-i2c_status_t i2c_readReg(uint8_t devaddr, uint8_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
-{
-    i2c_address = devaddr;
-    i2c_start(i2c_address, timeout);
-
-    I2C_Send7bitAddress(i2c_address, I2C_Direction_Transmitter); //发送地址+最低位0表示为“写”
-    uint16_t timeout_timer = timer_read();
-    while (!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-    I2C_SendData(regaddr);                     //发送内存地址
-    while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) { //获取TxE的状态
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-
-    i2c_start(i2c_address, timeout);                        //重起始信号
-    while (!I2C_CheckEvent(I2C_EVENT_MASTER_MODE_SELECT)) { //判断BUSY, MSL and SB flags
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-    I2C_Send7bitAddress(regaddr, I2C_Direction_Receiver);
-    timeout_timer = timer_read();
-    while (!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-
-    for (uint8_t i = 0; i < length; i++) {
-        if (i == length - 1)
-            I2C_AcknowledgeConfig(DISABLE);
         while (!I2C_GetFlagStatus(I2C_FLAG_RXNE)) {
             if ((timer_elapsed(timeout_timer) > timeout)) {
                 return I2C_STATUS_TIMEOUT;
             }
-            data[i] = I2C_ReceiveData(); //获得从机的寄存器中的数据
         }
+        if (i == length - 1) {
+            I2C_AcknowledgeConfig(DISABLE);
+        }
+        data[i] = I2C_ReceiveData();
     }
+
+    i2c_stop();
+    I2C_AcknowledgeConfig(ENABLE);
     return I2C_STATUS_SUCCESS;
 }
 
-i2c_status_t i2c_readReg16(uint8_t devaddr, uint16_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
+i2c_status_t i2c_writeReg(uint8_t devaddr, uint8_t regaddr, const uint8_t *data, uint16_t length, uint16_t timeout)
 {
-    i2c_address = devaddr;
-    i2c_start(i2c_address, timeout);
+    uint8_t buffer[length + 1];
 
-    I2C_Send7bitAddress(i2c_address, I2C_Direction_Transmitter); //发送地址+最低位0表示为“写”
+    buffer[0] = regaddr;
+    for (uint16_t i = 0; i < length; i++) {
+        buffer[i + 1] = data[i];
+    }
+
+    return i2c_transmit(devaddr, (const uint8_t *)buffer, length + 1, timeout);
+}
+
+i2c_status_t i2c_writeReg16(uint8_t devaddr, uint16_t regaddr, const uint8_t *data, uint16_t length, uint16_t timeout)
+{
+    uint8_t buffer[length + 2];
+
+    buffer[0] = (uint8_t)((regaddr & 0xFF00) >> 8);
+    buffer[1] = (uint8_t)(regaddr & 0xFF);
+    for (uint16_t i = 0; i < length; i++) {
+        buffer[i + 2] = data[i];
+    }
+
+    return i2c_transmit(devaddr, (const uint8_t *)buffer, length + 2, timeout);
+}
+
+// TODO: verify this
+i2c_status_t i2c_readReg(uint8_t devaddr, uint8_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
+{
+    i2c_status_t status = i2c_start(devaddr, timeout);
+
+    if (status != I2C_STATUS_SUCCESS) {
+        return status;
+    }
+
     uint16_t timeout_timer = timer_read();
+
+    I2C_Send7bitAddress(i2c_address, I2C_Direction_Transmitter);
     while (!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-    I2C_SendData((uint8_t)(regaddr >> 8));     //发送内存地址
-    while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) { //获取TxE的状态
-        if ((timer_elapsed(timeout_timer) > timeout)) {
-            return I2C_STATUS_TIMEOUT;
-        }
-    }
-    I2C_SendData((uint8_t)regaddr);            //发送内存地址
-    while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) { //获取TxE的状态
         if ((timer_elapsed(timeout_timer) > timeout)) {
             return I2C_STATUS_TIMEOUT;
         }
     }
 
-    i2c_start(i2c_address, timeout);                        //重起始信号
-    while (!I2C_CheckEvent(I2C_EVENT_MASTER_MODE_SELECT)) { //判断BUSY, MSL and SB flags
+    while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) {
         if ((timer_elapsed(timeout_timer) > timeout)) {
             return I2C_STATUS_TIMEOUT;
         }
     }
-    I2C_Send7bitAddress(regaddr, I2C_Direction_Receiver); //发送地址+最低位1表示为“读”
-    timeout_timer = timer_read();
-    while (!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
+    I2C_SendData(regaddr);
+    while (!I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTED)) {
         if ((timer_elapsed(timeout_timer) > timeout)) {
             return I2C_STATUS_TIMEOUT;
         }
     }
+
+    // just resend a start signal to initiate read procedure
+    status = i2c_start(devaddr, timeout - timer_elapsed(timeout_timer));
+    if (status != I2C_STATUS_SUCCESS) {
+        return status;
+    }
+
+    I2C_Send7bitAddress(i2c_address, I2C_Direction_Receiver);
+    while (!I2C_CheckEvent(I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED)) {
+        if ((timer_elapsed(timeout_timer) > timeout)) {
+            return I2C_STATUS_TIMEOUT;
+        }
+    }
+
+    I2C_GenerateSTOP(DISABLE);
 
     for (uint8_t i = 0; i < length; i++) {
-        if (i == length - 1)
-            I2C_AcknowledgeConfig(DISABLE);
-        while (!I2C_GetFlagStatus(I2C_FLAG_RXNE)) { //获取RxEN的状态，等待收到数据
+        while (!I2C_GetFlagStatus(I2C_FLAG_RXNE)) {
             if ((timer_elapsed(timeout_timer) > timeout)) {
                 return I2C_STATUS_TIMEOUT;
             }
-            data[i] = I2C_ReceiveData(); //获得从机的寄存器中的数据
+        }
+        if (i == length - 1) {
+            I2C_AcknowledgeConfig(DISABLE);
+        }
+        data[i] = I2C_ReceiveData();
+    }
+
+    i2c_stop();
+    I2C_AcknowledgeConfig(ENABLE);
+    return I2C_STATUS_SUCCESS;
+}
+
+// TODO: verify this
+i2c_status_t i2c_readReg16(uint8_t devaddr, uint16_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
+{
+    i2c_status_t status = i2c_start(devaddr, timeout);
+
+    if (status != I2C_STATUS_SUCCESS) {
+        return status;
+    }
+
+    uint16_t timeout_timer = timer_read();
+
+    I2C_Send7bitAddress(i2c_address, I2C_Direction_Transmitter);
+    while (!I2C_CheckEvent(I2C_EVENT_MASTER_TRANSMITTER_MODE_SELECTED)) {
+        if ((timer_elapsed(timeout_timer) > timeout)) {
+            return I2C_STATUS_TIMEOUT;
         }
     }
+
+    while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) {
+        if ((timer_elapsed(timeout_timer) > timeout)) {
+            return I2C_STATUS_TIMEOUT;
+        }
+    }
+    I2C_SendData((uint8_t)((regaddr & 0xFF00) >> 8));
+    while (!I2C_GetFlagStatus(I2C_FLAG_TXE)) {
+        if ((timer_elapsed(timeout_timer) > timeout)) {
+            return I2C_STATUS_TIMEOUT;
+        }
+    }
+    I2C_SendData((uint8_t)(regaddr & 0xFF));
+    while (!I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTED)) {
+        if ((timer_elapsed(timeout_timer) > timeout)) {
+            return I2C_STATUS_TIMEOUT;
+        }
+    }
+
+    // just resend a start signal to initiate read procedure
+    status = i2c_start(devaddr, timeout - timer_elapsed(timeout_timer));
+    if (status != I2C_STATUS_SUCCESS) {
+        return status;
+    }
+
+    I2C_Send7bitAddress(i2c_address, I2C_Direction_Receiver);
+    while (!I2C_CheckEvent(I2C_EVENT_MASTER_RECEIVER_MODE_SELECTED)) {
+        if ((timer_elapsed(timeout_timer) > timeout)) {
+            return I2C_STATUS_TIMEOUT;
+        }
+    }
+
+    I2C_GenerateSTOP(DISABLE);
+
+    for (uint8_t i = 0; i < length; i++) {
+        while (!I2C_GetFlagStatus(I2C_FLAG_RXNE)) {
+            if ((timer_elapsed(timeout_timer) > timeout)) {
+                return I2C_STATUS_TIMEOUT;
+            }
+        }
+        if (i == length - 1) {
+            I2C_AcknowledgeConfig(DISABLE);
+        }
+        data[i] = I2C_ReceiveData();
+    }
+
+    i2c_stop();
+    I2C_AcknowledgeConfig(ENABLE);
     return I2C_STATUS_SUCCESS;
 }

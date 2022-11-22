@@ -67,7 +67,11 @@
         "usb_def.h": "c",
         "usb_config.h": "c",
         "battery_measure.h": "c",
-        "bongo.h": "c"
+        "bongo.h": "c",
+        "condition_variable": "c",
+        "future": "c",
+        "i2c_master.h": "c",
+        "bootloader.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,

@@ -429,7 +429,7 @@ int main()
     setPinInputHigh(A8);
     setPinOutput(A9);
     UART1_DefInit();
-    UART1_BaudRateCfg(460800);
+    UART1_BaudRateCfg(DEBUG_BAUDRATE);
 
     char buffer[128];
     uint8_t len = sprintf(buffer, "Chipstart, %s\nBuild on %s %s - " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", VER_LIB, __DATE__, __TIME__, R8_RESET_STATUS & RB_RESET_FLAG);
@@ -443,7 +443,6 @@ int main()
     while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
         __nop();
     }
-    R8_UART1_IER = RB_IER_RESET;
 #endif
 
 #if !defined ESB_ENABLE || ESB_ENABLE != 2

@@ -45,7 +45,9 @@ void platform_setup()
     SetSysClock(Fsys);
     DelayMs(5);
 #ifdef PLF_DEBUG
-    UART1_BaudRateCfg(460800);
+    DBG_BAUD_RECONFIG;
+#else
+    UART1_BaudRateCfg(DEBUG_BAUDRATE);
 #endif
 #endif
 #if LSE_ENABLE

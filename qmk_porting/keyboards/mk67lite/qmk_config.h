@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //* platform settings
 // #define DEBUG        Debug_UART1
 #define DCDC_ENABLE  1
-#define FREQ_SYS     60000000
-#define LSE_ENABLE   1
+#define FREQ_SYS     40000000
+#define LSE_ENABLE   0
 #define BLE_SLOT_NUM 4
 // #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
 // #define LSE_LOAD_CAPACITANCE 7   // in pF unit
