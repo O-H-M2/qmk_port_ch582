@@ -71,7 +71,8 @@
         "condition_variable": "c",
         "future": "c",
         "i2c_master.h": "c",
-        "bootloader.h": "c"
+        "bootloader.h": "c",
+        "sequencer.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,

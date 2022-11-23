@@ -18,10 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include "quantum_keycodes.h"
+#include "action.h"
+#include "via.h"
 
 enum {
+    CUSTOM_START = USER00 - 1,
 #ifdef USB_ENABLE
-    USB_MODE = 0x5F80,
+    USB_MODE,
 #endif
 #ifdef BLE_ENABLE
     BLE_SLOT0,
@@ -43,5 +46,4 @@ enum {
     CUSTOM_MAX,
 };
 
-// #undef SAFE_RANGE
-// #define SAFE_RANGE MK01_SAFE_RANGE
+_Static_assert(CUSTOM_MAX <= USER15 + 1, "");

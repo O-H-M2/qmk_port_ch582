@@ -80,8 +80,6 @@ add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-lim
 add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
 add_compile_options(--param highcode-gen-section-name=1)
 add_compile_options(-Wall -Wno-comment -Wno-enum-compare)
-
-# add_compile_options(-Wno-unused-function -Wno-unused-variable -Wno-type-limits)
 add_compile_options(-fdiagnostics-color=always)
 
 if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")

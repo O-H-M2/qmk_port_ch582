@@ -24,16 +24,12 @@ if(ENCODER_ENABLE)
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/encoder.c"
     )
-endif()
 
-# ENCODER_MAP_ENABLE
-if(ENCODER_MAP_ENABLE)
-    if(NOT ENCODER_ENABLE)
-        message(FATAL_ERROR "ENCODER_MAP_ENABLE requires ENCODER_ENABLE, either disable ENCODER_MAP explicitly or enable ENCODER!")
+    # ENCODER_MAP_ENABLE
+    if(ENCODER_MAP_ENABLE)
+        add_definitions(-DENCODER_MAP_ENABLE)
+        message(STATUS "ENCODER_MAP_ENABLE")
     endif()
-
-    add_definitions(-DENCODER_MAP_ENABLE)
-    message(STATUS "ENCODER_MAP_ENABLE")
 endif()
 
 # VIA_ENABLE
@@ -302,4 +298,3 @@ if(DIP_SWITCH_ENABLE)
         "${QMK_BASE_DIR}/quantum/dip_switch.c"
     )
 endif()
-    

@@ -99,3 +99,11 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
 
     return true;
 }
+
+void post_process_record_kb(uint16_t keycode, keyrecord_t *record)
+{
+#if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
+    lowpower_update_last_keypress();
+#endif
+    post_process_record_user(keycode, record);
+}
