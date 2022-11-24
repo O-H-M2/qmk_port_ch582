@@ -43,7 +43,7 @@ void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, kbd_out_buffer, KBD_OUT_EP_SIZE);
 #if ESB_ENABLE == 2
-    wireless_ringbuffer_write(KBD_OUT_EP_SIZE, REPORT_ID_KEYBOARD, kbd_out_buffer);
+    esb_send_response(REPORT_ID_KEYBOARD, kbd_out_buffer, KBD_OUT_EP_SIZE);
 #else
     keyboard_led_state = kbd_out_buffer[0];
 #endif
@@ -60,7 +60,7 @@ void usbd_hid_custom_out_callback(uint8_t ep, uint32_t nbytes)
 
     usbd_ep_start_read(ep, custom_out_buffer, HIDRAW_OUT_EP_SIZE);
 #if ESB_ENABLE == 2
-    wireless_ringbuffer_write(HIDRAW_OUT_EP_SIZE, REPORT_ID_CUSTOM, custom_out_buffer);
+    esb_send_response(REPORT_ID_CUSTOM, custom_out_buffer, HIDRAW_OUT_EP_SIZE);
 #else
     raw_hid_receive(custom_out_buffer, HIDRAW_OUT_EP_SIZE);
 #endif
