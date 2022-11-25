@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "extra_keycode.h"
-#include "quantum.h"
 
 #ifdef BLE_ENABLE
 extern bool process_ble_passcode_kb(uint16_t keycode, keyrecord_t *record);
@@ -103,6 +102,8 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
 void post_process_record_kb(uint16_t keycode, keyrecord_t *record)
 {
 #if (defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
+    extern void lowpower_update_last_keypress();
+
     lowpower_update_last_keypress();
 #endif
     post_process_record_user(keycode, record);

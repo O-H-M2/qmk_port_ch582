@@ -16,12 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "eeprom_driver.h"
-#if __BUILDING_APP__
-#include "eventhandler.h"
-#endif
-#if __BUILDING_IAP__
-#include "bootloader.h"
-#endif
+#include "platform_deps.h"
 
 void bootmagic_lite_reset_eeprom(void)
 {
@@ -92,7 +87,21 @@ void bootloader_jump()
 void mcu_reset()
 {
 #if __BUILDING_APP__
-    event_propagate(PLATFORM_EVENT_REBOOT, NULL);
+#ifdef USB_ENABLE
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        platform_reboot_usb();
+    }
+#endif
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type == kbd_protocol_ble) {
+        platform_reboot_ble();
+    }
+#endif
+#ifdef ESB_ENABLE
+    if (kbd_protocol_type == kbd_protocol_esb) {
+        platform_reboot_esb();
+    }
+#endif
 #endif
 #if __BUILDING_IAP__
     SYS_ResetExecute();

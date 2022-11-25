@@ -19,7 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum_keycodes.h"
 #include "action.h"
-#include "via.h"
+#include "quantum.h"
+#include "battery_measure.h"
+// #include "via.h"
 
 enum {
     CUSTOM_START = USER00 - 1,

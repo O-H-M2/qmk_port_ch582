@@ -43,6 +43,8 @@ void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, kbd_out_buffer, KBD_OUT_EP_SIZE);
 #if ESB_ENABLE == 2
+    extern void esb_send_response(uint8_t reportid, uint8_t * data, uint8_t len);
+
     esb_send_response(REPORT_ID_KEYBOARD, kbd_out_buffer, KBD_OUT_EP_SIZE);
 #else
     keyboard_led_state = kbd_out_buffer[0];
@@ -56,12 +58,14 @@ void usbd_hid_custom_in_callback(uint8_t ep, uint32_t nbytes)
 
 void usbd_hid_custom_out_callback(uint8_t ep, uint32_t nbytes)
 {
-    extern void raw_hid_receive(uint8_t * data, uint8_t length);
-
     usbd_ep_start_read(ep, custom_out_buffer, HIDRAW_OUT_EP_SIZE);
 #if ESB_ENABLE == 2
+    extern void esb_send_response(uint8_t reportid, uint8_t * data, uint8_t len);
+
     esb_send_response(REPORT_ID_CUSTOM, custom_out_buffer, HIDRAW_OUT_EP_SIZE);
 #else
+    extern void raw_hid_receive(uint8_t * data, uint8_t length);
+
     raw_hid_receive(custom_out_buffer, HIDRAW_OUT_EP_SIZE);
 #endif
 }

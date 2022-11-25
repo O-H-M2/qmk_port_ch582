@@ -18,12 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform_deps.h"
 #include "quantum_keycodes.h"
 
-__attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
-
-#if (defined(BLE_MAC)) && (BLE_MAC == TRUE)
-const uint8_t MacAddr[6] = { 0x84, 0xC2, 0xE4, 0x03, 0x02, 0x02 };
-#endif
-
 volatile uint8_t kbd_protocol_type = 0;
 
 _PUTCHAR_CLAIM;
@@ -69,6 +63,20 @@ void platform_setup()
     }
     PRINT("End of EEPROM dump.\n\n");
 #endif
-    event_propagate(PLATFORM_EVENT_MODE_SELECT, NULL);
-    event_propagate(PLATFORM_EVENT_INITIALIZE, NULL);
+    bootloader_select_boot_mode();
+#ifdef USB_ENABLE
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        platform_initialize_usb();
+    }
+#endif
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type == kbd_protocol_ble) {
+        platform_initialize_ble();
+    }
+#endif
+#ifdef ESB_ENABLE
+    if (kbd_protocol_type == kbd_protocol_esb) {
+        platform_initialize_esb();
+    }
+#endif
 }
