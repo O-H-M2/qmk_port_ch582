@@ -11,8 +11,22 @@ file(GLOB QMK_PORTING_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/suspend.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/timer.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/battery_measure.c"
-    "${CMAKE_CURRENT_LIST_DIR}/protocol/*.c"
+    "${CMAKE_CURRENT_LIST_DIR}/protocol/extra_keycode.c"
+    "${CMAKE_CURRENT_LIST_DIR}/protocol/protocol.c"
 )
+
+if(USB_ENABLE)
+    list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/protocol/protocol_usb.c"
+        "${CMAKE_CURRENT_LIST_DIR}/protocol/usb_main.c"
+    )
+endif()
+
+if(BLE_ENABLE)
+    list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/protocol/ble_descriptor.c"
+    )
+endif()
 
 file(GLOB_RECURSE QMK_PORTING_IAP_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/IAP/*.c"
