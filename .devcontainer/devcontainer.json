@@ -1,8 +1,28 @@
 {
+  "name": "qmk_port_ch582",
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": ". ./.devcontainer/postCreateCommands.sh",
+  "postAttachCommand": "zsh",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {
-  },
-   "customizations": {
+  "features": {},
+  "extensions": [
+    "jeff-hykin.better-cpp-syntax",
+    "aaron-bond.better-comments",
+    "ms-vscode.cpptools",
+    "xaver.clang-format",
+    "twxs.cmake",
+    "josetr.cmake-language-support-vscode",
+    "ms-vscode.cmake-tools",
+    "emilast.logfilehighlighter",
+    "stepanvanzuriak.mono",
+    "monokai.theme-monokai-pro-vscode",
+    "ms-python.vscode-pylance",
+    "ms-python.python",
+    "vscode-icons-team.vscode-icons"
+  ],
+  "customizations": {
     "codespaces": {
       "repositories": {
         "O-H-M2/*": {
