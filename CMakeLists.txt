@@ -88,67 +88,105 @@ file(GLOB IAP_SOURCES
     ${QMK_PORTING_IAP_SOURCES}
 )
 
-add_executable(${keyboard}.elf ${APP_SOURCES})
-add_executable(${keyboard}_IAP.elf ${IAP_SOURCES})
+if(BUILD_WIRELESS_LIB)
+    add_library(${keyboard} STATIC)
+    target_link_libraries(${keyboard} PRIVATE CH582_APP)
+    target_compile_definitions(${keyboard} PRIVATE __BUILDING_APP__=1)
 
-target_link_libraries(${keyboard}.elf PRIVATE CH582_APP)
-target_link_libraries(${keyboard}_IAP.elf PRIVATE CH582_IAP)
+    # target_link_options(${keyboard} PRIVATE
+    # -nostartfiles
+    # --specs=nano.specs
+    # )
+    if(${keyboard_type} STREQUAL "public")
+        target_precompile_headers(${keyboard} PUBLIC
+            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
+        )
+    elseif(${keyboard_type} STREQUAL "private")
+        target_precompile_headers(${keyboard} PUBLIC
+            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
+        )
+    endif()
 
-target_compile_definitions(${keyboard}.elf PRIVATE __BUILDING_APP__=1)
-target_compile_definitions(${keyboard}_IAP.elf PRIVATE __BUILDING_IAP__=1)
+    if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
+        add_subdirectory(${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB})
+        target_link_libraries(${keyboard} PRIVATE wireless)
+    else()
+        message(FATAL_ERROR "Remove defination of BUILD_WIRELESS_LIB!")
+    endif()
 
-target_link_options(${keyboard}.elf PRIVATE
-    -nostartfiles
-    -Xlinker --gc-sections
-    -Wl,--print-memory-usage
-    -Wl,-Map,${keyboard}.map
-    --specs=nano.specs
-    --specs=nosys.specs
-)
-target_link_options(${keyboard}_IAP.elf PRIVATE
-    -nostartfiles
-    -Xlinker --gc-sections
-    -Wl,--print-memory-usage
-    -Wl,-Map,${keyboard}_IAP.map
-    --specs=nano.specs
-    --specs=nosys.specs
-)
-
-if(${keyboard_type} STREQUAL "public")
-    target_precompile_headers(${keyboard}.elf PUBLIC
-        ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
+    add_custom_command(TARGET ${keyboard} POST_BUILD
+        COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}
+        COMMAND mv ${CMAKE_BINARY_DIR}/lib${keyboard}.a ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/lib${keyboard}.a
+        COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/ble/include ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}
+        COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/esb/include ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}
     )
-    target_precompile_headers(${keyboard}_IAP.elf PUBLIC
-        ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
+else()
+    add_executable(${keyboard}.elf ${APP_SOURCES})
+    add_executable(${keyboard}_IAP.elf ${IAP_SOURCES})
+
+    target_link_libraries(${keyboard}.elf PRIVATE CH582_APP)
+    target_link_libraries(${keyboard}_IAP.elf PRIVATE CH582_IAP)
+
+    target_compile_definitions(${keyboard}.elf PRIVATE __BUILDING_APP__=1)
+    target_compile_definitions(${keyboard}_IAP.elf PRIVATE __BUILDING_IAP__=1)
+
+    target_link_options(${keyboard}.elf PRIVATE
+        -nostartfiles
+        -Xlinker --gc-sections
+        -Wl,--print-memory-usage
+        -Wl,-Map,${keyboard}.map
+        --specs=nano.specs
+        --specs=nosys.specs
     )
-elseif(${keyboard_type} STREQUAL "private")
-    target_precompile_headers(${keyboard}.elf PUBLIC
-        ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
+    target_link_options(${keyboard}_IAP.elf PRIVATE
+        -nostartfiles
+        -Xlinker --gc-sections
+        -Wl,--print-memory-usage
+        -Wl,-Map,${keyboard}_IAP.map
+        --specs=nano.specs
+        --specs=nosys.specs
     )
-    target_precompile_headers(${keyboard}_IAP.elf PUBLIC
-        ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
+
+    if(${keyboard_type} STREQUAL "public")
+        target_precompile_headers(${keyboard}.elf PUBLIC
+            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
+        )
+        target_precompile_headers(${keyboard}_IAP.elf PUBLIC
+            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
+        )
+    elseif(${keyboard_type} STREQUAL "private")
+        target_precompile_headers(${keyboard}.elf PUBLIC
+            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
+        )
+        target_precompile_headers(${keyboard}_IAP.elf PUBLIC
+            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
+        )
+    endif()
+
+    if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
+        target_include_directories(${keyboard}.elf PRIVATE
+            ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/include
+        )
+        target_link_libraries(${keyboard}.elf PRIVATE
+            ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/lib${keyboard}.a
+        )
+    endif()
+
+    set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
+    set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
+    add_custom_command(TARGET ${keyboard}.elf POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}.elf> ${HEX_FILE_APP}
+        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}.elf> ${BIN_FILE_APP}
+        COMMAND python3 ${CMAKE_CURRENT_LIST_DIR}/utils/uf2conv.py ${HEX_FILE_APP} -c -f 0x1aa143c7 -o ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2
+    )
+    set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
+    set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
+    add_custom_command(TARGET ${keyboard}_IAP.elf POST_BUILD
+        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}_IAP.elf> ${HEX_FILE_IAP}
+        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}_IAP.elf> ${BIN_FILE_IAP}
+    )
+    add_custom_target(post_build ALL
+        COMMAND mergehex --merge ${HEX_FILE_APP} ${HEX_FILE_IAP} --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
+        DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
     )
 endif()
-
-if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-    add_subdirectory(${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless)
-    target_link_libraries(${keyboard}.elf PRIVATE wireless)
-endif()
-
-set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
-set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
-add_custom_command(TARGET ${keyboard}.elf POST_BUILD
-    COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}.elf> ${HEX_FILE_APP}
-    COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}.elf> ${BIN_FILE_APP}
-    COMMAND python3 ${CMAKE_CURRENT_LIST_DIR}/utils/uf2conv.py ${HEX_FILE_APP} -c -f 0x1aa143c7 -o ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2
-)
-set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
-set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
-add_custom_command(TARGET ${keyboard}_IAP.elf POST_BUILD
-    COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}_IAP.elf> ${HEX_FILE_IAP}
-    COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}_IAP.elf> ${BIN_FILE_IAP}
-)
-add_custom_target(post_build ALL
-    COMMAND mergehex --merge ${HEX_FILE_APP} ${HEX_FILE_IAP} --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
-    DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
-)
