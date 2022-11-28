@@ -3,8 +3,6 @@
 repo=$(pwd)
 
 sudo apt remove -y cmake && sudo apt update && sudo apt upgrade -y && sudo apt install -y ninja-build &&
-    # cd ~ && wget https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0.tar.gz && tar -zxvf cmake-3.25.0.tar.gz && rm -rf cmake-3.25.0.tar.gz && \
-    # cd cmake-3.25.0 && ./bootstrap && make -j2 && sudo make install && cd .. && rm -rf cmake-3.25.0
     cd ~ && wget https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0-linux-x86_64.sh && sudo chmod +x cmake-3.25.0-linux-x86_64.sh && sudo ./cmake-3.25.0-linux-x86_64.sh --skip-license --exclude-subdir --prefix=/usr/local
 
 cd ~/.oh-my-zsh/custom/plugins && git clone https://github.com/zsh-users/zsh-autosuggestions.git && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git &&
