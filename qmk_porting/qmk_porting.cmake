@@ -45,10 +45,20 @@ if(${keyboard_type} STREQUAL "public")
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard}/*.c"
     )
+
+    if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard}/keymaps/${keymap}/rules.cmake")
+        message(STATUS "Found keymap specified rules.")
+        include(${CMAKE_CURRENT_LIST_DIR}/keyboards/${keyboard}/keymaps/${keymap}/rules.cmake)
+    endif()
 elseif(${keyboard_type} STREQUAL "private")
     include_directories(${CMAKE_CURRENT_LIST_DIR}/keyboards_private/${keyboard})
     include_directories(${CMAKE_CURRENT_LIST_DIR}/keyboards_private/${keyboard}/keymaps/${keymap})
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/keyboards_private/${keyboard}/*.c"
     )
+
+    if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/keyboards_private/${keyboard}/keymaps/${keymap}/rules.cmake")
+        message(STATUS "Found keymap specified rules.")
+        include(${CMAKE_CURRENT_LIST_DIR}/keyboards_private/${keyboard}/keymaps/${keymap}/rules.cmake)
+    endif()
 endif()
