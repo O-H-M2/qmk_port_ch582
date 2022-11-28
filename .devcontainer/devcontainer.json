@@ -20,7 +20,11 @@
     "monokai.theme-monokai-pro-vscode",
     "ms-python.vscode-pylance",
     "ms-python.python",
-    "vscode-icons-team.vscode-icons"
+    "vscode-icons-team.vscode-icons",
+    "ibm.output-colorizer",
+    "christian-kohler.path-intellisense",
+    "2gua.rainbow-brackets",
+    "foxundermoon.shell-format"
   ],
   "customizations": {
     "codespaces": {
