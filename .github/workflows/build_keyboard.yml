@@ -1,0 +1,75 @@
+name: Build_keyboard
+
+on:
+  # push:
+  #   branches: ["via"]
+  # pull_request:
+  #   branches: ["via"]
+  # # Allows you to run this workflow manually from the Actions tab or through HTTP API
+  workflow_dispatch:
+    inputs:
+      keyboard:
+        description: "Keyboard name"
+        required: true
+        type: string
+      keymap:
+        description: "Specified keymap"
+        default: "default"
+        required: true
+        type: string
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
+    # You can convert this to a matrix build if you need cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Prepare Submodules
+        run: git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
+
+      - name: Cache mergehex
+        id: cache-mergehex
+        uses: actions/cache@v3.0.11
+        continue-on-error: true
+        with:
+          path: ~/nrf-command-line-tools-10.18.1_Linux-amd64.tar.gz
+          key: mergehex
+
+      - name: Prepare mergehex
+        if: steps.cache-mergehex.outputs.cache-hit != 'true'
+        run: cd ~ && wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-18-1/nrf-command-line-tools-10.18.1_Linux-amd64.tar.gz
+
+      - name: Decompress mergehex
+        run: cd ~ && tar -zxvf nrf-command-line-tools-10.18.1_Linux-amd64.tar.gz && rm -f JLink_Linux_V780c_x86_64.deb && rm -f JLink_Linux_V780c_x86_64.rpm && rm -f JLink_Linux_V780c_x86_64.tgz && rm README.txt
+
+      - name: Install mergehex
+        run: cd ~ && sudo ln -s ~/nrf-command-line-tools/bin/mergehex /bin/mergehex
+
+      - name: Configure CMake
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        run: cmake --no-warn-unused-cli -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=TRUE -DCMAKE_BUILD_TYPE:STRING=${{env.BUILD_TYPE}} -Dkeyboard:STRING=${{inputs.keyboard}} -Dkeymap:STRING=${{inputs.keymap}} -S${{github.workspace}} -B${{github.workspace}}/build
+
+      - name: Build
+        # Build your program with the given configuration
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target all --
+
+      - name: Archive (${{inputs.keyboard}})
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{inputs.keyboard}}.uf2
+          path: ${{inputs.keyboard}}_upgrade.uf2
+
+      # - name: Test
+      #   working-directory: ${{github.workspace}}/build
+      #   # Execute tests defined by the CMake configuration.
+      #   # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
+      #   run: ctest -C ${{env.BUILD_TYPE}}
