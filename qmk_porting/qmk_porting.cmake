@@ -15,19 +15,6 @@ file(GLOB QMK_PORTING_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/protocol/protocol.c"
 )
 
-if(USB_ENABLE)
-    list(APPEND QMK_PORTING_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/protocol/protocol_usb.c"
-        "${CMAKE_CURRENT_LIST_DIR}/protocol/usb_main.c"
-    )
-endif()
-
-if(BLE_ENABLE)
-    list(APPEND QMK_PORTING_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/protocol/ble_descriptor.c"
-    )
-endif()
-
 file(GLOB_RECURSE QMK_PORTING_IAP_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/IAP/*.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/bootloader.c"
