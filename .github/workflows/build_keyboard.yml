@@ -1,4 +1,5 @@
-name: Build_keyboard
+name: Build keyboard firmware
+run-name: Build keyboard firmware
 
 on:
   # push:

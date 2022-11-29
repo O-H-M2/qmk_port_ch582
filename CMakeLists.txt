@@ -17,7 +17,7 @@ execute_process(COMMAND git rev-parse --short HEAD
 )
 
 # allow for manual override
-if(NOT keyboard OR NOT keymap)
+if(NOT keyboard OR(NOT keymap AND NOT BUILD_WIRELESS_LIB))
     include(keyboard_target.cmake)
 endif()
 
