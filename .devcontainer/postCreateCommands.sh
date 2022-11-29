@@ -9,8 +9,8 @@ sudo apt remove -y cmake && sudo apt update && sudo apt upgrade -y && sudo apt i
 cd ~/.oh-my-zsh/custom/plugins && git clone https://github.com/zsh-users/zsh-autosuggestions.git && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git &&
     sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
 
-cd ~ && wget https://www.nordicsemi.com/-/media/Software-and-other-downloads/Desktop-software/nRF-command-line-tools/sw/Versions-10-x-x/10-18-1/nrf-command-line-tools-10.18.1_Linux-amd64.tar.gz &&
-    tar -zxvf nrf-command-line-tools-10.18.1_Linux-amd64.tar.gz && rm -f nrf-command-line-tools-10.18.1_Linux-amd64.tar.gz &&
+cd ~ && wget https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x/10-18-1/nrf-command-line-tools-10.18.1_linux-amd64.tar.gz &&
+    tar -zxvf nrf-command-line-tools-10.18.1_linux-amd64.tar.gz && rm -f nrf-command-line-tools-10.18.1_linux-amd64.tar.gz &&
     rm -f JLink_Linux_V780c_x86_64.deb && rm -f JLink_Linux_V780c_x86_64.rpm && rm -f JLink_Linux_V780c_x86_64.tgz && rm README.txt &&
     sudo ln -s ~/nrf-command-line-tools/bin/mergehex /bin/mergehex
 
