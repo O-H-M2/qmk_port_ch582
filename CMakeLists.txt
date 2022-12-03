@@ -115,12 +115,12 @@ if(BUILD_WIRELESS_LIB)
     endif()
 
     add_custom_command(TARGET ${keyboard} POST_BUILD
-        COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}
-        COMMAND mv ${CMAKE_BINARY_DIR}/lib${keyboard}.a ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/lib${keyboard}.a
-        COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/ble/include ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}
-        COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/esb/include ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}
-        COMMAND cp ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/keyboard_id/${keyboard}/ble_config_pub.h ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/include/ble_config.h
-        COMMAND cp ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/keyboard_id/${keyboard}/esb_config_pub.h ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/include/esb_config.h
+        COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
+        COMMAND mv ${CMAKE_BINARY_DIR}/lib${keyboard}.a ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
+        COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/ble/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
+        COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/esb/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
+        COMMAND cp ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/keyboard_id/${keyboard}/ble_config_pub.h ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include/ble_config.h
+        COMMAND cp ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/keyboard_id/${keyboard}/esb_config_pub.h ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include/esb_config.h
     )
 else()
     add_executable(${keyboard}.elf ${APP_SOURCES})
@@ -167,10 +167,10 @@ else()
 
     if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
         target_include_directories(${keyboard}.elf PRIVATE
-            ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/include
+            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include
         )
         target_link_libraries(${keyboard}.elf PRIVATE
-            ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/lib${keyboard}.a
+            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
         )
     endif()
 
