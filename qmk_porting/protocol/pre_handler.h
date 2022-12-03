@@ -21,6 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "eeprom_partition_table.h"
 #include "partition_table.h"
 
+#if __BUILDING_APP__ && defined BLE_ENABLE
+#include "ble_config.h"
+#endif
+#if __BUILDING_APP__ && defined ESB_ENABLE
+#include "esb_config.h"
+#endif
+
 #if !defined(UINT8_MAX)
 #define UINT8_MAX ((uint8_t)-1)
 #endif

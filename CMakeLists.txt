@@ -119,6 +119,8 @@ if(BUILD_WIRELESS_LIB)
         COMMAND mv ${CMAKE_BINARY_DIR}/lib${keyboard}.a ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/lib${keyboard}.a
         COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/ble/include ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}
         COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/esb/include ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}
+        COMMAND cp ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/keyboard_id/${keyboard}/ble_config_pub.h ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/include/ble_config.h
+        COMMAND cp ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/keyboard_id/${keyboard}/esb_config_pub.h ${PROJECT_SOURCE_DIR}/qmk_porting/platforms/ch58x/wireless/${keyboard}/include/esb_config.h
     )
 else()
     add_executable(${keyboard}.elf ${APP_SOURCES})
