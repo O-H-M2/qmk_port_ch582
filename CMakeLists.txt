@@ -114,12 +114,22 @@ if(BUILD_WIRELESS_LIB)
         message(FATAL_ERROR "Remove defination of BUILD_WIRELESS_LIB!")
     endif()
 
-    add_custom_command(TARGET ${keyboard} POST_BUILD
-        COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
-        COMMAND mv ${CMAKE_BINARY_DIR}/lib${keyboard}.a ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
-        COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/ble/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
-        COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/esb/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
-    )
+    if(${keyboard_type} STREQUAL "public")
+        add_custom_command(TARGET ${keyboard} POST_BUILD
+            COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
+            COMMAND mv ${CMAKE_BINARY_DIR}/lib${keyboard}.a ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
+            COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/ble/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
+            COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/esb/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
+        )
+    elseif(${keyboard_type} STREQUAL "private")
+        add_custom_command(TARGET ${keyboard} POST_BUILD
+            COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless
+            COMMAND mv ${CMAKE_BINARY_DIR}/lib${keyboard}.a ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/lib${keyboard}.a
+            COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/ble/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless
+            COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/esb/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless
+        )
+    endif()
+
 else()
     add_executable(${keyboard}.elf ${APP_SOURCES})
     add_executable(${keyboard}_IAP.elf ${IAP_SOURCES})
@@ -154,6 +164,15 @@ else()
         target_precompile_headers(${keyboard}_IAP.elf PUBLIC
             ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
         )
+
+        if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
+            target_include_directories(${keyboard}.elf PRIVATE
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include
+            )
+            target_link_libraries(${keyboard}.elf PRIVATE
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
+            )
+        endif()
     elseif(${keyboard_type} STREQUAL "private")
         target_precompile_headers(${keyboard}.elf PUBLIC
             ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
@@ -161,15 +180,15 @@ else()
         target_precompile_headers(${keyboard}_IAP.elf PUBLIC
             ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
         )
-    endif()
 
-    if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-        target_include_directories(${keyboard}.elf PRIVATE
-            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include
-        )
-        target_link_libraries(${keyboard}.elf PRIVATE
-            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
-        )
+        if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
+            target_include_directories(${keyboard}.elf PRIVATE
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/include
+            )
+            target_link_libraries(${keyboard}.elf PRIVATE
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/lib${keyboard}.a
+            )
+        endif()
     endif()
 
     set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
