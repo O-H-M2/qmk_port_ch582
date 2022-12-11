@@ -24,14 +24,11 @@ signed short ADC_DataCalib_Rough(void) // 采样数据粗调,获取偏差值
     uint16_t i;
     uint32_t sum = 0;
     uint8_t  ch = 0;   // 备份通道
-    uint8_t  ctrl = 0; // 备份控制寄存器
 
     ch = R8_ADC_CHANNEL;
-    ctrl = R8_ADC_CFG;
-    R8_ADC_CFG = 0;
 
     ADC_ChannelCfg(1);                                          // ADC校准通道请选择通道1
-    R8_ADC_CFG |= RB_ADC_OFS_TEST | RB_ADC_POWER_ON | (2 << 4); // 进入测试模式
+    R8_ADC_CFG |= RB_ADC_OFS_TEST; // 进入测试模式
     R8_ADC_CONVERT = RB_ADC_START;
     while(R8_ADC_CONVERT & RB_ADC_START);
     for(i = 0; i < 16; i++)
@@ -44,7 +41,7 @@ signed short ADC_DataCalib_Rough(void) // 采样数据粗调,获取偏差值
     R8_ADC_CFG &= ~RB_ADC_OFS_TEST; // 关闭测试模式
 
     R8_ADC_CHANNEL = ch;
-    R8_ADC_CFG = ctrl;
+
     return (2048 - sum);
 }
 
@@ -193,7 +190,7 @@ void ADC_DMACfg(uint8_t s, uint16_t startAddr, uint16_t endAddr, ADC_DMAModeType
 {
     if(s == DISABLE)
     {
-        R8_ADC_CTRL_DMA &= ~RB_ADC_DMA_ENABLE;
+        R8_ADC_CTRL_DMA &= ~(RB_ADC_DMA_ENABLE | RB_ADC_IE_DMA_END);
     }
     else
     {

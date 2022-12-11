@@ -19,6 +19,27 @@ extern "C" {
 
 #define RTC_TIMER_MAX_VALUE    0xa8c00000
 
+#ifdef CLK_OSC32K
+#if (CLK_OSC32K==1)
+#define FREQ_RTC    32000
+#else
+#define FREQ_RTC    32768
+#endif
+#endif /* CLK_OSC32K */
+
+
+#define CLK_PER_US                  (1.0 / ((1.0 / FREQ_RTC) * 1000 * 1000))
+#define CLK_PER_MS                  (CLK_PER_US * 1000)
+
+#define US_PER_CLK                  (1.0 / CLK_PER_US)
+#define MS_PER_CLK                  (US_PER_CLK / 1000.0)
+
+#define RTC_TO_US(clk)              ((uint32_t)((clk) * US_PER_CLK + 0.5))
+#define RTC_TO_MS(clk)              ((uint32_t)((clk) * MS_PER_CLK + 0.5))
+
+#define US_TO_RTC(us)               ((uint32_t)((us) * CLK_PER_US + 0.5))
+#define MS_TO_RTC(ms)               ((uint32_t)((ms) * CLK_PER_MS + 0.5))
+
 extern volatile uint32_t RTCTigFlag;
 
 /**

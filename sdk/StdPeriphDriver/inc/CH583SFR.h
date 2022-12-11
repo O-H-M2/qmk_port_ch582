@@ -675,7 +675,9 @@ extern "C" {
 #define  bMISO_             (1<<15)                   // PB15
 #define  bDTR_              (1<<15)                   // PB15
 #define  bSDA_              (1<<20)                   // PB20
+#define  bRXD3_             (1<<20)                   // PB20
 #define  bSCL_              (1<<21)                   // PB21
+#define  bTXD3_             (1<<21)                   // PB21
 #define  bRXD2_             (1<<22)                   // PB22
 #define  bTMR3              (1<<22)                   // PB22
 #define  bCAP3              bTMR3

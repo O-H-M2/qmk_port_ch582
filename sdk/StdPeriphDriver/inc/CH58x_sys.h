@@ -20,14 +20,14 @@ extern "C" {
  */
 typedef enum
 {
-    RST_STATUS_SW = 0, // Èí¼ş¸´Î»
-    RST_STATUS_RPOR,   // ÉÏµç¸´Î»
-    RST_STATUS_WTR,    // ¿´ÃÅ¹·³¬Ê±¸´Î»
-    RST_STATUS_MR,     // Íâ²¿ÊÖ¶¯¸´Î»
-    RST_STATUS_LRM0,   // »½ĞÑ¸´Î»-Èí¸´Î»ÒıÆğ
-    RST_STATUS_GPWSM,  // ÏÂµçÄ£Ê½»½ĞÑ¸´Î»
-    RST_STATUS_LRM1,   //	»½ĞÑ¸´Î»-¿´ÃÅ¹·ÒıÆğ
-    RST_STATUS_LRM2,   //	»½ĞÑ¸´Î»-ÊÖ¶¯¸´Î»ÒıÆğ
+    RST_STATUS_SW = 0, // è½¯ä»¶å¤ä½
+    RST_STATUS_RPOR,   // ä¸Šç”µå¤ä½
+    RST_STATUS_WTR,    // çœ‹é—¨ç‹—è¶…æ—¶å¤ä½
+    RST_STATUS_MR,     // å¤–éƒ¨æ‰‹åŠ¨å¤ä½
+    RST_STATUS_LRM0,   // å”¤é†’å¤ä½-è½¯å¤ä½å¼•èµ·
+    RST_STATUS_GPWSM,  // ä¸‹ç”µæ¨¡å¼å”¤é†’å¤ä½
+    RST_STATUS_LRM1,   //	å”¤é†’å¤ä½-çœ‹é—¨ç‹—å¼•èµ·
+    RST_STATUS_LRM2,   //	å”¤é†’å¤ä½-æ‰‹åŠ¨å¤ä½å¼•èµ·
 
 } SYS_ResetStaTypeDef;
 
@@ -36,136 +36,143 @@ typedef enum
  */
 typedef enum
 {
-    INFO_ROM_READ = 0, // FlashROM ´úÂëºÍÊı¾İÇø ÊÇ·ñ¿É¶Á
-    INFO_RESET_EN = 2, // RST#Íâ²¿ÊÖ¶¯¸´Î»ÊäÈë¹¦ÄÜÊÇ·ñ¿ªÆô
-    INFO_BOOT_EN,      // ÏµÍ³Òıµ¼³ÌĞò BootLoader ÊÇ·ñ¿ªÆô
-    INFO_DEBUG_EN,     // ÏµÍ³·ÂÕæµ÷ÊÔ½Ó¿ÚÊÇ·ñ¿ªÆô
-    INFO_LOADER,       // µ±Ç°ÏµÍ³ÊÇ·ñ´¦ÓÚBootloader Çø
-    STA_SAFEACC_ACT,   // µ±Ç°ÏµÍ³ÊÇ·ñ´¦ÓÚ°²È«·ÃÎÊ×´Ì¬£¬·ñÔòRWAÊôĞÔÇøÓò²»¿É·ÃÎÊ
+    INFO_ROM_READ = 0, // FlashROM ä»£ç å’Œæ•°æ®åŒº æ˜¯å¦å¯è¯»
+    INFO_RESET_EN = 2, // RST#å¤–éƒ¨æ‰‹åŠ¨å¤ä½è¾“å…¥åŠŸèƒ½æ˜¯å¦å¼€å¯
+    INFO_BOOT_EN,      // ç³»ç»Ÿå¼•å¯¼ç¨‹åº BootLoader æ˜¯å¦å¼€å¯
+    INFO_DEBUG_EN,     // ç³»ç»Ÿä»¿çœŸè°ƒè¯•æ¥å£æ˜¯å¦å¼€å¯
+    INFO_LOADER,       // å½“å‰ç³»ç»Ÿæ˜¯å¦å¤„äºBootloader åŒº
+    STA_SAFEACC_ACT,   // å½“å‰ç³»ç»Ÿæ˜¯å¦å¤„äºå®‰å…¨è®¿é—®çŠ¶æ€ï¼Œå¦åˆ™RWAå±æ€§åŒºåŸŸä¸å¯è®¿é—®
 
 } SYS_InfoStaTypeDef;
 
 /**
- * @brief  »ñÈ¡Ğ¾Æ¬IDÀà£¬Ò»°ãÎª¹Ì¶¨Öµ
+ * @brief  è·å–èŠ¯ç‰‡IDç±»ï¼Œä¸€èˆ¬ä¸ºå›ºå®šå€¼
  */
 #define SYS_GetChipID()      R8_CHIP_ID
 
 /**
- * @brief  »ñÈ¡°²È«·ÃÎÊID£¬Ò»°ãÎª¹Ì¶¨Öµ
+ * @brief  è·å–å®‰å…¨è®¿é—®IDï¼Œä¸€èˆ¬ä¸ºå›ºå®šå€¼
  */
 #define SYS_GetAccessID()    R8_SAFE_ACCESS_ID
 
 /**
- * @brief   ÅäÖÃÏµÍ³ÔËĞĞÊ±ÖÓ
+ * @brief   é…ç½®ç³»ç»Ÿè¿è¡Œæ—¶é’Ÿ
  *
- * @param   sc      - ÏµÍ³Ê±ÖÓÔ´Ñ¡Ôñ refer to SYS_CLKTypeDef
+ * @param   sc      - ç³»ç»Ÿæ—¶é’Ÿæºé€‰æ‹© refer to SYS_CLKTypeDef
  */
 void SetSysClock(SYS_CLKTypeDef sc);
 
 /**
- * @brief   »ñÈ¡µ±Ç°ÏµÍ³Ê±ÖÓ
+ * @brief   è·å–å½“å‰ç³»ç»Ÿæ—¶é’Ÿ
  *
  * @return  Hz
  */
 uint32_t GetSysClock(void);
 
 /**
- * @brief   »ñÈ¡µ±Ç°ÏµÍ³ĞÅÏ¢×´Ì¬
+ * @brief   è·å–å½“å‰ç³»ç»Ÿä¿¡æ¯çŠ¶æ€
  *
  * @param   i       - refer to SYS_InfoStaTypeDef
  *
- * @return  ÊÇ·ñ¿ªÆô
+ * @return  æ˜¯å¦å¼€å¯
  */
 uint8_t SYS_GetInfoSta(SYS_InfoStaTypeDef i);
 
 /**
- * @brief   »ñÈ¡ÏµÍ³ÉÏ´Î¸´Î»×´Ì¬
+ * @brief   è·å–ç³»ç»Ÿä¸Šæ¬¡å¤ä½çŠ¶æ€
  *
  * @return  refer to SYS_ResetStaTypeDef
  */
 #define SYS_GetLastResetSta()    (R8_RESET_STATUS & RB_RESET_FLAG)
 
 /**
- * @brief   Ö´ĞĞÏµÍ³Èí¼ş¸´Î»
+ * @brief   æ‰§è¡Œç³»ç»Ÿè½¯ä»¶å¤ä½
  */
 void SYS_ResetExecute(void);
 
 /**
- * @brief   ÉèÖÃ¸´Î»±£´æ¼Ä´æÆ÷µÄÖµ£¬²»ÊÜÊÖ¶¯¸´Î»¡¢ Èí¼ş¸´Î»¡¢ ¿´ÃÅ¹·¸´Î»»òÕßÆÕÍ¨»½ĞÑ¸´Î»µÄÓ°Ïì
+ * @brief   è®¾ç½®å¤ä½ä¿å­˜å¯„å­˜å™¨çš„å€¼ï¼Œä¸å—æ‰‹åŠ¨å¤ä½ã€ è½¯ä»¶å¤ä½ã€ çœ‹é—¨ç‹—å¤ä½æˆ–è€…æ™®é€šå”¤é†’å¤ä½çš„å½±å“
  *
  * @param   i       - refer to SYS_InfoStaTypeDef
  */
 #define SYS_ResetKeepBuf(d)    (R8_GLOB_RESET_KEEP = d)
 
 /**
- * @brief   ¹Ø±ÕËùÓĞÖĞ¶Ï£¬²¢±£Áôµ±Ç°ÖĞ¶ÏÖµ
+ * @brief   å…³é—­æ‰€æœ‰ä¸­æ–­ï¼Œå¹¶ä¿ç•™å½“å‰ä¸­æ–­å€¼
  *
- * @param   pirqv   - µ±Ç°±£ÁôÖĞ¶ÏÖµ
+ * @param   pirqv   - å½“å‰ä¿ç•™ä¸­æ–­å€¼
  */
 void SYS_DisableAllIrq(uint32_t *pirqv);
 
 /**
- * @brief   »Ö¸´Ö®Ç°¹Ø±ÕµÄÖĞ¶ÏÖµ
+ * @brief   æ¢å¤ä¹‹å‰å…³é—­çš„ä¸­æ–­å€¼
  *
- * @param   irq_status  - µ±Ç°±£ÁôÖĞ¶ÏÖµ
+ * @param   irq_status  - å½“å‰ä¿ç•™ä¸­æ–­å€¼
  */
 void SYS_RecoverIrq(uint32_t irq_status);
 
 /**
- * @brief   »ñÈ¡µ±Ç°ÏµÍ³(SYSTICK)¼ÆÊıÖµ
+ * @brief   è·å–å½“å‰ç³»ç»Ÿ(SYSTICK)è®¡æ•°å€¼
  *
- * @return  µ±Ç°¼ÆÊıÖµ
+ * @return  å½“å‰è®¡æ•°å€¼
  */
 uint32_t SYS_GetSysTickCnt(void);
 
 /**
- * @brief   ¼ÓÔØ¿´ÃÅ¹·¼ÆÊı³õÖµ£¬µİÔöĞÍ
+ * @brief   åŠ è½½çœ‹é—¨ç‹—è®¡æ•°åˆå€¼ï¼Œé€’å¢å‹
  *
- * @param   c       - ¿´ÃÅ¹·¼ÆÊı³õÖµ
+ * @param   c       - çœ‹é—¨ç‹—è®¡æ•°åˆå€¼
  */
 #define WWDG_SetCounter(c)    (R8_WDOG_COUNT = c)
 
 /**
- * @brief   ¿´ÃÅ¹·¶¨Ê±Æ÷Òç³öÖĞ¶ÏÊ¹ÄÜ
+ * @brief   çœ‹é—¨ç‹—å®šæ—¶å™¨æº¢å‡ºä¸­æ–­ä½¿èƒ½
  *
- * @param   s       - Òç³öÊÇ·ñÖĞ¶Ï
+ * @param   s       - æº¢å‡ºæ˜¯å¦ä¸­æ–­
  */
 void WWDG_ITCfg(FunctionalState s);
 
 /**
- * @brief   ¿´ÃÅ¹·¶¨Ê±Æ÷¸´Î»¹¦ÄÜ
+ * @brief   çœ‹é—¨ç‹—å®šæ—¶å™¨å¤ä½åŠŸèƒ½
  *
- * @param   s       - Òç³öÊÇ·ñ¸´Î»
+ * @param   s       - æº¢å‡ºæ˜¯å¦å¤ä½
  */
 void WWDG_ResetCfg(FunctionalState s);
 
 /**
- * @brief   »ñÈ¡µ±Ç°¿´ÃÅ¹·¶¨Ê±Æ÷Òç³ö±êÖ¾
+ * @brief   è·å–å½“å‰çœ‹é—¨ç‹—å®šæ—¶å™¨æº¢å‡ºæ ‡å¿—
  *
- * @return  ¿´ÃÅ¹·¶¨Ê±Æ÷Òç³ö±êÖ¾
+ * @return  çœ‹é—¨ç‹—å®šæ—¶å™¨æº¢å‡ºæ ‡å¿—
  */
 #define WWDG_GetFlowFlag()    (R8_RST_WDOG_CTRL & RB_WDOG_INT_FLAG)
 
 /**
- * @brief   Çå³ı¿´ÃÅ¹·ÖĞ¶Ï±êÖ¾£¬ÖØĞÂ¼ÓÔØ¼ÆÊıÖµÒ²¿ÉÇå³ı
+ * @brief   æ¸…é™¤çœ‹é—¨ç‹—ä¸­æ–­æ ‡å¿—ï¼Œé‡æ–°åŠ è½½è®¡æ•°å€¼ä¹Ÿå¯æ¸…é™¤
  */
 void WWDG_ClearFlag(void);
 
 /**
- * @brief   uS ÑÓÊ±
+ * @brief   uS å»¶æ—¶
  *
- * @param   t       - Ê±¼ä²ÎÊı
+ * @param   t       - æ—¶é—´å‚æ•°
  */
 void mDelayuS(uint16_t t);
 
 /**
- * @brief   mS ÑÓÊ±
+ * @brief   mS å»¶æ—¶
  *
- * @param   t       - Ê±¼ä²ÎÊı
+ * @param   t       - æ—¶é—´å‚æ•°
  */
 void mDelaymS(uint16_t t);
 
-/* Safe access */
+/**
+ * @brief Enter safe access mode.
+ * 
+ * @NOTE: After enter safe access mode, about 16 system frequency cycles 
+ * are in safe mode, and one or more secure registers can be rewritten 
+ * within the valid period. The safe mode will be automatically 
+ * terminated after the above validity period is exceeded.
+ */
  __attribute__((always_inline)) static inline void sys_safe_access_enable(void)
 {
     R8_SAFE_ACCESS_SIG = SAFE_ACCESS_SIG1;

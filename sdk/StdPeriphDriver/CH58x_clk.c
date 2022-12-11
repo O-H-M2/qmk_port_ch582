@@ -155,7 +155,7 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
     sys_safe_access_enable();
     R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
     R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
-    while( (R8_OSC_CAL_CTRL&RB_OSC_CNT_EN)!= RB_OSC_CNT_EN )
+    while( (R8_OSC_CAL_CTRL &RB_OSC_CNT_EN) == 0 )
     {
         sys_safe_access_enable();
         R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
@@ -170,9 +170,12 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
         i = R16_OSC_CAL_CNT; // 实时校准后采样值
         cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF - 2000 * (freq_sys / 1000) / CAB_LSIFQ;
         if(((cnt_offset > -37 * (freq_sys / 1000) / CAB_LSIFQ) && (cnt_offset < 37 * (freq_sys / 1000) / CAB_LSIFQ)) || retry > 2)
-            break;
+        {
+            if(retry)
+                break;
+        }
         retry++;
-        cnt_offset = (cnt_offset > 0) ? (((cnt_offset * 2) / (37 * (freq_sys / 1000) / CAB_LSIFQ)) + 1) / 2 : (((cnt_offset * 2) / (37 * (freq_sys / 1000) / CAB_LSIFQ)) - 1) / 2;
+        cnt_offset = (cnt_offset > 0) ? (((cnt_offset * 2) / (74 * (freq_sys/1000) / 60000)) + 1) / 2 : (((cnt_offset * 2) / (74 * (freq_sys/1000) / 60000 )) - 1) / 2;
         sys_safe_access_enable();
         R16_INT32K_TUNE += cnt_offset;
     }
@@ -185,11 +188,17 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
     sys_safe_access_enable();
     R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
     R8_OSC_CAL_CTRL |= cali_Lv;
+    while( R8_OSC_CAL_CTRL&0x07 != cali_Lv )
+    {
+        sys_safe_access_enable();
+        R8_OSC_CAL_CTRL |= cali_Lv;
+    }
     while(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT);
     while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
     i = R16_OSC_CAL_CNT; // 实时校准后采样值
-    cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF - 4000 * (1 << cali_Lv) * (freq_sys / 1000000) / CAB_LSIFQ * 1000;
-    cnt_offset = (cnt_offset > 0) ? ((((cnt_offset * (3200 / (1 << cali_Lv))) / (1366 * (freq_sys / 1000) / CAB_LSIFQ)) + 1) / 2) << 5 : ((((cnt_offset * (3200 / (1 << cali_Lv))) / (1366 * (freq_sys / 1000) / CAB_LSIFQ)) - 1) / 2) << 5;
+
+    cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF - 4000 * (1 << cali_Lv) * (freq_sys / 1000000) / 256 * 1000/(CAB_LSIFQ/256) ;
+    cnt_offset = (cnt_offset > 0) ? ((((cnt_offset * 2*(100 )) / (1366 * ((1 << cali_Lv)/8) * (freq_sys/1000) / 60000)) + 1) / 2)<<5 : ((((cnt_offset * 2*(100)) / (1366 * ((1 << cali_Lv)/8) * (freq_sys/1000) / 60000)) - 1) / 2)<<5;
     sys_safe_access_enable();
     R16_INT32K_TUNE += cnt_offset;
     R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
