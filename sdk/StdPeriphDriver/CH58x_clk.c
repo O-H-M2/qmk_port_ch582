@@ -188,7 +188,7 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
     sys_safe_access_enable();
     R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
     R8_OSC_CAL_CTRL |= cali_Lv;
-    while( R8_OSC_CAL_CTRL&0x07 != cali_Lv )
+    while( (R8_OSC_CAL_CTRL&0x07) != cali_Lv )
     {
         sys_safe_access_enable();
         R8_OSC_CAL_CTRL |= cali_Lv;
