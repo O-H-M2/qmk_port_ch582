@@ -105,6 +105,15 @@ void protocol_post_init()
     host_set_driver(&ch582_driver);
 }
 
+void protocol_toggle(uint8_t status)
+{
+    if (status) {
+        host_set_driver(&ch582_driver);
+    } else {
+        host_set_driver(NULL);
+    }
+}
+
 // void protocol_pre_task()
 // {
 // }
