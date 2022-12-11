@@ -79,7 +79,9 @@ void raw_hid_send_usb(uint8_t *data, uint8_t length)
 
 void platform_initialize_usb()
 {
+#if CLK_OSC32K
     Calibration_LSI(Level_128);
+#endif
 }
 
 void protocol_pre_init_usb()
