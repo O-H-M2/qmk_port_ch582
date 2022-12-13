@@ -17,6 +17,16 @@ if(NKRO_ENABLE)
     )
 endif()
 
+# GRAVE_ESC_ENABLE
+if(GRAVE_ESC_ENABLE)
+    #add_definitions(-DGRAVE_ESC_ENABLE -DFORCE_NKRO)
+    message(STATUS "GRAVE_ESC_ENABLE")
+    add_definitions(-DGRAVE_ESC_ENABLE)
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_grave_esc.c"
+    )
+endif()
+
 # ENCODER_ENABLE
 if(ENCODER_ENABLE)
     add_definitions(-DENCODER_ENABLE)
