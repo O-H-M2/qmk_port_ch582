@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 uint8_t keyboard_protocol = 1;
 uint8_t keyboard_idle = 0;
+static uint8_t *hid_descriptor = NULL;
 /*!< hid state ! Data can be sent only when state is idle  */
 static struct usbd_interface keyboard_interface;
 static struct usbd_interface exkey_interface;
@@ -114,6 +115,39 @@ void init_usb_driver()
         .ep_addr = HIDRAW_OUT_EP
     };
 
+    // build descriptor according to the keyboard name
+#if ESB_ENABLE == 2
+    uint8_t keyboard_name[] = MACRO2STR(PRODUCT) "2.4G";
+#else
+    uint8_t keyboard_name[] = MACRO2STR(PRODUCT);
+#endif
+    uint8_t hid_descriptor_scratch_2[((sizeof(keyboard_name) - 1) + 1) * 2] = {
+        ///////////////////////////////////////
+        /// string2 descriptor
+        ///////////////////////////////////////
+        ((sizeof(keyboard_name) - 1) + 1) * 2, /* bLength */
+        USB_DESCRIPTOR_TYPE_STRING,            /* bDescriptorType */
+    };
+
+    for (uint8_t i = 0; i < (sizeof(keyboard_name) - 1); i++) {
+        hid_descriptor_scratch_2[2 + i * 2] = keyboard_name[i];
+        hid_descriptor_scratch_2[2 + i * 2 + 1] = 0x00;
+    }
+
+    if (hid_descriptor != NULL) {
+        free(hid_descriptor);
+    }
+    hid_descriptor = (uint8_t *)malloc(sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2) + sizeof(hid_descriptor_scratch_3));
+#if ESB_ENABLE == 2
+    tmos_memcpy(hid_descriptor, hid_descriptor_scratch_1, sizeof(hid_descriptor_scratch_1));
+    tmos_memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1), hid_descriptor_scratch_2, sizeof(hid_descriptor_scratch_2));
+    tmos_memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2), hid_descriptor_scratch_3, sizeof(hid_descriptor_scratch_3));
+#else
+    memcpy(hid_descriptor, hid_descriptor_scratch_1, sizeof(hid_descriptor_scratch_1));
+    memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1), hid_descriptor_scratch_2, sizeof(hid_descriptor_scratch_2));
+    memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2), hid_descriptor_scratch_3, sizeof(hid_descriptor_scratch_3));
+#endif
+
     usbd_desc_register(hid_descriptor);
 
     usbd_add_interface(usbd_hid_init_intf(&keyboard_interface, KeyboardReport, HID_KEYBOARD_REPORT_DESC_SIZE));
@@ -145,7 +179,7 @@ void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len)
     hid_exkey_send_report(data, len);
 }
 
-void hid_exkey_send_report(uint8_t *data, uint8_t len)
+inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
 {
     int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
 
