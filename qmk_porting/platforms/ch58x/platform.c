@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "platform_deps.h"
+#include "gpio.h"
 #include "quantum_keycodes.h"
 
 volatile uint8_t kbd_protocol_type = 0;
@@ -31,6 +32,17 @@ int8_t sendchar(uint8_t c)
 void shutdown_user()
 {
     rgbled_power_off();
+
+#ifdef ENCODER_ENABLE
+    pin_t encoders_pad_a[] = ENCODERS_PAD_A, encoders_pad_b[] = ENCODERS_PAD_B;
+
+    for (uint8_t i = 0; i < sizeof(encoders_pad_a); i++) {
+        setPinInputLow(encoders_pad_a[i]);
+    }
+    for (uint8_t i = 0; i < sizeof(encoders_pad_b); i++) {
+        setPinInputLow(encoders_pad_b[i]);
+    }
+#endif
 }
 
 void platform_setup()

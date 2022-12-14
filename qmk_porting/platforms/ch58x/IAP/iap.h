@@ -54,6 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 __attribute__((always_inline)) inline void jumpApp_prerequisite()
 {
 #if FREQ_SYS != 60000000
+    WAIT_FOR_DBG;
     SetSysClock(Fsys);
     DelayMs(5);
 #ifdef PLF_DEBUG

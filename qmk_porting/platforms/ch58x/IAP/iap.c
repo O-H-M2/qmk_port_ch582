@@ -433,7 +433,7 @@ int main()
     UART1_BaudRateCfg(DEBUG_BAUDRATE);
 
     char buffer[128];
-    uint8_t len = sprintf(buffer, "Chipstart, %s\nBuild on %s %s - " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", VER_LIB, __DATE__, __TIME__, R8_RESET_STATUS & RB_RESET_FLAG);
+    uint8_t len = sprintf(buffer, "Chip start, %s\nBuild on %s %s - " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", VER_LIB, __DATE__, __TIME__, R8_RESET_STATUS & RB_RESET_FLAG);
 
     while (len) {
         if (R8_UART1_TFC != UART_FIFO_SIZE) {
