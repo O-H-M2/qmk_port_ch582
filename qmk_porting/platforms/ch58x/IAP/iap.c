@@ -338,7 +338,8 @@ __HIGH_CODE void Main_Circulation()
             second = 0;
         }
         if (second >= 60) {
-            jumpPre;
+            iap_leave_dfu();
+            jumpApp_prerequisite();
             jumpApp();
         }
     }
@@ -447,11 +448,13 @@ int main()
 
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
     if (bootloader_boot_mode_get() != BOOTLOADER_BOOT_MODE_IAP) {
+        jumpApp_prerequisite();
         jumpApp();
     }
 #else
     // TODO: implement judging condition for 2.4g dongle
     if (1) {
+        jumpApp_prerequisite();
         jumpApp();
     }
 #endif

@@ -32,7 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "uf2.h"
 #include "usb_ch58x_usbfs_reg.h"
 
-#define jumpPre                                               \
+#define iap_leave_dfu()                                       \
     PRINT("Leaving DFU...\n");                                \
     PFIC_DisableIRQ(USB_IRQn);                                \
     R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU); \
@@ -50,6 +50,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USBD_LANGID_STRING 1033
 
 #define USB_CONFIG_SIZE (9 + MSC_DESCRIPTOR_LEN)
+
+__attribute__((always_inline)) inline void jumpApp_prerequisite()
+{
+#if FREQ_SYS != 60000000
+    SetSysClock(Fsys);
+    DelayMs(5);
+#ifdef PLF_DEBUG
+    DBG_BAUD_RECONFIG;
+#else
+    UART1_BaudRateCfg(DEBUG_BAUDRATE);
+#endif
+#endif
+}
 
 void my_memcpy(void *dst, const void *src, uint32_t l);
 void my_memset(void *dst, int c, uint32_t n);

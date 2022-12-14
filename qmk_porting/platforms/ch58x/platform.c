@@ -35,18 +35,10 @@ void shutdown_user()
 
 void platform_setup()
 {
-#if FREQ_SYS != 60000000
-    SetSysClock(Fsys);
-    DelayMs(5);
-#ifdef PLF_DEBUG
-    DBG_BAUD_RECONFIG;
-#else
-    UART1_BaudRateCfg(DEBUG_BAUDRATE);
-#endif
-#endif
 #if LSE_ENABLE
     R16_PIN_ANALOG_IE |= RB_PIN_XT32K_IE;
 #endif
+    // TODO: maybe we need this?
     // PowerMonitor(ENABLE, HALevel_2V1);
 #if 0
     PRINT("EEPROM dump: \n");

@@ -30,9 +30,11 @@ __attribute__((always_inline)) inline bool rgbled_status_check()
 {
 #ifdef RGBLIGHT_ENABLE
     extern bool rgblight_is_enabled();
+
     return rgblight_is_enabled();
 #elif defined RGB_MATRIX_ENABLE
     extern uint8_t rgb_matrix_is_enabled();
+    
     return rgb_matrix_is_enabled();
 #else
     return false;
