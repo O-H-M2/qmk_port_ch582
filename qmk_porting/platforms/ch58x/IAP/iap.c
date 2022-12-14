@@ -198,7 +198,7 @@ __HIGH_CODE uint32_t board_flash_size()
 
 __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 {
-    PRINT("Reading flash address 0x%04x...\n", addr);
+    PRINT("Reading flash address 0x%04x, len 0x%04x...\n", addr, len);
     usb_counter = 0;
     my_memset(buffer, 0xFF, len);
 }
@@ -216,7 +216,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
         return;
     }
 
-    PRINT("Writing flash address 0x%04x... ", addr);
+    PRINT("Writing flash address 0x%04x, len 0x%04x... ", addr, len);
     usb_counter = 0;
     for (;;) {
         FLASH_ROM_WRITE(addr, (void *)data, len);

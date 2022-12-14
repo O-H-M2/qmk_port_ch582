@@ -74,12 +74,9 @@ static const char indexFile[] =
     "</script>"
     "</body>"
     "</html>\n";
-// size of CURRENT.UF2:
 static FileContent_t info[] = {
     { .name = "INFO_UF2TXT", .content = infoUf2File, .size = sizeof(infoUf2File) - 1 },
     { .name = "INDEX   HTM", .content = indexFile, .size = sizeof(indexFile) - 1 },
-    // current.uf2 must be the last element and its content must be NULL
-    { .name = "CURRENT UF2", .content = NULL, .size = 0 },
 };
 
 enum {
@@ -164,7 +161,7 @@ static void init_starting_clusters(void)
 // sectors past the end of the media.
 __HIGH_CODE static uint32_t info_index_of(uint32_t cluster)
 {
-    // default results for invalid requests is the index of the last file (CURRENT.UF2)
+    // default results for invalid requests is the index of the last file
     if (cluster >= 0xFFF0) {
         return FID_UF2;
     }
@@ -180,8 +177,6 @@ void uf2_init(void)
 {
     // TODO maybe limit to application size only if possible board_flash_app_size()
     _flash_size = board_flash_size();
-    // update CURRENT.UF2 file size
-    info[FID_UF2].size = UF2_BYTE_COUNT;
     init_starting_clusters();
 }
 
@@ -313,41 +308,21 @@ __HIGH_CODE void uf2_read_block(uint32_t block_no, uint8_t *data)
 
         uint32_t fileRelativeSector = sectionRelativeSector - (info[fid].cluster_start - 2) * BPB_SECTORS_PER_CLUSTER;
 
-        if (fid != FID_UF2) {
-            // Handle all files other than CURRENT.UF2
-            size_t fileContentStartOffset = fileRelativeSector * BPB_SECTOR_SIZE;
-            size_t fileContentLength = inf->size;
+        // Handle all files
+        size_t fileContentStartOffset = fileRelativeSector * BPB_SECTOR_SIZE;
+        size_t fileContentLength = inf->size;
 
-            // nothing to copy if already past the end of the file (only when >1 sector per cluster)
-            if (fileContentLength > fileContentStartOffset) {
-                // obviously, 2nd and later sectors should not copy data from the start
-                const void *dataStart = (inf->content) + fileContentStartOffset;
-                // limit number of bytes of data to be copied to remaining valid bytes
-                size_t bytesToCopy = fileContentLength - fileContentStartOffset;
-                // and further limit that to a single sector at a time
-                if (bytesToCopy > BPB_SECTOR_SIZE) {
-                    bytesToCopy = BPB_SECTOR_SIZE;
-                }
-                my_memcpy(data, dataStart, bytesToCopy);
+        // nothing to copy if already past the end of the file (only when >1 sector per cluster)
+        if (fileContentLength > fileContentStartOffset) {
+            // obviously, 2nd and later sectors should not copy data from the start
+            const void *dataStart = (inf->content) + fileContentStartOffset;
+            // limit number of bytes of data to be copied to remaining valid bytes
+            size_t bytesToCopy = fileContentLength - fileContentStartOffset;
+            // and further limit that to a single sector at a time
+            if (bytesToCopy > BPB_SECTOR_SIZE) {
+                bytesToCopy = BPB_SECTOR_SIZE;
             }
-        } else {
-            // CURRENT.UF2: generate data on-the-fly
-            uint32_t addr = APP_CODE_START_ADDR + (fileRelativeSector * UF2_FIRMWARE_BYTES_PER_SECTOR);
-            if (addr < _flash_size) // TODO abstract this out
-            {
-                UF2_Block *bl = (void *)data;
-                bl->magicStart0 = UF2_MAGIC_START0;
-                bl->magicStart1 = UF2_MAGIC_START1;
-                bl->magicEnd = UF2_MAGIC_END;
-                bl->blockNo = fileRelativeSector;
-                bl->numBlocks = UF2_SECTOR_COUNT;
-                bl->targetAddr = addr;
-                bl->payloadSize = UF2_FIRMWARE_BYTES_PER_SECTOR;
-                bl->flags = UF2_FLAG_FAMILYID;
-                bl->familyID = BOARD_UF2_FAMILY_ID;
-
-                board_flash_read(addr, bl->data, bl->payloadSize);
-            }
+            my_memcpy(data, dataStart, bytesToCopy);
         }
     }
 }
