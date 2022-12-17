@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "platform_deps.h"
 #include "gpio.h"
 #include "quantum_keycodes.h"
+#include "battery_measure.h"
 
 volatile uint8_t kbd_protocol_type = 0;
 
@@ -50,8 +51,17 @@ void platform_setup()
 #if LSE_ENABLE
     R16_PIN_ANALOG_IE |= RB_PIN_XT32K_IE;
 #endif
-    // TODO: maybe we need this?
-    // PowerMonitor(ENABLE, HALevel_2V1);
+#ifdef POWER_DETECT_PIN
+    setPinInputLow(POWER_DETECT_PIN);
+#endif
+#ifdef BATTERY_MEASURE_PIN
+    uint16_t adc;
+
+    battery_init();
+    adc = battery_measure();
+    battery_calculate(adc);
+    PRINT("Battery level: %d\n", adc);
+#endif
 #if 0
     PRINT("EEPROM dump: \n");
     for (uint8_t i = 0; i < 8; i++) {
