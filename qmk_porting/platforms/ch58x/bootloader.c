@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "eeprom_driver.h"
 #include "platform_deps.h"
+#include "gpio.h"
 
 void bootmagic_lite_reset_eeprom(void)
 {
@@ -78,6 +79,14 @@ void bootloader_select_boot_mode()
 
     if (mode == BOOTLOADER_BOOT_MODE_IAP) {
         mode = bootloader_set_to_default_mode("Successfully booted from IAP");
+    } else if (mode == BOOTLOADER_BOOT_MODE_USB) {
+#ifdef POWER_DETECT_PIN
+        if (!readPin(POWER_DETECT_PIN)) {
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+            mode = BOOTLOADER_BOOT_MODE_BLE;
+            PRINT("Cable not connected, USB mode is disabled.\n");
+        }
+#endif
     }
 
     //! TODO: for test only!
@@ -119,11 +128,21 @@ void bootloader_select_boot_mode()
 
 uint8_t bootloader_set_to_default_mode(const char *reason)
 {
+    bool limited_mode = false;
+
+#ifdef POWER_DETECT_PIN
+    if (!readPin(POWER_DETECT_PIN)) {
+        // cable not connected, skip usb mode
+        limited_mode = true;
+    }
+#endif
     PRINT("%s, ", reason);
 #ifdef USB_ENABLE
-    PRINT("default to USB.\n");
-    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
-    return BOOTLOADER_BOOT_MODE_USB;
+    if (!limited_mode) {
+        PRINT("default to USB.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
+        return BOOTLOADER_BOOT_MODE_USB;
+    }
 #elif defined BLE_ENABLE
     PRINT("default to BLE slot 0.\n");
     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
@@ -133,6 +152,7 @@ uint8_t bootloader_set_to_default_mode(const char *reason)
     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
     return BOOTLOADER_BOOT_MODE_ESB;
 #endif
+    __builtin_unreachable();
 }
 
 void bootloader_jump()

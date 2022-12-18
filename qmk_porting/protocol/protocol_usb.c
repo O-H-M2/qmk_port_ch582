@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "host.h"
 #include "gpio.h"
+#include "protocol_usb.h"
 #include "usb_device_state.h"
 #include "keycode_config.h"
 #include "usb_main.h"
@@ -100,6 +100,12 @@ __HIGH_CODE void protocol_task_usb()
     for (;;) {
         keyboard_task();
         housekeeping_task();
+#ifdef POWER_DETECT_PIN
+        if (!readPin(POWER_DETECT_PIN)) {
+            // cable removed
+            platform_reboot_usb();
+        }
+#endif
     }
 }
 
