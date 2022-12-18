@@ -35,6 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define iap_leave_dfu()                                       \
     PRINT("Leaving DFU...\n");                                \
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);       \
     PFIC_DisableIRQ(USB_IRQn);                                \
     R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU); \
     R32_USB_CONTROL = 0;                                      \

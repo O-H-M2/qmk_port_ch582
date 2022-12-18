@@ -26,8 +26,10 @@ void bootmagic_lite_reset_eeprom(void)
 
 void bootloader_boot_mode_set(uint8_t mode)
 {
-    if (mode != BOOTLOADER_BOOT_MODE_IAP && mode != BOOTLOADER_BOOT_MODE_USB &&
-        mode != BOOTLOADER_BOOT_MODE_BLE && mode != BOOTLOADER_BOOT_MODE_ESB) {
+    if (mode != BOOTLOADER_BOOT_MODE_IAP && mode != BOOTLOADER_BOOT_MODE_IAP_ONGOING &&
+        mode != BOOTLOADER_BOOT_MODE_USB &&
+        mode != BOOTLOADER_BOOT_MODE_BLE &&
+        mode != BOOTLOADER_BOOT_MODE_ESB) {
         PRINT("Invalid mode select, will ignore.\n");
         return;
     }
@@ -65,12 +67,7 @@ uint8_t bootloader_boot_mode_get()
     do {
         ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION, &buffer, sizeof(buffer));
     } while (ret);
-    if (buffer == BOOTLOADER_BOOT_MODE_IAP || buffer == BOOTLOADER_BOOT_MODE_USB ||
-        buffer == BOOTLOADER_BOOT_MODE_BLE || buffer == BOOTLOADER_BOOT_MODE_ESB) {
-        return buffer;
-    } else {
-        return bootloader_set_to_default_mode("Invalid boot mode");
-    }
+    return buffer;
 }
 
 void bootloader_select_boot_mode()
@@ -93,6 +90,11 @@ void bootloader_select_boot_mode()
     // mode = BOOTLOADER_BOOT_MODE_BLE;
 
     switch (mode) {
+        case BOOTLOADER_BOOT_MODE_IAP_ONGOING:
+            PRINT("IAP incomplete, will reboot back to IAP.\n");
+            WAIT_FOR_DBG;
+            SYS_ResetExecute();
+            __builtin_unreachable();
 #ifdef USB_ENABLE
         case BOOTLOADER_BOOT_MODE_USB:
             // cable mode
@@ -111,18 +113,6 @@ void bootloader_select_boot_mode()
             kbd_protocol_type = kbd_protocol_esb;
             break;
 #endif
-        default:
-            PRINT("Invalid mode record detected, ");
-            if (mode == BOOTLOADER_BOOT_MODE_IAP) {
-                PRINT("will reside in IAP.\n");
-            } else {
-                bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
-                mode = bootloader_boot_mode_get();
-                PRINT("set to IAP... %s\n", mode == BOOTLOADER_BOOT_MODE_IAP ? "done" : "fail");
-            }
-            PRINT("Reboot execute.\n");
-            WAIT_FOR_DBG;
-            SYS_ResetExecute();
     }
 }
 
@@ -137,21 +127,31 @@ uint8_t bootloader_set_to_default_mode(const char *reason)
     }
 #endif
     PRINT("%s, ", reason);
+    if (limited_mode) {
+#ifdef BLE_ENABLE
+        PRINT("default to BLE slot 0.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+        return BOOTLOADER_BOOT_MODE_BLE;
+#else
+        PRINT("default to ESB.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+        return BOOTLOADER_BOOT_MODE_ESB;
+#endif
+    } else {
 #ifdef USB_ENABLE
-    if (!limited_mode) {
         PRINT("default to USB.\n");
         bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
         return BOOTLOADER_BOOT_MODE_USB;
-    }
 #elif defined BLE_ENABLE
-    PRINT("default to BLE slot 0.\n");
-    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
-    return BOOTLOADER_BOOT_MODE_BLE;
+        PRINT("default to BLE slot 0.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+        return BOOTLOADER_BOOT_MODE_BLE;
 #else
-    PRINT("default to ESB.\n");
-    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
-    return BOOTLOADER_BOOT_MODE_ESB;
+        PRINT("default to ESB.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+        return BOOTLOADER_BOOT_MODE_ESB;
 #endif
+    }
     __builtin_unreachable();
 }
 

@@ -188,6 +188,7 @@ __HIGH_CODE void my_memset(void *dst, int c, uint32_t n)
 __HIGH_CODE void board_flash_init()
 {
     PRINT("Erasing application...\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
     FLASH_ROM_ERASE(APP_CODE_START_ADDR, APP_CODE_END_ADDR - APP_CODE_START_ADDR);
 }
 
@@ -231,6 +232,10 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
 }
 #endif
 
+/**
+ * Callbacks for CherryUSB stack
+*/
+#if 1
 __HIGH_CODE void usbd_configure_done_callback(void)
 {
     /* do nothing */
@@ -277,6 +282,7 @@ __HIGH_CODE int usbd_msc_sector_write(uint32_t sector, uint8_t *buffer, uint32_t
     }
     return 0;
 }
+#endif
 
 __HIGH_CODE void gpio_strap()
 {
@@ -466,9 +472,28 @@ __HIGH_CODE int main()
 #endif
 
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
-    if (bootloader_boot_mode_get() != BOOTLOADER_BOOT_MODE_IAP) {
-        jumpApp_prerequisite();
-        jumpApp();
+    uint8_t mode = bootloader_boot_mode_get();
+
+    switch (mode) {
+        case BOOTLOADER_BOOT_MODE_IAP:
+            PRINT("Will direct to normal mode in next boot.\n");
+            break;
+        case BOOTLOADER_BOOT_MODE_IAP_ONGOING:
+            PRINT("Last IAP procedure was incomplete, will reside in IAP.\n");
+            break;
+        case BOOTLOADER_BOOT_MODE_USB:
+        case BOOTLOADER_BOOT_MODE_BLE:
+        case BOOTLOADER_BOOT_MODE_ESB:
+            jumpApp_prerequisite();
+            jumpApp();
+            __builtin_unreachable();
+        default:
+            PRINT("Invalid mode record detected, will reboot to IAP.\n");
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
+            PRINT("Reboot execute.\n");
+            WAIT_FOR_DBG;
+            SYS_ResetExecute();
+            __builtin_unreachable();
     }
 #else
     // TODO: implement judging condition for 2.4g dongle
