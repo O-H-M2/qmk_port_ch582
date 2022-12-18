@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "platform_deps.h"
+#include <stdio.h>
 #include "gpio.h"
 #include "quantum_keycodes.h"
 #include "battery_measure.h"
@@ -51,16 +52,30 @@ void platform_setup()
 #if LSE_ENABLE
     R16_PIN_ANALOG_IE |= RB_PIN_XT32K_IE;
 #endif
-#ifdef POWER_DETECT_PIN
-    setPinInputLow(POWER_DETECT_PIN);
-#endif
-#ifdef BATTERY_MEASURE_PIN
-    uint16_t adc;
+#ifdef PLF_DEBUG
+    PRINT("App " MACRO2STR(__GIT_VERSION__) ", build on %s %s\n", __DATE__, __TIME__);
+#else
+    writePinHigh(A9);
+    setPinOutput(A9);
+    setPinInputHigh(A8);
+    UART1_DefInit();
+    UART1_BaudRateCfg(DEBUG_BAUDRATE);
 
-    battery_init();
-    adc = battery_measure();
-    battery_calculate(adc);
-    PRINT("Battery level: %d\n", adc);
+    char buffer[UINT8_MAX];
+    uint8_t len = sprintf(buffer, "App " MACRO2STR(__GIT_VERSION__) ", build on %s %s\n", __DATE__, __TIME__);
+
+    while (len) {
+        if (R8_UART1_TFC != UART_FIFO_SIZE) {
+            R8_UART1_THR = buffer[strlen(buffer) - len];
+            len--;
+        }
+    }
+    while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
+        __nop();
+    }
+    R8_UART1_IER = RB_IER_RESET;
+    setPinInputLow(A8);
+    setPinInputLow(A9);
 #endif
 #if 0
     PRINT("EEPROM dump: \n");

@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <assert.h>
 #include <inttypes.h>
 #include "compile_date.h"
+#include "battery_measure.h"
 #include "gpio.h"
 #include "eeprom_driver.h"
 #include "config.h"

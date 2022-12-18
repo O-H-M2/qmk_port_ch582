@@ -345,7 +345,7 @@ __HIGH_CODE void Main_Circulation()
     }
 }
 
-int main()
+__HIGH_CODE int main()
 {
 #ifdef HSE_LOAD_CAPACITANCE
     {
@@ -401,8 +401,7 @@ int main()
 #endif
 #ifdef PLF_DEBUG
     DBG_INIT;
-    PRINT("Chip start, %s\n", VER_LIB);
-    PRINT("Build on %s %s - " MACRO2STR(__GIT_VERSION__) "\n", __DATE__, __TIME__);
+    PRINT("Bootloader " MACRO2STR(__GIT_VERSION__) "\n");
     PRINT("Reason of last reset:  ");
     switch (R8_RESET_STATUS & RB_RESET_FLAG) {
         case 0b000:
@@ -427,13 +426,21 @@ int main()
 #else
     // manually initialize uart1 and send some debug information
     writePinHigh(A9);
-    setPinInputHigh(A8);
     setPinOutput(A9);
-    UART1_DefInit();
-    UART1_BaudRateCfg(DEBUG_BAUDRATE);
+    setPinInputHigh(A8);
 
-    char buffer[128];
-    uint8_t len = sprintf(buffer, "Chip start, %s\nBuild on %s %s - " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", VER_LIB, __DATE__, __TIME__, R8_RESET_STATUS & RB_RESET_FLAG);
+    uint32_t x;
+
+    x = 75000000 / DEBUG_BAUDRATE;
+    x = (x + 5) / 10;
+    R16_UART1_DL = (uint16_t)x;
+    R8_UART1_FCR = (2 << 6) | RB_FCR_TX_FIFO_CLR | RB_FCR_RX_FIFO_CLR | RB_FCR_FIFO_EN; // FIFO打开，触发点4字节
+    R8_UART1_LCR = RB_LCR_WORD_SZ;
+    R8_UART1_IER = RB_IER_TXD_EN;
+    R8_UART1_DIV = 1;
+
+    char buffer[UINT8_MAX];
+    uint8_t len = sprintf(buffer, "Bootloader " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", R8_RESET_STATUS & RB_RESET_FLAG);
 
     while (len) {
         if (R8_UART1_TFC != UART_FIFO_SIZE) {
@@ -444,6 +451,18 @@ int main()
     while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
         __nop();
     }
+    R8_UART1_IER = RB_IER_RESET;
+    setPinInputLow(A8);
+    setPinInputLow(A9);
+#endif
+#ifdef BATTERY_MEASURE_PIN
+    // do a power check
+    uint16_t adc;
+
+    battery_init();
+    adc = battery_measure();
+    adc = battery_calculate(adc);
+    PRINT("Battery level: %d\n", adc);
 #endif
 
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
