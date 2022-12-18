@@ -201,14 +201,12 @@ __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
         battery_handle_critical();
     }
 
-    uint32_t i;
-
-    for (i = 1; i < BATTERY_MAP_SIZE; i++) {
+    for (uint32_t i = 1; i < BATTERY_MAP_SIZE; i++) {
         if (adcVal < battery_map[i] * 10) {
-            break;
+            return (uint8_t)(i * 100 / BATTERY_MAP_SIZE);
         }
     }
-    return (i * 100 / BATTERY_MAP_SIZE);
+    return 100;
 }
 
 void battery_indicator_toggle(bool status)

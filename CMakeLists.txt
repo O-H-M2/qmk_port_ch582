@@ -89,47 +89,7 @@ file(GLOB IAP_SOURCES
 )
 
 if(BUILD_WIRELESS_LIB)
-    add_library(${keyboard} STATIC)
-    target_link_libraries(${keyboard} PRIVATE CH582_APP)
-    target_compile_definitions(${keyboard} PRIVATE __BUILDING_APP__=1)
-
-    # target_link_options(${keyboard} PRIVATE
-    # -nostartfiles
-    # --specs=nano.specs
-    # )
-    if(${keyboard_type} STREQUAL "public")
-        target_precompile_headers(${keyboard} PUBLIC
-            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
-        )
-    elseif(${keyboard_type} STREQUAL "private")
-        target_precompile_headers(${keyboard} PUBLIC
-            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
-        )
-    endif()
-
-    if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-        add_subdirectory(${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB})
-        target_link_libraries(${keyboard} PRIVATE wireless)
-    else()
-        message(FATAL_ERROR "Remove defination of BUILD_WIRELESS_LIB!")
-    endif()
-
-    if(${keyboard_type} STREQUAL "public")
-        add_custom_command(TARGET ${keyboard} POST_BUILD
-            COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
-            COMMAND mv ${CMAKE_BINARY_DIR}/lib${keyboard}.a ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
-            COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/ble/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
-            COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/esb/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless
-        )
-    elseif(${keyboard_type} STREQUAL "private")
-        add_custom_command(TARGET ${keyboard} POST_BUILD
-            COMMAND mkdir -p ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless
-            COMMAND mv ${CMAKE_BINARY_DIR}/lib${keyboard}.a ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/lib${keyboard}.a
-            COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/ble/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless
-            COMMAND cp -r ${PROJECT_SOURCE_DIR}/${BUILD_WIRELESS_LIB}/esb/include ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless
-        )
-    endif()
-
+    include(${BUILD_WIRELESS_LIB}/gen_lib.cmake)
 else()
     add_executable(${keyboard}.elf ${APP_SOURCES})
     add_executable(${keyboard}_IAP.elf ${IAP_SOURCES})

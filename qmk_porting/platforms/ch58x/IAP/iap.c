@@ -488,12 +488,9 @@ __HIGH_CODE int main()
             jumpApp();
             __builtin_unreachable();
         default:
-            PRINT("Invalid mode record detected, will reboot to IAP.\n");
+            PRINT("Invalid mode record detected, will take as interrupted IAP procedure.\n");
             bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
-            PRINT("Reboot execute.\n");
-            WAIT_FOR_DBG;
-            SYS_ResetExecute();
-            __builtin_unreachable();
+            break;
     }
 #else
     // TODO: implement judging condition for 2.4g dongle
