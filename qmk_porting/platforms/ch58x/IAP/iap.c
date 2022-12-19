@@ -207,12 +207,13 @@ __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 __HIGH_CODE void board_flash_flush()
 {
     PRINT("Flashing done.\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
     usb_counter = 58000;
 }
 
 __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len)
 {
-    if (addr < APP_CODE_START_ADDR || addr % EEPROM_PAGE_SIZE != 0) {
+    if (addr < APP_CODE_START_ADDR || addr % sizeof(uint32_t) != 0) {
         PRINT("Flash violation.\n");
         return;
     }
@@ -344,9 +345,23 @@ __HIGH_CODE void Main_Circulation()
             second = 0;
         }
         if (second >= 60) {
-            iap_leave_dfu();
-            jumpApp_prerequisite();
-            jumpApp();
+            uint8_t mode = bootloader_boot_mode_get();
+
+            if (mode == BOOTLOADER_BOOT_MODE_IAP) {
+                PRINT("Leaving DFU...\n");
+                PFIC_DisableIRQ(USB_IRQn);
+                R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
+                R32_USB_CONTROL = 0;
+                R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
+                my_delay_ms(10);
+                R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+                jumpApp_prerequisite();
+                jumpApp();
+            } else if (mode == BOOTLOADER_BOOT_MODE_IAP_ONGOING) {
+                PRINT("IAP unaccomplished, will reside.\n");
+                usb_counter = 0;
+                second = 0;
+            }
         }
     }
 }
@@ -481,6 +496,9 @@ __HIGH_CODE int main()
         case BOOTLOADER_BOOT_MODE_IAP_ONGOING:
             PRINT("Last IAP procedure was incomplete, will reside in IAP.\n");
             break;
+        case UINT8_MAX:
+            // TODO: do some POST?
+            bootloader_set_to_default_mode("New chip");
         case BOOTLOADER_BOOT_MODE_USB:
         case BOOTLOADER_BOOT_MODE_BLE:
         case BOOTLOADER_BOOT_MODE_ESB:

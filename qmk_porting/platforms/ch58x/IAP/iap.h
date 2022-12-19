@@ -33,15 +33,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "uf2.h"
 #include "usb_ch58x_usbfs_reg.h"
 
-#define iap_leave_dfu()                                       \
-    PRINT("Leaving DFU...\n");                                \
-    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);       \
-    PFIC_DisableIRQ(USB_IRQn);                                \
-    R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU); \
-    R32_USB_CONTROL = 0;                                      \
-    R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;           \
-    my_delay_ms(10);                                          \
-    R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
 #define jumpApp ((void (*)(void))((int *)APP_CODE_START_ADDR))
 
 #define MSC_IN_EP          0x81
