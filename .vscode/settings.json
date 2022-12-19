@@ -78,6 +78,7 @@
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
     "C_Cpp.files.exclude": {
-        "**/build": true
+        "**/build": true,
+        "**/build/*": true
     }
 }
