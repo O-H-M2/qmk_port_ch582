@@ -44,7 +44,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define USB_CONFIG_SIZE (9 + MSC_DESCRIPTOR_LEN)
 
-__attribute__((always_inline)) inline void jumpApp_prerequisite()
+void my_memcpy(void *dst, const void *src, uint32_t l);
+void my_memset(void *dst, int c, uint32_t n);
+uint32_t my_get_sys_clock();
+void board_flash_init();
+uint32_t board_flash_size();
+void board_flash_read(uint32_t addr, void *buffer, uint32_t len);
+void board_flash_flush();
+void board_flash_write(uint32_t addr, void const *data, uint32_t len);
+
+__attribute__((always_inline)) inline void jumpApp_Pre()
 {
 #if FREQ_SYS != 60000000
     WAIT_FOR_DBG;
@@ -56,12 +65,5 @@ __attribute__((always_inline)) inline void jumpApp_prerequisite()
     UART1_BaudRateCfg(DEBUG_BAUDRATE);
 #endif
 #endif
+    PRINT("Current system clock: %d Hz\n", my_get_sys_clock());
 }
-
-void my_memcpy(void *dst, const void *src, uint32_t l);
-void my_memset(void *dst, int c, uint32_t n);
-void board_flash_init();
-uint32_t board_flash_size();
-void board_flash_read(uint32_t addr, void *buffer, uint32_t len);
-void board_flash_flush();
-void board_flash_write(uint32_t addr, void const *data, uint32_t len);
