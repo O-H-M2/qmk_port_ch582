@@ -166,25 +166,43 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
 
 __attribute__((weak)) void battery_init()
 {
-    setPinInput(BATTERY_MEASURE_PIN);
+    switch (BATTERY_MEASURE_PIN) {
+        case A0:
+        case A1:
+        case A2:
+        case A3:
+        case A12:
+        case A13:
+        case A14:
+        case A15:
+            setPinInput(BATTERY_MEASURE_PIN);
+            break;
+        default:
+            break;
+    }
     ADC_ExtSingleChSampInit(SampleFreq_3_2, ADC_PGA_2);
 }
 
 __attribute__((weak)) uint16_t battery_measure()
 {
-    uint16_t abcBuff[15];
+    uint16_t adcBuff[15];
     int16_t RoughCalib_Value = ADC_DataCalib_Rough();
 
     battery_config_channel(BATTERY_MEASURE_PIN);
     for (uint8_t i = 0; i < 15; i++) {
-        abcBuff[i] = ADC_ExcutSingleConver() + RoughCalib_Value;
+        adcBuff[i] = ADC_ExcutSingleConver();
+        if ((adcBuff[i] + RoughCalib_Value) > 0) {
+            adcBuff[i] += RoughCalib_Value;
+        } else {
+            adcBuff[i] = 0;
+        }
     }
     R8_ADC_CFG &= ~(RB_ADC_BUF_EN | RB_ADC_POWER_ON);
 
     uint16_t adc_data = 0;
 
     for (uint8_t i = 0; i < 10; i++) {
-        adc_data += abcBuff[i + 5];
+        adc_data += adcBuff[i + 5];
     }
 
     return adc_data;
