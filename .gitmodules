@@ -10,3 +10,6 @@
 [submodule "qmk_porting/keyboards_private"]
 	path = qmk_porting/keyboards_private
 	url = https://github.com/O-H-M2/keyboards_private.git
+[submodule "mcuboot"]
+	path = mcuboot
+	url = https://github.com/mcu-tools/mcuboot.git

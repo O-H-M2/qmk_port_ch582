@@ -94,11 +94,28 @@ else()
     add_executable(${keyboard}.elf ${APP_SOURCES})
     add_executable(${keyboard}_IAP.elf ${IAP_SOURCES})
 
-    target_link_libraries(${keyboard}.elf PRIVATE CH582_APP)
-    target_link_libraries(${keyboard}_IAP.elf PRIVATE CH582_IAP)
+    target_link_libraries(${keyboard}.elf PUBLIC CH582_APP)
+    target_link_libraries(${keyboard}_IAP.elf PUBLIC CH582_IAP)
 
-    target_compile_definitions(${keyboard}.elf PRIVATE __BUILDING_APP__=1)
-    target_compile_definitions(${keyboard}_IAP.elf PRIVATE __BUILDING_IAP__=1)
+    target_compile_definitions(${keyboard}.elf PUBLIC __BUILDING_APP__=1)
+    target_compile_definitions(${keyboard}_IAP.elf PUBLIC __BUILDING_IAP__=1)
+
+    include_directories(
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting"
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/include"
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library"
+    )
+    file(GLOB mbedtls_sources
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x509]*.c"
+    )
+    target_sources(${keyboard}_IAP.elf PUBLIC
+        ${mbedtls_sources}
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting/mcuboot_port.c"
+    )
+
+    add_subdirectory(mcuboot/boot/bootutil EXCLUDE_FROM_ALL)
+    target_link_libraries(bootutil PUBLIC CH582_IAP)
+    target_link_libraries(${keyboard}_IAP.elf PUBLIC bootutil)
 
     target_link_options(${keyboard}.elf PRIVATE
         -nostartfiles
@@ -126,10 +143,16 @@ else()
         )
 
         if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-            target_include_directories(${keyboard}.elf PRIVATE
+            target_include_directories(${keyboard}.elf PUBLIC
                 ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include
             )
-            target_link_libraries(${keyboard}.elf PRIVATE
+            target_include_directories(${keyboard}_IAP.elf PUBLIC
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include
+            )
+            target_link_libraries(${keyboard}.elf PUBLIC
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
+            )
+            target_link_libraries(${keyboard}_IAP.elf PUBLIC
                 ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
             )
         endif()
@@ -142,21 +165,29 @@ else()
         )
 
         if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-            target_include_directories(${keyboard}.elf PRIVATE
+            target_include_directories(${keyboard}.elf PUBLIC
                 ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/include
             )
-            target_link_libraries(${keyboard}.elf PRIVATE
+            target_include_directories(${keyboard}_IAP.elf PUBLIC
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/include
+            )
+            target_link_libraries(${keyboard}.elf PUBLIC
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/lib${keyboard}.a
+            )
+            target_link_libraries(${keyboard}_IAP.elf PUBLIC
                 ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/lib${keyboard}.a
             )
         endif()
     endif()
 
     set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
+    set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_signed.hex)
     set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
     add_custom_command(TARGET ${keyboard}.elf POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}.elf> ${HEX_FILE_APP}
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}.elf> ${BIN_FILE_APP}
-        COMMAND python3 ${CMAKE_CURRENT_LIST_DIR}/utils/uf2conv.py ${HEX_FILE_APP} -c -f 0x1aa143c7 -o ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2
+        COMMAND python3 ${CMAKE_CURRENT_LIST_DIR}/mcuboot/scripts/imgtool.py sign --header-size 0x1000 --align 4 --slot-size 0x2e000 --version 1.0.0 --pad-header ${HEX_FILE_APP} ${HEX_FILE_APP_SIGNED}
+        COMMAND python3 ${CMAKE_CURRENT_LIST_DIR}/utils/uf2conv.py ${HEX_FILE_APP_SIGNED} -c -f 0x1aa143c7 -o ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2
     )
     set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
     set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
@@ -165,7 +196,7 @@ else()
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}_IAP.elf> ${BIN_FILE_IAP}
     )
     add_custom_target(post_build ALL
-        COMMAND mergehex --merge ${HEX_FILE_APP} ${HEX_FILE_IAP} ${CMAKE_CURRENT_LIST_DIR}/sdk/BLE_LIB/CH58xBLE_ROMx.hex --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
+        COMMAND mergehex --merge ${HEX_FILE_APP_SIGNED} ${HEX_FILE_IAP} ${CMAKE_CURRENT_LIST_DIR}/sdk/BLE_LIB/CH58xBLE_ROMx.hex --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
         DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
     )
 endif()

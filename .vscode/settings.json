@@ -74,7 +74,11 @@
         "bootloader.h": "c",
         "sequencer.h": "c",
         "extra_keycode.h": "c",
-        "iap.h": "c"
+        "iap.h": "c",
+        "bootutil_public.h": "c",
+        "sysflash.h": "c",
+        "mcuboot_logging.h": "c",
+        "partition_table.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,

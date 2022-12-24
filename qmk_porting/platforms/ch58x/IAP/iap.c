@@ -15,7 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "bootloader.h"
 #include "iap.h"
 
 static struct usbd_interface intf0;
@@ -141,7 +140,7 @@ __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 {
     PRINT("Reading flash address 0x%04x, len 0x%04x...\n", addr, len);
     usb_counter = 0;
-    my_memset(buffer, 0xFF, len);
+    my_memset(buffer, 0xff, len);
 }
 
 __HIGH_CODE void board_flash_flush()
@@ -153,7 +152,7 @@ __HIGH_CODE void board_flash_flush()
 
 __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len)
 {
-    if (addr < APP_CODE_START_ADDR || addr % sizeof(uint32_t) != 0) {
+    if (addr < APP_SECTOR_START_ADDR || addr % sizeof(uint32_t) != 0) {
         PRINT("Flash violation.\n");
         return;
     }
@@ -299,7 +298,6 @@ __HIGH_CODE static void iap_decide_jump()
     switch (mode) {
         case UINT8_MAX:
             iap_handle_new_chip();
-            jumpApp_Pre();
             jumpApp();
             __builtin_unreachable();
         case BOOTLOADER_BOOT_MODE_IAP:
@@ -320,7 +318,6 @@ __HIGH_CODE static void iap_decide_jump()
         case BOOTLOADER_BOOT_MODE_BLE:
         case BOOTLOADER_BOOT_MODE_ESB:
             // ready to go
-            jumpApp_Pre();
             jumpApp();
             __builtin_unreachable();
         case BOOTLOADER_BOOT_MODE_IAP_ONGOING:

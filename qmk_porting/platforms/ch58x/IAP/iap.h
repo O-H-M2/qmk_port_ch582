@@ -27,13 +27,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "battery_measure.h"
 #include "gpio.h"
 #include "eeprom_driver.h"
+#include "bootloader.h"
 #include "config.h"
 #include "usbd_core.h"
 #include "usbd_msc.h"
 #include "uf2.h"
+#include "bootutil/bootutil.h"
+#include "bootutil/image.h"
 #include "usb_ch58x_usbfs_reg.h"
-
-#define jumpApp ((void (*)(void))((int *)APP_CODE_START_ADDR))
 
 #define MSC_IN_EP          0x81
 #define MSC_OUT_EP         0x02
@@ -53,17 +54,37 @@ void board_flash_read(uint32_t addr, void *buffer, uint32_t len);
 void board_flash_flush();
 void board_flash_write(uint32_t addr, void const *data, uint32_t len);
 
-__attribute__((always_inline)) inline void jumpApp_Pre()
+__attribute__((always_inline)) inline void jumpApp()
 {
+    struct boot_rsp rsp;
+    fih_int rc = boot_go(&rsp);
+
+    if (rc == 0) {
+        uint32_t image_off = rsp.br_image_off, header_size = rsp.br_hdr->ih_hdr_size;
+
+        PRINT("Image found at 0x%02x, with header size 0x%02x.\n", image_off, header_size);
 #if FREQ_SYS != 60000000
-    WAIT_FOR_DBG;
-    SetSysClock(Fsys);
-    DelayMs(5);
+        WAIT_FOR_DBG;
+        SetSysClock(Fsys);
+        DelayMs(5);
 #ifdef PLF_DEBUG
-    DBG_BAUD_RECONFIG;
+        DBG_BAUD_RECONFIG;
 #else
-    UART1_BaudRateCfg(DEBUG_BAUDRATE);
+        UART1_BaudRateCfg(DEBUG_BAUDRATE);
 #endif
+        PRINT("Reset system clock to %d Hz before entering APP.\n", my_get_sys_clock());
 #endif
-    PRINT("Current system clock: %d Hz\n", my_get_sys_clock());
+        WAIT_FOR_DBG;
+        ((void (*)(void))((int *)(image_off + header_size)))();
+    } else {
+        PRINT("Failed searching for a bootable image.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
+        WAIT_FOR_DBG;
+        mcu_reset();
+    }
+
+    while (1) {
+        __nop();
+    }
+    __builtin_unreachable();
 }
