@@ -1,6 +1,17 @@
 #include "quantum.h"
 #include "ws2812.h"
 
+#ifndef WS2812_SPI_DRIVER
+#define WS2812_SPI_DRIVER 1 // defult
+#define RGB_DI_PIN        A14
+#endif
+#if WS2812_SPI_DRIVER == 1
+#define RGB_DI_PIN        A14
+#endif
+#if WS2812_SPI_DRIVER == 2
+#define RGB_DI_PIN        B14
+#endif
+
 // Define SPI config speed
 #ifndef WS2812_SPI_DIVISOR
 #define WS2812_SPI_DIVISOR FREQ_SYS / 3200000 + (FREQ_SYS % 3200000 ? 1 : 0) //target 3.2MHz
@@ -23,6 +34,9 @@ static volatile bool ws2812_inited = false, ws2812_powered_on = false, ws2812_ne
 static void ws2812_init()
 {
     // we have only one spi controller
+#if WS2812_SPI_DRIVER == 2
+    GPIOPinRemap(ENABLE,RB_PIN_SPI0);
+#endif
     setPinOutput(RGB_DI_PIN);
 
     R8_SPI0_CLOCK_DIV = WS2812_SPI_DIVISOR;
