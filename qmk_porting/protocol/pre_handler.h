@@ -277,8 +277,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #endif
 
+#ifndef WS2812_SPI_DRIVER
+#define WS2812_SPI_DRIVER 1 // defult
+#endif
+
 #ifdef WS2812_DRIVER_SPI
-#define RGB_DI_PIN A14
+#if WS2812_SPI_DRIVER == 1
+#define RGB_DI_PIN        A14
+#endif
+#if WS2812_SPI_DRIVER == 2
+#define RGB_DI_PIN        B14
+#endif
 #elif defined WS2812_DRIVER_PWM
 #if WS2812_PWM_DRIVER == 1
 #define RGB_DI_PIN A10

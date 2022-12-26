@@ -30,22 +30,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VENDOR_ID    0xCAFE
 #define PRODUCT_ID   0x0B91
 #define DEVICE_VER   0x0001
-#define MANUFACTURER mk67lite
-#define PRODUCT      mk67lite
+#define MANUFACTURER ezy64
+#define PRODUCT      ezy64
 
 #define QMK_VERSION    "0.0.1"
 #define QMK_BUILDDATE  __DATE__
-#define QMK_KEYBOARD_H "mk67lite.h"
+#define QMK_KEYBOARD_H "ezy64.h"
 
 #define MATRIX_ROWS 5
-#define MATRIX_COLS 15
+#define MATRIX_COLS 14
 #define MATRIX_ROW_PINS      \
     {                        \
         B9, B8, B17, B16, B18 \
     }
 #define MATRIX_COL_PINS                                              \
     {                                                                \
-        A6, A0, A1, A2 ,A3, A15, A14, A13, A12, A7, B7, B6, B5, B4, B3, B2, B1, B0, A9, A8, B23        \
+        A6, A0, A1, A2 ,A3, A15, A14, A13, A12, A7, B7, B6, B5, B4   \
     }
 #define DIODE_DIRECTION       COL2ROW
 #define BOOTMAGIC_LITE_ROW    0
