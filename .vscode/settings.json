@@ -73,11 +73,13 @@
         "i2c_master.h": "c",
         "bootloader.h": "c",
         "sequencer.h": "c",
-        "extra_keycode.h": "c"
+        "extra_keycode.h": "c",
+        "iap.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
     "C_Cpp.files.exclude": {
-        "**/build": true
+        "**/build": true,
+        "**/build/*": true
     }
 }

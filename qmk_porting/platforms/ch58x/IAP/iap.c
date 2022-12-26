@@ -188,6 +188,7 @@ __HIGH_CODE void my_memset(void *dst, int c, uint32_t n)
 __HIGH_CODE void board_flash_init()
 {
     PRINT("Erasing application...\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
     FLASH_ROM_ERASE(APP_CODE_START_ADDR, APP_CODE_END_ADDR - APP_CODE_START_ADDR);
 }
 
@@ -198,7 +199,7 @@ __HIGH_CODE uint32_t board_flash_size()
 
 __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 {
-    PRINT("Reading flash address 0x%04x...\n", addr);
+    PRINT("Reading flash address 0x%04x, len 0x%04x...\n", addr, len);
     usb_counter = 0;
     my_memset(buffer, 0xFF, len);
 }
@@ -206,17 +207,18 @@ __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 __HIGH_CODE void board_flash_flush()
 {
     PRINT("Flashing done.\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
     usb_counter = 58000;
 }
 
 __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len)
 {
-    if (addr < APP_CODE_START_ADDR || addr % EEPROM_PAGE_SIZE != 0) {
+    if (addr < APP_CODE_START_ADDR || addr % sizeof(uint32_t) != 0) {
         PRINT("Flash violation.\n");
         return;
     }
 
-    PRINT("Writing flash address 0x%04x... ", addr);
+    PRINT("Writing flash address 0x%04x, len 0x%04x... ", addr, len);
     usb_counter = 0;
     for (;;) {
         FLASH_ROM_WRITE(addr, (void *)data, len);
@@ -231,6 +233,10 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
 }
 #endif
 
+/**
+ * Callbacks for CherryUSB stack
+*/
+#if 1
 __HIGH_CODE void usbd_configure_done_callback(void)
 {
     /* do nothing */
@@ -277,6 +283,7 @@ __HIGH_CODE int usbd_msc_sector_write(uint32_t sector, uint8_t *buffer, uint32_t
     }
     return 0;
 }
+#endif
 
 __HIGH_CODE void gpio_strap()
 {
@@ -338,13 +345,28 @@ __HIGH_CODE void Main_Circulation()
             second = 0;
         }
         if (second >= 60) {
-            jumpPre;
-            jumpApp();
+            uint8_t mode = bootloader_boot_mode_get();
+
+            if (mode == BOOTLOADER_BOOT_MODE_IAP) {
+                PRINT("Leaving DFU...\n");
+                PFIC_DisableIRQ(USB_IRQn);
+                R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
+                R32_USB_CONTROL = 0;
+                R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
+                my_delay_ms(10);
+                R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+                jumpApp_prerequisite();
+                jumpApp();
+            } else if (mode == BOOTLOADER_BOOT_MODE_IAP_ONGOING) {
+                PRINT("IAP unaccomplished, will reside.\n");
+                usb_counter = 0;
+                second = 0;
+            }
         }
     }
 }
 
-int main()
+__HIGH_CODE int main()
 {
 #ifdef HSE_LOAD_CAPACITANCE
     {
@@ -400,8 +422,7 @@ int main()
 #endif
 #ifdef PLF_DEBUG
     DBG_INIT;
-    PRINT("Chip start, %s\n", VER_LIB);
-    PRINT("Build on %s %s - " MACRO2STR(__GIT_VERSION__) "\n", __DATE__, __TIME__);
+    PRINT("Bootloader " MACRO2STR(__GIT_VERSION__) "\n");
     PRINT("Reason of last reset:  ");
     switch (R8_RESET_STATUS & RB_RESET_FLAG) {
         case 0b000:
@@ -426,13 +447,21 @@ int main()
 #else
     // manually initialize uart1 and send some debug information
     writePinHigh(A9);
-    setPinInputHigh(A8);
     setPinOutput(A9);
-    UART1_DefInit();
-    UART1_BaudRateCfg(DEBUG_BAUDRATE);
+    setPinInputHigh(A8);
 
-    char buffer[128];
-    uint8_t len = sprintf(buffer, "Chipstart, %s\nBuild on %s %s - " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", VER_LIB, __DATE__, __TIME__, R8_RESET_STATUS & RB_RESET_FLAG);
+    uint32_t x;
+
+    x = 75000000 / DEBUG_BAUDRATE;
+    x = (x + 5) / 10;
+    R16_UART1_DL = (uint16_t)x;
+    R8_UART1_FCR = (2 << 6) | RB_FCR_TX_FIFO_CLR | RB_FCR_RX_FIFO_CLR | RB_FCR_FIFO_EN; // FIFO打开，触发点4字节
+    R8_UART1_LCR = RB_LCR_WORD_SZ;
+    R8_UART1_IER = RB_IER_TXD_EN;
+    R8_UART1_DIV = 1;
+
+    char buffer[UINT8_MAX];
+    uint8_t len = sprintf(buffer, "Bootloader " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", R8_RESET_STATUS & RB_RESET_FLAG);
 
     while (len) {
         if (R8_UART1_TFC != UART_FIFO_SIZE) {
@@ -443,15 +472,48 @@ int main()
     while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
         __nop();
     }
+    R8_UART1_IER = RB_IER_RESET;
+    setPinInputLow(A8);
+    setPinInputLow(A9);
+#endif
+#ifdef BATTERY_MEASURE_PIN
+    // do a power check
+    uint16_t adc;
+
+    battery_init();
+    adc = battery_measure();
+    adc = battery_calculate(adc);
+    PRINT("Battery level: %d\n", adc);
 #endif
 
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
-    if (bootloader_boot_mode_get() != BOOTLOADER_BOOT_MODE_IAP) {
-        jumpApp();
+    uint8_t mode = bootloader_boot_mode_get();
+
+    switch (mode) {
+        case BOOTLOADER_BOOT_MODE_IAP:
+            PRINT("Will direct to normal mode in next boot.\n");
+            break;
+        case BOOTLOADER_BOOT_MODE_IAP_ONGOING:
+            PRINT("Last IAP procedure was incomplete, will reside in IAP.\n");
+            break;
+        case UINT8_MAX:
+            // TODO: do some POST?
+            bootloader_set_to_default_mode("New chip");
+        case BOOTLOADER_BOOT_MODE_USB:
+        case BOOTLOADER_BOOT_MODE_BLE:
+        case BOOTLOADER_BOOT_MODE_ESB:
+            jumpApp_prerequisite();
+            jumpApp();
+            __builtin_unreachable();
+        default:
+            PRINT("Invalid mode record detected, will take as interrupted IAP procedure.\n");
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
+            break;
     }
 #else
     // TODO: implement judging condition for 2.4g dongle
     if (1) {
+        jumpApp_prerequisite();
         jumpApp();
     }
 #endif

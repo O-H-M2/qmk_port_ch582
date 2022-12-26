@@ -17,6 +17,7 @@ file(GLOB QMK_PORTING_SOURCES
 
 file(GLOB_RECURSE QMK_PORTING_IAP_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/IAP/*.c"
+    "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/battery_measure.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/bootloader.c"
 )
 
