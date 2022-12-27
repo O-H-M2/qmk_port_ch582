@@ -356,41 +356,25 @@ __HIGH_CODE static void Main_Circulation()
 __HIGH_CODE int main()
 {
 #ifdef HSE_LOAD_CAPACITANCE
-    {
-        uint8_t capacitance = HSE_LOAD_CAPACITANCE;
-
-        switch (capacitance) {
-            case 10:
-                HSECFG_Capacitance(HSECap_10p);
-                break;
-            case 12:
-                HSECFG_Capacitance(HSECap_12p);
-                break;
-            case 14:
-                HSECFG_Capacitance(HSECap_14p);
-                break;
-            case 16:
-                HSECFG_Capacitance(HSECap_16p);
-                break;
-            case 18:
-                HSECFG_Capacitance(HSECap_18p);
-                break;
-            case 20:
-                HSECFG_Capacitance(HSECap_20p);
-                break;
-            case 22:
-                HSECFG_Capacitance(HSECap_22p);
-                break;
-            case 24:
-                HSECFG_Capacitance(HSECap_24p);
-                break;
-            default:
-                PRINT("Fatal: Invalid HSE capacitance!\n");
-                while (1) {
-                    __nop();
-                }
-        }
-    }
+#if HSE_LOAD_CAPACITANCE == 10
+    HSECFG_Capacitance(HSECap_10p);
+#elif HSE_LOAD_CAPACITANCE == 12
+    HSECFG_Capacitance(HSECap_12p);
+#elif HSE_LOAD_CAPACITANCE == 14
+    HSECFG_Capacitance(HSECap_14p);
+#elif HSE_LOAD_CAPACITANCE == 16
+    HSECFG_Capacitance(HSECap_16p);
+#elif HSE_LOAD_CAPACITANCE == 18
+    HSECFG_Capacitance(HSECap_18p);
+#elif HSE_LOAD_CAPACITANCE == 20
+    HSECFG_Capacitance(HSECap_20p);
+#elif HSE_LOAD_CAPACITANCE == 22
+    HSECFG_Capacitance(HSECap_22p);
+#elif HSE_LOAD_CAPACITANCE == 24
+    HSECFG_Capacitance(HSECap_24p);
+#else
+#error "Invalid HSE capacitance!"
+#endif
 #endif
     SetSysClock(CLK_SOURCE_PLL_60MHz);
     gpio_strap();
