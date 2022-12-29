@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum {
     BOOTLOADER_BOOT_MODE_IAP = 0x05,
+    BOOTLOADER_BOOT_MODE_IAP_ONGOING = 0x14,
     BOOTLOADER_BOOT_MODE_USB = 0x0A,
     BOOTLOADER_BOOT_MODE_BLE = 0x50,
     BOOTLOADER_BOOT_MODE_ESB = 0xA0,

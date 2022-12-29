@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "battery_measure.h"
 
-static const uint16_t battery_map[100] = {
+#if defined BATTERY_MEASURE_PIN
+
+__attribute__((weak)) const uint16_t battery_map[] = {
     2515, 2528, 2541, 2554, 2567, 2580, 2593, 2606, 2619, 2632,
     2645, 2658, 2672, 2685, 2698, 2711, 2724, 2737, 2750, 2763,
     2776, 2789, 2802, 2816, 2829, 2842, 2855, 2868, 2881, 2894,
@@ -82,66 +84,125 @@ static inline void battery_config_channel(pin_t pin)
     }
 }
 
-// static int16_t battery_measure_calibrate()
-// {
-//     uint32_t sum = 0;
-//     uint8_t ch = R8_ADC_CHANNEL;
-//     uint8_t ctrl = R8_ADC_CFG;
-
-//     R8_ADC_CFG = 0;
-//     battery_config_channel(BATTERY_MEASURE_CALIBRATION_PIN);
-
-//     R8_ADC_CFG |= RB_ADC_OFS_TEST | RB_ADC_POWER_ON | (2 << 4); // 进入测试模式
-//     R8_ADC_CONVERT = RB_ADC_START;
-//     while (R8_ADC_CONVERT & RB_ADC_START) {
-//         ;
-//     }
-//     for (uint16_t i = 0; i < 16; i++) {
-//         R8_ADC_CONVERT = RB_ADC_START;
-//         while (R8_ADC_CONVERT & RB_ADC_START) {
-//             ;
-//         }
-//         sum += (~R16_ADC_DATA) & RB_ADC_DATA;
-//     }
-//     sum = (sum + 8) >> 4;
-//     R8_ADC_CFG &= ~RB_ADC_OFS_TEST; // 关闭测试模式
-
-//     R8_ADC_CHANNEL = ch;
-//     R8_ADC_CFG = ctrl;
-//     return (2048 - sum);
-// }
-
-__attribute__((weak)) uint16_t battery_get_min()
+uint16_t battery_get_min()
 {
     return battery_map[0];
 }
 
-__attribute__((weak)) uint16_t battery_get_max()
+uint16_t battery_get_max()
 {
-    return battery_map[sizeof(battery_map) - 1];
+    return battery_map[BATTERY_MAP_SIZE - 1];
+}
+
+// just in case there is no gpio interrupt handler defined
+__attribute__((weak)) __INTERRUPT __HIGH_CODE void GPIOA_IRQHandler()
+{
+    R16_PA_INT_IF = R16_PA_INT_IF;
+    R16_PB_INT_IF = R16_PB_INT_IF;
+}
+
+__attribute__((weak)) __INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
+{
+    R16_PA_INT_IF = R16_PA_INT_IF;
+    R16_PB_INT_IF = R16_PB_INT_IF;
+}
+
+__attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
+{
+    uint8_t temp = RB_WAKE_EV_MODE;
+
+#ifdef POWER_DETECT_PIN
+    temp |= RB_SLP_GPIO_WAKE;
+    if (POWER_DETECT_PIN & 0x80000000) {
+        PFIC_EnableIRQ(GPIO_B_IRQn);
+    } else {
+        PFIC_EnableIRQ(GPIO_A_IRQn);
+    }
+    setPinInputLow(POWER_DETECT_PIN);
+    setPinInterruptRisingEdge(POWER_DETECT_PIN);
+#endif
+    do {
+        sys_safe_access_enable();
+        R8_SLP_WAKE_CTRL = temp;
+        sys_safe_access_disable();
+    } while (R8_SLP_WAKE_CTRL != temp);
+
+    uint8_t x32Kpw, x32Mpw;
+
+    FLASH_ROM_SW_RESET();
+    x32Kpw = R8_XT32K_TUNE;
+    x32Mpw = R8_XT32M_TUNE;
+    x32Mpw = (x32Mpw & 0xfc) | 0x03;     // 150%额定电流
+    if (R16_RTC_CNT_32K > 0x3fff) {      // 超过500ms
+        x32Kpw = (x32Kpw & 0xfc) | 0x01; // LSE驱动电流降低到额定电流
+    }
+
+    WAIT_FOR_DBG;
+
+    sys_safe_access_enable();
+    R8_BAT_DET_CTRL = 0;
+    sys_safe_access_enable();
+    R8_XT32K_TUNE = x32Kpw;
+    R8_XT32M_TUNE = x32Mpw;
+    sys_safe_access_disable();
+    SetSysClock(CLK_SOURCE_HSE_6_4MHz);
+
+    PFIC->SCTLR |= (1 << 2); //deep sleep
+
+    sys_safe_access_enable();
+    R8_SLP_POWER_CTRL = RB_RAM_RET_LV | 0x01;
+    sys_safe_access_enable();
+    R16_POWER_PLAN = RB_PWR_PLAN_EN | RB_PWR_MUST_0010;
+    __WFI();
+    __nop();
+    __nop();
+    FLASH_ROM_SW_RESET();
+    sys_safe_access_enable();
+    R8_RST_WDOG_CTRL |= RB_SOFTWARE_RESET;
+    sys_safe_access_disable();
+
+    __builtin_unreachable();
 }
 
 __attribute__((weak)) void battery_init()
 {
-    setPinInput(BATTERY_MEASURE_PIN);
+    switch (BATTERY_MEASURE_PIN) {
+        case A0:
+        case A1:
+        case A2:
+        case A3:
+        case A12:
+        case A13:
+        case A14:
+        case A15:
+            setPinInput(BATTERY_MEASURE_PIN);
+            break;
+        default:
+            break;
+    }
     ADC_ExtSingleChSampInit(SampleFreq_3_2, ADC_PGA_2);
 }
 
 __attribute__((weak)) uint16_t battery_measure()
 {
-    uint16_t abcBuff[15];
+    uint16_t adcBuff[15];
     int16_t RoughCalib_Value = ADC_DataCalib_Rough();
 
     battery_config_channel(BATTERY_MEASURE_PIN);
     for (uint8_t i = 0; i < 15; i++) {
-        abcBuff[i] = ADC_ExcutSingleConver() + RoughCalib_Value;
+        adcBuff[i] = ADC_ExcutSingleConver();
+        if ((adcBuff[i] + RoughCalib_Value) > 0) {
+            adcBuff[i] += RoughCalib_Value;
+        } else {
+            adcBuff[i] = 0;
+        }
     }
     R8_ADC_CFG &= ~(RB_ADC_BUF_EN | RB_ADC_POWER_ON);
 
     uint16_t adc_data = 0;
 
     for (uint8_t i = 0; i < 10; i++) {
-        adc_data += abcBuff[i + 5];
+        adc_data += adcBuff[i + 5];
     }
 
     return adc_data;
@@ -149,12 +210,21 @@ __attribute__((weak)) uint16_t battery_measure()
 
 __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
 {
-    for (uint8_t i = 0; i < 100; i++) {
+    if ((adcVal < battery_map[0] * 10)
+#ifdef POWER_DETECT_PIN
+        && !readPin(POWER_DETECT_PIN)
+#endif
+    ) {
+        PRINT("Battery level critical.\n");
+        battery_handle_critical();
+    }
+
+    for (uint32_t i = 1; i < BATTERY_MAP_SIZE; i++) {
         if (adcVal < battery_map[i] * 10) {
-            return i;
+            return (uint8_t)(i * 100 / BATTERY_MAP_SIZE);
         }
     }
-    return battery_get_max();
+    return 100;
 }
 
 void battery_indicator_toggle(bool status)
@@ -176,3 +246,5 @@ bool battery_indicator_timeout()
 {
     return (timer_elapsed(battery_indicator_timer) > BATTERY_INDICATOR_TIMEOUT);
 }
+
+#endif

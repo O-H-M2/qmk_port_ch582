@@ -15,7 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "host.h"
+#include "gpio.h"
+#include "protocol_usb.h"
 #include "usb_device_state.h"
 #include "keycode_config.h"
 #include "usb_main.h"
@@ -79,6 +80,11 @@ void raw_hid_send_usb(uint8_t *data, uint8_t length)
 
 void platform_initialize_usb()
 {
+#ifndef PLF_DEBUG
+    UART1_Reset();
+    setPinInput(A8);
+    setPinInput(A9);
+#endif
 #if CLK_OSC32K
     Calibration_LSI(Level_128);
 #endif
@@ -94,6 +100,12 @@ __HIGH_CODE void protocol_task_usb()
     for (;;) {
         keyboard_task();
         housekeeping_task();
+#ifdef POWER_DETECT_PIN
+        if (!readPin(POWER_DETECT_PIN)) {
+            // cable removed
+            platform_reboot_usb();
+        }
+#endif
     }
 }
 

@@ -278,7 +278,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef WS2812_DRIVER_SPI
+#ifdef SPI_IO_REMAPPING
+#define RGB_DI_PIN B14
+#else
 #define RGB_DI_PIN A14
+#endif
 #elif defined WS2812_DRIVER_PWM
 #if WS2812_PWM_DRIVER == 1
 #define RGB_DI_PIN A10
@@ -321,7 +325,10 @@ enum {
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
 #define NO_USB_STARTUP_CHECK
 #ifndef BATTERY_MEASURE_PIN
-#warning "Battery measure pin undefined."
+#error "Battery measure pin undefined."
+#endif
+#ifndef POWER_DETECT_PIN
+#warning "Power detect pin undefined."
 #endif
 #endif
 

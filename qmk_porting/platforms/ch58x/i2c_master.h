@@ -28,8 +28,6 @@ typedef int16_t i2c_status_t;
 
 #define TxAdderss 0x52
 
-#define I2C_IO_REMAPPING 1
-
 #define I2C_STATUS_SUCCESS (0)
 #define I2C_STATUS_ERROR   (-1)
 #define I2C_STATUS_TIMEOUT (-2)

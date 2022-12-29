@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "eeprom_driver.h"
 #include "platform_deps.h"
+#include "gpio.h"
 
 void bootmagic_lite_reset_eeprom(void)
 {
@@ -25,8 +26,10 @@ void bootmagic_lite_reset_eeprom(void)
 
 void bootloader_boot_mode_set(uint8_t mode)
 {
-    if (mode != BOOTLOADER_BOOT_MODE_IAP && mode != BOOTLOADER_BOOT_MODE_USB &&
-        mode != BOOTLOADER_BOOT_MODE_BLE && mode != BOOTLOADER_BOOT_MODE_ESB) {
+    if (mode != BOOTLOADER_BOOT_MODE_IAP && mode != BOOTLOADER_BOOT_MODE_IAP_ONGOING &&
+        mode != BOOTLOADER_BOOT_MODE_USB &&
+        mode != BOOTLOADER_BOOT_MODE_BLE &&
+        mode != BOOTLOADER_BOOT_MODE_ESB) {
         PRINT("Invalid mode select, will ignore.\n");
         return;
     }
@@ -64,12 +67,7 @@ uint8_t bootloader_boot_mode_get()
     do {
         ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION, &buffer, sizeof(buffer));
     } while (ret);
-    if (buffer == BOOTLOADER_BOOT_MODE_IAP || buffer == BOOTLOADER_BOOT_MODE_USB ||
-        buffer == BOOTLOADER_BOOT_MODE_BLE || buffer == BOOTLOADER_BOOT_MODE_ESB) {
-        return buffer;
-    } else {
-        return bootloader_set_to_default_mode("Invalid boot mode");
-    }
+    return buffer;
 }
 
 void bootloader_select_boot_mode()
@@ -78,6 +76,21 @@ void bootloader_select_boot_mode()
 
     if (mode == BOOTLOADER_BOOT_MODE_IAP) {
         mode = bootloader_set_to_default_mode("Successfully booted from IAP");
+    } else if (mode == BOOTLOADER_BOOT_MODE_USB) {
+#ifdef POWER_DETECT_PIN
+        if (!readPin(POWER_DETECT_PIN)) {
+            PRINT("Cable not connected, USB mode is disabled.\n");
+#ifdef BLE_ENABLE
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+            mode = BOOTLOADER_BOOT_MODE_BLE;
+            PRINT("Default to BLE.\n");
+#elif defined ESB_ENABLE
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+            mode = BOOTLOADER_BOOT_MODE_ESB;
+            PRINT("Default to ESB.\n");
+#endif
+        }
+#endif
     }
 
     //! TODO: for test only!
@@ -103,52 +116,64 @@ void bootloader_select_boot_mode()
             break;
 #endif
         default:
-            PRINT("Invalid mode record detected, ");
-            if (mode == BOOTLOADER_BOOT_MODE_IAP) {
-                PRINT("will reside in IAP.\n");
-            } else {
-                bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
-                mode = bootloader_boot_mode_get();
-                PRINT("set to IAP... %s\n", mode == BOOTLOADER_BOOT_MODE_IAP ? "done" : "fail");
-            }
-            PRINT("Reboot execute.\n");
+            PRINT("IAP incomplete, will reboot back to IAP.\n");
             WAIT_FOR_DBG;
             SYS_ResetExecute();
+            __builtin_unreachable();
     }
 }
 
 uint8_t bootloader_set_to_default_mode(const char *reason)
 {
-    PRINT("%s, ", reason);
-#ifdef USB_ENABLE
-    PRINT("default to USB.\n");
-    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
-    return BOOTLOADER_BOOT_MODE_USB;
-#elif defined BLE_ENABLE
-    PRINT("default to BLE slot 0.\n");
-    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
-    return BOOTLOADER_BOOT_MODE_BLE;
-#else
-    PRINT("default to ESB.\n");
-    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
-    return BOOTLOADER_BOOT_MODE_ESB;
+    bool limited_mode = false;
+
+#ifdef POWER_DETECT_PIN
+    if (!readPin(POWER_DETECT_PIN)) {
+        // cable not connected, skip usb mode
+        limited_mode = true;
+    }
 #endif
+    PRINT("%s, ", reason);
+    if (limited_mode) {
+#ifdef BLE_ENABLE
+        PRINT("default to BLE slot 0.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+        return BOOTLOADER_BOOT_MODE_BLE;
+#else
+        PRINT("default to ESB.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+        return BOOTLOADER_BOOT_MODE_ESB;
+#endif
+    } else {
+#ifdef USB_ENABLE
+        PRINT("default to USB.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
+        return BOOTLOADER_BOOT_MODE_USB;
+#elif defined BLE_ENABLE
+        PRINT("default to BLE slot 0.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+        return BOOTLOADER_BOOT_MODE_BLE;
+#else
+        PRINT("default to ESB.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+        return BOOTLOADER_BOOT_MODE_ESB;
+#endif
+    }
+    __builtin_unreachable();
 }
 
 void bootloader_jump()
 {
     PRINT("Jumping IAP...\n");
     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
-    if (bootloader_boot_mode_get() == BOOTLOADER_BOOT_MODE_IAP) {
-        PRINT("Boot mode set to IAP.\n");
-        mcu_reset();
-    } else {
-        PRINT("Setting boot mode failed, abort.\n");
-    }
+    mcu_reset();
 }
 
 void mcu_reset()
 {
+#if __BUILDING_IAP__
+    SYS_ResetExecute();
+#endif
 #if __BUILDING_APP__
 #ifdef USB_ENABLE
     if (kbd_protocol_type == kbd_protocol_usb) {
@@ -165,8 +190,5 @@ void mcu_reset()
         platform_reboot_esb();
     }
 #endif
-#endif
-#if __BUILDING_IAP__
-    SYS_ResetExecute();
 #endif
 }

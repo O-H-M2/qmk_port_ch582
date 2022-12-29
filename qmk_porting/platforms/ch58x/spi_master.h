@@ -21,10 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 #include "gpio.h"
 
-#ifndef SPI_ALTER
-#define SPI_ALTER 0
-#endif
-
 #define SPI_STATUS_SUCCESS (0)
 #define SPI_STATUS_ERROR   (-1)
 #define SPI_STATUS_TIMEOUT (-2)

@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "timer.h"
 
 #define BATTERY_INDICATOR_TIMEOUT 5000 // in unit of ms
+#define BATTERY_MAP_SIZE          (sizeof(battery_map) / sizeof(battery_map[0]))
 
 uint16_t battery_get_min();
 uint16_t battery_get_max();

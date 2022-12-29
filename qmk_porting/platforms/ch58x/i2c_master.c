@@ -32,7 +32,7 @@ static uint8_t i2c_address;
 
 void i2c_init()
 {
-#if I2C_IO_REMAPPING
+#ifdef I2C_IO_REMAPPING
     R16_PIN_ALTERNATE |= RB_PIN_I2C;
     setPinInputHigh(B20);
     setPinInputHigh(B21);

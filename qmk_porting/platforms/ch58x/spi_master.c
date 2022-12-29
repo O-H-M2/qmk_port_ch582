@@ -53,7 +53,7 @@ void spi_init()
     if (spi_initialized) {
         return;
     }
-#if SPI_ALTER
+#ifdef SPI_IO_REMAPPING
     R16_PIN_ALTERNATE |= RB_PIN_SPI0;
     setPinOutput(B13);
     setPinOutput(B14);

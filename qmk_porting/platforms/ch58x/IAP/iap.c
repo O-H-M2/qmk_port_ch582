@@ -68,84 +68,10 @@ static uint8_t msc_ram_descriptor[] = {
 static WriteState _wr_state = { 0 };
 
 /**
- * Use a dedicate section to reconstruct the start up sequence
+ * "Reload" some functions into IRAM to increase speed
 */
 #if 1
-extern uint32_t _highcode_lma;
-extern uint32_t _highcode_vma_start;
-extern uint32_t _highcode_vma_end;
-
-extern uint32_t _data_lma;
-extern uint32_t _data_vma;
-extern uint32_t _edata;
-
-extern uint32_t _sbss;
-extern uint32_t _ebss;
-
-__attribute__((section(".highcode_copy"))) static void __attribute__((noinline)) copy_section(uint32_t *p_load, uint32_t *p_vma, uint32_t *p_vma_end)
-{
-    while (p_vma <= p_vma_end) {
-        *p_vma = *p_load;
-        ++p_load;
-        ++p_vma;
-    }
-}
-
-__attribute__((section(".highcode_copy"))) static void __attribute__((noinline)) zero_section(uint32_t *start, uint32_t *end)
-{
-    uint32_t *p_zero = start;
-
-    while (p_zero <= end) {
-        *p_zero = 0;
-        ++p_zero;
-    }
-}
-
-__attribute__((section(".highcode_copy"))) void mySystemInit()
-{
-    sys_safe_access_enable();
-    R8_PLL_CONFIG &= ~(1 << 5); //
-    sys_safe_access_disable();
-    // PLL div
-    if (!(R8_HFCK_PWR_CTRL & RB_CLK_PLL_PON)) {
-        sys_safe_access_enable();
-        R8_HFCK_PWR_CTRL |= RB_CLK_PLL_PON; // PLL power on
-        for (uint32_t i = 0; i < 2000; i++) {
-            __nop();
-            __nop();
-        }
-    }
-    sys_safe_access_enable();
-    R16_CLK_SYS_CFG = (1 << 6) | (CLK_SOURCE_PLL_60MHz & 0x1f);
-    __nop();
-    __nop();
-    __nop();
-    __nop();
-    sys_safe_access_disable();
-    sys_safe_access_enable();
-    R8_FLASH_CFG = 0X52;
-    sys_safe_access_disable();
-    //更改FLASH clk的驱动能力
-    sys_safe_access_enable();
-    R8_PLL_CONFIG |= 1 << 7;
-    sys_safe_access_disable();
-
-    copy_section(&_highcode_lma, &_highcode_vma_start, &_highcode_vma_end);
-    copy_section(&_data_lma, &_data_vma, &_edata);
-    zero_section(&_sbss, &_ebss);
-}
-
-void SystemInit()
-{
-    mySystemInit();
-}
-#endif
-
-/**
- * "Reload" two basic functions into IRAM to increase speed
-*/
-#if 1
-__HIGH_CODE void my_delay_us(uint16_t t)
+__HIGH_CODE static void my_delay_us(uint16_t t)
 {
     uint32_t i = t * 15;
 
@@ -154,7 +80,7 @@ __HIGH_CODE void my_delay_us(uint16_t t)
     } while (--i);
 }
 
-__HIGH_CODE void my_delay_ms(uint16_t t)
+__HIGH_CODE static void my_delay_ms(uint16_t t)
 {
     for (uint16_t i = 0; i < t; i++) {
         my_delay_us(1000);
@@ -179,6 +105,20 @@ __HIGH_CODE void my_memset(void *dst, int c, uint32_t n)
         *((uint8_t *)dst + i) = c;
     }
 }
+
+__HIGH_CODE uint32_t my_get_sys_clock()
+{
+    uint16_t rev;
+
+    rev = R16_CLK_SYS_CFG & 0xff;
+    if ((rev & 0x40) == (0 << 6)) {
+        return (32000000 / (rev & 0x1f));
+    } else if ((rev & RB_CLK_SYS_MOD) == (1 << 6)) {
+        return (480000000 / (rev & 0x1f));
+    } else {
+        return (32000);
+    }
+}
 #endif
 
 /**
@@ -188,6 +128,7 @@ __HIGH_CODE void my_memset(void *dst, int c, uint32_t n)
 __HIGH_CODE void board_flash_init()
 {
     PRINT("Erasing application...\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
     FLASH_ROM_ERASE(APP_CODE_START_ADDR, APP_CODE_END_ADDR - APP_CODE_START_ADDR);
 }
 
@@ -198,7 +139,7 @@ __HIGH_CODE uint32_t board_flash_size()
 
 __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 {
-    PRINT("Reading flash address 0x%04x...\n", addr);
+    PRINT("Reading flash address 0x%04x, len 0x%04x...\n", addr, len);
     usb_counter = 0;
     my_memset(buffer, 0xFF, len);
 }
@@ -206,17 +147,18 @@ __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 __HIGH_CODE void board_flash_flush()
 {
     PRINT("Flashing done.\n");
+    bootloader_set_to_default_mode("DFU done");
     usb_counter = 58000;
 }
 
 __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len)
 {
-    if (addr < APP_CODE_START_ADDR || addr % EEPROM_PAGE_SIZE != 0) {
+    if (addr < APP_CODE_START_ADDR || addr % sizeof(uint32_t) != 0) {
         PRINT("Flash violation.\n");
         return;
     }
 
-    PRINT("Writing flash address 0x%04x... ", addr);
+    PRINT("Writing flash address 0x%04x, len 0x%04x... ", addr, len);
     usb_counter = 0;
     for (;;) {
         FLASH_ROM_WRITE(addr, (void *)data, len);
@@ -231,6 +173,10 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
 }
 #endif
 
+/**
+ * Callbacks for CherryUSB stack
+*/
+#if 1
 __HIGH_CODE void usbd_configure_done_callback(void)
 {
     /* do nothing */
@@ -277,8 +223,9 @@ __HIGH_CODE int usbd_msc_sector_write(uint32_t sector, uint8_t *buffer, uint32_t
     }
     return 0;
 }
+#endif
 
-__HIGH_CODE void gpio_strap()
+__HIGH_CODE static void gpio_strap()
 {
     uint32_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
 
@@ -323,7 +270,67 @@ __HIGH_CODE void gpio_strap()
 
 __HIGH_CODE _PUTCHAR_CLAIM;
 
-__HIGH_CODE void Main_Circulation()
+__HIGH_CODE static void iap_handle_new_chip()
+{
+    uint8_t ret = UserOptionByteConfig(DISABLE, ENABLE, DISABLE, 128);
+
+    PRINT("Setting user config... %s\n", ret == SUCCESS ? "done" : "fail");
+    (void)ret;
+    bootloader_set_to_default_mode("New chip with wireless support");
+    WAIT_FOR_DBG;
+    // construct a power on reset to make the config effective
+    FLASH_ROM_SW_RESET();
+    sys_safe_access_enable();
+    R16_INT32K_TUNE = 0xFFFF;
+    sys_safe_access_enable();
+    R8_RST_WDOG_CTRL |= RB_SOFTWARE_RESET;
+    sys_safe_access_disable();
+    __builtin_unreachable();
+}
+
+__HIGH_CODE static void iap_decide_jump()
+{
+    static uint8_t first_in = true;
+    uint8_t mode = bootloader_boot_mode_get();
+
+    switch (mode) {
+        case UINT8_MAX:
+            iap_handle_new_chip();
+            jumpApp_Pre();
+            jumpApp();
+            __builtin_unreachable();
+        case BOOTLOADER_BOOT_MODE_IAP:
+            // we stay in dfu mode for a while
+            if (first_in) {
+                first_in = false;
+                return;
+            } else {
+                PRINT("Leaving DFU...\n");
+                PFIC_DisableIRQ(USB_IRQn);
+                R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
+                R32_USB_CONTROL = 0;
+                R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
+                my_delay_ms(10);
+                R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+            }
+        case BOOTLOADER_BOOT_MODE_USB:
+        case BOOTLOADER_BOOT_MODE_BLE:
+        case BOOTLOADER_BOOT_MODE_ESB:
+            // ready to go
+            jumpApp_Pre();
+            jumpApp();
+            __builtin_unreachable();
+        case BOOTLOADER_BOOT_MODE_IAP_ONGOING:
+            PRINT("IAP unaccomplished, will reside.\n");
+            return;
+        default:
+            PRINT("Invalid mode record detected, will take as interrupted IAP procedure.\n");
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
+            return;
+    }
+}
+
+__HIGH_CODE static void Main_Circulation()
 {
     static uint8_t second = 0;
 
@@ -338,51 +345,38 @@ __HIGH_CODE void Main_Circulation()
             second = 0;
         }
         if (second >= 60) {
-            jumpPre;
-            jumpApp();
+            iap_decide_jump();
+            // jump must have failed, reset the counters
+            usb_counter = 0;
+            second = 0;
         }
     }
 }
 
-int main()
+__HIGH_CODE int main()
 {
 #ifdef HSE_LOAD_CAPACITANCE
-    {
-        uint8_t capacitance = HSE_LOAD_CAPACITANCE;
-
-        switch (capacitance) {
-            case 10:
-                HSECFG_Capacitance(HSECap_10p);
-                break;
-            case 12:
-                HSECFG_Capacitance(HSECap_12p);
-                break;
-            case 14:
-                HSECFG_Capacitance(HSECap_14p);
-                break;
-            case 16:
-                HSECFG_Capacitance(HSECap_16p);
-                break;
-            case 18:
-                HSECFG_Capacitance(HSECap_18p);
-                break;
-            case 20:
-                HSECFG_Capacitance(HSECap_20p);
-                break;
-            case 22:
-                HSECFG_Capacitance(HSECap_22p);
-                break;
-            case 24:
-                HSECFG_Capacitance(HSECap_24p);
-                break;
-            default:
-                PRINT("Fatal: Invalid HSE capacitance!\n");
-                while (1) {
-                    __nop();
-                }
-        }
-    }
+#if HSE_LOAD_CAPACITANCE == 10
+    HSECFG_Capacitance(HSECap_10p);
+#elif HSE_LOAD_CAPACITANCE == 12
+    HSECFG_Capacitance(HSECap_12p);
+#elif HSE_LOAD_CAPACITANCE == 14
+    HSECFG_Capacitance(HSECap_14p);
+#elif HSE_LOAD_CAPACITANCE == 16
+    HSECFG_Capacitance(HSECap_16p);
+#elif HSE_LOAD_CAPACITANCE == 18
+    HSECFG_Capacitance(HSECap_18p);
+#elif HSE_LOAD_CAPACITANCE == 20
+    HSECFG_Capacitance(HSECap_20p);
+#elif HSE_LOAD_CAPACITANCE == 22
+    HSECFG_Capacitance(HSECap_22p);
+#elif HSE_LOAD_CAPACITANCE == 24
+    HSECFG_Capacitance(HSECap_24p);
+#else
+#error "Invalid HSE capacitance!"
 #endif
+#endif
+    SetSysClock(CLK_SOURCE_PLL_60MHz);
     gpio_strap();
 #if (defined(DCDC_ENABLE)) && (DCDC_ENABLE == TRUE)
     uint16_t adj = R16_AUX_POWER_ADJ;
@@ -400,8 +394,7 @@ int main()
 #endif
 #ifdef PLF_DEBUG
     DBG_INIT;
-    PRINT("Chip start, %s\n", VER_LIB);
-    PRINT("Build on %s %s - " MACRO2STR(__GIT_VERSION__) "\n", __DATE__, __TIME__);
+    PRINT("Bootloader " MACRO2STR(__GIT_VERSION__) "\n");
     PRINT("Reason of last reset:  ");
     switch (R8_RESET_STATUS & RB_RESET_FLAG) {
         case 0b000:
@@ -426,13 +419,21 @@ int main()
 #else
     // manually initialize uart1 and send some debug information
     writePinHigh(A9);
-    setPinInputHigh(A8);
     setPinOutput(A9);
-    UART1_DefInit();
-    UART1_BaudRateCfg(DEBUG_BAUDRATE);
+    setPinInputHigh(A8);
 
-    char buffer[128];
-    uint8_t len = sprintf(buffer, "Chipstart, %s\nBuild on %s %s - " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", VER_LIB, __DATE__, __TIME__, R8_RESET_STATUS & RB_RESET_FLAG);
+    uint32_t x;
+
+    x = 75000000 / DEBUG_BAUDRATE;
+    x = (x + 5) / 10;
+    R16_UART1_DL = (uint16_t)x;
+    R8_UART1_FCR = (2 << 6) | RB_FCR_TX_FIFO_CLR | RB_FCR_RX_FIFO_CLR | RB_FCR_FIFO_EN;
+    R8_UART1_LCR = RB_LCR_WORD_SZ;
+    R8_UART1_IER = RB_IER_TXD_EN;
+    R8_UART1_DIV = 1;
+
+    char buffer[UINT8_MAX];
+    uint8_t len = sprintf(buffer, "Bootloader " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", R8_RESET_STATUS & RB_RESET_FLAG);
 
     while (len) {
         if (R8_UART1_TFC != UART_FIFO_SIZE) {
@@ -443,17 +444,25 @@ int main()
     while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
         __nop();
     }
+    R8_UART1_IER = RB_IER_RESET;
+    setPinInputLow(A8);
+    setPinInputLow(A9);
+#endif
+#ifdef BATTERY_MEASURE_PIN
+    // do a power check
+    uint16_t adc;
+
+    battery_init();
+    adc = battery_measure();
+    adc = battery_calculate(adc);
+    PRINT("Battery level: %d\n", adc);
 #endif
 
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
-    if (bootloader_boot_mode_get() != BOOTLOADER_BOOT_MODE_IAP) {
-        jumpApp();
-    }
+    iap_decide_jump();
 #else
     // TODO: implement judging condition for 2.4g dongle
-    if (1) {
-        jumpApp();
-    }
+    iap_decide_jump();
 #endif
 
     uf2_init();

@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BLE_SLOT_NUM 4
 // #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
 // #define LSE_LOAD_CAPACITANCE 7   // in pF unit
+// #define I2C_IO_REMAPPING
+// #define SPI_IO_REMAPPING
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE
@@ -71,6 +73,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_EN_LEVEL 1
 
 #define BATTERY_MEASURE_PIN A2
+// #define POWER_DETECT_PIN    B12
 
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        17
