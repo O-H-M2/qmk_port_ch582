@@ -39,20 +39,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 14
-#define MATRIX_ROW_PINS      \
-    {                        \
+#define MATRIX_ROW_PINS       \
+    {                         \
         B9, B8, B17, B16, B18 \
     }
-#define MATRIX_COL_PINS                                              \
-    {                                                                \
-        A6, A0, A1, A2 ,A3, A15, A14, A13, A12, A7, B7, B6, B5, B4   \
+#define MATRIX_COL_PINS                                            \
+    {                                                              \
+        A6, A0, A1, A2, A3, A15, A14, A13, A12, A7, B7, B6, B5, B4 \
     }
 #define DIODE_DIRECTION       COL2ROW
 #define BOOTMAGIC_LITE_ROW    0
 #define BOOTMAGIC_LITE_COLUMN 0
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
-
 
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
@@ -101,6 +100,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENABLE_RGB_MATRIX_PIXEL_RAIN
 #define ENABLE_RGB_MATRIX_PIXEL_FLOW
 #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
+
 #endif
 
 /* define if matrix has ghost */
