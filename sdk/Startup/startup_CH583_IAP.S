@@ -127,22 +127,7 @@ handle_reset:
 1:
 	la sp, _eusrstack 
 
-2:
-    la a0, _highcode_copy_lma
-    la a1, _highcode_copy_start
-    la a2, _highcode_copy_end
-    bgeu a1, a2, 2f
-1:
-    lw t0, (a0)
-    sw t0, (a1)
-    addi a0, a0, 4
-    addi a1, a1, 4
-    bltu a1, a2, 1b
-
-	jal SystemInit
-
 /* Load highcode code  section from flash to RAM */
-/*
 2:
     la a0, _highcode_lma
     la a1, _highcode_vma_start
@@ -155,6 +140,7 @@ handle_reset:
     addi a1, a1, 4
     bltu a1, a2, 1b
 
+/* Load data section from flash to RAM */
 2:
 	la a0, _data_lma
 	la a1, _data_vma
@@ -167,7 +153,7 @@ handle_reset:
 	addi a1, a1, 4
 	bltu a1, a2, 1b
 2:
-
+	/* clear bss section */
 	la a0, _sbss
 	la a1, _ebss
 	bgeu a0, a1, 2f
@@ -175,10 +161,9 @@ handle_reset:
 	sw zero, (a0)
 	addi a0, a0, 4
 	bltu a0, a1, 1b
-	*/
 2:
 	/* 流水线控制位 & 动态预测控制位 */
-	li t0, 0x1f	/*原0x3f-为了屏蔽中断*/
+	li t0, 0x1f
 	csrw 0xbc0, t0
 	/* 打开嵌套中断、硬件压栈功能 */
 	li t0, 0x3

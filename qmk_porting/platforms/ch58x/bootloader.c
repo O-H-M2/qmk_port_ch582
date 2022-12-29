@@ -79,9 +79,16 @@ void bootloader_select_boot_mode()
     } else if (mode == BOOTLOADER_BOOT_MODE_USB) {
 #ifdef POWER_DETECT_PIN
         if (!readPin(POWER_DETECT_PIN)) {
+            PRINT("Cable not connected, USB mode is disabled.\n");
+#ifdef BLE_ENABLE
             bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
             mode = BOOTLOADER_BOOT_MODE_BLE;
-            PRINT("Cable not connected, USB mode is disabled.\n");
+            PRINT("Default to BLE.\n");
+#elif defined ESB_ENABLE
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+            mode = BOOTLOADER_BOOT_MODE_ESB;
+            PRINT("Default to ESB.\n");
+#endif
         }
 #endif
     }
@@ -90,11 +97,6 @@ void bootloader_select_boot_mode()
     // mode = BOOTLOADER_BOOT_MODE_BLE;
 
     switch (mode) {
-        case BOOTLOADER_BOOT_MODE_IAP_ONGOING:
-            PRINT("IAP incomplete, will reboot back to IAP.\n");
-            WAIT_FOR_DBG;
-            SYS_ResetExecute();
-            __builtin_unreachable();
 #ifdef USB_ENABLE
         case BOOTLOADER_BOOT_MODE_USB:
             // cable mode
@@ -113,6 +115,11 @@ void bootloader_select_boot_mode()
             kbd_protocol_type = kbd_protocol_esb;
             break;
 #endif
+        default:
+            PRINT("IAP incomplete, will reboot back to IAP.\n");
+            WAIT_FOR_DBG;
+            SYS_ResetExecute();
+            __builtin_unreachable();
     }
 }
 
@@ -159,16 +166,14 @@ void bootloader_jump()
 {
     PRINT("Jumping IAP...\n");
     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
-    if (bootloader_boot_mode_get() == BOOTLOADER_BOOT_MODE_IAP) {
-        PRINT("Boot mode set to IAP.\n");
-        mcu_reset();
-    } else {
-        PRINT("Setting boot mode failed, abort.\n");
-    }
+    mcu_reset();
 }
 
 void mcu_reset()
 {
+#if __BUILDING_IAP__
+    SYS_ResetExecute();
+#endif
 #if __BUILDING_APP__
 #ifdef USB_ENABLE
     if (kbd_protocol_type == kbd_protocol_usb) {
@@ -185,8 +190,5 @@ void mcu_reset()
         platform_reboot_esb();
     }
 #endif
-#endif
-#if __BUILDING_IAP__
-    SYS_ResetExecute();
 #endif
 }

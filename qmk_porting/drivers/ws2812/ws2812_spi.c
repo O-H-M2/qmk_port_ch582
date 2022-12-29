@@ -23,10 +23,12 @@ static volatile bool ws2812_inited = false, ws2812_powered_on = false, ws2812_ne
 static void ws2812_init()
 {
     // we have only one spi controller
-#if WS2812_SPI_DRIVER == 2
-    GPIOPinRemap(ENABLE,RB_PIN_SPI0);
+    setPinOutput(RGB_DI_PIN);
+#ifdef SPI_IO_REMAPPING
+    R16_PIN_ALTERNATE |= RB_PIN_SPI0;
+#else
+    R16_PIN_ALTERNATE &= ~RB_PIN_SPI0;
 #endif
-    setPinOutput(B14);
 
     R8_SPI0_CLOCK_DIV = WS2812_SPI_DIVISOR;
     R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
