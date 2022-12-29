@@ -61,6 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_EN_LEVEL 1
 
 #define BATTERY_MEASURE_PIN A4
+#define POWER_DETECT_PIN    B12
 
 #ifdef RGB_MATRIX_ENABLE
 #define WS2812_SPI_DRIVER             2
