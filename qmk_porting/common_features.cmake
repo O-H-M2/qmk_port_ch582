@@ -19,7 +19,6 @@ endif()
 
 # GRAVE_ESC_ENABLE
 if(GRAVE_ESC_ENABLE)
-    #add_definitions(-DGRAVE_ESC_ENABLE -DFORCE_NKRO)
     message(STATUS "GRAVE_ESC_ENABLE")
     add_definitions(-DGRAVE_ESC_ENABLE)
     list(APPEND quantum_SOURCES
