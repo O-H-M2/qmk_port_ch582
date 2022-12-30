@@ -2,10 +2,11 @@ ENTRY( _start )
 
 MEMORY
 {
-	FLASH (rx) : ORIGIN = 0x0000C000, LENGTH = 400K
-	RAM (xrw) : ORIGIN = 0x20000000, LENGTH = 32K
+	FLASH (rx) : ORIGIN = 0x0000C000, LENGTH = 208K
+	RAM (xrw) : ORIGIN = 0x20002000, LENGTH = 24K
 }
 
+    PROVIDE( __global_pointer$ = 0x20002000 );
 
 SECTIONS
 {
@@ -138,7 +139,6 @@ SECTIONS
     	*(.data .data.*)
     	*(.gnu.linkonce.d.*)
 		. = ALIGN(8);
-    	PROVIDE( __global_pointer$ = . + 0x800 );
     	*(.sdata .sdata.*)
     	*(.gnu.linkonce.s.*)
     	. = ALIGN(8);

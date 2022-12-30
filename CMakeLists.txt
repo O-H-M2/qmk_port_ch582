@@ -165,7 +165,7 @@ else()
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}_IAP.elf> ${BIN_FILE_IAP}
     )
     add_custom_target(post_build ALL
-        COMMAND mergehex --merge ${HEX_FILE_APP} ${HEX_FILE_IAP} --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
+        COMMAND mergehex --merge ${HEX_FILE_APP} ${HEX_FILE_IAP} ${CMAKE_CURRENT_LIST_DIR}/sdk/BLE_LIB/CH58xBLE_ROMx.hex --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
         DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
     )
 endif()

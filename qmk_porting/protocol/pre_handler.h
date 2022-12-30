@@ -17,6 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#define CH58xBLE_ROM            1
+#define LIB_FLASH_BASE_ADDRESSS 0x00040000
+
 #include "CH58x_common.h"
 #include "eeprom_partition_table.h"
 #include "partition_table.h"

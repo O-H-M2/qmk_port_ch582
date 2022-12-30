@@ -19,4 +19,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define IAP_CODE_START_ADDR 0x00000000
 #define APP_CODE_START_ADDR 0x0000C000
-#define APP_CODE_END_ADDR   0x00070000
+#define APP_CODE_END_ADDR   LIB_FLASH_BASE_ADDRESSS
