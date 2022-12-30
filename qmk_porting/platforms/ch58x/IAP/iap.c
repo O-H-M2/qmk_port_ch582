@@ -275,8 +275,11 @@ __HIGH_CODE static void iap_handle_new_chip()
     uint8_t ret = UserOptionByteConfig(DISABLE, ENABLE, DISABLE, 128);
 
     PRINT("Setting user config... %s\n", ret == SUCCESS ? "done" : "fail");
-    (void)ret;
-    bootloader_set_to_default_mode("New chip with wireless support");
+    if (ret == SUCCESS) {
+        bootloader_set_to_default_mode("New chip with wireless support");
+    } else {
+        PRINT("Will reboot and try again.\n");
+    }
     WAIT_FOR_DBG;
     // construct a power on reset to make the config effective
     FLASH_ROM_SW_RESET();
