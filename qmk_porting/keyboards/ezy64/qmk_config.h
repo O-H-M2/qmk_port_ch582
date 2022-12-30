@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
 // #define LSE_LOAD_CAPACITANCE 7   // in pF unit
 // #define I2C_IO_REMAPPING
-// #define SPI_IO_REMAPPING
+#define SPI_IO_REMAPPING
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE
