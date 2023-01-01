@@ -147,7 +147,7 @@ __HIGH_CODE void board_flash_flush()
 {
     PRINT("Flashing done.\n");
     bootloader_set_to_default_mode("DFU done");
-    usb_counter = 58000;
+    usb_counter = 60000;
 }
 
 __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len)
