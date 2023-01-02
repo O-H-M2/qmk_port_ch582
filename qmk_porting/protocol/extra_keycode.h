@@ -24,7 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #include "via.h"
 
 enum {
+#ifdef VIA_ENABLE
     CUSTOM_START = USER00 - 1,
+#else
+    CUSTOM_START = SAFE_RANGE,
+#endif
 #ifdef USB_ENABLE
     USB_MODE,
 #endif
