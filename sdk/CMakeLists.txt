@@ -47,11 +47,11 @@ endif()
 
 target_sources(CH582_APP INTERFACE
     ${ch582_sdk_temp}
-    "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583_APP.S"
+    "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583.S"
 )
 target_sources(CH582_IAP INTERFACE
     ${ch582_sdk_temp}
-    "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583_IAP.S"
+    "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583.S"
 )
 
 target_link_options(CH582_APP INTERFACE

@@ -169,7 +169,7 @@ handle_reset:
 	li t0, 0x3
 	csrw 0x804, t0
 	
-    li t0, 0x88
+    li t0, 0x1888
     csrs mstatus, t0
 	la t0, _vector_base
 
@@ -179,8 +179,7 @@ handle_reset:
 
 	la t0, main
 	csrw mepc, t0
-	
-	
-	mret
 
+	j 0x40000
 
+    mret
