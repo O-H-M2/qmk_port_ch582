@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usbd_hid.h"
 #include "usb_def.h"
 #include "report.h"
+#include "usb_descriptor_common.h"
 
 const uint8_t KeyboardReport[] = {
     0x05, 0x01,       // Usage Page (Generic Desktop)
@@ -149,9 +150,9 @@ const uint8_t ExtrakeyReport[] = {
 
 #ifdef RAW_ENABLE
 const uint8_t QMKRawReport[] = {
-    0x06, 0x60, 0xFF, // Usage Page (Vendor Defined)
-    0x09, 0x61,       // Usage (Vendor Defined)
-    0xA1, 0x01,       // Collection (Application)
+    0x06, RAW_USAGE_PAGE_LO, RAW_USAGE_PAGE_HI, // Usage Page (Vendor Defined)
+    0x09, RAW_USAGE_ID,                         // Usage (Vendor Defined)
+    0xA1, 0x01,                                 // Collection (Application)
     // Data to host
     0x09, 0x62,       //   Usage (Vendor Defined)
     0x15, 0x00,       //   Logical Minimum (0)
