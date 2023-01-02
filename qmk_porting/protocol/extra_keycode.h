@@ -52,4 +52,6 @@ enum {
     CUSTOM_MAX,
 };
 
+#ifdef VIA_ENABLE
 _Static_assert(CUSTOM_MAX <= USER15 + 1, "");
+#endif

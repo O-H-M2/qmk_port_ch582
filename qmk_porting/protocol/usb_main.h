@@ -32,17 +32,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define HID_STATE_IDLE 0
 #define HID_STATE_BUSY 1
 
-/*!< keyboard in endpoint */
 #define KBD_IN_EP          0x81
 #define KBD_IN_EP_SIZE     KEYBOARD_EPSIZE
 #define KBD_IN_EP_INTERVAL 1
 
-/*!< keyboard out endpoint */
 #define KBD_OUT_EP          0x02
 #define KBD_OUT_EP_SIZE     1
 #define KBD_OUT_EP_INTERVAL 1
 
-/*!< Extrkey in endpoint */
 #define EXKEY_IN_EP 0x83
 #ifdef NKRO_ENABLE
 #define EXKEY_IN_EP_SIZE SHARED_EPSIZE
@@ -51,15 +48,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #define EXKEY_IN_EP_INTERVAL 1
 
-/*!< hidraw in endpoint */
-#define HIDRAW_IN_EP       0x84
-#define HIDRAW_IN_SIZE     RAW_EPSIZE
-#define HIDRAW_IN_INTERVAL 1
+#define QMKRAW_IN_EP       0x84
+#define QMKRAW_IN_SIZE     RAW_EPSIZE
+#define QMKRAW_IN_INTERVAL 1
 
-/*!< hidraw out endpoint */
-#define HIDRAW_OUT_EP          0x04
-#define HIDRAW_OUT_EP_SIZE     HIDRAW_IN_SIZE
-#define HIDRAW_OUT_EP_INTERVAL 1
+#define QMKRAW_OUT_EP          0x04
+#define QMKRAW_OUT_EP_SIZE     QMKRAW_IN_SIZE
+#define QMKRAW_OUT_EP_INTERVAL 1
 
 #define USBD_VID           VENDOR_ID
 #define USBD_PID           PRODUCT_ID
@@ -73,4 +68,4 @@ void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len);
 void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len);
 void raw_hid_send(uint8_t *data, uint8_t length);
 void hid_exkey_send_report(uint8_t *data, uint8_t len);
-void hid_custom_send_report(uint8_t *data, uint8_t len);
+void hid_qmk_raw_send_report(uint8_t *data, uint8_t len);

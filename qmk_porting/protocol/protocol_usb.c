@@ -75,7 +75,9 @@ void send_digitizer_usb(report_digitizer_t *report)
 
 void raw_hid_send_usb(uint8_t *data, uint8_t length)
 {
-    hid_custom_send_report(data, length);
+#ifdef RAW_ENABLE
+    hid_qmk_raw_send_report(data, length);
+#endif
 }
 
 void platform_initialize_usb()

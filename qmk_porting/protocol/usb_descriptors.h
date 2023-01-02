@@ -57,7 +57,7 @@ const uint8_t KeyboardReport[] = {
     0xC0,             // End Collection
 };
 
-const uint8_t ExtrkeyReport[] = {
+const uint8_t ExtrakeyReport[] = {
 #ifdef MOUSE_ENABLE
     0x05, 0x01,            // Usage Page (Generic Desktop)
     0x09, 0x02,            // Usage (Mouse)
@@ -147,7 +147,8 @@ const uint8_t ExtrkeyReport[] = {
 #endif
 };
 
-const uint8_t RawReport[] = {
+#ifdef RAW_ENABLE
+const uint8_t QMKRawReport[] = {
     0x06, 0x60, 0xFF, // Usage Page (Vendor Defined)
     0x09, 0x61,       // Usage (Vendor Defined)
     0xA1, 0x01,       // Collection (Application)
@@ -167,25 +168,36 @@ const uint8_t RawReport[] = {
     0x91, 0x02,       //   Output (Data, Variable, Absolute)
     0xC0,             // End Collection
 };
+#endif
 
 /*!< config descriptor size */
-// #define USB_HID_CONFIG_DESC_SIZ 0x5B
-#define USB_HID_CONFIG_DESC_SIZ (USB_SIZEOF_CONFIG_DESC +                                          \
-                                 USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2 + \
-                                 USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC +     \
-                                 USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2)
+#define USB_HID_CONFIG_DESC_SIZ_SCRATCH (USB_SIZEOF_CONFIG_DESC +                                          \
+                                         USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2 + \
+                                         USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC)
 
 /*!< report descriptor size */
 #define HID_KEYBOARD_REPORT_DESC_SIZE sizeof(KeyboardReport)
 
-#define HID_RAWHID_REPORT_DESC_SIZE sizeof(RawReport)
+#define HID_EXTRAKEY_REPORT_DESC_SIZE sizeof(ExtrakeyReport)
 
-#define HID_EXTRAKEY_REPORT_DESC_SIZE sizeof(ExtrkeyReport)
+#ifdef RAW_ENABLE
+#define HID_QMKRAW_REPORT_DESC_SIZE sizeof(QMKRawReport)
+#endif
 
 /*!< global descriptor */
 const uint8_t hid_descriptor_scratch_1[] = {
     USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, DEVICE_VER, 0x01),
-    USB_CONFIG_DESCRIPTOR_INIT(USB_HID_CONFIG_DESC_SIZ, 0x03, 0x01, USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
+    USB_CONFIG_DESCRIPTOR_INIT((USB_HID_CONFIG_DESC_SIZ_SCRATCH
+#ifdef RAW_ENABLE
+                                + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
+#endif
+                                ),
+                               (0x02
+#ifdef RAW_ENABLE
+                                + 0x01
+#endif
+                                ),
+                               0x01, USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
 
     /************** Descriptor of Keyboard interface ****************/
     0x09, /* bLength */
@@ -246,7 +258,8 @@ const uint8_t hid_descriptor_scratch_1[] = {
     WBVAL(EXKEY_IN_EP_SIZE), /* wMaxPacketSize */
     EXKEY_IN_EP_INTERVAL,    /* bInterval */
 
-    /************** Descriptor of RAWHID interface *****************/
+#ifdef RAW_ENABLE
+    /************** Descriptor of QMKRAW interface *****************/
     0x09, /* bLength */
     0x04, /* bDescriptorType */
     0x02, /* bInterfaceNumber */
@@ -256,28 +269,29 @@ const uint8_t hid_descriptor_scratch_1[] = {
     0x00, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
     0x00, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
     0x00, /* iInterface: Index of string descriptor */
-    /******************** Descriptor of RAWHID HID ********************/
+    /******************** Descriptor of QMKRAW HID ********************/
     0x09,                               /* bLength */
     0x21,                               /* bDescriptorType */
     0x11, 0x01,                         /* bcdHID */
     0x00,                               /* bCountryCode */
     0x01,                               /* bNumDescriptors */
     0x22,                               /* bDescriptorType */
-    WBVAL(HID_RAWHID_REPORT_DESC_SIZE), /* wItemLength */
-    /******************** Descriptor of RAWHID in endpoint ********************/
+    WBVAL(HID_QMKRAW_REPORT_DESC_SIZE), /* wItemLength */
+    /******************** Descriptor of QMKRAW in endpoint ********************/
     0x07,                  /* bLength */
     0x05,                  /* bDescriptorType */
-    HIDRAW_IN_EP,          /* bEndpointAddress */
+    QMKRAW_IN_EP,          /* bEndpointAddress */
     0x03,                  /* bmAttributes */
-    WBVAL(HIDRAW_IN_SIZE), /* wMaxPacketSize */
-    HIDRAW_IN_INTERVAL,    /* bInterval */
-    /******************** Descriptor of RAWHID out endpoint ********************/
+    WBVAL(QMKRAW_IN_SIZE), /* wMaxPacketSize */
+    QMKRAW_IN_INTERVAL,    /* bInterval */
+    /******************** Descriptor of QMKRAW out endpoint ********************/
     0x07,                      /* bLength */
     0x05,                      /* bDescriptorType */
-    HIDRAW_OUT_EP,             /* bEndpointAddress */
+    QMKRAW_OUT_EP,             /* bEndpointAddress */
     0x03,                      /* bmAttributes */
-    WBVAL(HIDRAW_OUT_EP_SIZE), /* wMaxPacketSize */
-    HIDRAW_OUT_EP_INTERVAL,    /* bInterval */
+    WBVAL(QMKRAW_OUT_EP_SIZE), /* wMaxPacketSize */
+    QMKRAW_OUT_EP_INTERVAL,    /* bInterval */
+#endif
 
     ///////////////////////////////////////
     /// string0 descriptor
