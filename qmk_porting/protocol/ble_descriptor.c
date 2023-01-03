@@ -96,23 +96,25 @@ const uint8_t hidReportMap[] = {
     0x75, 0x10,                   //   Report Size (16)
     0x81, 0x00,                   //   Input (Data, Array, Absolute)
     0xC0,                         // End Collection
-    0x06, 0x60, 0xFF,             // Usage Page (Vendor Defined)
-    0x09, 0x61,                   // Usage (Vendor Defined)
-    0xA1, 0x01,                   // Collection (Application)
-    0x85, BLE_REPORT_ID_CUSTOM,   //   REPORT_ID
-    0x09, 0x62,                   //   Usage (Vendor Defined)
-    0x15, 0x00,                   //   Logical Minimum (0)
-    0x26, 0xFF, 0x00,             //   Logical Maximum (255)
-    0x95, 0x20,                   //   Report Count
-    0x75, 0x08,                   //   Report Size (8)
-    0x81, 0x02,                   //   Input (Data, Variable, Absolute)
-    0x09, 0x63,                   //   Usage (Vendor Defined)
-    0x15, 0x00,                   //   Logical Minimum (0)
-    0x26, 0xFF, 0x00,             //   Logical Maximum (255)
-    0x95, 0x20,                   //   Report Count
-    0x75, 0x08,                   //   Report Size (8)
-    0x91, 0x02,                   //   Output (Data, Variable, Absolute)
-    0xC0,                         // End Collection
+#ifdef RAW_ENABLE
+    0x06, 0x60, 0xFF,            // Usage Page (Vendor Defined)
+    0x09, 0x61,                  // Usage (Vendor Defined)
+    0xA1, 0x01,                  // Collection (Application)
+    0x85, BLE_REPORT_ID_QMK_RAW, //   REPORT_ID
+    0x09, 0x62,                  //   Usage (Vendor Defined)
+    0x15, 0x00,                  //   Logical Minimum (0)
+    0x26, 0xFF, 0x00,            //   Logical Maximum (255)
+    0x95, 0x20,                  //   Report Count
+    0x75, 0x08,                  //   Report Size (8)
+    0x81, 0x02,                  //   Input (Data, Variable, Absolute)
+    0x09, 0x63,                  //   Usage (Vendor Defined)
+    0x15, 0x00,                  //   Logical Minimum (0)
+    0x26, 0xFF, 0x00,            //   Logical Maximum (255)
+    0x95, 0x20,                  //   Report Count
+    0x75, 0x08,                  //   Report Size (8)
+    0x91, 0x02,                  //   Output (Data, Variable, Absolute)
+    0xC0,                        // End Collection
+#endif
 };
 
 const uint16_t hidReportMapLen = sizeof(hidReportMap);
