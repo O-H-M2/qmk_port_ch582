@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 //* platform settings
-#define DEBUG        Debug_UART1
+// #define DEBUG        Debug_UART1
 #define DCDC_ENABLE  1
 #define FREQ_SYS     40000000
 #define LSE_ENABLE   0

@@ -21,7 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "action.h"
 #include "quantum.h"
 #include "battery_measure.h"
-// #include "via.h"
+#ifdef VIA_ENABLE
+#include "via.h"
+#endif
 
 enum {
 #ifdef VIA_ENABLE
