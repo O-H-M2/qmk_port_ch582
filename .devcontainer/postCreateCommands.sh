@@ -18,4 +18,6 @@ sudo rm /bin/sh && sudo ln -s /bin/zsh /bin/sh
 
 cd ${repo} && git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
 
+pip3 install -r ./mcuboot/scripts/requirements.txt
+
 echo "Configuration done!"
