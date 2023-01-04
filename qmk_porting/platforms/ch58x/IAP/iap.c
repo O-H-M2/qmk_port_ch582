@@ -147,6 +147,7 @@ __HIGH_CODE void board_flash_flush()
 {
     PRINT("Flashing done.\n");
     bootloader_set_to_default_mode("DFU done");
+    iap_cleanup();
     usb_counter = 60000;
 }
 
@@ -306,12 +307,7 @@ __HIGH_CODE static void iap_decide_jump()
                 return;
             } else {
                 PRINT("Leaving DFU...\n");
-                PFIC_DisableIRQ(USB_IRQn);
-                R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
-                R32_USB_CONTROL = 0;
-                R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
-                my_delay_ms(10);
-                R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+                iap_cleanup();
             }
         case BOOTLOADER_BOOT_MODE_USB:
         case BOOTLOADER_BOOT_MODE_BLE:
