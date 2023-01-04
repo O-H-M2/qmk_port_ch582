@@ -54,6 +54,16 @@ void board_flash_read(uint32_t addr, void *buffer, uint32_t len);
 void board_flash_flush();
 void board_flash_write(uint32_t addr, void const *data, uint32_t len);
 
+__attribute__((always_inline)) inline void iap_cleanup()
+{
+    PFIC_DisableIRQ(USB_IRQn);
+    R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
+    R32_USB_CONTROL = 0;
+    R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
+    my_delay_ms(10);
+    R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+}
+
 __attribute__((always_inline)) inline void jumpApp()
 {
     struct boot_rsp rsp;
@@ -62,7 +72,7 @@ __attribute__((always_inline)) inline void jumpApp()
     if (rc == 0) {
         uint32_t image_off = rsp.br_image_off, header_size = rsp.br_hdr->ih_hdr_size;
 
-        PRINT("Image found at 0x%02x, with header size 0x%02x.\n", image_off, header_size);
+        PRINT("Image found.\n");
 #if FREQ_SYS != 60000000
         WAIT_FOR_DBG;
         SetSysClock(Fsys);
@@ -72,7 +82,7 @@ __attribute__((always_inline)) inline void jumpApp()
 #else
         UART1_BaudRateCfg(DEBUG_BAUDRATE);
 #endif
-        PRINT("Reset system clock to %d Hz before entering APP.\n", my_get_sys_clock());
+        PRINT("Resetting system clock to %d Hz before entering APP.\n", my_get_sys_clock());
 #endif
         WAIT_FOR_DBG;
         ((void (*)(void))((int *)(image_off + header_size)))();
