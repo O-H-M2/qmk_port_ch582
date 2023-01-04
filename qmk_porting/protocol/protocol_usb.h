@@ -10,7 +10,6 @@ void platform_reboot_usb();
 
 void send_keyboard_usb(report_keyboard_t *report);
 void send_mouse_usb(report_mouse_t *report);
-void send_system_usb(uint16_t data);
-void send_consumer_usb(uint16_t data);
+void send_extra(report_extra_t *report);
 void send_programmable_button_usb(uint32_t data);
 void raw_hid_send_usb(uint8_t *data, uint8_t length);

@@ -76,7 +76,7 @@ void protocol_post_init()
     if (kbd_protocol_type == kbd_protocol_usb) {
         ch582_driver.send_keyboard = send_keyboard_usb;
         ch582_driver.send_mouse = send_mouse_usb;
-        ch582_driver.send_extra = send_system_usb;
+        ch582_driver.send_extra = send_extra;
         //ch582_driver.send_programmable_button = send_programmable_button_usb;
         ch582_driver_raw_hid_send = raw_hid_send_usb;
     }
