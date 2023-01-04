@@ -48,7 +48,7 @@ led_config_t g_led_config = {
 
 /* clang-format on */
 
-void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 {
     if (host_keyboard_led_state().caps_lock) {
         if (g_led_config.flags[0] & LED_FLAG_KEYLIGHT) {
@@ -73,6 +73,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
             battery_indicator_toggle(false);
         }
     }
+    return 1;
 }
 
 #endif
