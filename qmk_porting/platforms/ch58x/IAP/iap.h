@@ -62,7 +62,7 @@ __attribute__((always_inline)) inline void jumpApp()
     if (rc == 0) {
         uint32_t image_off = rsp.br_image_off, header_size = rsp.br_hdr->ih_hdr_size;
 
-        PRINT("Image found at 0x%02x, with header size 0x%02x.\n", image_off, header_size);
+        PRINT("Image found.\n");
 #if FREQ_SYS != 60000000
         WAIT_FOR_DBG;
         SetSysClock(Fsys);
@@ -72,7 +72,7 @@ __attribute__((always_inline)) inline void jumpApp()
 #else
         UART1_BaudRateCfg(DEBUG_BAUDRATE);
 #endif
-        PRINT("Reset system clock to %d Hz before entering APP.\n", my_get_sys_clock());
+        PRINT("Resetting system clock to %d Hz before entering APP.\n", my_get_sys_clock());
 #endif
         WAIT_FOR_DBG;
         ((void (*)(void))((int *)(image_off + header_size)))();

@@ -252,19 +252,18 @@ __HIGH_CODE static void gpio_strap()
     }
 #endif
 #endif
-#ifdef BATTERY_MEASURE_PIN
-    if (BATTERY_MEASURE_PIN & 0x80000000) {
-        pin_b &= ~((BATTERY_MEASURE_PIN & 0x7FFFFFFF));
-    } else {
-        pin_a &= ~((BATTERY_MEASURE_PIN & 0x7FFFFFFF));
-    }
-#endif
     pin_b &= ~bUDP;
     pin_b &= ~bUDM;
     pin_b &= ~bU2DP;
     pin_b &= ~bU2DM;
     setPinInputLow(pin_a);
     setPinInputLow(pin_b);
+#ifdef BATTERY_MEASURE_PIN
+    setPinInputHigh(BATTERY_MEASURE_PIN);
+#endif
+#ifdef POWER_DETECT_PIN
+    setPinInput(POWER_DETECT_PIN);
+#endif
 }
 
 __HIGH_CODE _PUTCHAR_CLAIM;
@@ -450,10 +449,12 @@ __HIGH_CODE int main()
 #endif
 #ifdef BATTERY_MEASURE_PIN
     // do a power check
-    uint16_t adc;
 
+    setPinInput(BATTERY_MEASURE_PIN);
     battery_init();
-    adc = battery_measure();
+
+    uint16_t adc = battery_measure();
+
     adc = battery_calculate(adc);
     PRINT("Battery level: %d\n", adc);
 #endif
