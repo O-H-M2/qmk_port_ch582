@@ -150,9 +150,9 @@ const uint8_t ExtrakeyReport[] = {
 
 #ifdef RAW_ENABLE
 const uint8_t QMKRawReport[] = {
-    HID_RI_USAGE_PAGE(16, RAW_USAGE_PAGE), // Vendor Defined
-    HID_RI_USAGE(8, RAW_USAGE_ID),         // Vendor Defined
-    0xA1, 0x01,                                 // Collection (Application)
+    0x06, WBVAL(RAW_USAGE_PAGE), // Usage Page (Vendor Defined)
+    0x09, RAW_USAGE_ID,          // Usage (Vendor Defined)
+    0xA1, 0x01,                  // Collection (Application)
     // Data to host
     0x09, 0x62,       //   Usage (Vendor Defined)
     0x15, 0x00,       //   Logical Minimum (0)

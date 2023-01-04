@@ -71,7 +71,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
             battery_indicator_toggle(false);
         }
     }
-    return 1;
+    return true;
 }
 
 #endif
