@@ -79,7 +79,8 @@
         "sysflash.h": "c",
         "mcuboot_logging.h": "c",
         "partition_table.h": "c",
-        "usb_descriptor_common.h": "c"
+        "usb_descriptor_common.h": "c",
+        "action_code.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
