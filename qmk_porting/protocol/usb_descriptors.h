@@ -218,9 +218,15 @@ const uint8_t hid_descriptor_scratch_1[] = {
 #ifdef RAW_ENABLE
                                 + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
 #endif
+#ifdef EZRAW_ENABLE
+                                + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
+#endif
                                 ),
                                (0x02
 #ifdef RAW_ENABLE
+                                + 0x01
+#endif
+#ifdef EZRAW_ENABLE
                                 + 0x01
 #endif
                                 ),
