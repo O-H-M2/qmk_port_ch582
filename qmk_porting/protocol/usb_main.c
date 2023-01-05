@@ -31,10 +31,17 @@ static struct usbd_interface extrakey_interface;
 static struct usbd_interface qmkraw_interface;
 #endif
 
+#ifdef EZRAW_ENABLE
+static struct usbd_interface ezraw_interface;
+#endif
+
 static uint8_t keyboard_state = HID_STATE_IDLE;
 static uint8_t extrakey_state = HID_STATE_IDLE;
 #ifdef RAW_ENABLE
 static uint8_t qmkraw_state = HID_STATE_IDLE;
+#endif
+#ifdef EZRAW_ENABLE
+static uint8_t ezraw_state = HID_STATE_IDLE;
 #endif
 
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t kbd_out_buffer[CONFIG_USB_ALIGN_SIZE];
@@ -77,6 +84,21 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 
     raw_hid_receive(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #endif
+}
+#endif
+
+#ifdef EZRAW_ENABLE
+void usbd_hid_ez_raw_in_callback(uint8_t ep, uint32_t nbytes)
+{
+    ezraw_state = HID_STATE_IDLE;
+}
+
+void usbd_hid_ez_raw_out_callback(uint8_t ep, uint32_t nbytes)
+{
+    usbd_ep_start_read(ep, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
+    extern void raw_hid_receive(uint8_t * data, uint8_t length);
+
+    raw_hid_receive(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 }
 #endif
 
@@ -128,6 +150,18 @@ void init_usb_driver()
     };
 #endif
 
+#ifdef EZRAW_ENABLE
+    struct usbd_endpoint ezraw_in_ep = {
+        .ep_cb = usbd_hid_ez_raw_in_callback,
+        .ep_addr = EZRAW_IN_EP
+    };
+
+    struct usbd_endpoint ezraw_out_ep = {
+        .ep_cb = usbd_hid_ez_raw_out_callback,
+        .ep_addr = EZRAW_OUT_EP
+    };
+#endif
+
     // build descriptor according to the keyboard name
 #if ESB_ENABLE == 2
     uint8_t keyboard_name[] = MACRO2STR(PRODUCT) "2.4G";
@@ -174,6 +208,12 @@ void init_usb_driver()
     usbd_add_interface(usbd_hid_init_intf(&qmkraw_interface, QMKRawReport, HID_QMKRAW_REPORT_DESC_SIZE));
     usbd_add_endpoint(&qmkraw_in_ep);
     usbd_add_endpoint(&qmkraw_out_ep);
+#endif
+
+#ifdef EZRAW_ENABLE
+    usbd_add_interface(usbd_hid_init_intf(&ezraw_interface, EZRawReport, HID_EZRAW_REPORT_DESC_SIZE));
+    usbd_add_endpoint(&ezraw_in_ep);
+    usbd_add_endpoint(&ezraw_out_ep);
 #endif
 
     usbd_initialize();

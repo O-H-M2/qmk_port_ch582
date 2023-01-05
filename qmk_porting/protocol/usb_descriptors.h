@@ -170,6 +170,28 @@ const uint8_t QMKRawReport[] = {
     0xC0,             // End Collection
 };
 #endif
+#ifdef EZRAW_ENABLE
+const uint8_t EZRawReport[] = {
+    0x06, WBVAL(RAW_USAGE_PAGE), // Usage Page (Vendor Defined)
+    0x09, RAW_USAGE_ID,          // Usage (Vendor Defined)
+    0xA1, 0x01,                  // Collection (Application)
+    // Data to host
+    0x09, 0x62,       //   Usage (Vendor Defined)
+    0x15, 0x00,       //   Logical Minimum (0)
+    0x26, 0xFF, 0x00, //   Logical Maximum (255)
+    0x95, 0x20,       //   Report Count
+    0x75, 0x08,       //   Report Size (8)
+    0x81, 0x02,       //   Input (Data, Variable, Absolute)
+    // Data from host
+    0x09, 0x63,       //   Usage (Vendor Defined)
+    0x15, 0x00,       //   Logical Minimum (0)
+    0x26, 0xFF, 0x00, //   Logical Maximum (255)
+    0x95, 0x20,       //   Report Count
+    0x75, 0x08,       //   Report Size (8)
+    0x91, 0x02,       //   Output (Data, Variable, Absolute)
+    0xC0,             // End Collection
+};
+#endif
 
 /*!< config descriptor size */
 #define USB_HID_CONFIG_DESC_SIZ_SCRATCH (USB_SIZEOF_CONFIG_DESC +                                          \
@@ -183,6 +205,10 @@ const uint8_t QMKRawReport[] = {
 
 #ifdef RAW_ENABLE
 #define HID_QMKRAW_REPORT_DESC_SIZE sizeof(QMKRawReport)
+#endif
+
+#ifdef EZRAW_ENABLE
+#define HID_EZRAW_REPORT_DESC_SIZE sizeof(EZRawReport)
 #endif
 
 /*!< global descriptor */
@@ -292,6 +318,41 @@ const uint8_t hid_descriptor_scratch_1[] = {
     0x03,                      /* bmAttributes */
     WBVAL(QMKRAW_OUT_EP_SIZE), /* wMaxPacketSize */
     QMKRAW_OUT_EP_INTERVAL,    /* bInterval */
+#endif
+
+#ifdef EZRAW_ENABLE
+    /************** Descriptor of QMKRAW interface *****************/
+    0x09, /* bLength */
+    0x04, /* bDescriptorType */
+    0x03, /* bInterfaceNumber */
+    0x00, /* bAlternateSetting */
+    0x02, /* bNumEndpoints */
+    0x03, /* bInterfaceClass */
+    0x00, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x00, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00, /* iInterface: Index of string descriptor */
+    /******************** Descriptor of QMKRAW HID ********************/
+    0x09,                               /* bLength */
+    0x21,                               /* bDescriptorType */
+    0x11, 0x01,                         /* bcdHID */
+    0x00,                               /* bCountryCode */
+    0x01,                               /* bNumDescriptors */
+    0x22,                               /* bDescriptorType */
+    WBVAL(HID_EZRAW_REPORT_DESC_SIZE), /* wItemLength */
+    /******************** Descriptor of QMKRAW in endpoint ********************/
+    0x07,                  /* bLength */
+    0x05,                  /* bDescriptorType */
+    EZRAW_IN_EP,          /* bEndpointAddress */
+    0x03,                  /* bmAttributes */
+    WBVAL(EZRAW_IN_SIZE), /* wMaxPacketSize */
+    EZRAW_IN_INTERVAL,    /* bInterval */
+    /******************** Descriptor of QMKRAW out endpoint ********************/
+    0x07,                      /* bLength */
+    0x05,                      /* bDescriptorType */
+    EZRAW_OUT_EP,             /* bEndpointAddress */
+    0x03,                      /* bmAttributes */
+    WBVAL(EZRAW_OUT_EP_SIZE), /* wMaxPacketSize */
+    EZRAW_OUT_EP_INTERVAL,    /* bInterval */
 #endif
 
     ///////////////////////////////////////
