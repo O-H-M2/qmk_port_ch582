@@ -47,22 +47,9 @@ void send_mouse_usb(report_mouse_t *report)
 #endif
 }
 
-void send_system_usb(uint16_t data)
+void send_extra(report_extra_t *report)
 {
-    uint8_t report_to_send[3];
-
-    report_to_send[0] = REPORT_ID_SYSTEM;
-    memcpy(report_to_send + 1, &data, 2);
-    hid_exkey_send_report(report_to_send, 3);
-}
-
-void send_consumer_usb(uint16_t data)
-{
-    uint8_t report_to_send[3];
-
-    report_to_send[0] = REPORT_ID_CONSUMER;
-    memcpy(report_to_send + 1, &data, 2);
-    hid_exkey_send_report(report_to_send, 3);
+    hid_nkro_keyboard_send_report((uint8_t *)report, EXKEY_IN_EP_SIZE);
 }
 
 void send_programmable_button_usb(uint32_t data)

@@ -67,6 +67,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_SPI_DRIVER             2
 #define RGBLED_NUM                    64
 #define DRIVER_LED_TOTAL              RGBLED_NUM
+#define RGB_MATRIX_LED_COUNT          DRIVER_LED_TOTAL
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 32
 #define RGB_MATRIX_STARTUP_VAL        RGB_MATRIX_MAXIMUM_BRIGHTNESS
 #define RGB_MATRIX_HUE_STEP           10
