@@ -88,6 +88,7 @@ __HIGH_CODE void protocol_task_usb()
 #ifdef POWER_DETECT_PIN
         if (!readPin(POWER_DETECT_PIN)) {
             // cable removed
+            PRINT("Cable pulled out.\n");
             platform_reboot_usb();
         }
 #endif
