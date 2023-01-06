@@ -47,6 +47,13 @@ void raw_hid_send(uint8_t *data, uint8_t length)
     ch582_driver_raw_hid_send(data, length);
 }
 
+void (*ch582_driver_rgb_raw_hid_send)(uint8_t *, uint8_t);
+
+void rgb_raw_hid_send(uint8_t *data, uint8_t length)
+{
+    ch582_driver_rgb_raw_hid_send(data, length);
+}
+
 void protocol_setup()
 {
 #ifdef USB_ENABLE
@@ -83,6 +90,7 @@ void protocol_post_init()
         ch582_driver.send_mouse = send_mouse_usb;
         ch582_driver.send_extra = send_extra_usb;
         ch582_driver_raw_hid_send = raw_hid_send_usb;
+        ch582_driver_rgb_raw_hid_send = rgb_raw_hid_send_usb;
     }
 #endif
 #ifdef BLE_ENABLE
