@@ -27,7 +27,7 @@ __attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length)
     // placeholder in case VIA is disabled
 }
 
-__attribute__((weak)) void ezraw_hid_receive(uint8_t *data, uint8_t length)
+__attribute__((weak)) void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
 {
     // placeholder in case openRGB or others is disabled
 }

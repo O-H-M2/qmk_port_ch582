@@ -31,8 +31,8 @@ static struct usbd_interface extrakey_interface;
 static struct usbd_interface qmkraw_interface;
 #endif
 
-#ifdef EZRAW_ENABLE
-static struct usbd_interface ezraw_interface;
+#ifdef RGB_RAW_ENABLE
+static struct usbd_interface rgbraw_interface;
 #endif
 
 static uint8_t keyboard_state = HID_STATE_IDLE;
@@ -40,16 +40,16 @@ static uint8_t extrakey_state = HID_STATE_IDLE;
 #ifdef RAW_ENABLE
 static uint8_t qmkraw_state = HID_STATE_IDLE;
 #endif
-#ifdef EZRAW_ENABLE
-static uint8_t ezraw_state = HID_STATE_IDLE;
+#ifdef RGB_RAW_ENABLE
+static uint8_t rgbraw_state = HID_STATE_IDLE;
 #endif
 
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t kbd_out_buffer[CONFIG_USB_ALIGN_SIZE];
 #ifdef RAW_ENABLE
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t qmkraw_out_buffer[QMKRAW_OUT_EP_SIZE];
 #endif
-#ifdef EZRAW_ENABLE
-USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t ezraw_out_buffer[EZRAW_OUT_EP_SIZE];
+#ifdef RGB_RAW_ENABLE
+USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t rgbraw_out_buffer[RGBRAW_OUT_EP_SIZE];
 #endif
 
 void usbd_hid_kbd_in_callback(uint8_t ep, uint32_t nbytes)
@@ -90,19 +90,19 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 }
 #endif
 
-#ifdef EZRAW_ENABLE
-void usbd_hid_ez_raw_in_callback(uint8_t ep, uint32_t nbytes)
+#ifdef RGB_RAW_ENABLE
+void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
-    ezraw_state = HID_STATE_IDLE;
+    rgbraw_state = HID_STATE_IDLE;
 }
 
-void usbd_hid_ez_raw_out_callback(uint8_t ep, uint32_t nbytes)
+void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
-    usbd_ep_start_read(ep, ezraw_out_buffer, sizeof(ezraw_out_buffer));
+    usbd_ep_start_read(ep, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
 
-    extern void ez_raw_hid_receive(uint8_t * data, uint8_t length);
+    extern void rgb_raw_hid_receive(uint8_t * data, uint8_t length);
 
-    ezraw_hid_receive(ezraw_out_buffer, sizeof(ezraw_out_buffer));
+    rgb_raw_hid_receive(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
 }
 #endif
 
@@ -117,8 +117,8 @@ void usbd_configure_done_callback()
 #ifdef RAW_ENABLE
     usbd_ep_start_read(QMKRAW_OUT_EP, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #endif
-#ifdef EZRAW_ENABLE
-    usbd_ep_start_read(EZRAW_OUT_EP, ezraw_out_buffer, sizeof(ezraw_out_buffer));
+#ifdef RGB_RAW_ENABLE
+    usbd_ep_start_read(RGBRAW_OUT_EP, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
 #endif
 }
 
@@ -157,15 +157,15 @@ void init_usb_driver()
     };
 #endif
 
-#ifdef EZRAW_ENABLE
-    struct usbd_endpoint ezraw_in_ep = {
-        .ep_cb = usbd_hid_ez_raw_in_callback,
-        .ep_addr = EZRAW_IN_EP
+#ifdef RGB_RAW_ENABLE
+    struct usbd_endpoint rgbraw_in_ep = {
+        .ep_cb = usbd_hid_rgb_raw_in_callback,
+        .ep_addr = RGBRAW_IN_EP
     };
 
-    struct usbd_endpoint ezraw_out_ep = {
-        .ep_cb = usbd_hid_ez_raw_out_callback,
-        .ep_addr = EZRAW_OUT_EP
+    struct usbd_endpoint rgbraw_out_ep = {
+        .ep_cb = usbd_hid_rgb_raw_out_callback,
+        .ep_addr = RGBRAW_OUT_EP
     };
 #endif
 
@@ -217,10 +217,10 @@ void init_usb_driver()
     usbd_add_endpoint(&qmkraw_out_ep);
 #endif
 
-#ifdef EZRAW_ENABLE
-    usbd_add_interface(usbd_hid_init_intf(&ezraw_interface, EZRawReport, HID_EZRAW_REPORT_DESC_SIZE));
-    usbd_add_endpoint(&ezraw_in_ep);
-    usbd_add_endpoint(&ezraw_out_ep);
+#ifdef RGB_RAW_ENABLE
+    usbd_add_interface(usbd_hid_init_intf(&rgbraw_interface, RGBRawReport, HID_RGBRAW_REPORT_DESC_SIZE));
+    usbd_add_endpoint(&rgbraw_in_ep);
+    usbd_add_endpoint(&rgbraw_out_ep);
 #endif
 
     usbd_initialize();
@@ -263,14 +263,14 @@ void hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
 }
 #endif
 
-#ifdef EZRAW_ENABLE
-void hid_ez_raw_send_report(uint8_t *data, uint8_t len)
+#ifdef RGB_RAW_ENABLE
+void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
 {
-    int ret = usbd_ep_start_write(EZRAW_IN_EP, data, len);
+    int ret = usbd_ep_start_write(RGBRAW_IN_EP, data, len);
 
     if (ret < 0) {
         return;
     }
-    ezraw_state = HID_STATE_BUSY;
+    rgbraw_state = HID_STATE_BUSY;
 }
 #endif

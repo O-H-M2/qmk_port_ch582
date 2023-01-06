@@ -171,8 +171,8 @@ const uint8_t QMKRawReport[] = {
 };
 #endif
 
-#ifdef EZRAW_ENABLE
-const uint8_t EZRawReport[] = {
+#ifdef RGB_RAW_ENABLE
+const uint8_t RGBRawReport[] = {
     0x06, WBVAL(RAW_USAGE_PAGE), // Usage Page (Vendor Defined)
     0x09, RAW_USAGE_ID,          // Usage (Vendor Defined)
     0xA1, 0x01,                  // Collection (Application)
@@ -208,8 +208,8 @@ const uint8_t EZRawReport[] = {
 #define HID_QMKRAW_REPORT_DESC_SIZE sizeof(QMKRawReport)
 #endif
 
-#ifdef EZRAW_ENABLE
-#define HID_EZRAW_REPORT_DESC_SIZE sizeof(EZRawReport)
+#ifdef RGB_RAW_ENABLE
+#define HID_RGBRAW_REPORT_DESC_SIZE sizeof(RGBRawReport)
 #endif
 
 /*!< global descriptor */
@@ -219,7 +219,7 @@ const uint8_t hid_descriptor_scratch_1[] = {
 #ifdef RAW_ENABLE
                                 + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
 #endif
-#ifdef EZRAW_ENABLE
+#ifdef RGB_RAW_ENABLE
                                 + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
 #endif
                                 ),
@@ -227,7 +227,7 @@ const uint8_t hid_descriptor_scratch_1[] = {
 #ifdef RAW_ENABLE
                                 + 0x01
 #endif
-#ifdef EZRAW_ENABLE
+#ifdef RGB_RAW_ENABLE
                                 + 0x01
 #endif
                                 ),
@@ -327,8 +327,8 @@ const uint8_t hid_descriptor_scratch_1[] = {
     QMKRAW_OUT_EP_INTERVAL,    /* bInterval */
 #endif
 
-#ifdef EZRAW_ENABLE
-    /************** Descriptor of EZRAW interface *****************/
+#ifdef RGB_RAW_ENABLE
+    /************** Descriptor of RGB_RAW interface *****************/
     0x09, /* bLength */
     0x04, /* bDescriptorType */
     0x03, /* bInterfaceNumber */
@@ -338,28 +338,28 @@ const uint8_t hid_descriptor_scratch_1[] = {
     0x00, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
     0x00, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
     0x00, /* iInterface: Index of string descriptor */
-    /******************** Descriptor of EZRAW HID ********************/
-    0x09,                              /* bLength */
-    0x21,                              /* bDescriptorType */
-    0x11, 0x01,                        /* bcdHID */
-    0x00,                              /* bCountryCode */
-    0x01,                              /* bNumDescriptors */
-    0x22,                              /* bDescriptorType */
-    WBVAL(HID_EZRAW_REPORT_DESC_SIZE), /* wItemLength */
-    /******************** Descriptor of EZRAW in endpoint ********************/
-    0x07,                 /* bLength */
-    0x05,                 /* bDescriptorType */
-    EZRAW_IN_EP,          /* bEndpointAddress */
-    0x03,                 /* bmAttributes */
-    WBVAL(EZRAW_IN_SIZE), /* wMaxPacketSize */
-    EZRAW_IN_INTERVAL,    /* bInterval */
-    /******************** Descriptor of EZRAW out endpoint ********************/
-    0x07,                     /* bLength */
-    0x05,                     /* bDescriptorType */
-    EZRAW_OUT_EP,             /* bEndpointAddress */
-    0x03,                     /* bmAttributes */
-    WBVAL(EZRAW_OUT_EP_SIZE), /* wMaxPacketSize */
-    EZRAW_OUT_EP_INTERVAL,    /* bInterval */
+    /******************** Descriptor of RGB_RAW HID ********************/
+    0x09,                                /* bLength */
+    0x21,                                /* bDescriptorType */
+    0x11, 0x01,                          /* bcdHID */
+    0x00,                                /* bCountryCode */
+    0x01,                                /* bNumDescriptors */
+    0x22,                                /* bDescriptorType */
+    WBVAL(HID_RGBRAW_REPORT_DESC_SIZE), /* wItemLength */
+    /******************** Descriptor of RGB_RAW in endpoint ********************/
+    0x07,                   /* bLength */
+    0x05,                   /* bDescriptorType */
+    RGBRAW_IN_EP,          /* bEndpointAddress */
+    0x03,                   /* bmAttributes */
+    WBVAL(RGBRAW_IN_SIZE), /* wMaxPacketSize */
+    RGBRAW_IN_INTERVAL,    /* bInterval */
+    /******************** Descriptor of RGB_RAW out endpoint ********************/
+    0x07,                       /* bLength */
+    0x05,                       /* bDescriptorType */
+    RGBRAW_OUT_EP,             /* bEndpointAddress */
+    0x03,                       /* bmAttributes */
+    WBVAL(RGBRAW_OUT_EP_SIZE), /* wMaxPacketSize */
+    RGBRAW_OUT_EP_INTERVAL,    /* bInterval */
 #endif
 
     ///////////////////////////////////////

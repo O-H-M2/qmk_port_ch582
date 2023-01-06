@@ -115,7 +115,17 @@ if(RGB_MATRIX_ENABLE)
     )
 endif()
 
-# RGB_MATRIX_ENABLE
+# AUXILIARY_RGB_ENABLE
+if(AUXILIARY_RGB_ENABLE)
+    if(NOT RGB_MATRIX_ENABLE OR NOT VIA_ENABLE)
+        message(FATAL_ERROR "AUXILIARY_RGB_ENABLE requires RGB_MATRIX_ENABLE and VIA_ENABLE!")
+    else()
+        message(STATUS "AUXILIARY_RGB_ENABLE")
+        add_definitions(-DRGB_RAW_ENABLE)
+    endif()
+endif()
+
+# SPLIT_KEYBOARD
 if(SPLIT_KEYBOARD)
     add_definitions(-DSPLIT_KEYBOARD)
     include_directories(${QMK_BASE_DIR}/quantum/split_common)

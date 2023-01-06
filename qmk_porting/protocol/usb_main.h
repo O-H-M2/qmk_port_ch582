@@ -56,13 +56,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define QMKRAW_OUT_EP_SIZE     QMKRAW_IN_SIZE
 #define QMKRAW_OUT_EP_INTERVAL 1
 
-#define EZRAW_IN_EP       0x85
-#define EZRAW_IN_SIZE     64
-#define EZRAW_IN_INTERVAL 1
+#define RGBRAW_IN_EP       0x85
+#define RGBRAW_IN_SIZE     64
+#define RGBRAW_IN_INTERVAL 1
 
-#define EZRAW_OUT_EP          0x05
-#define EZRAW_OUT_EP_SIZE     64
-#define EZRAW_OUT_EP_INTERVAL 1
+#define RGBRAW_OUT_EP          0x05
+#define RGBRAW_OUT_EP_SIZE     64
+#define RGBRAW_OUT_EP_INTERVAL 1
 
 #define USBD_VID           VENDOR_ID
 #define USBD_PID           PRODUCT_ID
