@@ -1,175 +1,175 @@
 {
-	"name": "EZY64",
-	"vendorId": "0xCAFE",
-	"productId": "0x0B91",
-	"customKeycodes": [
-		{
-			"name": "USB_MODE",
-			"title": "USB_MODE",
-			"shortName": "USB_MODE"
-		},
-		{
-			"name": "BLE_SLOT0",
-			"title": "BLE_SLOT0",
-			"shortName": "BLE0"
-		},
-		{
-			"name": "BLE_SLOT1",
-			"title": "BLE_SLOT1",
-			"shortName": "BLE1"
-		},
-		{
-			"name": "BLE_SLOT2",
-			"title": "BLE_SLOT2",
-			"shortName": "BLE2"
-		},
-		{
-			"name": "BLE_SLOT3",
-			"title": "BLE_SLOT3",
-			"shortName": "BLE3"
-		},
-		{
-			"name": "BLE_SLOT4",
-			"title": "BLE_SLOT4",
-			"shortName": "BLE4"
-		},
-		{
-			"name": "BLE_SLOT5",
-			"title": "BLE_SLOT5",
-			"shortName": "BLE5"
-		},
-		{
-			"name": "BLE_SLOT6",
-			"title": "BLE_SLOT6",
-			"shortName": "BLE6"
-		},
-		{
-			"name": "BLE_SLOT7",
-			"title": "BLE_SLOT7",
-			"shortName": "BLE7"
-		},
-		{
-			"name": "BLE_ALL_CLEAR",
-			"title": "BLE_ALL_CLEAR",
-			"shortName": "BLE_ALL_CLEAR"
-		},
-		{
-			"name": "ESB_MODE",
-			"title": "ESB_MODE",
-			"shortName": "ESB_MODE"
-		}
-	],
-	"lighting": "qmk_rgblight",
-	"matrix": {
-		"rows": 5,
-		"cols": 14
-	},
-	"layouts": {
-		"keymap": [
-			[
-			  "0,13",
-			  "0,12",
-			  "0,11",
-			  "0,10",
-			  "0,9",
-			  "0,8",
-			  "0,7",
-			  "0,6",
-			  "0,5",
-			  "0,4",
-			  "0,3",
-			  "0,2",
-			  "0,1",
-			  {
-				"w": 2
-			  },
-			  "0,0"
-			],
-			[
-			  {
-				"w": 1.5
-			  },
-			  "1,13",
-			  "1,12",
-			  "1,11",
-			  "1,10",
-			  "1,9",
-			  "1,8",
-			  "1,7",
-			  "1,6",
-			  "1,5",
-			  "1,4",
-			  "1,3",
-			  "1,2",
-			  "1,1",
-			  {
-				"w": 1.5
-			  },
-			  "1,0"
-			],
-			[
-			  {
-				"w": 1.75
-			  },
-			  "2,13",
-			  "2,11",
-			  "2,10",
-			  "2,9",
-			  "2,8",
-			  "2,7",
-			  "2,6",
-			  "2,5",
-			  "2,4",
-			  "2,3",
-			  "2,2",
-			  "2,1",
-			  {
-				"w": 2.25
-			  },
-			  "2,0"
-			],
-			[
-			  {
-				"w": 2
-			  },
-			  "3,13",
-			  "3,12",
-			  "3,11",
-			  "3,10",
-			  "3,9",
-			  "3,8",
-			  "3,7",
-			  "3,6",
-			  "3,5",
-			  "3,4",
-			  "3,3",
-			  "3,2",
-			  "3,1",
-			  "3,0"
-			],
-			[
-			  {
-				"w": 1.25
-			  },
-			  "4,13",
-			  {
-				"w": 1.25
-			  },
-			  "4,12",
-			  {
-				"w": 1.25
-			  },
-			  "4,11",
-			  {
-				"w": 6.25
-			  },
-			  "4,8",
-			  "4,4",
-			  "4,3",
-			  "4,2",
-			  "4,1",
-			  "4,0"
-			]
-		  ]
-	}
+  "name": "EZY64",
+  "vendorId": "0xCAFE",
+  "productId": "0x0B91",
+  "customKeycodes": [
+    {
+      "name": "USB_MODE",
+      "title": "USB_MODE",
+      "shortName": "USB_MODE"
+    },
+    {
+      "name": "BLE_SLOT1",
+      "title": "BLE_SLOT1",
+      "shortName": "BLE1"
+    },
+    {
+      "name": "BLE_SLOT2",
+      "title": "BLE_SLOT2",
+      "shortName": "BLE2"
+    },
+    {
+      "name": "BLE_SLOT3",
+      "title": "BLE_SLOT3",
+      "shortName": "BLE3"
+    },
+    {
+      "name": "BLE_SLOT4",
+      "title": "BLE_SLOT4",
+      "shortName": "BLE4"
+    },
+    {
+      "name": "BLE_CLEAN1",
+      "title": "BLE_CLEAN1",
+      "shortName": "BC1"
+    },
+    {
+      "name": "BLE_CLEAN2",
+      "title": "BLE_CLEAN2",
+      "shortName": "BC2"
+    },
+    {
+      "name": "BLE_CLEAN3",
+      "title": "BLE_CLEAN3",
+      "shortName": "BC3"
+    },
+    {
+      "name": "BLE_CLEAN4",
+      "title": "BLE_CLEAN4",
+      "shortName": "BC3"
+    },
+    {
+      "name": "BLE_ALL_CLEAR",
+      "title": "BLE_ALL_CLEAR",
+      "shortName": "BC_A"
+    },
+    {
+      "name": "ESB_MODE",
+      "title": "ESB_MODE",
+      "shortName": "ESB_MODE"
+    }
+  ],
+  "lighting": "qmk_rgblight",
+  "matrix": {
+    "rows": 5,
+    "cols": 14
+  },
+  "layouts": {
+    "keymap": [
+      [
+        "0,13",
+        "0,12",
+        "0,11",
+        "0,10",
+        "0,9",
+        "0,8",
+        "0,7",
+        "0,6",
+        "0,5",
+        "0,4",
+        "0,3",
+        "0,2",
+        "0,1",
+        {
+          "w": 2
+        },
+        "0,0"
+      ],
+      [
+        {
+          "w": 1.5
+        },
+        "1,13",
+        "1,12",
+        "1,11",
+        "1,10",
+        "1,9",
+        "1,8",
+        "1,7",
+        "1,6",
+        "1,5",
+        "1,4",
+        "1,3",
+        "1,2",
+        "1,1",
+        {
+          "w": 1.5
+        },
+        "1,0"
+      ],
+      [
+        {
+          "w": 1.75
+        },
+        "2,13",
+        "2,11",
+        "2,10",
+        "2,9",
+        "2,8",
+        "2,7",
+        "2,6",
+        "2,5",
+        "2,4",
+        "2,3",
+        "2,2",
+        "2,1",
+        {
+          "w": 2.25
+        },
+        "2,0"
+      ],
+      [
+        {
+          "w": 2
+        },
+        "3,13",
+        "3,12",
+        "3,11",
+        "3,10",
+        "3,9",
+        "3,8",
+        "3,7",
+        "3,6",
+        "3,5",
+        "3,4",
+        "3,3",
+        "3,2",
+        "3,1",
+        "3,0"
+      ],
+      [
+        {
+          "w": 1.25
+        },
+        "4,13",
+        {
+          "w": 1.25
+        },
+        "4,12",
+        {
+          "w": 1.25
+        },
+        "4,11",
+        {
+          "w": 6.25
+        },
+        "4,8",
+        "4,4",
+        "4,3",
+        "4,2",
+        "4,1",
+        "4,0"
+      ]
+    ]
+  }
 }
