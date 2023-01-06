@@ -49,6 +49,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {                                                              \
         A6, A0, A1, A2, A3, A15, A14, A13, A12, A7, B7, B6, B5, B4 \
     }
+
+#define DYNAMIC_KEYMAP_LAYER_COUNT 10
+
 #define DIODE_DIRECTION       COL2ROW
 #define BOOTMAGIC_LITE_ROW    0
 #define BOOTMAGIC_LITE_COLUMN 0
