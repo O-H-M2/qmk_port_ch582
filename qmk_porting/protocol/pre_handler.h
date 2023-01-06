@@ -17,9 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define CH58xBLE_ROM            1
-#define LIB_FLASH_BASE_ADDRESSS 0x00040000
-
 #include "CH58x_common.h"
 #include "eeprom_partition_table.h"
 #include "partition_table.h"
@@ -326,6 +323,8 @@ enum {
 #endif
 
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+#define CH58xBLE_ROM            1
+#define LIB_FLASH_BASE_ADDRESSS 0x00040000
 #define NO_USB_STARTUP_CHECK
 #ifndef BATTERY_MEASURE_PIN
 #error "Battery measure pin undefined."

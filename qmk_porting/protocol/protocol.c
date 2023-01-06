@@ -81,7 +81,7 @@ void protocol_post_init()
     if (kbd_protocol_type == kbd_protocol_usb) {
         ch582_driver.send_keyboard = send_keyboard_usb;
         ch582_driver.send_mouse = send_mouse_usb;
-        ch582_driver.send_extra = send_extra;
+        ch582_driver.send_extra = send_extra_usb;
         ch582_driver_raw_hid_send = raw_hid_send_usb;
     }
 #endif
@@ -89,9 +89,7 @@ void protocol_post_init()
     if (kbd_protocol_type == kbd_protocol_ble) {
         ch582_driver.send_keyboard = send_keyboard_ble;
         ch582_driver.send_mouse = send_mouse_ble;
-        ch582_driver.send_system = send_system_ble;
-        ch582_driver.send_consumer = send_consumer_ble;
-        ch582_driver.send_programmable_button = send_programmable_button_ble;
+        ch582_driver.send_extra = send_extra_ble;
         ch582_driver_raw_hid_send = raw_hid_send_ble;
     }
 #endif
@@ -99,9 +97,7 @@ void protocol_post_init()
     if (kbd_protocol_type == kbd_protocol_esb) {
         ch582_driver.send_keyboard = send_keyboard_esb;
         ch582_driver.send_mouse = send_mouse_esb;
-        ch582_driver.send_system = send_system_esb;
-        ch582_driver.send_consumer = send_consumer_esb;
-        ch582_driver.send_programmable_button = send_programmable_button_esb;
+        ch582_driver.send_extra = send_extra_esb;
         ch582_driver_raw_hid_send = raw_hid_send_esb;
     }
 #endif

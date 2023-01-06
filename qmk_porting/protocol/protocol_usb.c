@@ -47,13 +47,9 @@ void send_mouse_usb(report_mouse_t *report)
 #endif
 }
 
-void send_extra(report_extra_t *report)
+void send_extra_usb(report_extra_t *report)
 {
     hid_nkro_keyboard_send_report((uint8_t *)report, EXKEY_IN_EP_SIZE);
-}
-
-void send_programmable_button_usb(uint32_t data)
-{
 }
 
 void send_digitizer_usb(report_digitizer_t *report)
