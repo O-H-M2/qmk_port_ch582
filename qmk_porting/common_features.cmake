@@ -122,6 +122,9 @@ if(AUXILIARY_RGB_ENABLE)
     else()
         message(STATUS "AUXILIARY_RGB_ENABLE")
         add_definitions(-DRGB_RAW_ENABLE)
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/protocol/openRGB.c"
+        )
     endif()
 endif()
 
