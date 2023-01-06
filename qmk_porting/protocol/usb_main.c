@@ -48,6 +48,9 @@ USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t kbd_out_buffer[CONFIG_USB_ALIGN_S
 #ifdef RAW_ENABLE
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t qmkraw_out_buffer[QMKRAW_OUT_EP_SIZE];
 #endif
+#ifdef EZRAW_ENABLE
+USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t ezraw_out_buffer[EZRAW_OUT_EP_SIZE];
+#endif
 
 void usbd_hid_kbd_in_callback(uint8_t ep, uint32_t nbytes)
 {
@@ -95,10 +98,10 @@ void usbd_hid_ez_raw_in_callback(uint8_t ep, uint32_t nbytes)
 
 void usbd_hid_ez_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
-    usbd_ep_start_read(ep, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
-    extern void raw_hid_receive(uint8_t * data, uint8_t length);
+    usbd_ep_start_read(ep, ezraw_out_buffer, sizeof(ezraw_out_buffer));
+    extern void ez_raw_hid_receive(uint8_t * data, uint8_t length);
 
-    raw_hid_receive(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
+    ezraw_hid_receive(ezraw_out_buffer, sizeof(ezraw_out_buffer));
 }
 #endif
 
@@ -112,6 +115,9 @@ void usbd_configure_done_callback()
     usbd_ep_start_read(KBD_OUT_EP, kbd_out_buffer, KBD_OUT_EP_SIZE);
 #ifdef RAW_ENABLE
     usbd_ep_start_read(QMKRAW_OUT_EP, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
+#endif
+#ifdef EZRAW_ENABLE
+    usbd_ep_start_read(EZRAW_OUT_EP, ezraw_out_buffer, sizeof(ezraw_out_buffer));
 #endif
 }
 
@@ -253,5 +259,17 @@ void hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
         return;
     }
     qmkraw_state = HID_STATE_BUSY;
+}
+#endif
+
+#ifdef EZRAW_ENABLE
+void hid_ez_raw_send_report(uint8_t *data, uint8_t len)
+{
+    int ret = usbd_ep_start_write(EZRAW_IN_EP, data, len);
+
+    if (ret < 0) {
+        return;
+    }
+    ezraw_state = HID_STATE_BUSY;
 }
 #endif
