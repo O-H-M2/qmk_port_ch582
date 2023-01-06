@@ -17,7 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#define IAP_CODE_START_ADDR   0x00000000
-#define APP_SECTOR_START_ADDR 0x00012000
-#define APP_CODE_START_ADDR   (APP_SECTOR_START_ADDR + 0x1000)
-#define APP_CODE_END_ADDR     LIB_FLASH_BASE_ADDRESSS
+#define CH58xBLE_ROM            1
+#define LIB_FLASH_BASE_ADDRESSS 0x00040000
+
+#define IAP_CODE_START_ADDR     0x00000000
+#define APP_SECTOR_START_ADDR   0x00012000
+#define APP_CODE_START_ADDR     (APP_SECTOR_START_ADDR + 0x1000)
+#define APP_CODE_END_ADDR       LIB_FLASH_BASE_ADDRESSS
