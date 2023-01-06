@@ -9,11 +9,6 @@
 			"shortName": "USB_MODE"
 		},
 		{
-			"name": "BLE_SLOT0",
-			"title": "BLE_SLOT0",
-			"shortName": "BLE0"
-		},
-		{
 			"name": "BLE_SLOT1",
 			"title": "BLE_SLOT1",
 			"shortName": "BLE1"
@@ -34,24 +29,29 @@
 			"shortName": "BLE4"
 		},
 		{
-			"name": "BLE_SLOT5",
-			"title": "BLE_SLOT5",
-			"shortName": "BLE5"
+			"name": "BLE_CLEAN1",
+			"title": "BLE_CLEAN1",
+			"shortName": "BC1"
 		},
 		{
-			"name": "BLE_SLOT6",
-			"title": "BLE_SLOT6",
-			"shortName": "BLE6"
+			"name": "BLE_CLEAN2",
+			"title": "BLE_CLEAN2",
+			"shortName": "BC2"
 		},
 		{
-			"name": "BLE_SLOT7",
-			"title": "BLE_SLOT7",
-			"shortName": "BLE7"
+			"name": "BLE_CLEAN3",
+			"title": "BLE_CLEAN3",
+			"shortName": "BC3"
+		},
+		{
+			"name": "BLE_CLEAN4",
+			"title": "BLE_CLEAN4",
+			"shortName": "BC3"
 		},
 		{
 			"name": "BLE_ALL_CLEAR",
 			"title": "BLE_ALL_CLEAR",
-			"shortName": "BLE_ALL_CLEAR"
+			"shortName": "BC_A"
 		},
 		{
 			"name": "ESB_MODE",
