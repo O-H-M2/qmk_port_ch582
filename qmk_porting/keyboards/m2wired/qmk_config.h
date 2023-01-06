@@ -70,8 +70,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_EN_PIN   A3
 #define WS2812_EN_LEVEL 1
 
-#define BATTERY_MEASURE_PIN A2
-
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        17
 #define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_RGB
