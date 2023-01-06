@@ -99,6 +99,7 @@ void usbd_hid_ez_raw_in_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_ez_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, ezraw_out_buffer, sizeof(ezraw_out_buffer));
+
     extern void ez_raw_hid_receive(uint8_t * data, uint8_t length);
 
     ezraw_hid_receive(ezraw_out_buffer, sizeof(ezraw_out_buffer));
