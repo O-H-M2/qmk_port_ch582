@@ -180,14 +180,14 @@ const uint8_t RGBRawReport[] = {
     0x09, 0x62,       //   Usage (Vendor Defined)
     0x15, 0x00,       //   Logical Minimum (0)
     0x26, 0xFF, 0x00, //   Logical Maximum (255)
-    0x95, 0x20,       //   Report Count
+    0x95, 0x40,       //   Report Count
     0x75, 0x08,       //   Report Size (8)
     0x81, 0x02,       //   Input (Data, Variable, Absolute)
     // Data from host
     0x09, 0x63,       //   Usage (Vendor Defined)
     0x15, 0x00,       //   Logical Minimum (0)
     0x26, 0xFF, 0x00, //   Logical Maximum (255)
-    0x95, 0x20,       //   Report Count
+    0x95, 0x40,       //   Report Count
     0x75, 0x08,       //   Report Size (8)
     0x91, 0x02,       //   Output (Data, Variable, Absolute)
     0xC0,             // End Collection
@@ -339,25 +339,25 @@ const uint8_t hid_descriptor_scratch_1[] = {
     0x00, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
     0x00, /* iInterface: Index of string descriptor */
     /******************** Descriptor of RGB_RAW HID ********************/
-    0x09,                                /* bLength */
-    0x21,                                /* bDescriptorType */
-    0x11, 0x01,                          /* bcdHID */
-    0x00,                                /* bCountryCode */
-    0x01,                                /* bNumDescriptors */
-    0x22,                                /* bDescriptorType */
+    0x09,                               /* bLength */
+    0x21,                               /* bDescriptorType */
+    0x11, 0x01,                         /* bcdHID */
+    0x00,                               /* bCountryCode */
+    0x01,                               /* bNumDescriptors */
+    0x22,                               /* bDescriptorType */
     WBVAL(HID_RGBRAW_REPORT_DESC_SIZE), /* wItemLength */
     /******************** Descriptor of RGB_RAW in endpoint ********************/
-    0x07,                   /* bLength */
-    0x05,                   /* bDescriptorType */
+    0x07,                  /* bLength */
+    0x05,                  /* bDescriptorType */
     RGBRAW_IN_EP,          /* bEndpointAddress */
-    0x03,                   /* bmAttributes */
+    0x03,                  /* bmAttributes */
     WBVAL(RGBRAW_IN_SIZE), /* wMaxPacketSize */
     RGBRAW_IN_INTERVAL,    /* bInterval */
     /******************** Descriptor of RGB_RAW out endpoint ********************/
-    0x07,                       /* bLength */
-    0x05,                       /* bDescriptorType */
+    0x07,                      /* bLength */
+    0x05,                      /* bDescriptorType */
     RGBRAW_OUT_EP,             /* bEndpointAddress */
-    0x03,                       /* bmAttributes */
+    0x03,                      /* bmAttributes */
     WBVAL(RGBRAW_OUT_EP_SIZE), /* wMaxPacketSize */
     RGBRAW_OUT_EP_INTERVAL,    /* bInterval */
 #endif
