@@ -53,6 +53,21 @@ if(VIA_ENABLE)
     )
 endif()
 
+# VIAL_ENABLE
+if(VIAL_ENABLE)
+    if(NOT VIA_ENABLE )
+        essage(FATAL_ERROR "Unsupported split keyboard driver!")
+    else()
+    add_definitions(-DVIAL_ENABLE)
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/vial.c"
+        "${QMK_BASE_DIR}/quantum/vial_ensure_keycode.h"
+        "${CMAKE_CURRENT_LIST_DIR}/protocol/version.h"
+        "${CMAKE_CURRENT_LIST_DIR}/qmk_porting/keyboards/kbd67lite/vial_generated_keyboard_definition.h"
+    )
+    endif()
+endif()
+
 # COMMAND_ENABLE
 if(COMMAND_ENABLE)
     add_definitions(-DCOMMAND_ENABLE)
