@@ -22,16 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 uint8_t keyboard_led_state;
 
-__attribute__((weak)) void raw_hid_receive(uint8_t *data, uint8_t length)
-{
-    // placeholder in case VIA is disabled
-}
-
-__attribute__((weak)) void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
-{
-    // placeholder in case openRGB or others is disabled
-}
-
 uint8_t keyboard_leds()
 {
     return keyboard_led_state;

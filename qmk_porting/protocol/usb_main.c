@@ -17,6 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "usb_main.h"
 #include "usb_descriptors.h"
+#ifdef RAW_ENABLE
+#include "raw_hid.h"
+#endif
 #if ESB_ENABLE == 2
 #include "esb.h"
 #endif
@@ -83,8 +86,6 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 
     esb_send_response(REPORT_ID_CUSTOM, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #else
-    extern void raw_hid_receive(uint8_t * data, uint8_t length);
-
     raw_hid_receive(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #endif
 }
