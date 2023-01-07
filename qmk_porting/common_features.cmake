@@ -64,6 +64,8 @@ if(VIAL_ENABLE)
         "${QMK_BASE_DIR}/quantum/vial_ensure_keycode.h"
         "${CMAKE_CURRENT_LIST_DIR}/protocol/version.h"
         "${CMAKE_CURRENT_LIST_DIR}/qmk_porting/keyboards/kbd67lite/vial_generated_keyboard_definition.h"
+        "${QMK_BASE_DIR}/quantum/vialrgb_effects.inc"
+        "${QMK_BASE_DIR}/quantum/vialrgb.c"
     )
     endif()
 endif()
