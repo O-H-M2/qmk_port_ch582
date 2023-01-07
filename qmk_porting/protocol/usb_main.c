@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef RAW_ENABLE
 #include "raw_hid.h"
 #endif
+#ifdef RGB_RAW_ENABLE
+#include "auxiliary_rgb.h"
+#endif
 #if ESB_ENABLE == 2
 #include "esb.h"
 #endif
@@ -100,9 +103,6 @@ void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
-
-    extern void rgb_raw_hid_receive(uint8_t * data, uint8_t length);
-
     rgb_raw_hid_receive(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
 }
 #endif
