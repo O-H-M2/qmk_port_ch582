@@ -13,12 +13,6 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
 {
     bool send = false;
 
-    PRINT("raw receive %d: \n", length);
-    for (uint8_t i = 0; i < length; i++) {
-        PRINT("%x ", data[i]);
-    }
-    PRINT("\n");
-
     switch (*data) {
         case 1 ... 9:
             send = openrgb_command_handler(data, length);
@@ -39,56 +33,55 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
     }
 }
 
-uint16_t g_auxiliary_rgb_timer = 0;
-bool g_auxiliary_rgb_anim_playing = false;
-
+// uint16_t g_auxiliary_rgb_timer = 0;
+// bool g_auxiliary_rgb_anim_playing = false;
 // static uint8_t auxiliary_rgb_mode = HID_MODE_OPENRGB;
 static RGB auxiliary_rgb_color_buffer[DRIVER_LED_TOTAL] = { [0 ... DRIVER_LED_TOTAL - 1] = { AUXILIARY_RGB_STARTUP_GREEN, AUXILIARY_RGB_STARTUP_RED, AUXILIARY_RGB_STARTUP_BLUE } };
 
-void auxiliary_rgb_set_color(int index, uint8_t red, uint8_t green, uint8_t blue)
+void auxiliary_rgb_set_color_buffer(int index, uint8_t red, uint8_t green, uint8_t blue)
 {
-    // if (rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
-    //     return;
-    // }
+    if (rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
+        return;
+    }
 
     // if (auxiliary_rgb_get_mode() == HID_MODE_OPENRGB) {
-        auxiliary_rgb_color_buffer[index].r = red;
-        auxiliary_rgb_color_buffer[index].g = green;
-        auxiliary_rgb_color_buffer[index].b = blue;
-    // } else {
-#ifdef AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
-        float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
+    auxiliary_rgb_color_buffer[index].r = red;
+    auxiliary_rgb_color_buffer[index].g = green;
+    auxiliary_rgb_color_buffer[index].b = blue;
+    //     } else {
+    // #ifdef AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
+    //         float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
 
-        rgb_matrix_set_color(index, brightness * red, brightness * green, brightness * blue);
-#else
-        rgb_matrix_set_color(index, red, green, blue);
-#endif
-    // }
+    //         rgb_matrix_set_color(index, brightness * red, brightness * green, brightness * blue);
+    // #else
+    //         rgb_matrix_set_color(index, red, green, blue);
+    // #endif
+    //     }
 }
 
 // void auxiliary_rgb_reload_openrgb_colors()
 // {
 //     // if (auxiliary_rgb_get_mode() == HID_MODE_OPENRGB) {
 //         for (uint8_t i = 0; i < DRIVER_LED_TOTAL; i++) {
-//             auxiliary_rgb_set_color(i, auxiliary_rgb_color_buffer[i].r, auxiliary_rgb_color_buffer[i].g, auxiliary_rgb_color_buffer[i].b);
+//             auxiliary_rgb_set_color_buffer(i, auxiliary_rgb_color_buffer[i].r, auxiliary_rgb_color_buffer[i].g, auxiliary_rgb_color_buffer[i].b);
 //         }
 //     // }
 // }
 
-void auxiliary_rgb_reload_openrgb_anim()
+void auxiliary_rgb_flush()
 {
-    if (!g_auxiliary_rgb_anim_playing) {
-        g_auxiliary_rgb_timer = 0;
-    }
+    // if (!g_auxiliary_rgb_anim_playing) {
+    //     g_auxiliary_rgb_timer = 0;
+    // }
     rgb_matrix_set_color_all(0, 0, 0);
 }
 
-RGB *auxiliary_rgb_get_openrgb_colors()
+RGB *auxiliary_rgb_get_color_buffer()
 {
     return auxiliary_rgb_color_buffer;
 }
 
-RGB auxiliary_rgb_get_openrgb_color(int index)
+RGB auxiliary_rgb_get_color_buffer_element(int index)
 {
     return auxiliary_rgb_color_buffer[index];
 }

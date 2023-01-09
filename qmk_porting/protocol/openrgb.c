@@ -262,7 +262,7 @@ void openrgb_get_led_info(uint8_t *data)
     const uint8_t first_led = data[1];
     const uint8_t number_leds = data[2];
 
-    const RGB *openrgb_colors = auxiliary_rgb_get_openrgb_colors();
+    const RGB *openrgb_colors = auxiliary_rgb_get_color_buffer();
 
     openrgb_hid_buffer[0] = OPENRGB_GET_LED_INFO;
     for (uint8_t i = 0; i < number_leds; i++) {
@@ -345,16 +345,16 @@ void openrgb_set_mode(uint8_t *data)
         rgb_matrix_sethsv_noeeprom(h, s, v);
     }
 
-    // if (rgb_matrix_get_mode() == RGB_MATRIX_CUSTOM_AUXILIARY_RGB) { // if matrix mode not signalrgb, do not streaming led.
-    //     auxiliary_rgb_reload_openrgb_anim();
-    // }
+    if (rgb_matrix_get_mode() == RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
+        auxiliary_rgb_flush();
+    }
 
     openrgb_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 
 void openrgb_direct_mode_set_single_led(uint8_t *data)
 {
-    // if (auxiliary_rgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
+    // if (auxiliary_rgb_get_mode() != HID_MODE_OPENRGB) {
     //     openrgb_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_FAILURE;
     //     return;
     // }
@@ -371,19 +371,16 @@ void openrgb_direct_mode_set_single_led(uint8_t *data)
         return;
     }
 
-    auxiliary_rgb_set_color(led, r, g, b);
+    auxiliary_rgb_set_color_buffer(led, r, g, b);
 
     openrgb_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 
 void openrgb_direct_mode_set_leds(uint8_t *data)
 {
-    // if (auxiliary_rgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
+    // if (auxiliary_rgb_get_mode() != HID_MODE_OPENRGB) {
+    //     openrgb_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_FAILURE;
     //     return;
-    // }
-
-    // if (rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
-    //     rgb_matrix_mode(RGB_MATRIX_CUSTOM_AUXILIARY_RGB);
     // }
 
     const uint8_t number_leds = data[1];
@@ -392,6 +389,6 @@ void openrgb_direct_mode_set_leds(uint8_t *data)
         const uint8_t data_idx = i * 4;
         const uint8_t color_idx = data[data_idx + 2];
 
-        auxiliary_rgb_set_color(color_idx, data[data_idx + 3], data[data_idx + 4], data[data_idx + 5]);
+        auxiliary_rgb_set_color_buffer(color_idx, data[data_idx + 3], data[data_idx + 4], data[data_idx + 5]);
     }
 }

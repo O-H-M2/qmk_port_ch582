@@ -8,9 +8,9 @@ RGB_MATRIX_EFFECT(AUXILIARY_RGB)
 
 static inline void set_openrgb_color(uint8_t led_index, uint8_t val)
 {
-    extern RGB auxiliary_rgb_get_openrgb_color(int index);
+    extern RGB auxiliary_rgb_get_color_buffer_element(int index);
 
-    RGB rgb = auxiliary_rgb_get_openrgb_color(led_index);
+    RGB rgb = auxiliary_rgb_get_color_buffer_element(led_index);
 
 #ifdef AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
     float brightness = (float)val / UINT8_MAX;
@@ -30,26 +30,26 @@ bool AUXILIARY_RGB(effect_params_t *params)
     // extern bool g_auxiliary_rgb_anim_playing;
     // uint8_t time = scale16by8(g_auxiliary_rgb_timer, AUXILIARY_RGB_WELCOME_ANIM_SPD);
 
-    // HSV hsv = rgb_matrix_config.hsv;
+    HSV hsv = rgb_matrix_config.hsv;
     // g_auxiliary_rgb_anim_playing = (time != UINT8_MAX);
 
-    // for (uint8_t i = led_min; i < led_max; i++) {
-    //     RGB_MATRIX_TEST_LED_FLAGS();
-    //     if (g_auxiliary_rgb_anim_playing) { // play loop loading animation
-    //         int16_t dx = g_led_config.point[i].x - k_rgb_matrix_center.x;
-    //         int16_t dy = g_led_config.point[i].y - k_rgb_matrix_center.y;
-    //         hsv.v = 0;
+    for (uint8_t i = led_min; i < led_max; i++) {
+        RGB_MATRIX_TEST_LED_FLAGS();
+        //     if (g_auxiliary_rgb_anim_playing) { // play loop loading animation
+        //         int16_t dx = g_led_config.point[i].x - k_rgb_matrix_center.x;
+        //         int16_t dy = g_led_config.point[i].y - k_rgb_matrix_center.y;
+        //         hsv.v = 0;
 
-    //         int16_t effect = time - sqrt16(dx * dx + dy * dy);
-    //         if (effect < 0)
-    //             effect = 0;
+        //         int16_t effect = time - sqrt16(dx * dx + dy * dy);
+        //         if (effect < 0)
+        //             effect = 0;
 
-    //         hsv.v = qadd8(hsv.v, effect);
-    //         hsv.v = scale8(hsv.v, rgb_matrix_config.hsv.v);
-    //     }
+        //         hsv.v = qadd8(hsv.v, effect);
+        //         hsv.v = scale8(hsv.v, rgb_matrix_config.hsv.v);
+        //     }
 
-    //     set_openrgb_color(i, hsv.v);
-    // }
+        set_openrgb_color(i, hsv.v);
+    }
 
     // if (g_auxiliary_rgb_anim_playing)
     //     g_auxiliary_rgb_timer++; // tick counter
