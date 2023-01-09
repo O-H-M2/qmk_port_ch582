@@ -1,10 +1,13 @@
 #pragma once
 
+#include "usb_main.h"
+#include "rgb_matrix.h"
 #include "auxiliary_rgb.h"
 
 // This is changed only when the command IDs change,
 // so OpenRGB can detect compatible firmware.
 #define OPENRGB_PROTOCOL_VERSION 0xE //add openRGB Version
+#define OPENRGB_EPSIZE           RGBRAW_EP_SIZE
 
 enum openrgb_command_id {
     OPENRGB_GET_PROTOCOL_VERSION = 1,

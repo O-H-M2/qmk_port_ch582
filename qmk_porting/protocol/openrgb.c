@@ -1,21 +1,18 @@
-#include "version.h"
 #include "quantum.h"
 #include <string.h>
 #include "openrgb.h"
 
-#if !defined(OPENRGB_DIRECT_MODE_STARTUP_RED)
-#define OPENRGB_DIRECT_MODE_STARTUP_RED 0
-#endif
+// #if !defined(OPENRGB_DIRECT_MODE_STARTUP_RED)
+// #define OPENRGB_DIRECT_MODE_STARTUP_RED 0
+// #endif
 
-#if !defined(OPENRGB_DIRECT_MODE_STARTUP_GREEN)
-#define OPENRGB_DIRECT_MODE_STARTUP_GREEN 0
-#endif
+// #if !defined(OPENRGB_DIRECT_MODE_STARTUP_GREEN)
+// #define OPENRGB_DIRECT_MODE_STARTUP_GREEN 167
+// #endif
 
-#if !defined(OPENRGB_DIRECT_MODE_STARTUP_BLUE)
-#define OPENRGB_DIRECT_MODE_STARTUP_BLUE 255
-#endif
-
-#define OPENRGB_EPSIZE RGBRAW_EP_SIZE
+// #if !defined(OPENRGB_DIRECT_MODE_STARTUP_BLUE)
+// #define OPENRGB_DIRECT_MODE_STARTUP_BLUE 224
+// #endif
 
 #if !defined(OPENRGB_DEFAULT_KEYMAP_ID)
 #define OPENRGB_DEFAULT_KEYMAP_ID 0 // default keyamp id，read keymap by id from u keyboard
@@ -26,7 +23,6 @@ extern const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS];
 static const uint8_t openrgb_rgb_matrix_effects_indexes[] = {
     1,
     2,
-
 #ifdef ENABLE_RGB_MATRIX_ALPHAS_MODS
     3,
 #endif
@@ -157,7 +153,6 @@ static const uint8_t openrgb_rgb_matrix_effects_indexes[] = {
     45,
 #endif
 };
-
 static uint8_t openrgb_hid_buffer[OPENRGB_EPSIZE];
 
 bool openrgb_command_handler(uint8_t *data, uint8_t length)
@@ -190,6 +185,8 @@ bool openrgb_command_handler(uint8_t *data, uint8_t length)
         case OPENRGB_DIRECT_MODE_SET_LEDS:
             openrgb_direct_mode_set_leds(data);
             break;
+        default:
+            break;
     }
 
     if (*data != OPENRGB_DIRECT_MODE_SET_LEDS) {
@@ -201,23 +198,25 @@ bool openrgb_command_handler(uint8_t *data, uint8_t length)
     return false;
 }
 
-void openrgb_get_protocol_version(void)
+void openrgb_get_protocol_version()
 {
     openrgb_hid_buffer[0] = OPENRGB_GET_PROTOCOL_VERSION;
     openrgb_hid_buffer[1] = OPENRGB_PROTOCOL_VERSION;
 }
 
-void openrgb_get_qmk_version(void)
+void openrgb_get_qmk_version()
 {
     openrgb_hid_buffer[0] = OPENRGB_GET_QMK_VERSION;
+
     uint8_t current_byte = 1;
+
     for (uint8_t i = 0; (current_byte < (OPENRGB_EPSIZE - 2)) && (QMK_VERSION[i] != 0); i++) {
         openrgb_hid_buffer[current_byte] = QMK_VERSION[i];
         current_byte++;
     }
 }
 
-void openrgb_get_device_info(void)
+void openrgb_get_device_info()
 {
     openrgb_hid_buffer[0] = OPENRGB_GET_DEVICE_INFO;
     openrgb_hid_buffer[1] = DRIVER_LED_TOTAL;
@@ -233,20 +232,20 @@ void openrgb_get_device_info(void)
 #endif
 
     uint8_t current_byte = 3;
+
     for (uint8_t i = 0; (current_byte < ((OPENRGB_EPSIZE - 2) / 2)) && (PRODUCT_STRING[i] != 0); i++) {
         openrgb_hid_buffer[current_byte] = PRODUCT_STRING[i];
         current_byte++;
     }
     openrgb_hid_buffer[current_byte] = 0;
     current_byte++;
-
     for (uint8_t i = 0; (current_byte + 2 < OPENRGB_EPSIZE) && (MANUFACTURER_STRING[i] != 0); i++) {
         openrgb_hid_buffer[current_byte] = MANUFACTURER_STRING[i];
         current_byte++;
     }
 }
 
-void openrgb_get_mode_info(void)
+void openrgb_get_mode_info()
 {
     const HSV hsv_color = rgb_matrix_get_hsv();
 
@@ -262,10 +261,10 @@ void openrgb_get_led_info(uint8_t *data)
 {
     const uint8_t first_led = data[1];
     const uint8_t number_leds = data[2];
+
     const RGB *openrgb_colors = auxiliary_rgb_get_openrgb_colors();
 
     openrgb_hid_buffer[0] = OPENRGB_GET_LED_INFO;
-
     for (uint8_t i = 0; i < number_leds; i++) {
         const uint8_t led_idx = first_led + i;
         const uint8_t data_idx = i * 7;
@@ -300,17 +299,19 @@ void openrgb_get_led_info(uint8_t *data)
         }
 
         if (col >= MATRIX_COLS || row >= MATRIX_ROWS) {
-            openrgb_hid_buffer[data_idx + 7] = KC_NO; // fix some kb, has no keymap led
+            openrgb_hid_buffer[data_idx + 7] = KC_NO;
         } else {
             openrgb_hid_buffer[data_idx + 7] = pgm_read_byte(&keymaps[OPENRGB_DEFAULT_KEYMAP_ID][row][col]);
         }
     }
 }
 
-void openrgb_get_enabled_modes(void)
+void openrgb_get_enabled_modes()
 {
     openrgb_hid_buffer[0] = OPENRGB_GET_ENABLED_MODES;
+
     const uint8_t size = sizeof openrgb_rgb_matrix_effects_indexes / sizeof openrgb_rgb_matrix_effects_indexes[0];
+
     for (int i = 0; i < size; i++) {
         openrgb_hid_buffer[i + 1] = openrgb_rgb_matrix_effects_indexes[i];
     }
@@ -332,7 +333,7 @@ void openrgb_set_mode(uint8_t *data)
         return;
     }
 
-    auxiliary_rgb_set_mode(HID_MODE_OPENRGB);
+    // auxiliary_rgb_set_mode(HID_MODE_OPENRGB);
 
     if (save == 1) {
         rgb_matrix_mode(mode);
@@ -344,19 +345,19 @@ void openrgb_set_mode(uint8_t *data)
         rgb_matrix_sethsv_noeeprom(h, s, v);
     }
 
-    if (rgb_matrix_get_mode() == RGB_MATRIX_CUSTOM_AUXILIARY_RGB) { // if matrix mode not signalrgb, do not streaming led.
-        auxiliary_rgb_reload_openrgb_anim();
-    }
+    // if (rgb_matrix_get_mode() == RGB_MATRIX_CUSTOM_AUXILIARY_RGB) { // if matrix mode not signalrgb, do not streaming led.
+    //     auxiliary_rgb_reload_openrgb_anim();
+    // }
 
     openrgb_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 
 void openrgb_direct_mode_set_single_led(uint8_t *data)
 {
-    if (auxiliary_rgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
-        openrgb_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_FAILURE;
-        return;
-    }
+    // if (auxiliary_rgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
+    //     openrgb_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_FAILURE;
+    //     return;
+    // }
 
     const uint8_t led = data[1];
     const uint8_t r = data[2];
@@ -373,14 +374,17 @@ void openrgb_direct_mode_set_single_led(uint8_t *data)
     auxiliary_rgb_set_color(led, r, g, b);
 
     openrgb_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
-    openrgb_hid_buffer[OPENRGB_EPSIZE - 2] = OPENRGB_SUCCESS;
 }
 
 void openrgb_direct_mode_set_leds(uint8_t *data)
 {
-    if (auxiliary_rgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
-        return;
-    }
+    // if (auxiliary_rgb_get_mode() != HID_MODE_OPENRGB || rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
+    //     return;
+    // }
+
+    // if (rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
+    //     rgb_matrix_mode(RGB_MATRIX_CUSTOM_AUXILIARY_RGB);
+    // }
 
     const uint8_t number_leds = data[1];
 
