@@ -62,6 +62,12 @@ void raw_hid_send_usb(uint8_t *data, uint8_t length)
     hid_qmk_raw_send_report(data, length);
 #endif
 }
+void rgb_raw_hid_send_usb(uint8_t *data, uint8_t length)
+{
+#ifdef RGB_RAW_ENABLE
+    hid_rgb_raw_send_report(data, length);
+#endif
+}
 
 void platform_initialize_usb()
 {

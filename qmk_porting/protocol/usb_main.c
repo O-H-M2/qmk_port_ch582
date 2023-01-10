@@ -17,6 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "usb_main.h"
 #include "usb_descriptors.h"
+#ifdef RGB_RAW_ENABLE
+#include "auxiliary_rgb.h"
+#endif
 #ifdef RAW_ENABLE
 #include "raw_hid.h"
 #endif
@@ -29,18 +32,27 @@ uint8_t keyboard_idle = 0;
 static uint8_t *hid_descriptor = NULL;
 /*!< hid state ! Data can be sent only when state is idle  */
 static struct usbd_interface keyboard_interface;
+#ifdef RGB_RAW_ENABLE
+static struct usbd_interface rgbraw_interface;
+#endif
 static struct usbd_interface extrakey_interface;
 #ifdef RAW_ENABLE
 static struct usbd_interface qmkraw_interface;
 #endif
 
 static uint8_t keyboard_state = HID_STATE_IDLE;
+#ifdef RGB_RAW_ENABLE
+static uint8_t rgbraw_state = HID_STATE_IDLE;
+#endif
 static uint8_t extrakey_state = HID_STATE_IDLE;
 #ifdef RAW_ENABLE
 static uint8_t qmkraw_state = HID_STATE_IDLE;
 #endif
 
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t kbd_out_buffer[CONFIG_USB_ALIGN_SIZE];
+#ifdef RGB_RAW_ENABLE
+USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t rgbraw_out_buffer[RGBRAW_OUT_EP_SIZE];
+#endif
 #ifdef RAW_ENABLE
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t qmkraw_out_buffer[QMKRAW_OUT_EP_SIZE];
 #endif
@@ -62,6 +74,24 @@ void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 #endif
 }
 
+#ifdef RGB_RAW_ENABLE
+void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
+{
+    rgbraw_state = HID_STATE_IDLE;
+}
+
+void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
+{
+    usbd_ep_start_read(ep, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
+    rgb_raw_hid_receive(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
+}
+#endif
+
+void usbd_hid_exkey_in_callback(uint8_t ep, uint32_t nbytes)
+{
+    extrakey_state = HID_STATE_IDLE;
+}
+
 #ifdef RAW_ENABLE
 void usbd_hid_qmk_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
@@ -81,14 +111,12 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 }
 #endif
 
-void usbd_hid_exkey_in_callback(uint8_t ep, uint32_t nbytes)
-{
-    extrakey_state = HID_STATE_IDLE;
-}
-
 void usbd_configure_done_callback()
 {
     usbd_ep_start_read(KBD_OUT_EP, kbd_out_buffer, KBD_OUT_EP_SIZE);
+#ifdef RGB_RAW_ENABLE
+    usbd_ep_start_read(RGBRAW_OUT_EP, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
+#endif
 #ifdef RAW_ENABLE
     usbd_ep_start_read(QMKRAW_OUT_EP, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #endif
@@ -111,6 +139,18 @@ void init_usb_driver()
         .ep_cb = usbd_hid_kbd_out_callback,
         .ep_addr = KBD_OUT_EP
     };
+
+#ifdef RGB_RAW_ENABLE
+    struct usbd_endpoint rgbraw_in_ep = {
+        .ep_cb = usbd_hid_rgb_raw_in_callback,
+        .ep_addr = RGBRAW_IN_EP
+    };
+
+    struct usbd_endpoint rgbraw_out_ep = {
+        .ep_cb = usbd_hid_rgb_raw_out_callback,
+        .ep_addr = RGBRAW_OUT_EP
+    };
+#endif
 
     struct usbd_endpoint exkey_in_ep = {
         .ep_cb = usbd_hid_exkey_in_callback,
@@ -168,6 +208,12 @@ void init_usb_driver()
     usbd_add_endpoint(&keyboard_in_ep);
     usbd_add_endpoint(&keyboard_out_ep);
 
+#ifdef RGB_RAW_ENABLE
+    usbd_add_interface(usbd_hid_init_intf(&rgbraw_interface, RGBRawReport, HID_RGBRAW_REPORT_DESC_SIZE));
+    usbd_add_endpoint(&rgbraw_in_ep);
+    usbd_add_endpoint(&rgbraw_out_ep);
+#endif
+
     usbd_add_interface(usbd_hid_init_intf(&extrakey_interface, ExtrakeyReport, HID_EXTRAKEY_REPORT_DESC_SIZE));
     usbd_add_endpoint(&exkey_in_ep);
 
@@ -194,6 +240,18 @@ void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len)
 {
     hid_exkey_send_report(data, len);
 }
+
+#ifdef RGB_RAW_ENABLE
+void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
+{
+    int ret = usbd_ep_start_write(RGBRAW_IN_EP, data, len);
+
+    if (ret < 0) {
+        return;
+    }
+    rgbraw_state = HID_STATE_BUSY;
+}
+#endif
 
 inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
 {

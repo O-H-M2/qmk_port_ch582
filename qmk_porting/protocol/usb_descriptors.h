@@ -22,6 +22,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usb_def.h"
 #include "report.h"
 #include "usb_descriptor_common.h"
+#ifdef RGB_RAW_ENABLE
+#include "auxiliary_rgb.h"
+#endif
+
+enum {
+    InterfaceNumber_start = 0x00,
+    InterfaceNumber_keyboard = InterfaceNumber_start,
+#ifdef RGB_RAW_ENABLE
+    InterfaceNumber_rgb_raw,
+#endif
+    InterfaceNumber_extra_key,
+#ifdef RAW_ENABLE
+    InterfaceNumber_qmk_raw,
+#endif
+};
 
 const uint8_t KeyboardReport[] = {
     0x05, 0x01,       // Usage Page (Generic Desktop)
@@ -57,6 +72,29 @@ const uint8_t KeyboardReport[] = {
     0x81, 0x00,       //   Input (Data, Array, Absolute)
     0xC0,             // End Collection
 };
+
+#ifdef RGB_RAW_ENABLE
+const uint8_t RGBRawReport[] = {
+    0x06, WBVAL(RGB_RAW_USAGE_PAGE), // Usage Page (Vendor Defined)
+    0x09, RGB_RAW_USAGE_ID,          // Usage (Vendor Defined)
+    0xA1, 0x01,                      // Collection (Application)
+    // Data to host
+    0x09, 0x62,       //   Usage (Vendor Defined)
+    0x15, 0x00,       //   Logical Minimum (0)
+    0x26, 0xFF, 0x00, //   Logical Maximum (255)
+    0x95, 0x40,       //   Report Count
+    0x75, 0x08,       //   Report Size (8)
+    0x81, 0x02,       //   Input (Data, Variable, Absolute)
+    // Data from host
+    0x09, 0x63,       //   Usage (Vendor Defined)
+    0x15, 0x00,       //   Logical Minimum (0)
+    0x26, 0xFF, 0x00, //   Logical Maximum (255)
+    0x95, 0x40,       //   Report Count
+    0x75, 0x08,       //   Report Size (8)
+    0x91, 0x02,       //   Output (Data, Variable, Absolute)
+    0xC0,             // End Collection
+};
+#endif
 
 const uint8_t ExtrakeyReport[] = {
 #ifdef MOUSE_ENABLE
@@ -178,9 +216,10 @@ const uint8_t QMKRawReport[] = {
 
 /*!< report descriptor size */
 #define HID_KEYBOARD_REPORT_DESC_SIZE sizeof(KeyboardReport)
-
+#ifdef RGB_RAW_ENABLE
+#define HID_RGBRAW_REPORT_DESC_SIZE sizeof(RGBRawReport)
+#endif
 #define HID_EXTRAKEY_REPORT_DESC_SIZE sizeof(ExtrakeyReport)
-
 #ifdef RAW_ENABLE
 #define HID_QMKRAW_REPORT_DESC_SIZE sizeof(QMKRawReport)
 #endif
@@ -189,11 +228,17 @@ const uint8_t QMKRawReport[] = {
 const uint8_t hid_descriptor_scratch_1[] = {
     USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, DEVICE_VER, 0x01),
     USB_CONFIG_DESCRIPTOR_INIT((USB_HID_CONFIG_DESC_SIZ_SCRATCH
+#ifdef RGB_RAW_ENABLE
+                                + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
+#endif
 #ifdef RAW_ENABLE
                                 + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
 #endif
                                 ),
                                (0x02
+#ifdef RGB_RAW_ENABLE
+                                + 0x01
+#endif
 #ifdef RAW_ENABLE
                                 + 0x01
 #endif
@@ -201,15 +246,15 @@ const uint8_t hid_descriptor_scratch_1[] = {
                                0x01, USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
 
     /************** Descriptor of Keyboard interface ****************/
-    0x09, /* bLength */
-    0x04, /* bDescriptorType */
-    0x00, /* bInterfaceNumber */
-    0x00, /* bAlternateSetting */
-    0x02, /* bNumEndpoints */
-    0x03, /* bInterfaceClass */
-    0x01, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
-    0x01, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
-    0x00, /* iInterface: Index of string descriptor */
+    0x09,                     /* bLength */
+    0x04,                     /* bDescriptorType */
+    InterfaceNumber_keyboard, /* bInterfaceNumber */
+    0x00,                     /* bAlternateSetting */
+    0x02,                     /* bNumEndpoints */
+    0x03,                     /* bInterfaceClass */
+    0x01,                     /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x01,                     /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00,                     /* iInterface: Index of string descriptor */
     /******************** Descriptor of Keyboard HID ********************/
     0x09,                                 /* bLength */
     0x21,                                 /* bDescriptorType */
@@ -233,16 +278,51 @@ const uint8_t hid_descriptor_scratch_1[] = {
     WBVAL(KBD_OUT_EP_SIZE), /* wMaxPacketSize */
     KBD_OUT_EP_INTERVAL,    /* bInterval */
 
+#ifdef RGB_RAW_ENABLE
+    /************** Descriptor of RGB_RAW interface *****************/
+    0x09,                    /* bLength */
+    0x04,                    /* bDescriptorType */
+    InterfaceNumber_rgb_raw, /* bInterfaceNumber */
+    0x00,                    /* bAlternateSetting */
+    0x02,                    /* bNumEndpoints */
+    0x03,                    /* bInterfaceClass */
+    0x00,                    /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x00,                    /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00,                    /* iInterface: Index of string descriptor */
+    /******************** Descriptor of RGB_RAW HID ********************/
+    0x09,                               /* bLength */
+    0x21,                               /* bDescriptorType */
+    0x11, 0x01,                         /* bcdHID */
+    0x00,                               /* bCountryCode */
+    0x01,                               /* bNumDescriptors */
+    0x22,                               /* bDescriptorType */
+    WBVAL(HID_RGBRAW_REPORT_DESC_SIZE), /* wItemLength */
+    /******************** Descriptor of RGB_RAW in endpoint ********************/
+    0x07,                  /* bLength */
+    0x05,                  /* bDescriptorType */
+    RGBRAW_IN_EP,          /* bEndpointAddress */
+    0x03,                  /* bmAttributes */
+    WBVAL(RGBRAW_IN_SIZE), /* wMaxPacketSize */
+    RGBRAW_IN_INTERVAL,    /* bInterval */
+    /******************** Descriptor of RGB_RAW out endpoint ********************/
+    0x07,                      /* bLength */
+    0x05,                      /* bDescriptorType */
+    RGBRAW_OUT_EP,             /* bEndpointAddress */
+    0x03,                      /* bmAttributes */
+    WBVAL(RGBRAW_OUT_EP_SIZE), /* wMaxPacketSize */
+    RGBRAW_OUT_EP_INTERVAL,    /* bInterval */
+#endif
+
     /************** Descriptor of EXTRAKEY interface *****************/
-    0x09, /* bLength */
-    0x04, /* bDescriptorType */
-    0x01, /* bInterfaceNumber */
-    0x00, /* bAlternateSetting */
-    0x01, /* bNumEndpoints */
-    0x03, /* bInterfaceClass */
-    0x00, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
-    0x00, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
-    0x00, /* iInterface: Index of string descriptor */
+    0x09,                      /* bLength */
+    0x04,                      /* bDescriptorType */
+    InterfaceNumber_extra_key, /* bInterfaceNumber */
+    0x00,                      /* bAlternateSetting */
+    0x01,                      /* bNumEndpoints */
+    0x03,                      /* bInterfaceClass */
+    0x00,                      /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x00,                      /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00,                      /* iInterface: Index of string descriptor */
     /******************** Descriptor of EXTRAKEY HID ********************/
     0x09,                                 /* bLength */
     0x21,                                 /* bDescriptorType */
@@ -261,15 +341,15 @@ const uint8_t hid_descriptor_scratch_1[] = {
 
 #ifdef RAW_ENABLE
     /************** Descriptor of QMKRAW interface *****************/
-    0x09, /* bLength */
-    0x04, /* bDescriptorType */
-    0x02, /* bInterfaceNumber */
-    0x00, /* bAlternateSetting */
-    0x02, /* bNumEndpoints */
-    0x03, /* bInterfaceClass */
-    0x00, /* bInterfaceSubClass : 1=BOOT, 0=no boot */
-    0x00, /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
-    0x00, /* iInterface: Index of string descriptor */
+    0x09,                    /* bLength */
+    0x04,                    /* bDescriptorType */
+    InterfaceNumber_qmk_raw, /* bInterfaceNumber */
+    0x00,                    /* bAlternateSetting */
+    0x02,                    /* bNumEndpoints */
+    0x03,                    /* bInterfaceClass */
+    0x00,                    /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x00,                    /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00,                    /* iInterface: Index of string descriptor */
     /******************** Descriptor of QMKRAW HID ********************/
     0x09,                               /* bLength */
     0x21,                               /* bDescriptorType */
