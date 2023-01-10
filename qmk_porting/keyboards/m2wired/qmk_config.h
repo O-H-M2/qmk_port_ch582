@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BLE_SLOT_NUM 0
 // #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
 // #define LSE_LOAD_CAPACITANCE 7   // in pF unit
+#define I2C_IO_REMAPPING
+// #define SPI_IO_REMAPPING
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE
@@ -68,8 +70,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_EN_PIN   A3
 #define WS2812_EN_LEVEL 1
 
-#define BATTERY_MEASURE_PIN A2
-
 #ifdef RGBLIGHT_ENABLE
 #define RGBLED_NUM        17
 #define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_RGB
@@ -100,6 +100,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #define RGBLED_NUM                    17
 #define DRIVER_LED_TOTAL              RGBLED_NUM
+#define RGB_MATRIX_LED_COUNT          DRIVER_LED_TOTAL
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 128
 #define RGB_DISABLE_WHEN_USB_SUSPENDED
 #define ENABLE_RGB_MATRIX_ALPHAS_MODS

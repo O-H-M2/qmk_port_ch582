@@ -30,12 +30,24 @@ uint8_t keyboard_leds()
 host_driver_t ch582_driver = {
     .keyboard_leds = keyboard_leds,
 };
+
+#ifdef RAW_ENABLE
 void (*ch582_driver_raw_hid_send)(uint8_t *, uint8_t);
 
 void raw_hid_send(uint8_t *data, uint8_t length)
 {
     ch582_driver_raw_hid_send(data, length);
 }
+#endif
+
+#ifdef RGB_RAW_ENABLE
+void (*ch582_driver_rgb_raw_hid_send)(uint8_t *, uint8_t);
+
+void rgb_raw_hid_send(uint8_t *data, uint8_t length)
+{
+    ch582_driver_rgb_raw_hid_send(data, length);
+}
+#endif
 
 void protocol_setup()
 {
@@ -73,6 +85,7 @@ void protocol_post_init()
         ch582_driver.send_mouse = send_mouse_usb;
         ch582_driver.send_extra = send_extra_usb;
         ch582_driver_raw_hid_send = raw_hid_send_usb;
+        ch582_driver_rgb_raw_hid_send = rgb_raw_hid_send_usb;
     }
 #endif
 #ifdef BLE_ENABLE

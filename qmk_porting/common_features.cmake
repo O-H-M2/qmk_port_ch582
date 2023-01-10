@@ -115,7 +115,21 @@ if(RGB_MATRIX_ENABLE)
     )
 endif()
 
-# RGB_MATRIX_ENABLE
+# AUXILIARY_RGB_ENABLE
+if(AUXILIARY_RGB_ENABLE)
+    if(NOT RGB_MATRIX_ENABLE)
+        message(FATAL_ERROR "AUXILIARY_RGB_ENABLE requires RGB_MATRIX_ENABLE!")
+    else()
+        message(STATUS "AUXILIARY_RGB_ENABLE")
+        add_definitions(-DRGB_MATRIX_CUSTOM_KB -DRGB_RAW_ENABLE)
+        list(APPEND QMK_PORTING_SOURCES
+            "${CMAKE_CURRENT_LIST_DIR}/protocol/auxiliary_rgb.c"
+            "${CMAKE_CURRENT_LIST_DIR}/protocol/openrgb.c"
+        )
+    endif()
+endif()
+
+# SPLIT_KEYBOARD
 if(SPLIT_KEYBOARD)
     add_definitions(-DSPLIT_KEYBOARD)
     include_directories(${QMK_BASE_DIR}/quantum/split_common)
