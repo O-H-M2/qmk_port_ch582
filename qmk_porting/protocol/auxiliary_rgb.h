@@ -25,10 +25,10 @@
 #define AUXILIARY_RGB_STARTUP_BLUE 224
 #endif
 
-enum hidrgb_mode {
-    HID_MODE_OPENRGB = 1,
-    HID_MODE_SIGNALRGB,
-};
+// enum hidrgb_mode {
+//     HID_MODE_OPENRGB = 1,
+//     HID_MODE_SIGNALRGB,
+// };
 
 void rgb_raw_hid_receive(uint8_t *data, uint8_t length);
 void rgb_raw_hid_send(uint8_t *data, uint8_t length);

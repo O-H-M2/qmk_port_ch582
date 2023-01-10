@@ -2,9 +2,9 @@
 RGB_MATRIX_EFFECT(AUXILIARY_RGB)
 #ifdef RGB_MATRIX_CUSTOM_EFFECT_IMPLS
 
-#if !defined(AUXILIARY_RGB_WELCOME_ANIM_SPD)
-#define AUXILIARY_RGB_WELCOME_ANIM_SPD 255
-#endif
+// #if !defined(AUXILIARY_RGB_WELCOME_ANIM_SPD)
+// #define AUXILIARY_RGB_WELCOME_ANIM_SPD 255
+// #endif
 
 static inline void set_openrgb_color(uint8_t led_index, uint8_t val)
 {

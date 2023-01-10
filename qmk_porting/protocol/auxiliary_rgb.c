@@ -2,9 +2,15 @@
 #include "rgb_matrix.h"
 #include "usb_main.h"
 #include "auxiliary_rgb.h"
-#ifdef RAW_ENABLE
-#include "raw_hid.h"
-#endif
+#include "openrgb.h"
+// #ifdef RAW_ENABLE
+// #include "raw_hid.h"
+// #endif
+
+// uint16_t g_auxiliary_rgb_timer = 0;
+// bool g_auxiliary_rgb_anim_playing = false;
+// static uint8_t auxiliary_rgb_mode = HID_MODE_OPENRGB;
+static RGB auxiliary_rgb_color_buffer[DRIVER_LED_TOTAL] = { [0 ... DRIVER_LED_TOTAL - 1] = { AUXILIARY_RGB_STARTUP_GREEN, AUXILIARY_RGB_STARTUP_RED, AUXILIARY_RGB_STARTUP_BLUE } };
 
 extern bool openrgb_command_handler(uint8_t *data, uint8_t length);
 // extern bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
@@ -14,17 +20,19 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
     bool send = false;
 
     switch (*data) {
-        case 1 ... 9:
+        case OPENRGB_GET_PROTOCOL_VERSION ... OPENRGB_DIRECT_MODE_SET_LEDS:
             send = openrgb_command_handler(data, length);
             break;
         // case 0x21 ... 0x28:
         //     send = signal_rgb_command_handler(data, length);
         //     break;
         default:
+#ifdef RAW_ENABLE
             PRINT("\n **** Unhandled! ****\n\n");
             mcu_reset();
-            // pass it to RAW interface
-            // raw_hid_receive(data, QMKRAW_OUT_EP_SIZE);
+// pass it to RAW interface
+// raw_hid_receive(data, QMKRAW_OUT_EP_SIZE);
+#endif
             break;
     }
 
@@ -32,11 +40,6 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
         rgb_raw_hid_send(data, length);
     }
 }
-
-// uint16_t g_auxiliary_rgb_timer = 0;
-// bool g_auxiliary_rgb_anim_playing = false;
-// static uint8_t auxiliary_rgb_mode = HID_MODE_OPENRGB;
-static RGB auxiliary_rgb_color_buffer[DRIVER_LED_TOTAL] = { [0 ... DRIVER_LED_TOTAL - 1] = { AUXILIARY_RGB_STARTUP_GREEN, AUXILIARY_RGB_STARTUP_RED, AUXILIARY_RGB_STARTUP_BLUE } };
 
 void auxiliary_rgb_set_color_buffer(int index, uint8_t red, uint8_t green, uint8_t blue)
 {
