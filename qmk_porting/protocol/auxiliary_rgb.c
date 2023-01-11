@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // uint16_t g_auxiliary_rgb_timer = 0;
 // bool g_auxiliary_rgb_anim_playing = false;
 // static uint8_t auxiliary_rgb_mode = HID_MODE_OPENRGB;
-static RGB auxiliary_rgb_color_buffer[DRIVER_LED_TOTAL] = { [0 ... DRIVER_LED_TOTAL - 1] = { AUXILIARY_RGB_STARTUP_GREEN, AUXILIARY_RGB_STARTUP_RED, AUXILIARY_RGB_STARTUP_BLUE } };
+static RGB auxiliary_rgb_color_buffer[RGB_MATRIX_LED_COUNT] = { [0 ... RGB_MATRIX_LED_COUNT - 1] = { AUXILIARY_RGB_STARTUP_GREEN, AUXILIARY_RGB_STARTUP_RED, AUXILIARY_RGB_STARTUP_BLUE } };
 
 extern bool openrgb_command_handler(uint8_t *data, uint8_t length);
 // extern bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
@@ -83,7 +83,7 @@ void auxiliary_rgb_set_color_buffer(int index, uint8_t red, uint8_t green, uint8
 // void auxiliary_rgb_reload_openrgb_colors()
 // {
 //     // if (auxiliary_rgb_get_mode() == HID_MODE_OPENRGB) {
-//         for (uint8_t i = 0; i < DRIVER_LED_TOTAL; i++) {
+//         for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
 //             auxiliary_rgb_set_color_buffer(i, auxiliary_rgb_color_buffer[i].r, auxiliary_rgb_color_buffer[i].g, auxiliary_rgb_color_buffer[i].b);
 //         }
 //     // }
