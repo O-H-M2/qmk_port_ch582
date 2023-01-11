@@ -27,8 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // uint16_t g_auxiliary_rgb_timer = 0;
 // bool g_auxiliary_rgb_anim_playing = false;
-// static uint8_t auxiliary_rgb_mode = HID_MODE_OPENRGB;
-static RGB auxiliary_rgb_color_buffer[RGB_MATRIX_LED_COUNT] = { [0 ... RGB_MATRIX_LED_COUNT - 1] = { AUXILIARY_RGB_STARTUP_GREEN, AUXILIARY_RGB_STARTUP_RED, AUXILIARY_RGB_STARTUP_BLUE } };
+
+static RGB *auxiliary_rgb_color_buffer = NULL;
 
 extern bool openrgb_command_handler(uint8_t *data, uint8_t length);
 // extern bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
@@ -59,34 +59,51 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
     }
 }
 
+bool auxiliary_rgb_init_buffer()
+{
+    if (auxiliary_rgb_color_buffer != NULL) {
+        free(auxiliary_rgb_color_buffer);
+    }
+
+    auxiliary_rgb_color_buffer = (RGB *)malloc(sizeof(RGB) * RGB_MATRIX_LED_COUNT);
+    for (uint16_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+        auxiliary_rgb_color_buffer[i].r = AUXILIARY_RGB_STARTUP_RED;
+        auxiliary_rgb_color_buffer[i].g = AUXILIARY_RGB_STARTUP_GREEN;
+        auxiliary_rgb_color_buffer[i].b = AUXILIARY_RGB_STARTUP_BLUE;
+    }
+
+    return (auxiliary_rgb_color_buffer != NULL);
+}
+
+void auxiliary_rgb_deinit_buffer()
+{
+    if (auxiliary_rgb_color_buffer == NULL) {
+        return;
+    }
+
+    free(auxiliary_rgb_color_buffer);
+    auxiliary_rgb_color_buffer = NULL;
+}
+
 void auxiliary_rgb_set_color_buffer(int index, uint8_t red, uint8_t green, uint8_t blue)
 {
     if (rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
         return;
     }
+    if (auxiliary_rgb_color_buffer == NULL) {
+        return;
+    }
 
-    // if (auxiliary_rgb_get_mode() == HID_MODE_OPENRGB) {
     auxiliary_rgb_color_buffer[index].r = red;
     auxiliary_rgb_color_buffer[index].g = green;
     auxiliary_rgb_color_buffer[index].b = blue;
-    //     } else {
-    // #ifdef AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
-    //         float brightness = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
-
-    //         rgb_matrix_set_color(index, brightness * red, brightness * green, brightness * blue);
-    // #else
-    //         rgb_matrix_set_color(index, red, green, blue);
-    // #endif
-    //     }
 }
 
 // void auxiliary_rgb_reload_openrgb_colors()
 // {
-//     // if (auxiliary_rgb_get_mode() == HID_MODE_OPENRGB) {
-//         for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
-//             auxiliary_rgb_set_color_buffer(i, auxiliary_rgb_color_buffer[i].r, auxiliary_rgb_color_buffer[i].g, auxiliary_rgb_color_buffer[i].b);
-//         }
-//     // }
+//     for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+//         auxiliary_rgb_set_color_buffer(i, auxiliary_rgb_color_buffer[i].r, auxiliary_rgb_color_buffer[i].g, auxiliary_rgb_color_buffer[i].b);
+//     }
 // }
 
 void auxiliary_rgb_flush()
@@ -102,17 +119,7 @@ RGB *auxiliary_rgb_get_color_buffer()
     return auxiliary_rgb_color_buffer;
 }
 
-RGB auxiliary_rgb_get_color_buffer_element(int index)
-{
-    return auxiliary_rgb_color_buffer[index];
-}
-
-// void auxiliary_rgb_set_mode(int mode)
+// RGB auxiliary_rgb_get_color_buffer_element(int index)
 // {
-//     auxiliary_rgb_mode = mode;
-// }
-
-// uint8_t auxiliary_rgb_get_mode()
-// {
-//     return auxiliary_rgb_mode;
+//     return auxiliary_rgb_color_buffer[index];
 // }

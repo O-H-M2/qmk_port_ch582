@@ -32,10 +32,10 @@ __INTERRUPT __HIGH_CODE void TMR1_IRQHandler()
     if (ws2812_need_power_off) {
         ws2812_need_power_off = false;
         ws2812_power_toggle(false);
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR1;
+        sys_safe_access_disable();
     }
-    sys_safe_access_enable();
-    R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR1;
-    sys_safe_access_disable();
 }
 #elif WS2812_PWM_DRIVER == 2
 #define WS2812_PWM_CNT_END_REG R32_TMR2_CNT_END
@@ -53,10 +53,10 @@ __INTERRUPT __HIGH_CODE void TMR2_IRQHandler()
     if (ws2812_need_power_off) {
         ws2812_need_power_off = false;
         ws2812_power_toggle(false);
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR2;
+        sys_safe_access_disable();
     }
-    sys_safe_access_enable();
-    R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR2;
-    sys_safe_access_disable();
 }
 #else
 // Only TMR1 and TMR2 support DMA and PWM

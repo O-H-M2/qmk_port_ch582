@@ -48,10 +48,10 @@ __INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
         if (ws2812_need_power_off) {
             ws2812_need_power_off = false;
             ws2812_power_toggle(false);
+            sys_safe_access_enable();
+            R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;
+            sys_safe_access_disable();
         }
-        sys_safe_access_enable();
-        R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;
-        sys_safe_access_disable();
         spi_transfering = false;
     }
 }

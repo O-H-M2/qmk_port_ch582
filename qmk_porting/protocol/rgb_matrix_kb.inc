@@ -24,31 +24,38 @@ RGB_MATRIX_EFFECT(AUXILIARY_RGB)
 // #define AUXILIARY_RGB_WELCOME_ANIM_SPD 255
 // #endif
 
-static inline void set_openrgb_color(uint8_t led_index, uint8_t val)
-{
-    extern RGB auxiliary_rgb_get_color_buffer_element(int index);
-
-    RGB rgb = auxiliary_rgb_get_color_buffer_element(led_index);
-
-#ifdef AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
-    float brightness = (float)val / UINT8_MAX;
-
-    rgb_matrix_set_color(led_index, rgb.r * brightness, rgb.g * brightness, rgb.b * brightness);
-#else
-    rgb_matrix_set_color(led_index, rgb.r, rgb.g, rgb.b);
-#endif
-}
+extern bool auxiliary_rgb_init_buffer();
+extern RGB *auxiliary_rgb_get_color_buffer();
 
 bool AUXILIARY_RGB(effect_params_t *params)
 {
-    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    // skip this effect in bluetooth mode
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type == kbd_protocol_ble) {
+        return true;
+    }
+#endif
 
-    // // if (auxiliary_rgb_get_mode() == HID_MODE_OPENRGB) {
+    static bool inited = false;
+
+    if (!inited) {
+        inited = auxiliary_rgb_init_buffer();
+    }
+
+    RGB_MATRIX_USE_LIMITS(led_min, led_max);
+    RGB *buffer = auxiliary_rgb_get_color_buffer();
+
     // extern uint16_t g_auxiliary_rgb_timer;
     // extern bool g_auxiliary_rgb_anim_playing;
     // uint8_t time = scale16by8(g_auxiliary_rgb_timer, AUXILIARY_RGB_WELCOME_ANIM_SPD);
 
     HSV hsv = rgb_matrix_config.hsv;
+    float brightness =
+#ifdef AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
+        (float)hsv.v / UINT8_MAX;
+#else
+        1;
+#endif
     // g_auxiliary_rgb_anim_playing = (time != UINT8_MAX);
 
     for (uint8_t i = led_min; i < led_max; i++) {
@@ -65,13 +72,12 @@ bool AUXILIARY_RGB(effect_params_t *params)
         //         hsv.v = qadd8(hsv.v, effect);
         //         hsv.v = scale8(hsv.v, rgb_matrix_config.hsv.v);
         //     }
-
-        set_openrgb_color(i, hsv.v);
+        rgb_matrix_set_color(i, buffer[i].r * brightness, buffer[i].g * brightness, buffer[i].b * brightness);
     }
 
-    // if (g_auxiliary_rgb_anim_playing)
+    // if (g_auxiliary_rgb_anim_playing) {
     //     g_auxiliary_rgb_timer++; // tick counter
-    // // }
+    // }
 
     return rgb_matrix_check_finished_leds(led_max);
 }
