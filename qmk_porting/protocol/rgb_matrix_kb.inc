@@ -49,12 +49,11 @@ bool AUXILIARY_RGB(effect_params_t *params)
     // extern bool g_auxiliary_rgb_anim_playing;
     // uint8_t time = scale16by8(g_auxiliary_rgb_timer, AUXILIARY_RGB_WELCOME_ANIM_SPD);
 
-    HSV hsv = rgb_matrix_config.hsv;
-    float brightness =
 #ifdef AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
-        (float)hsv.v / UINT8_MAX;
+    HSV hsv = rgb_matrix_config.hsv;
+    float brightness = (float)hsv.v / UINT8_MAX;
 #else
-        1;
+    float brightness = 1;
 #endif
     // g_auxiliary_rgb_anim_playing = (time != UINT8_MAX);
 
