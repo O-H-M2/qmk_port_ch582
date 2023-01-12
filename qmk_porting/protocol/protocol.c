@@ -84,8 +84,12 @@ void protocol_post_init()
         ch582_driver.send_keyboard = send_keyboard_usb;
         ch582_driver.send_mouse = send_mouse_usb;
         ch582_driver.send_extra = send_extra_usb;
+#ifdef RAW_ENABLE
         ch582_driver_raw_hid_send = raw_hid_send_usb;
+#endif
+#ifdef RGB_RAW_ENABLE
         ch582_driver_rgb_raw_hid_send = rgb_raw_hid_send_usb;
+#endif
     }
 #endif
 #ifdef BLE_ENABLE
@@ -93,7 +97,9 @@ void protocol_post_init()
         ch582_driver.send_keyboard = send_keyboard_ble;
         ch582_driver.send_mouse = send_mouse_ble;
         ch582_driver.send_extra = send_extra_ble;
+#ifdef RAW_ENABLE
         ch582_driver_raw_hid_send = raw_hid_send_ble;
+#endif
     }
 #endif
 #ifdef ESB_ENABLE
@@ -101,7 +107,9 @@ void protocol_post_init()
         ch582_driver.send_keyboard = send_keyboard_esb;
         ch582_driver.send_mouse = send_mouse_esb;
         ch582_driver.send_extra = send_extra_esb;
+#ifdef RAW_ENABLE
         ch582_driver_raw_hid_send = raw_hid_send_esb;
+#endif
     }
 #endif
     host_set_driver(&ch582_driver);
