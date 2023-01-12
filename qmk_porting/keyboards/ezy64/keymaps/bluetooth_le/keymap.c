@@ -1,5 +1,6 @@
 /*
 Copyright 2022 OctopusZ <https://github.com/OctopusZ>
+Copyright 2022 Huckies <https://github.com/Huckies>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -78,14 +79,3 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
                      _______, _______, _______, _______, _______, _______, _______, _______, _______),
 };
-
-#ifdef ENCODER_MAP_ENABLE
-
-const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
-    [0] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
-    [1] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-    [2] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-    [3] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-};
-
-#endif
