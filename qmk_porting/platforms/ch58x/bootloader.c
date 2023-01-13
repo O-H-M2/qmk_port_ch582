@@ -125,41 +125,20 @@ void bootloader_select_boot_mode()
 
 uint8_t bootloader_set_to_default_mode(const char *reason)
 {
-    bool limited_mode = false;
-
-#ifdef POWER_DETECT_PIN
-    if (!readPin(POWER_DETECT_PIN)) {
-        // cable not connected, skip usb mode
-        limited_mode = true;
-    }
-#endif
     PRINT("%s, ", reason);
-    if (limited_mode) {
-#ifdef BLE_ENABLE
-        PRINT("default to BLE slot 0.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
-        return BOOTLOADER_BOOT_MODE_BLE;
-#else
-        PRINT("default to ESB.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
-        return BOOTLOADER_BOOT_MODE_ESB;
-#endif
-    } else {
 #ifdef USB_ENABLE
-        PRINT("default to USB.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
-        return BOOTLOADER_BOOT_MODE_USB;
+    PRINT("default to USB.\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
+    return BOOTLOADER_BOOT_MODE_USB;
 #elif defined BLE_ENABLE
-        PRINT("default to BLE slot 0.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
-        return BOOTLOADER_BOOT_MODE_BLE;
+    PRINT("default to BLE slot 0.\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+    return BOOTLOADER_BOOT_MODE_BLE;
 #else
-        PRINT("default to ESB.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
-        return BOOTLOADER_BOOT_MODE_ESB;
+    PRINT("default to ESB.\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+    return BOOTLOADER_BOOT_MODE_ESB;
 #endif
-    }
-    __builtin_unreachable();
 }
 
 void bootloader_jump()
