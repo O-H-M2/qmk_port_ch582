@@ -264,6 +264,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #endif
 
+#define SLEEP_RTC_MAX_TIME (RTC_TIMER_MAX_VALUE - TMOS_TIME_VALID)
+
 #ifdef AW20216
 #define AW_SPI_DIVISOR FREQ_SYS / 10000000
 #endif
