@@ -99,7 +99,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_PWM_DRIVER 1
 #endif
 #define RGBLED_NUM                    61
-#define DRIVER_LED_TOTAL              RGBLED_NUM
+#define RGB_MATRIX_LED_COUNT          RGBLED_NUM
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 128
 #define RGB_DISABLE_WHEN_USB_SUSPENDED
 #define ENABLE_RGB_MATRIX_ALPHAS_MODS
