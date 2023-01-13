@@ -106,7 +106,7 @@ else()
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library"
     )
     file(GLOB mbedtls_sources
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x509]*.c"
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x][^5]*.c"
     )
     target_sources(${keyboard}_IAP.elf PUBLIC
         ${mbedtls_sources}
