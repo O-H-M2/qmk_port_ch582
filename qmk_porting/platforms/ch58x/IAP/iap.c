@@ -389,7 +389,7 @@ __HIGH_CODE int main()
 #endif
 #ifdef PLF_DEBUG
     DBG_INIT;
-    PRINT("Bootloader " MACRO2STR(__GIT_VERSION__) "\n");
+    PRINT("\n\n\nBootloader " MACRO2STR(__GIT_VERSION__) "\n");
     PRINT("Reason of last reset:  ");
     switch (R8_RESET_STATUS & RB_RESET_FLAG) {
         case 0b000:
@@ -428,7 +428,7 @@ __HIGH_CODE int main()
     R8_UART1_DIV = 1;
 
     char buffer[UINT8_MAX];
-    uint8_t len = sprintf(buffer, "Bootloader " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", R8_RESET_STATUS & RB_RESET_FLAG);
+    uint8_t len = sprintf(buffer, "\n\n\nBootloader " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", R8_RESET_STATUS & RB_RESET_FLAG);
 
     while (len) {
         if (R8_UART1_TFC != UART_FIFO_SIZE) {
