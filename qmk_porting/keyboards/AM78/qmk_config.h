@@ -64,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_EN_LEVEL 1
 
 #define BATTERY_MEASURE_PIN A4
-//#define POWER_DETECT_PIN    B12
+#define POWER_DETECT_PIN    B12
 
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \
@@ -75,13 +75,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {                  \
         B1             \
     }
-#define ENCODER_RESOLUTION 4
+#define ENCODER_RESOLUTION 1
 #endif
 
 #ifdef RGBLIGHT_ENABLE
 #define WS2812_SPI_DRIVER 2
 #define RGBLED_NUM        10
-#define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_RGB
+#define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_GRB
 // #define RGBLIGHT_ANIMATIONS
 #define RGBLIGHT_EFFECT_BREATHING
 #define RGBLIGHT_EFFECT_RAINBOW_MOOD
@@ -93,8 +93,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLIGHT_EFFECT_RGB_TEST
 #define RGBLIGHT_EFFECT_ALTERNATING
 #define RGBLIGHT_EFFECT_TWINKLE
-#define RGBLIGHT_LIMIT_VAL   128
-#define RGBLIGHT_HUE_STEP    20
+#define RGBLIGHT_LIMIT_VAL   64
+#define RGBLIGHT_HUE_STEP    8
 #define RGBLIGHT_SAT_STEP    20
 #define RGBLIGHT_VAL_STEP    20
 #define RGBLIGHT_DEFAULT_HUE 191
