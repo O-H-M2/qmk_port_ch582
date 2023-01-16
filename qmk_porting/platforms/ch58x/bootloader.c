@@ -51,7 +51,7 @@ void bootloader_boot_mode_set(uint8_t mode)
     uint8_t buffer[EEPROM_PAGE_SIZE], ret;
 
     do {
-        ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION, &buffer, sizeof(buffer));
+        ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION, buffer, sizeof(buffer));
     } while (ret);
     buffer[0] = mode;
     do {

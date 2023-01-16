@@ -140,7 +140,7 @@ __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 {
     PRINT("Reading flash address 0x%04x, len 0x%04x...\n", addr, len);
     usb_counter = 0;
-    my_memset(buffer, 0xff, len);
+    my_memset(buffer, UINT8_MAX, len);
 }
 
 __HIGH_CODE void board_flash_flush()
@@ -456,6 +456,50 @@ __HIGH_CODE int main()
 #endif
 
 #if !defined ESB_ENABLE || ESB_ENABLE != 2
+    // check if there is any existing bootmagic pin setting
+    do {
+        uint8_t buffer[2], ret;
+
+        do {
+            ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION + 1, buffer, sizeof(buffer));
+        } while (ret);
+
+        if (buffer[0] == UINT8_MAX && buffer[1] == UINT8_MAX) {
+            // TODO: verify this
+            break;
+        }
+
+        bool bootmagic = false;
+        pin_t rows[] = MATRIX_ROW_PINS;
+        pin_t cols[] = MATRIX_COL_PINS;
+#if DIODE_DIRECTION == COL2ROW
+        pin_t input_pin = cols[buffer[1]];
+        pin_t output_pin = rows[buffer[0]];
+#else
+        pin_t input_pin = rows[buffer[0]];
+        pin_t output_pin = cols[buffer[1]];
+#endif
+
+        setPinInputHigh(input_pin);
+        writePinLow(output_pin);
+        setPinOutput(output_pin);
+        do {
+            if (readPin(input_pin)) {
+                break;
+            }
+            my_delay_ms(DEBOUNCE * 3);
+            if (readPin(input_pin)) {
+                break;
+            }
+            bootmagic = true;
+        } while (0);
+        if (bootmagic) {
+            PRINT("Entering DFU...\n");
+            eeprom_driver_erase();
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
+        }
+    } while (0);
+
     iap_decide_jump();
 #else
     // TODO: implement judging condition for 2.4g dongle
