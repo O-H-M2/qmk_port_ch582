@@ -465,7 +465,6 @@ __HIGH_CODE int main()
         } while (ret);
 
         if (buffer[0] == UINT8_MAX && buffer[1] == UINT8_MAX) {
-            // TODO: verify this
             break;
         }
 

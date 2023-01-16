@@ -63,8 +63,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_EN_PIN   A5
 #define WS2812_EN_LEVEL 1
 
-#define BATTERY_MEASURE_PIN A4
-#define POWER_DETECT_PIN    B12
+#define BATTERY_MEASURE_PIN           A4
+#define POWER_DETECT_PIN              B12
+#define BATTERY_INDICATOR_START_INDEX 0
+#define BATTERY_INDICATOR_END_INDEX   4
 
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \
