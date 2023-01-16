@@ -18,7 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "battery_measure.h"
 
-#if defined BATTERY_MEASURE_PIN
+#ifdef BATTERY_MEASURE_PIN
+
+static uint8_t last_percentage = 0;
 
 __attribute__((weak)) const uint16_t battery_map[] = {
     2515, 2528, 2541, 2554, 2567, 2580, 2593, 2606, 2619, 2632,
@@ -32,9 +34,6 @@ __attribute__((weak)) const uint16_t battery_map[] = {
     3562, 3575, 3588, 3601, 3614, 3627, 3640, 3653, 3666, 3680,
     3693, 3706, 3719, 3732, 3745, 3758, 3771, 3784, 3797, 3810
 };
-
-static bool battery_indicator_enable = 0;
-static uint16_t battery_indicator_timer = 0;
 
 static inline void battery_config_channel(pin_t pin)
 {
@@ -221,30 +220,19 @@ __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
 
     for (uint32_t i = 1; i < BATTERY_MAP_SIZE; i++) {
         if (adcVal < battery_map[i] * 10) {
-            return (uint8_t)(i * 100 / BATTERY_MAP_SIZE);
+            last_percentage = (uint8_t)(i * 100 / BATTERY_MAP_SIZE);
+            goto done;
         }
     }
-    return 100;
+    last_percentage = 100;
+
+done:
+    return last_percentage;
 }
 
-void battery_indicator_toggle(bool status)
+uint8_t battery_get_last_percentage()
 {
-    if (status) {
-        battery_indicator_enable = true;
-        battery_indicator_timer = timer_read();
-    } else {
-        battery_indicator_enable = false;
-    }
-}
-
-bool battery_indicator_state()
-{
-    return battery_indicator_enable;
-}
-
-bool battery_indicator_timeout()
-{
-    return (timer_elapsed(battery_indicator_timer) > BATTERY_INDICATOR_TIMEOUT);
+    return last_percentage;
 }
 
 #endif

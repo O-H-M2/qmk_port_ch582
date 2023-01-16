@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
-#include "battery_measure.h"
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -48,31 +47,19 @@ led_config_t g_led_config = {
 
 /* clang-format on */
 
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
+bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
+    if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
+        return false;
+    }
     if (host_keyboard_led_state().caps_lock) {
-        if (g_led_config.flags[0] & LED_FLAG_KEYLIGHT) {
-            rgb_matrix_set_color(28, RGB_RED);
-        }
+        RGB_MATRIX_INDICATOR_SET_COLOR(28, 0xFF, 0x00, 0x00);
     }
-    // battery indicator
-    if (battery_indicator_state()) {
-        if (!battery_indicator_timeout()) {
-            rgb_matrix_set_color_all(0, 0, 0); //turn off all leds
-            for (uint8_t i = 0; i < 5; i++) {
-                rgb_matrix_set_color(i, RGB_RED);
-            }
+#ifdef BATTERY_MEASURE_PIN
+    extern void wireless_rgb_indicator_task(uint8_t led_min, uint8_t led_max);
 
-            uint8_t battery_indicator_num = 5;
-
-            battery_indicator_num = 30 / 20;
-            for (uint8_t i = 0; i < battery_indicator_num; i++) {
-                rgb_matrix_set_color(i, RGB_GREEN);
-            }
-        } else {
-            battery_indicator_toggle(false);
-        }
-    }
+    wireless_rgb_indicator_task(led_min, led_max);
+#endif
     return true;
 }
 

@@ -28,6 +28,4 @@ uint16_t battery_get_max();
 void battery_init();
 uint16_t battery_measure();
 uint8_t battery_calculate(uint16_t adcVal);
-void battery_indicator_toggle(bool status);
-bool battery_indicator_state();
-bool battery_indicator_timeout();
+uint8_t battery_get_last_percentage();

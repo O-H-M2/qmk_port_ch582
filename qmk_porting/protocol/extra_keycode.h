@@ -45,7 +45,7 @@ enum {
 #ifdef ESB_ENABLE
     ESB_MODE,
 #endif
-#if defined BLE_ENABLE || (defined ESB_ENABLE && ESB_ENABLE == 1)
+#ifdef BATTERY_MEASURE_PIN
     BATTERY_INDICATOR,
 #endif
     CUSTOM_MAX,

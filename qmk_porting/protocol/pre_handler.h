@@ -324,6 +324,17 @@ enum {
 #error "Too many BLE slots! Cap: 16"
 #endif
 
+#ifndef BATTERY_INDICATOR_START_INDEX
+#define BATTERY_INDICATOR_START_INDEX 1
+#endif
+
+#ifndef BATTERY_INDICATOR_END_INDEX
+#define BATTERY_INDICATOR_END_INDEX 5
+#endif
+
+_Static_assert(BATTERY_INDICATOR_START_INDEX >= 0, "Invalid BATTERY_INDICATOR_START_INDEX!");
+_Static_assert(BATTERY_INDICATOR_END_INDEX < RGBLED_NUM, "Invalid BATTERY_INDICATOR_END_INDEX!");
+
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
 #define NO_USB_STARTUP_CHECK
 #ifndef BATTERY_MEASURE_PIN
@@ -331,6 +342,13 @@ enum {
 #endif
 #ifndef POWER_DETECT_PIN
 #warning "Power detect pin undefined."
+#endif
+#else
+#ifdef BATTERY_MEASURE_PIN
+#undef BATTERY_MEASURE_PIN
+#endif
+#ifdef POWER_DETECT_PIN
+#undef POWER_DETECT_PIN
 #endif
 #endif
 
