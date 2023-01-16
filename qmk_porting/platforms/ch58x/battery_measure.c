@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef BATTERY_MEASURE_PIN
 
-static uint8_t last_percentage = 0;
+static volatile uint8_t last_percentage = 100;
 
 __attribute__((weak)) const uint16_t battery_map[] = {
     2515, 2528, 2541, 2554, 2567, 2580, 2593, 2606, 2619, 2632,
@@ -110,6 +110,11 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
 {
     uint8_t temp = RB_WAKE_EV_MODE;
 
+#if __BUILDING_APP__
+    extern void shutdown_user();
+
+    shutdown_user();
+#endif
 #ifdef POWER_DETECT_PIN
     temp |= RB_SLP_GPIO_WAKE;
     if (POWER_DETECT_PIN & 0x80000000) {
@@ -209,6 +214,8 @@ __attribute__((weak)) uint16_t battery_measure()
 
 __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
 {
+    uint8_t percent;
+
     if ((adcVal < battery_map[0] * 10)
 #ifdef POWER_DETECT_PIN
         && !readPin(POWER_DETECT_PIN)
@@ -220,13 +227,25 @@ __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
 
     for (uint32_t i = 1; i < BATTERY_MAP_SIZE; i++) {
         if (adcVal < battery_map[i] * 10) {
-            last_percentage = (uint8_t)(i * 100 / BATTERY_MAP_SIZE);
+            percent = (uint8_t)(i * 100 / BATTERY_MAP_SIZE);
             goto done;
         }
     }
-    last_percentage = 100;
+    percent = 100;
 
 done:
+#ifdef POWER_DETECT_PIN
+    if (!readPin(POWER_DETECT_PIN)) {
+        // with cable unpluged, battery level should get lower only
+        if (percent < last_percentage) {
+            last_percentage = percent;
+        }
+    } else {
+        last_percentage = percent;
+    }
+#else
+    last_percentage = percent;
+#endif
     return last_percentage;
 }
 
