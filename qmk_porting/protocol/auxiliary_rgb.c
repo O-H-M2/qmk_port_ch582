@@ -47,7 +47,7 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
         default:
 #ifdef RAW_ENABLE
             PRINT("\n **** Unhandled! ****\n\n");
-            mcu_reset();
+            soft_reset_keyboard();
 // pass it to RAW interface
 // raw_hid_receive(data, QMKRAW_OUT_EP_SIZE);
 #endif
