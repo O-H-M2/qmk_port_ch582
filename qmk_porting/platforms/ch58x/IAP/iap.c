@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static struct usbd_interface intf0;
 static volatile uint16_t usb_counter = 0;
-static uint8_t msc_ram_descriptor[] = {
+static const uint8_t msc_ram_descriptor[] = {
     USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, 0x0200, 0x01),
     USB_CONFIG_DESCRIPTOR_INIT(USB_CONFIG_SIZE, 0x01, 0x01, USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
     MSC_DESCRIPTOR_INIT(0x00, MSC_OUT_EP, MSC_IN_EP, 0x02),
@@ -65,6 +65,7 @@ static uint8_t msc_ram_descriptor[] = {
     0x00
 };
 static WriteState _wr_state = { 0 };
+static uint8_t buffer[EEPROM_BLOCK_SIZE] = {};
 
 /**
  * "Reload" some functions into IRAM to increase speed
@@ -126,9 +127,18 @@ __HIGH_CODE uint32_t my_get_sys_clock()
 #if 1
 __HIGH_CODE void board_flash_init()
 {
+    uint8_t ret;
+
     PRINT("Erasing application...\n");
-    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
-    FLASH_ROM_ERASE(APP_CODE_START_ADDR, APP_CODE_END_ADDR - APP_CODE_START_ADDR);
+    do {
+        my_delay_ms(5);
+        ret = FLASH_ROM_SW_RESET();
+    } while (ret != SUCCESS);
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
+    do {
+        my_delay_ms(5);
+        ret = FLASH_ROM_ERASE(APP_CODE_START_ADDR, APP_CODE_END_ADDR - APP_CODE_START_ADDR);
+    } while (ret != SUCCESS);
 }
 
 __HIGH_CODE uint32_t board_flash_size()
@@ -146,9 +156,9 @@ __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 __HIGH_CODE void board_flash_flush()
 {
     PRINT("Flashing done.\n");
+    R8_GLOB_RESET_KEEP = 0x00;
     bootloader_set_to_default_mode("DFU done");
-    iap_cleanup();
-    usb_counter = 60000;
+    usb_counter = 59000;
 }
 
 __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len)
@@ -160,14 +170,41 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
 
     PRINT("Writing flash address 0x%04x, len 0x%04x... ", addr, len);
     usb_counter = 0;
+
+    uint16_t offset = addr % EEPROM_BLOCK_SIZE;
+
+    if (!offset) {
+        // a new block
+        my_memset(buffer, 0xFF, EEPROM_BLOCK_SIZE);
+    }
+
     for (;;) {
-        FLASH_ROM_WRITE(addr, (void *)data, len);
-        if (FLASH_ROM_VERIFY(addr, (void *)data, len) == SUCCESS) {
-            PRINT("done\n");
-            break;
+        uint8_t ret = FLASH_ROM_WRITE(addr, (void *)data, len);
+
+        if (ret != SUCCESS) {
+            goto fail;
         }
+
+        ret = FLASH_ROM_VERIFY(addr, (void *)data, len);
+
+        if (ret != SUCCESS) {
+            goto fail;
+        }
+
+        // stage the data
+        uint16_t actual_len = min(offset + len, EEPROM_BLOCK_SIZE) - offset;
+
+        my_memcpy(buffer + offset, data, actual_len);
+        PRINT("done\n");
+        break;
+
+    fail:
         PRINT("fail\n");
-        my_delay_ms(10);
+        do {
+            ret = FLASH_ROM_ERASE(addr - offset, EEPROM_BLOCK_SIZE);
+        } while (ret);
+        FLASH_ROM_WRITE(addr - offset, buffer, offset);
+        my_delay_ms(5);
         PRINT("Retry... ");
     }
 }
@@ -273,9 +310,12 @@ __HIGH_CODE static void iap_handle_new_chip()
 {
     uint8_t ret = UserOptionByteConfig(DISABLE, ENABLE, DISABLE, 128);
 
-    PRINT("Setting user config... %s\n", ret == SUCCESS ? "done" : "fail");
     if (ret == SUCCESS) {
-        bootloader_set_to_default_mode("New chip with wireless support");
+#if !defined ESB_ENABLE || ESB_ENABLE != 2
+        bootloader_set_to_default_mode("Initializing a new keyboard");
+#else
+        bootloader_set_to_default_mode("Initializing a new dongle");
+#endif
     } else {
         PRINT("Will reboot and try again.\n");
     }
@@ -290,37 +330,72 @@ __HIGH_CODE static void iap_handle_new_chip()
     __builtin_unreachable();
 }
 
-__HIGH_CODE static void iap_decide_jump()
+__HIGH_CODE static void iap_jump_app(uint8_t need_cleanup)
 {
-    static uint8_t first_in = true;
+    struct boot_rsp rsp;
+    fih_int rc = boot_go(&rsp);
+
+    if (rc == 0) {
+        uint32_t image_off = rsp.br_image_off, header_size = rsp.br_hdr->ih_hdr_size;
+
+        PRINT("Image found.\n");
+#if FREQ_SYS != 60000000
+        WAIT_FOR_DBG;
+        SetSysClock(Fsys);
+        my_delay_ms(5);
+#ifdef PLF_DEBUG
+        DBG_BAUD_RECONFIG;
+#else
+        UART1_BaudRateCfg(DEBUG_BAUDRATE);
+#endif
+        PRINT("Resetting system clock to %d Hz before entering APP.\n", my_get_sys_clock());
+#endif
+        WAIT_FOR_DBG;
+        if (need_cleanup) {
+            PFIC_DisableIRQ(USB_IRQn);
+            R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
+            R32_USB_CONTROL = 0;
+            R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
+            my_delay_ms(10);
+            R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+        }
+        ((void (*)(void))((int *)(image_off + header_size)))();
+    } else {
+        PRINT("Failed searching for a bootable image.\n");
+        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
+        WAIT_FOR_DBG;
+        mcu_reset();
+    }
+
+    while (1) {
+        __nop();
+    }
+    __builtin_unreachable();
+}
+
+__HIGH_CODE static void iap_decide_jump(uint8_t need_cleanup)
+{
+    if (R8_GLOB_RESET_KEEP == BOOTLOADER_BOOT_MODE_IAP) {
+        R8_GLOB_RESET_KEEP = 0x00;
+        return;
+    }
+
     uint8_t mode = bootloader_boot_mode_get();
 
     switch (mode) {
         case UINT8_MAX:
             iap_handle_new_chip();
-            jumpApp();
-            __builtin_unreachable();
-        case BOOTLOADER_BOOT_MODE_IAP:
-            // we stay in dfu mode for a while
-            if (first_in) {
-                first_in = false;
-                return;
-            } else {
-                PRINT("Leaving DFU...\n");
-                iap_cleanup();
-            }
         case BOOTLOADER_BOOT_MODE_USB:
         case BOOTLOADER_BOOT_MODE_BLE:
         case BOOTLOADER_BOOT_MODE_ESB:
             // ready to go
-            jumpApp();
+            iap_jump_app(need_cleanup);
             __builtin_unreachable();
-        case BOOTLOADER_BOOT_MODE_IAP_ONGOING:
-            PRINT("IAP unaccomplished, will reside.\n");
+        case BOOTLOADER_BOOT_MODE_IAP:
+            // app is invalid to boot, stay here
             return;
         default:
             PRINT("Invalid mode record detected, will take as interrupted IAP procedure.\n");
-            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP_ONGOING);
             return;
     }
 }
@@ -336,11 +411,10 @@ __HIGH_CODE static void Main_Circulation()
             second = usb_counter / 1000;
             PRINT("Exiting DFU in %d seconds...\n", 60 - second);
         } else if (usb_counter / 1000 < second) {
-            PRINT("Fatal: Operation interrupted.\n");
             second = 0;
         }
         if (second >= 60) {
-            iap_decide_jump();
+            iap_decide_jump(true);
             // jump must have failed, reset the counters
             usb_counter = 0;
             second = 0;
@@ -428,7 +502,7 @@ __HIGH_CODE int main()
     R8_UART1_DIV = 1;
 
     char buffer[UINT8_MAX];
-    uint8_t len = sprintf(buffer, "\n\n\nBootloader " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", R8_RESET_STATUS & RB_RESET_FLAG);
+    uint8_t len = sprintf(buffer, "Bootloader " MACRO2STR(__GIT_VERSION__) "\nReason of last reset: %d\n", R8_RESET_STATUS & RB_RESET_FLAG);
 
     while (len) {
         if (R8_UART1_TFC != UART_FIFO_SIZE) {
@@ -443,8 +517,10 @@ __HIGH_CODE int main()
     setPinInputLow(A8);
     setPinInputLow(A9);
 #endif
+
+#if !defined ESB_ENABLE || ESB_ENABLE != 2
 #ifdef BATTERY_MEASURE_PIN
-    // do a power check
+    // do a power check, only on keyboard
 
     setPinInput(BATTERY_MEASURE_PIN);
     battery_init();
@@ -455,7 +531,6 @@ __HIGH_CODE int main()
     PRINT("Battery level: %d\n", adc);
 #endif
 
-#if !defined ESB_ENABLE || ESB_ENABLE != 2
     // check if there is any existing bootmagic pin setting
     do {
         uint8_t buffer[2], ret;
@@ -464,7 +539,7 @@ __HIGH_CODE int main()
             ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION + 1, buffer, sizeof(buffer));
         } while (ret);
 
-        if (buffer[0] == UINT8_MAX && buffer[1] == UINT8_MAX) {
+        if (buffer[0] >= MATRIX_ROWS && buffer[1] >= MATRIX_COLS) {
             break;
         }
 
@@ -495,14 +570,14 @@ __HIGH_CODE int main()
         if (bootmagic) {
             PRINT("Entering DFU...\n");
             eeprom_driver_erase();
-            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
+            R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
         }
     } while (0);
 
-    iap_decide_jump();
+    iap_decide_jump(false);
 #else
     // TODO: implement judging condition for 2.4g dongle
-    iap_decide_jump();
+    iap_decide_jump(false);
 #endif
 
     uf2_init();

@@ -21,9 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usb_main.h"
 #include "auxiliary_rgb.h"
 #include "openrgb.h"
-// #ifdef RAW_ENABLE
-// #include "raw_hid.h"
-// #endif
 
 // uint16_t g_auxiliary_rgb_timer = 0;
 // bool g_auxiliary_rgb_anim_playing = false;
@@ -117,6 +114,14 @@ void auxiliary_rgb_flush()
 RGB *auxiliary_rgb_get_color_buffer()
 {
     return auxiliary_rgb_color_buffer;
+}
+
+void auxiliary_mode_confirm()
+{
+    if (rgb_matrix_get_mode() != RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
+        rgb_matrix_mode_noeeprom(RGB_MATRIX_CUSTOM_AUXILIARY_RGB);
+        auxiliary_rgb_flush();
+    }
 }
 
 // RGB auxiliary_rgb_get_color_buffer_element(int index)

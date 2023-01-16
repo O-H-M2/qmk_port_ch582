@@ -111,6 +111,15 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
     uint8_t temp = RB_WAKE_EV_MODE;
 
 #if __BUILDING_APP__
+    uint32_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
+
+#if defined LSE_ENABLE && LSE_ENABLE
+    pin_a &= ~bX32KI;
+    pin_a &= ~bX32KO;
+#endif
+    setPinInputLow(pin_a);
+    setPinInputLow(pin_b);
+
     extern void shutdown_user();
 
     shutdown_user();

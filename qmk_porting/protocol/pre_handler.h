@@ -25,6 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define UINT8_MAX ((uint8_t)-1)
 #endif
 
+#if !defined(UINT16_MAX)
+#define UINT16_MAX ((uint16_t)-1)
+#endif
+
 #if !defined(UINT32_MAX)
 #define UINT32_MAX ((uint32_t)-1)
 #endif
@@ -135,15 +139,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 #endif
 
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+#define NO_USB_STARTUP_CHECK
+#ifndef BATTERY_MEASURE_PIN
+#error "Battery measure pin undefined."
+#else
+#ifndef BATTERY_INDICATOR_START_INDEX
+#define BATTERY_INDICATOR_START_INDEX 1
+#endif
+#ifndef BATTERY_INDICATOR_END_INDEX
+#define BATTERY_INDICATOR_END_INDEX 10
+#endif
+_Static_assert(BATTERY_INDICATOR_START_INDEX >= 0, "Invalid BATTERY_INDICATOR_START_INDEX!");
+_Static_assert(BATTERY_INDICATOR_END_INDEX < RGBLED_NUM, "Invalid BATTERY_INDICATOR_END_INDEX!");
+#endif
+#ifndef POWER_DETECT_PIN
+#warning "Power detect pin undefined."
+#endif
+#ifndef LSE_ENABLE
+#define LSE_ENABLE 1
+#endif
+#else
+#ifdef BATTERY_MEASURE_PIN
+#undef BATTERY_MEASURE_PIN
+#endif
+#ifdef POWER_DETECT_PIN
+#undef POWER_DETECT_PIN
+#endif
+#ifndef LSE_ENABLE
+#define LSE_ENABLE 0
+#endif
+#endif
+
 #ifdef BLE_ENABLE
 #ifndef DCDC_ENABLE
 #define DCDC_ENABLE 1
 #endif
 #ifndef HAL_SLEEP
 #define HAL_SLEEP 1
-#endif
-#ifndef LSE_ENABLE
-#define LSE_ENABLE 1
 #endif
 #ifndef QMK_TASK_INTERVAL_MAX
 #define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(15)
@@ -153,6 +186,84 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #ifndef BLE_SLOT_NUM
 #define BLE_SLOT_NUM 4
+#endif
+#ifndef BLE_SLOT_1_INDICATOR
+#define BLE_SLOT_1_INDICATOR [1][1]
+#endif
+#if BLE_SLOT_NUM > 1
+#ifndef BLE_SLOT_2_INDICATOR
+#define BLE_SLOT_2_INDICATOR [1][2]
+#endif
+#endif
+#if BLE_SLOT_NUM > 2
+#ifndef BLE_SLOT_3_INDICATOR
+#define BLE_SLOT_3_INDICATOR [1][3]
+#endif
+#endif
+#if BLE_SLOT_NUM > 3
+#ifndef BLE_SLOT_4_INDICATOR
+#define BLE_SLOT_4_INDICATOR [1][4]
+#endif
+#endif
+#if BLE_SLOT_NUM > 4
+#ifndef BLE_SLOT_5_INDICATOR
+#define BLE_SLOT_5_INDICATOR [1][5]
+#endif
+#endif
+#if BLE_SLOT_NUM > 5
+#ifndef BLE_SLOT_6_INDICATOR
+#define BLE_SLOT_6_INDICATOR [1][6]
+#endif
+#endif
+#if BLE_SLOT_NUM > 6
+#ifndef BLE_SLOT_7_INDICATOR
+#define BLE_SLOT_7_INDICATOR [1][7]
+#endif
+#endif
+#if BLE_SLOT_NUM > 7
+#ifndef BLE_SLOT_8_INDICATOR
+#define BLE_SLOT_8_INDICATOR [1][8]
+#endif
+#endif
+#if BLE_SLOT_NUM > 8
+#ifndef BLE_SLOT_9_INDICATOR
+#define BLE_SLOT_9_INDICATOR [1][9]
+#endif
+#endif
+#if BLE_SLOT_NUM > 9
+#ifndef BLE_SLOT_10_INDICATOR
+#define BLE_SLOT_10_INDICATOR [1][10]
+#endif
+#endif
+#if BLE_SLOT_NUM > 10
+#ifndef BLE_SLOT_11_INDICATOR
+#define BLE_SLOT_11_INDICATOR [1][11]
+#endif
+#endif
+#if BLE_SLOT_NUM > 11
+#ifndef BLE_SLOT_12_INDICATOR
+#define BLE_SLOT_12_INDICATOR [1][12]
+#endif
+#endif
+#if BLE_SLOT_NUM > 12
+#ifndef BLE_SLOT_13_INDICATOR
+#define BLE_SLOT_13_INDICATOR [1][13]
+#endif
+#endif
+#if BLE_SLOT_NUM > 13
+#ifndef BLE_SLOT_14_INDICATOR
+#define BLE_SLOT_14_INDICATOR [1][14]
+#endif
+#endif
+#if BLE_SLOT_NUM > 14
+#ifndef BLE_SLOT_15_INDICATOR
+#define BLE_SLOT_15_INDICATOR [1][15]
+#endif
+#endif
+#if BLE_SLOT_NUM > 15
+#ifndef BLE_SLOT_16_INDICATOR
+#define BLE_SLOT_16_INDICATOR [1][16]
+#endif
 #endif
 #endif
 
@@ -164,9 +275,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef HAL_SLEEP
 #define HAL_SLEEP 1
 #endif
-#ifndef LSE_ENABLE
-#define LSE_ENABLE 1
-#endif
 #ifndef QMK_TASK_INTERVAL_MAX
 #define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(20) // 1.25ms
 #endif
@@ -174,18 +282,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define QMK_TASK_INTERVAL_LED QMK_TASK_INTERVAL_MAX
 #endif
 #elif ESB_ENABLE == 2
+#ifdef FREQ_SYS
+#undef FREQ_SYS
+#endif
 #ifdef DCDC_ENABLE
 #undef DCDC_ENABLE
 #endif
 #ifdef HAL_SLEEP
 #undef HAL_SLEEP
 #endif
-#ifdef LSE_ENABLE
-#undef LSE_ENABLE
-#endif
+#define FREQ_SYS    80000000
 #define DCDC_ENABLE 0
 #define HAL_SLEEP   0
-#define LSE_ENABLE  0
 #endif
 #endif
 
@@ -256,12 +364,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef LSE_LOAD_CAPACITANCE
 #undef LSE_LOAD_CAPACITANCE
 #endif
-#define FREQ_RTC 32000
-#if ESB_ENABLE == 2
-#define CLK_OSC32K 0x81
-#else
 #define CLK_OSC32K 1
-#endif
+#define FREQ_RTC   32000
 #endif
 
 #define SLEEP_RTC_MAX_TIME (RTC_TIMER_MAX_VALUE - TMOS_TIME_VALID)
@@ -322,34 +426,6 @@ enum {
 
 #if BLE_SLOT_NUM > 16
 #error "Too many BLE slots! Cap: 16"
-#endif
-
-#ifndef BATTERY_INDICATOR_START_INDEX
-#define BATTERY_INDICATOR_START_INDEX 1
-#endif
-
-#ifndef BATTERY_INDICATOR_END_INDEX
-#define BATTERY_INDICATOR_END_INDEX 10
-#endif
-
-_Static_assert(BATTERY_INDICATOR_START_INDEX >= 0, "Invalid BATTERY_INDICATOR_START_INDEX!");
-_Static_assert(BATTERY_INDICATOR_END_INDEX < RGBLED_NUM, "Invalid BATTERY_INDICATOR_END_INDEX!");
-
-#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
-#define NO_USB_STARTUP_CHECK
-#ifndef BATTERY_MEASURE_PIN
-#error "Battery measure pin undefined."
-#endif
-#ifndef POWER_DETECT_PIN
-#warning "Power detect pin undefined."
-#endif
-#else
-#ifdef BATTERY_MEASURE_PIN
-#undef BATTERY_MEASURE_PIN
-#endif
-#ifdef POWER_DETECT_PIN
-#undef POWER_DETECT_PIN
-#endif
 #endif
 
 #ifdef BATTERY_MEASURE_PIN

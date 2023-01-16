@@ -62,25 +62,6 @@ void protocol_pre_init()
 {
 #ifdef USB_ENABLE
     if (kbd_protocol_type == kbd_protocol_usb) {
-        protocol_pre_init_usb();
-    }
-#endif
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        protocol_pre_init_ble();
-    }
-#endif
-#ifdef ESB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_esb) {
-        protocol_pre_init_esb();
-    }
-#endif
-}
-
-void protocol_post_init()
-{
-#ifdef USB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_usb) {
         ch582_driver.send_keyboard = send_keyboard_usb;
         ch582_driver.send_mouse = send_mouse_usb;
         ch582_driver.send_extra = send_extra_usb;
@@ -102,7 +83,7 @@ void protocol_post_init()
 #endif
     }
 #endif
-#ifdef ESB_ENABLE
+#if defined ESB_ENABLE && ESB_ENABLE == 1
     if (kbd_protocol_type == kbd_protocol_esb) {
         ch582_driver.send_keyboard = send_keyboard_esb;
         ch582_driver.send_mouse = send_mouse_esb;
@@ -113,6 +94,25 @@ void protocol_post_init()
     }
 #endif
     host_set_driver(&ch582_driver);
+}
+
+void protocol_post_init()
+{
+#ifdef USB_ENABLE
+    if (kbd_protocol_type == kbd_protocol_usb) {
+        protocol_init_usb();
+    }
+#endif
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type == kbd_protocol_ble) {
+        protocol_init_ble();
+    }
+#endif
+#ifdef ESB_ENABLE
+    if (kbd_protocol_type == kbd_protocol_esb) {
+        protocol_init_esb();
+    }
+#endif
 }
 
 void protocol_toggle(uint8_t status)
@@ -157,3 +157,14 @@ void keyboard_post_init_user()
     print("Set log output for QMK.\n");
 #endif
 }
+
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+void protocol_init(void)
+{
+    // skip protocol_pre_init();
+
+    // skip keyboard_init()
+
+    protocol_post_init();
+}
+#endif

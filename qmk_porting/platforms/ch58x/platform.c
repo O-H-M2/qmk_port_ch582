@@ -53,6 +53,7 @@ void platform_setup()
     R16_PIN_ANALOG_IE |= RB_PIN_XT32K_IE;
 #endif
 #ifdef PLF_DEBUG
+    DBG_INIT;
     PRINT("App " MACRO2STR(__GIT_VERSION__) ", build on %s %s\n", __DATE__, __TIME__);
 #else
     writePinHigh(A9);

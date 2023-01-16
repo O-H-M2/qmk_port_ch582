@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define TIMER_DIFF_16(a, b)             TIMER_DIFF(a, b, UINT16_MAX)
 #define TIMER_DIFF_32(a, b)             TIMER_DIFF(a, b, UINT32_MAX)
 #define TIMER_DIFF_RAW(a, b)            TIMER_DIFF_8(a, b)
-#define TIMER_DIFF_RTC(_past, _current) ((_current > _past) ? (_current - _past) : (_current + RTC_TIMER_MAX_VALUE - _past))
+#define TIMER_DIFF_RTC(_past, _current) ((_current >= _past) ? (_current - _past) : (_current + RTC_TIMER_MAX_VALUE - _past))
 
 #define CLK_PER_US (1.0 / ((1.0 / FREQ_RTC) * 1000 * 1000)) // 0.032 clk/us
 #define CLK_PER_MS (CLK_PER_US * 1000)                      // 32clk/ms

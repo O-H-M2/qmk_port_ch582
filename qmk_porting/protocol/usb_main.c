@@ -24,7 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "raw_hid.h"
 #endif
 #if ESB_ENABLE == 2
-#include "esb.h"
+#include "protocol_esb.h"
+#include "config.h"
 #endif
 
 uint8_t keyboard_protocol = 1;
@@ -66,9 +67,7 @@ void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, kbd_out_buffer, KBD_OUT_EP_SIZE);
 #if ESB_ENABLE == 2
-    extern void esb_send_response(uint8_t reportid, uint8_t * data, uint8_t len);
-
-    esb_send_response(REPORT_ID_KEYBOARD, kbd_out_buffer, KBD_OUT_EP_SIZE);
+    esb_send_keyboard(kbd_out_buffer[0]);
 #else
     keyboard_led_state = kbd_out_buffer[0];
 #endif
@@ -83,7 +82,11 @@ void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
+#if ESB_ENABLE == 2
+    esb_rgb_raw_hid_send(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
+#else
     rgb_raw_hid_receive(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
+#endif
 }
 #endif
 
@@ -102,9 +105,7 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #if ESB_ENABLE == 2
-    extern void esb_send_response(uint8_t reportid, uint8_t * data, uint8_t len);
-
-    esb_send_response(REPORT_ID_CUSTOM, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
+    esb_raw_hid_send(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #else
     raw_hid_receive(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #endif
@@ -171,7 +172,7 @@ void init_usb_driver()
 
     // build descriptor according to the keyboard name
 #if ESB_ENABLE == 2
-    uint8_t keyboard_name[] = MACRO2STR(PRODUCT) "2.4G";
+    uint8_t keyboard_name[] = MACRO2STR(PRODUCT) " dongle";
 #else
     uint8_t keyboard_name[] = MACRO2STR(PRODUCT);
 #endif

@@ -53,4 +53,5 @@ void auxiliary_rgb_set_color_buffer(int index, uint8_t red, uint8_t green, uint8
 // void auxiliary_rgb_reload_openrgb_colors();
 void auxiliary_rgb_flush();
 RGB *auxiliary_rgb_get_color_buffer();
+void auxiliary_mode_confirm();
 // RGB auxiliary_rgb_get_color_buffer_element(int index);

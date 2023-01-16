@@ -49,7 +49,7 @@ void send_mouse_usb(report_mouse_t *report)
 
 void send_extra_usb(report_extra_t *report)
 {
-    hid_nkro_keyboard_send_report((uint8_t *)report, EXKEY_IN_EP_SIZE);
+    hid_exkey_send_report((uint8_t *)report, sizeof(report_extra_t));
 }
 
 void send_digitizer_usb(report_digitizer_t *report)
@@ -81,7 +81,7 @@ void platform_initialize_usb()
 #endif
 }
 
-void protocol_pre_init_usb()
+void protocol_init_usb()
 {
     init_usb_driver();
 }

@@ -65,8 +65,6 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 
 #endif
 
-#if !defined ESB_ENABLE || ESB_ENABLE != 2
-
 int main()
 {
     extern void protocol_setup();
@@ -76,7 +74,9 @@ int main()
     platform_setup();
 
     protocol_setup();
+#if !defined ESB_ENABLE || ESB_ENABLE != 2
     keyboard_setup();
+#endif
 
     protocol_init();
 
@@ -86,16 +86,3 @@ int main()
         //! housekeeping_task() is handled by platform
     }
 }
-
-#else
-
-__HIGH_CODE int main()
-{
-    platform_setup();
-
-    for (;;) {
-        TMOS_SystemProcess();
-    }
-}
-
-#endif

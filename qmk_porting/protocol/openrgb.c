@@ -173,15 +173,6 @@ static const uint8_t openrgb_rgb_matrix_effects_indexes[] = {
 };
 static uint8_t openrgb_hid_buffer[OPENRGB_EPSIZE];
 
-static void openrgb_mode_confirm()
-{
-    if (rgb_matrix_get_mode() == RGB_MATRIX_CUSTOM_AUXILIARY_RGB) {
-        auxiliary_rgb_flush();
-    } else {
-        rgb_matrix_mode_noeeprom(RGB_MATRIX_CUSTOM_AUXILIARY_RGB);
-    }
-}
-
 bool openrgb_command_handler(uint8_t *data, uint8_t length)
 {
     switch (*data) {
@@ -207,11 +198,11 @@ bool openrgb_command_handler(uint8_t *data, uint8_t length)
             openrgb_set_mode(data);
             break;
         case OPENRGB_DIRECT_MODE_SET_SINGLE_LED:
-            openrgb_mode_confirm();
+            auxiliary_mode_confirm();
             openrgb_direct_mode_set_single_led(data);
             break;
         case OPENRGB_DIRECT_MODE_SET_LEDS:
-            openrgb_mode_confirm();
+            auxiliary_mode_confirm();
             openrgb_direct_mode_set_leds(data);
             break;
         default:

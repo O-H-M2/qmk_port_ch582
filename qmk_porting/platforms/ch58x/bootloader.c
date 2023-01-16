@@ -26,10 +26,8 @@ void bootmagic_lite_reset_eeprom(void)
 
 void bootloader_boot_mode_set(uint8_t mode)
 {
-    if (mode != BOOTLOADER_BOOT_MODE_IAP && mode != BOOTLOADER_BOOT_MODE_IAP_ONGOING &&
-        mode != BOOTLOADER_BOOT_MODE_USB &&
-        mode != BOOTLOADER_BOOT_MODE_BLE &&
-        mode != BOOTLOADER_BOOT_MODE_ESB) {
+    if (mode != BOOTLOADER_BOOT_MODE_IAP && mode != BOOTLOADER_BOOT_MODE_USB &&
+        mode != BOOTLOADER_BOOT_MODE_BLE && mode != BOOTLOADER_BOOT_MODE_ESB) {
         PRINT("Invalid mode select, will ignore.\n");
         return;
     }
@@ -75,7 +73,9 @@ void bootloader_select_boot_mode()
     uint8_t mode = bootloader_boot_mode_get();
 
     if (mode == BOOTLOADER_BOOT_MODE_IAP) {
-        mode = bootloader_set_to_default_mode("Successfully booted from IAP");
+        PRINT("Fatal: Boot mode tampering detected!\n");
+        WAIT_FOR_DBG;
+        __builtin_trap();
     } else if (mode == BOOTLOADER_BOOT_MODE_USB) {
 #ifdef POWER_DETECT_PIN
         if (!readPin(POWER_DETECT_PIN)) {
@@ -117,6 +117,7 @@ void bootloader_select_boot_mode()
 #endif
         default:
             PRINT("IAP incomplete, will reboot back to IAP.\n");
+            R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
             WAIT_FOR_DBG;
             SYS_ResetExecute();
             __builtin_unreachable();
@@ -144,7 +145,7 @@ uint8_t bootloader_set_to_default_mode(const char *reason)
 void bootloader_jump()
 {
     PRINT("Jumping IAP...\n");
-    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
+    R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
     mcu_reset();
 }
 

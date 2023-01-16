@@ -89,8 +89,28 @@ file(GLOB IAP_SOURCES
 )
 
 if(BUILD_WIRELESS_LIB)
-    include(${BUILD_WIRELESS_LIB}/gen_lib.cmake)
+    include(${WIRELESS_SUBMODULE_PATH}/gen_lib.cmake)
 else()
+    if(NOT ESB_ENABLE OR(ESB_ENABLE AND ESB_ROLE STREQUAL "keyboard"))
+        set(LIB_FILE lib${keyboard}.a)
+        set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
+        set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_signed.hex)
+        set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
+        set(UF2_FILE_APP ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2)
+        set(HEX_FILE_FACTORY ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex)
+        set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
+        set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
+    else()
+        set(LIB_FILE lib${keyboard}_dongle.a)
+        set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}_dongle.hex)
+        set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_dongle_signed.hex)
+        set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}_dongle.bin)
+        set(UF2_FILE_APP ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_dongle_upgrade.uf2)
+        set(HEX_FILE_FACTORY ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_dongle_factory.hex)
+        set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.hex)
+        set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.bin)
+    endif()
+
     add_executable(${keyboard}.elf ${APP_SOURCES})
     add_executable(${keyboard}_IAP.elf ${IAP_SOURCES})
 
@@ -105,11 +125,22 @@ else()
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/include"
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library"
     )
+
+    add_library(mbedtls INTERFACE)
+    file(GLOB mbedtls_sources
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x][^5]*.c"
+    )
+    target_sources(mbedtls INTERFACE
+        ${mbedtls_sources}
+    )
+
+    # target_link_libraries(${keyboard}.elf PUBLIC mbedtls)
+    target_link_libraries(${keyboard}_IAP.elf PUBLIC mbedtls)
+
     file(GLOB mbedtls_sources
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x][^5]*.c"
     )
     target_sources(${keyboard}_IAP.elf PUBLIC
-        ${mbedtls_sources}
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting/mcuboot_port.c"
     )
 
@@ -150,10 +181,10 @@ else()
                 ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include
             )
             target_link_libraries(${keyboard}.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/${LIB_FILE}
             )
             target_link_libraries(${keyboard}_IAP.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/lib${keyboard}.a
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/${LIB_FILE}
             )
         endif()
     elseif(${keyboard_type} STREQUAL "private")
@@ -172,31 +203,31 @@ else()
                 ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/include
             )
             target_link_libraries(${keyboard}.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/lib${keyboard}.a
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/${LIB_FILE}
             )
             target_link_libraries(${keyboard}_IAP.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/lib${keyboard}.a
+                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/${LIB_FILE}
             )
         endif()
     endif()
 
-    set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
-    set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_signed.hex)
-    set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
     add_custom_command(TARGET ${keyboard}.elf POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}.elf> ${HEX_FILE_APP}
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}.elf> ${BIN_FILE_APP}
-        COMMAND python3 ${CMAKE_CURRENT_LIST_DIR}/mcuboot/scripts/imgtool.py sign --header-size 0x1000 --align 4 --slot-size 0x2e000 --version 1.0.0 --pad-header ${HEX_FILE_APP} ${HEX_FILE_APP_SIGNED}
-        COMMAND python3 ${CMAKE_CURRENT_LIST_DIR}/utils/uf2conv.py ${HEX_FILE_APP_SIGNED} -c -f 0x1aa143c7 -o ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2
     )
-    set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
-    set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
     add_custom_command(TARGET ${keyboard}_IAP.elf POST_BUILD
         COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${keyboard}_IAP.elf> ${HEX_FILE_IAP}
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}_IAP.elf> ${BIN_FILE_IAP}
     )
-    add_custom_target(post_build ALL
-        COMMAND mergehex --merge ${HEX_FILE_APP_SIGNED} ${HEX_FILE_IAP} ${CMAKE_CURRENT_LIST_DIR}/sdk/BLE_LIB/CH58xBLE_ROMx.hex --output ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex
-        DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
-    )
+
+    if(WIRELESS_SUBMODULE_PATH)
+        include(${WIRELESS_SUBMODULE_PATH}/post_build.cmake)
+    else()
+        add_custom_target(post_build ALL
+            COMMAND python3 ${PROJECT_SOURCE_DIR}/mcuboot/scripts/imgtool.py sign --header-size 0x1000 --align 4 --slot-size 0x2e000 --version 1.0.0 --pad-header ${HEX_FILE_APP} ${HEX_FILE_APP_SIGNED}
+            COMMAND python3 ${PROJECT_SOURCE_DIR}/utils/uf2conv.py ${HEX_FILE_APP_SIGNED} -c -f 0x1aa143c7 -o ${UF2_FILE_APP}
+            COMMAND mergehex --merge ${HEX_FILE_APP_SIGNED} ${HEX_FILE_IAP} ${CMAKE_CURRENT_LIST_DIR}/sdk/BLE_LIB/CH58xBLE_ROMx.hex --output ${HEX_FILE_FACTORY}
+            DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
+        )
+    endif()
 endif()
