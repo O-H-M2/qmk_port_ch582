@@ -4,6 +4,7 @@
 #include "rgb_matrix.h"
 #include "auxiliary_rgb.h"
 
+#define SINGALRGB_EPSIZE 64
 enum signalrgb_commands
 {
     GET_QMK_VERSION = 0x21,
@@ -30,7 +31,7 @@ enum signalrgb_responses //These are a bit clunky right now. Could use improveme
     FIRMWARE_TYPE_BYTE = 1, 
     DEVICE_ERROR_LEDS = 255, //Error code to show that there are more leds than a packet will allow.
 };
-
+bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
 void get_qmk_version(void);
 void get_signalrgb_protocol_version(void);
 void get_unique_identifier(void);
