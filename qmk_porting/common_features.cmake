@@ -125,6 +125,7 @@ if(AUXILIARY_RGB_ENABLE)
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/protocol/auxiliary_rgb.c"
             "${CMAKE_CURRENT_LIST_DIR}/protocol/openrgb.c"
+            "${CMAKE_CURRENT_LIST_DIR}/protocol/signalrgb.c"
         )
     endif()
 endif()

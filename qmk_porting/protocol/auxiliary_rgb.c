@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usb_main.h"
 #include "auxiliary_rgb.h"
 #include "openrgb.h"
+#include "signalrgb.h"
 // #ifdef RAW_ENABLE
 // #include "raw_hid.h"
 // #endif
@@ -41,9 +42,10 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
         case OPENRGB_GET_PROTOCOL_VERSION ... OPENRGB_DIRECT_MODE_SET_LEDS:
             send = openrgb_command_handler(data, length);
             break;
-        // case 0x21 ... 0x28:
-        //     send = signal_rgb_command_handler(data, length);
-        //     break;
+         case 0x21 ... 0x28:
+             send = signal_rgb_command_handler(data, length);
+             break;
+        
         default:
 #ifdef RAW_ENABLE
             PRINT("\n **** Unhandled! ****\n\n");
