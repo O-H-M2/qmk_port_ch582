@@ -76,7 +76,6 @@ void get_firmware_type(void) //Grab which fork of qmk a board is running.
 }
 bool signal_rgb_command_handler(uint8_t *data, uint8_t length)
 {
-    
     switch (*data) {
         case GET_QMK_VERSION:
 
@@ -94,7 +93,7 @@ bool signal_rgb_command_handler(uint8_t *data, uint8_t length)
 
             break;
         case STREAM_RGB_DATA:
-
+            auxiliary_mode_confirm();
             led_streaming(data);
 
             break;
