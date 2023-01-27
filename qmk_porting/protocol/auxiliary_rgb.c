@@ -44,11 +44,20 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
         default:
 #ifdef RAW_ENABLE
             PRINT("\n **** Unhandled! ****\n\n");
-            soft_reset_keyboard();
-// pass it to RAW interface
-// raw_hid_receive(data, QMKRAW_OUT_EP_SIZE);
+#if !defined ESB_ENABLE || ESB_ENABLE == 2
+            if (kbd_protocol_type == kbd_protocol_usb || kbd_protocol_type == kbd_protocol_esb) {
+                extern int usbd_deinitialize();
+
+                usbd_deinitialize();
+                init_usb_driver();
+            }
+#elif ESB_ENABLE == 1
+            if (kbd_protocol_type == kbd_protocol_esb) {
+                reenumerate_dongle_esb();
+            }
 #endif
-            break;
+#endif
+            return;
     }
 
     if (send) {
