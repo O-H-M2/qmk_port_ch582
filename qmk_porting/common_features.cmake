@@ -271,7 +271,7 @@ endif()
 # BLE_ENABLE
 if(BLE_ENABLE)
     if(ESB_ENABLE AND ESB_ROLE STREQUAL "dongle")
-        message(STATUS "Dongle should have BLE_ENABLE, ignore")
+        message(STATUS "Dongle shouldn't have BLE_ENABLE, ignore")
     else()
         add_definitions(-DBLE_ENABLE)
         message(STATUS "BLE_ENABLE: Nkro is forced enable")

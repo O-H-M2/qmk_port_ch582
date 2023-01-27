@@ -28,10 +28,7 @@ enum {
 #else
     CUSTOM_START = SAFE_RANGE,
 #endif
-#ifdef USB_ENABLE
     USB_MODE,
-#endif
-#ifdef BLE_ENABLE
     BLE_SLOT0,
     BLE_SLOT1,
     BLE_SLOT2,
@@ -41,13 +38,8 @@ enum {
     BLE_CLEAR_SLOT2,
     BLE_CLEAR_SLOT3,
     BLE_ALL_CLEAR,
-#endif
-#ifdef ESB_ENABLE
     ESB_MODE,
-#endif
-#if defined BLE_ENABLE || (defined ESB_ENABLE && ESB_ENABLE == 1)
     BATTERY_INDICATOR,
-#endif
     CUSTOM_MAX,
 };
 

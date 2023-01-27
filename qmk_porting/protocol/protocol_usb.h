@@ -4,7 +4,7 @@
 #include "host.h"
 
 void platform_initialize_usb();
-void protocol_pre_init_usb();
+void protocol_init_usb();
 void protocol_task_usb();
 void platform_reboot_usb();
 

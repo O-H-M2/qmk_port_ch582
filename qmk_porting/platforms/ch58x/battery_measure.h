@@ -20,14 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gpio.h"
 #include "timer.h"
 
-#define BATTERY_INDICATOR_TIMEOUT 5000 // in unit of ms
-#define BATTERY_MAP_SIZE          (sizeof(battery_map) / sizeof(battery_map[0]))
+#define BATTERY_MAP_SIZE (sizeof(battery_map) / sizeof(battery_map[0]))
 
 uint16_t battery_get_min();
 uint16_t battery_get_max();
 void battery_init();
 uint16_t battery_measure();
 uint8_t battery_calculate(uint16_t adcVal);
-void battery_indicator_toggle(bool status);
-bool battery_indicator_state();
-bool battery_indicator_timeout();
+uint8_t battery_get_last_percentage();

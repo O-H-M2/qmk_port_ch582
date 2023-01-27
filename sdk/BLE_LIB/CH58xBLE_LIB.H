@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT ******************************
  * File Name         : CH58xBLE_LIB.H
  * Author            : WCH
- * Version           : V1.60
- * Date              : 2022/11/08
+ * Version           : V1.70
+ * Date              : 2023/01/10
  * Description       : head file
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  *******************************************************************************/
@@ -179,7 +179,7 @@ typedef struct
 /*********************************************************************
  * GLOBAL MACROS
  */
-#define VER_FILE  "CH58x_BLE_LIB_V1.6"
+#define VER_FILE  "CH58x_BLE_LIB_V1.7"
 extern const uint8_t VER_LIB[];  // LIB version
 #define SYSTEM_TIME_MICROSEN            625   // unit of process event timer is 625us
 #define MS1_TO_SYSTEM_TIME(x)  ((x)*1000/SYSTEM_TIME_MICROSEN)   // transform unit in ms to unit in 625us ( attentional bias )
@@ -221,7 +221,7 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define ABS(n)     (((n) < 0) ? -(n) : (n))
 #endif
 
-/* TxPower define(Accuracy:¡À2dBm) */
+/* TxPower define(Accuracy:ï¿½ï¿½2dBm) */
 #define LL_TX_POWEER_MINUS_16_DBM       0x01
 #define LL_TX_POWEER_MINUS_12_DBM       0x02
 #define LL_TX_POWEER_MINUS_8_DBM        0x04
@@ -806,7 +806,7 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define TGAP_AUTH_TASK_ID                       24  //!< Task ID override for Task Authentication control (for stack internal use only)
 
 // v5.x
-#define TGAP_ADV_TX_POWER                       25  //!< Indicates the maximum power level Range: -127 ¡Ü N ¡Ü +126 Units: dBm.Default 127(Host has no preference).
+#define TGAP_ADV_TX_POWER                       25  //!< Indicates the maximum power level Range: -127 ï¿½ï¿½ N ï¿½ï¿½ +126 Units: dBm.Default 127(Host has no preference).
 #define TGAP_ADV_PRIMARY_PHY                    26  //!< Indicates the PHY on which the advertising packets are transmitted on the primary advertising channel.LE 1M/LE Coded.Default GAP_PHY_VAL_LE_1M.
 #define TGAP_ADV_SECONDARY_PHY                  27  //!< LE 1M/LE 2M/LE Coded. Default GAP_PHY_VAL_LE_1M.
 #define TGAP_ADV_SECONDARY_MAX_SKIP             28  //!< Maximum advertising events the Controller can skip before sending the AUX_ADV_IND packets on the secondary advertising channel. Default 0.
@@ -1134,7 +1134,7 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define SMP_PAIRING_FAILED_UNSPECIFIED          0x08 //!< Pairing failed due to an unspecified reason
 #define SMP_PAIRING_FAILED_REPEATED_ATTEMPTS    0x09 //!< Pairing or authentication procedure is disallowed because too little time has elapsed since the last pairing request or security request.
 #define SMP_PAIRING_FAILED_INVALID_PARAMERERS   0x0A //!< The Invalid Parameters error code indicates that the command length is invalid or that a parameter is outside of the specified range.
-#define SMP_PAIRING_FAILED_DHKEY_CHECK_FAILED   0x0B //!< Indicates to the remote device that the DHKey Check value received doesn¡¯t match the one calculated by the local device.
+#define SMP_PAIRING_FAILED_DHKEY_CHECK_FAILED   0x0B //!< Indicates to the remote device that the DHKey Check value received doesnï¿½ï¿½t match the one calculated by the local device.
 #define SMP_PAIRING_FAILED_NUMERIC_COMPARISON   0x0C //!< Indicates that the confirm values in the numeric comparison protocol do not match.
 #define SMP_PAIRING_FAILED_KEY_REJECTED         0x0F //!< Indicates that the device chose not to accept a distributed key.
 
@@ -2846,7 +2846,7 @@ extern void LLE_IRQLibHandler( void );
  * @return  access address
  * the Access Address meets the following requirements:
  * It shall have no more than six consecutive zeros or ones. 
- * It shall not be t he advertising channel packets¡¯ Access Address.
+ * It shall not be t he advertising channel packetsï¿½ï¿½ Access Address.
  * It shall not be a sequence that differ s from the advertising channel packets' Access Address by only one bit.
  * It shall not have all four octets equal.
  * It shall have no more  than 24 transitions.

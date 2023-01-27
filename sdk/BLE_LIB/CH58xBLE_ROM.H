@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT ******************************
  * File Name         : CH58xBLE_ROM.H
  * Author            : WCH
- * Version           : V1.60
- * Date              : 2022/11/08
+ * Version           : V1.70
+ * Date              : 2023/01/10
  * Description       : head file
  *                    Address Space
  *                       CODE:   00010000H - 0003FFFFH   192K
@@ -189,7 +189,7 @@ typedef struct
 /*********************************************************************
  * GLOBAL MACROS
  */
-#define VER_FILE  "CH58x_BLE_LIB_V1.6"
+#define VER_FILE  "CH58x_BLE_LIB_V1.7"
 extern const uint8_t VER_LIB[];  // LIB version
 #define SYSTEM_TIME_MICROSEN            625   // unit of process event timer is 625us
 #define MS1_TO_SYSTEM_TIME(x)  ((x)*1000/SYSTEM_TIME_MICROSEN)   // transform unit in ms to unit in 625us ( attentional bias )

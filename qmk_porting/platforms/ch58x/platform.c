@@ -53,6 +53,7 @@ void platform_setup()
     R16_PIN_ANALOG_IE |= RB_PIN_XT32K_IE;
 #endif
 #ifdef PLF_DEBUG
+    DBG_INIT;
     PRINT("App " MACRO2STR(__GIT_VERSION__) ", build on %s %s\n", __DATE__, __TIME__);
 #else
     writePinHigh(A9);
@@ -77,21 +78,24 @@ void platform_setup()
     setPinInputLow(A8);
     setPinInputLow(A9);
 #endif
-#if 0
-    PRINT("EEPROM dump: \n");
-    for (uint8_t i = 0; i < 8; i++) {
-        PRINT("Page: %d\n", i);
-        uint8_t eeprom_dump[0x1000] = {};
-        EEPROM_READ(i * 0x1000, eeprom_dump, 0x1000);
-        for (uint16_t j = 0; j < 0x1000; j++) {
-            PRINT("0x%02x ", eeprom_dump[j]);
-            DelayUs(20);
+
+    {
+        // preserve BOOTMAGIC_LITE_ROW and BOOTMAGIC_LITE_COLUMN to eeprom for future use
+        uint8_t buffer[EEPROM_PAGE_SIZE], ret;
+
+        do {
+            ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION, buffer, sizeof(buffer));
+        } while (ret);
+        if (buffer[1] != BOOTMAGIC_LITE_ROW || buffer[2] != BOOTMAGIC_LITE_COLUMN) {
+            buffer[1] = BOOTMAGIC_LITE_ROW;
+            buffer[2] = BOOTMAGIC_LITE_COLUMN;
+            do {
+                ret = EEPROM_ERASE(QMK_EEPROM_RESERVED_START_POSITION, EEPROM_PAGE_SIZE) ||
+                      EEPROM_WRITE(QMK_EEPROM_RESERVED_START_POSITION, buffer, EEPROM_PAGE_SIZE);
+            } while (ret);
         }
-        PRINT("\n\n");
-        DelayMs(1);
     }
-    PRINT("End of EEPROM dump.\n\n");
-#endif
+
     bootloader_select_boot_mode();
 #ifdef USB_ENABLE
     if (kbd_protocol_type == kbd_protocol_usb) {

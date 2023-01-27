@@ -22,6 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 extern bool process_ble_passcode_kb(uint16_t keycode, keyrecord_t *record);
 #endif
 
+#ifdef BATTERY_MEASURE_PIN
+extern void battery_indicator_toggle(bool status);
+#endif
+
 bool process_record_kb(uint16_t keycode, keyrecord_t *record)
 {
 #ifdef BLE_ENABLE
@@ -77,7 +81,7 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
                 }
                 return false;
 #endif
-#if defined BLE_ENABLE || (defined ESB_ENABLE && ESB_ENABLE == 1)
+#ifdef BATTERY_MEASURE_PIN
             case BATTERY_INDICATOR:
 #ifdef BLE_ENABLE
                 if (kbd_protocol_type == kbd_protocol_ble) {

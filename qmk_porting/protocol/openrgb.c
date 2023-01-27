@@ -198,9 +198,11 @@ bool openrgb_command_handler(uint8_t *data, uint8_t length)
             openrgb_set_mode(data);
             break;
         case OPENRGB_DIRECT_MODE_SET_SINGLE_LED:
+            auxiliary_mode_confirm();
             openrgb_direct_mode_set_single_led(data);
             break;
         case OPENRGB_DIRECT_MODE_SET_LEDS:
+            auxiliary_mode_confirm();
             openrgb_direct_mode_set_leds(data);
             break;
         default:
