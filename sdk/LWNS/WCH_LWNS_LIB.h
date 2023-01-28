@@ -4,9 +4,11 @@
  * Version           : V1.61
  * Date              : 2021/12/15
  * Description       : this file is a head file for WCH LightWeight Networking Stack.
+ *********************************************************************************
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * SPDX-License-Identifier: Apache-2.0
- *********************************************************************************************/
+ * Attention: This software (modified or not) and binary are used for 
+ * microcontroller manufactured by Nanjing Qinheng Microelectronics.
+ *******************************************************************************/
 #ifndef _WCH_LWNS_LIB_H_
 #define _WCH_LWNS_LIB_H_
 
@@ -48,7 +50,7 @@ typedef union
 /*******************************************************************************
  * @fn          lwns_addr_cmp
  *
- * @brief       compare two address, return 1 if they are same.use lwns_memcmp ,the size is 6.
+ * @brief       compare two address£¬return 1 if they are same.use lwns_memcmp ,the size is 6.
  *
  * input parameters
  *

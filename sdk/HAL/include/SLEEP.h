@@ -4,8 +4,10 @@
  * Version            : V1.0
  * Date               : 2018/11/12
  * Description        :
+ *********************************************************************************
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * SPDX-License-Identifier: Apache-2.0
+ * Attention: This software (modified or not) and binary are used for 
+ * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
 
 /******************************************************************************/
@@ -25,14 +27,14 @@ extern "C" {
  */
 
 /**
- * @brief   é…ç½®ç¡çœ å”¤é†’çš„æ–¹å¼   - RTCå”¤é†’ï¼Œè§¦å‘æ¨¡å¼
+ * @brief   ÅäÖÃË¯Ãß»½ĞÑµÄ·½Ê½   - RTC»½ĞÑ£¬´¥·¢Ä£Ê½
  */
 extern void HAL_SleepInit(void);
 
 /**
- * @brief   å¯åŠ¨ç¡çœ 
+ * @brief   Æô¶¯Ë¯Ãß
  *
- * @param   time    - å”¤é†’çš„æ—¶é—´ç‚¹ï¼ˆRTCç»å¯¹å€¼ï¼‰
+ * @param   time    - »½ĞÑµÄÊ±¼äµã£¨RTC¾ø¶ÔÖµ£©
  *
  * @return  state.
  */

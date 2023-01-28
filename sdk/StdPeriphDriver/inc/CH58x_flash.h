@@ -4,8 +4,10 @@
  * Version            : V1.2
  * Date               : 2021/11/17
  * Description
+ *********************************************************************************
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * SPDX-License-Identifier: Apache-2.0
+ * Attention: This software (modified or not) and binary are used for 
+ * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
 
 #ifndef __CH58x_FLASH_H__
@@ -16,7 +18,7 @@ extern "C" {
 #endif
 
 /**
- * @brief   ¶ÁÈ¡Flash-ROM
+ * @brief   ��ȡFlash-ROM
  *
  * @param   StartAddr   - read address
  * @param   Buffer      - read buffer
@@ -24,7 +26,7 @@ extern "C" {
  */
 void FLASH_ROM_READ(uint32_t StartAddr, void *Buffer, uint32_t len);
 
-void FLASH_ROM_READ(UINT32 StartAddr, PVOID Buffer, UINT32 len); /* 读取Flash-ROM */
+void FLASH_ROM_READ(UINT32 StartAddr, PVOID Buffer, UINT32 len); /* ��ȡFlash-ROM */
 
 UINT8 UserOptionByteConfig(FunctionalState RESET_EN, FunctionalState BOOT_PIN, FunctionalState UART_NO_KEY_EN,
                            UINT32 FLASHProt_Size);

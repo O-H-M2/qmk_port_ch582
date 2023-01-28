@@ -4,8 +4,10 @@
  * Version            : V1.0
  * Date               : 2016/04/12
  * Description        :
+ *********************************************************************************
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * SPDX-License-Identifier: Apache-2.0
+ * Attention: This software (modified or not) and binary are used for 
+ * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
 
 /******************************************************************************/
@@ -27,7 +29,7 @@ extern "C" {
 #define HAL_KEY_SW_3             0x04  // key3
 #define HAL_KEY_SW_4             0x08  // key4
 
-/* æŒ‰é”®å®šä¹‰ */
+/* °´¼ü¶¨Òå */
 
 /* 1 - KEY */
 #define KEY1_BV                  BV(22)
@@ -50,7 +52,7 @@ extern "C" {
 #define KEY3_IN                  ()
 #define KEY4_IN                  ()
 
-#define HAL_PUSH_BUTTON1()       (KEY1_IN) //æ·»åŠ è‡ªå®šä¹‰æŒ‰é”®
+#define HAL_PUSH_BUTTON1()       (KEY1_IN) //Ìí¼Ó×Ô¶¨Òå°´¼ü
 #define HAL_PUSH_BUTTON2()       (KEY2_IN)
 #define HAL_PUSH_BUTTON3()       (0)
 #define HAL_PUSH_BUTTON4()       (0)
