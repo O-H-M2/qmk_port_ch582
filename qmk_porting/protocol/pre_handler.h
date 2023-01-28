@@ -213,7 +213,7 @@ _Static_assert(BATTERY_INDICATOR_END_INDEX < RGBLED_NUM, "Invalid BATTERY_INDICA
 #ifdef HAL_SLEEP
 #undef HAL_SLEEP
 #endif
-#define FREQ_SYS    80000000
+#define FREQ_SYS    60000000
 #define DCDC_ENABLE 0
 #define HAL_SLEEP   0
 #endif
