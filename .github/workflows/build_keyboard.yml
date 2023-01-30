@@ -40,7 +40,7 @@ jobs:
         run: pip3 install -r ./mcuboot/scripts/requirements.txt
 
       - name: Install mergehex
-        run: sudo ln -s ./utils/nrf-command-line-tools-10.19.0_linux-amd64/bin/mergehex /bin/mergehex
+        run: sudo ln -s ./utils/nrf-command-line-tools-10.19.0_linux-amd64/bin/mergehex /bin/mergehex;source ~/.bashrc
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
