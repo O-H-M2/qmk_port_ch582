@@ -39,23 +39,8 @@ jobs:
       - name: Prepare Python requirements
         run: pip3 install -r ./mcuboot/scripts/requirements.txt
 
-      - name: Cache mergehex
-        id: cache-mergehex
-        uses: actions/cache@v3.0.11
-        continue-on-error: true
-        with:
-          path: ~/nrf-command-line-tools-10.18.1_linux-amd64.tar.gz
-          key: mergehex
-
-      - name: Prepare mergehex
-        if: steps.cache-mergehex.outputs.cache-hit != 'true'
-        run: cd ~ && wget https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x/10-18-1/nrf-command-line-tools-10.18.1_linux-amd64.tar.gz
-
-      - name: Decompress mergehex
-        run: cd ~ && tar -zxvf nrf-command-line-tools-10.18.1_linux-amd64.tar.gz
-
       - name: Install mergehex
-        run: cd ~ && sudo ln -s ~/nrf-command-line-tools/bin/mergehex /bin/mergehex
+        run: ln -s ./utils/nrf-command-line-tools-10.19.0_linux-amd64/bin/mergehex /bin/mergehex
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.

@@ -8,13 +8,12 @@ This is a porting of QMK keyboard firmware for CH58x series, currently support C
 
 ## Directory Structure
 
-- CherryUSB, qmk_firmware: Components introduced as submodules, **NO any file** is modified. 
+- CherryUSB, qmk_firmware, mcuboot: Components introduced as submodules, **NO any file** is modified. 
 
   *The qmk_firmware submodule should be able to keep up with upstream.*
-- CherryUSB porting: Files used to add CherryUSB submodule into the building system.
+- CherryUSB_porting, mcuboot_porting: Files used to configure submodules and add them into the building system.
 - qmk_porting: The adapter layer for QMK to running on the CH58x chip.
-- SDK: Directory for placing WCH SDK, so no IDE is needed.
-- template: TODO
+- SDK: Directory for placing WCH SDK, so no IDE is used.
 
 ## Code Branch
 
@@ -33,52 +32,24 @@ Currently only CH582M is tested.
 
 ## Building
 
-First of all, clone this repo recursively using `git clone --recursive https://github.com/Huckies/qmk_port_ch582.git`
-
 - A WCH-specified toolchain is provided in this repo, if you want to use the public version, you may find it [here](https://xpack.github.io/blog/2019/07/31/riscv-none-embed-gcc-v8-2-0-3-1-released). Note that you need to add it to your `PATH` environment variable manually.
 - *A global defination `INT_SOFT` is needed or the ISR handlers might not working properly.*
 
-### Environment setup
+### Keyboard manufacturers/QMK firmware users
 
-#### macOS
+Fork this repository then manually upload you keyboard configuration file to [keyboards](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards). You'll be able to use the GitHub Actions to build your firmware online.
 
-1. Install `Homebrew` if you haven't.
-2. Open your terminal and run
+*Note that currently the configuration file is slightly different from the original QMK ones, you may take [this keyboard](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards/m2wired) as a start point.*
 
-```
-brew install cmake ninja
-```
+### Platform developers
 
-3. Install [VS Code](https://code.visualstudio.com/#alt-downloads)
-
-#### Linux
-
-TODO
-
-#### Windows
-
-If you are familiar enough with the `MSYS2` subsystem (or `Cygwin`, but **NO WSL2**), you should be able to figure it out without many efforts. I'm only leaving a simple tutorial here.
-
-1. Install [CMake](https://cmake.org/download/), [ninja](https://github.com/ninja-build/ninja/releases), [Python 3](https://www.python.org/getit/) and [VS Code](https://code.visualstudio.com/#alt-downloads).
-2. Rename `python.exe` to `python3.exe`
-
-### Compiling
-
-1. Open this repository with VS Code.
-2. Install extension `CMake` and `Cmake Tools`.
-3. Check CMake configurations on status bar which you can find at the bottom of you GUI:
-
-- Check `build type` to `Release`
-- Check `active kit` to `No active kit` if you are using the WCH toolchain, or to the corresponding toolchain you have downloaded.
-
-4. Click the `Build` button.
-5. Firmwares will be generated to the root directory in the name of your keyboard. **Choose `xxx_upgrade.uf2` if you are the end user, `xxx_factory.hex` is for developers only.**
+Documentation about standard build & development flows using [Visual Studio Code](https://code.visualstudio.com/) can be found in [the development guide](./VSCODE_DEVELOPMENT.md).
 
 ## Flashing
 
-Developers：You may use the [flashing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html).
-
 End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite) with `.uf2` only, or take your own risk of bricking your keyboard.
+
+Developers：You may use the [flashing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html).
 
 ## 概述
 
@@ -86,13 +57,12 @@ End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=boot
 
 ## 目录结构
 
-- CherryUSB, qmk_firmware: 子仓库，**没有修改任何代码**。
+- CherryUSB, qmk_firmware, mcuboot: 子仓库，**没有修改任何代码**。
 
   *其中，QMK固件应当能够随上游仓库随时更新。*
-- CherryUSB porting: CherryUSB的配置文件。
+- CherryUSB porting, mcuboot_porting: CherryUSB的配置文件。
 - qmk_porting: QMK和硬件之间的接合层
 - SDK: WCH的SDK, 目前版本V1.5。
-- template: 新键盘的模板，待做。
 
 ## 分支说明
 
@@ -101,7 +71,7 @@ End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=boot
 
 ## 功能亮点
 
-- 三模支持 （无线功能还在写）
+- 三模支持 （无线功能暂不开放）
 - 可随QMK上游仓库随时更新，支持QMK的绝大多数功能
 - 无线低功耗
 
@@ -111,56 +81,26 @@ End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=boot
 
 ## 编译
 
-克隆我的仓库，使用`git clone --recursive https://github.com/Huckies/qmk_port_ch582.git`
-
-**无线部分子仓库未完成，可以通过从.gitmodules移除相关仓库来克隆并编译有线部分**
-
-- WCH的工具链已经随附，当然你也可以选择使用[公版编译器](https://xpack.github.io/blog/2019/07/31/riscv-none-embed-gcc-v8-2-0-3-1-released). 但需要你自行加进环境变量。
+- WCH的工具链已经随附，当然你也可以选择使用[公版编译器](https://xpack.github.io/blog/2019/07/31/riscv-none-embed-gcc-v8-2-0-3-1-released). 但需要你自行处理构建系统调用问题。
 - *如果你确定要头铁，加一个全局宏定义`INT_SOFT`，否则中断很有可能不会正常工作*
 
-### 环境配置
+### 键盘生产商/QMK固件用户
 
-#### macOS
+Fork我的仓库，手动将你的键盘配置文件上传到[keyboards](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards)目录下，然后使用页面上方的Actions来在线编译你的固件。
 
-1. 安装`Homebrew`
-2. 打开终端，运行
+*需要注意本仓库目前使用的配置文件与QMK的有一点轻微差异，你可以用[这个](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards/m2wired)作为模板自行修改。*
 
-```
-brew install cmake ninja
-```
+### 开发者
 
-3. 安装[VS Code](https://code.visualstudio.com/#alt-downloads)
+推荐使用[Visual Studio Code](https://code.visualstudio.com/)。
 
-#### Linux
+参照[这个](./VSCODE_DEVELOPMENT.md)搭建你的本机开发环境，也可选择Codespace.
 
-TODO
+## 烧录
 
-#### Windows
-
-如果你很熟悉`MSYS2`(或者`Cygwin`, **WSL2除外**)，你应该可以轻易配好环境，需要安装的东西包括`ninja`，`cmake`和`python`，注意msys2里的cmake版本很老，请百度解决方法。
-
-新手上路：
-1. 安装[CMake](https://cmake.org/download/)，[ninja](https://github.com/ninja-build/ninja/releases)，[Python 3](https://www.python.org/getit/)和[VS Code](https://code.visualstudio.com/#alt-downloads)。其中ninja只需要把其所在的目录添加进环境变量即可。
-2. 将`python.exe`重命名为`python3.exe`
-
-### 编译
-
-1. 在VS Code里打开本仓库的文件夹
-2. 安装插件`CMake`和`Cmake Tools`
-3. 在底部状态栏上寻找
-
-- `build type` 并将其设置为 `Release`
-- `active kit` 并将其设置为 `No active kit`
-- *如果你选择了公版编译器，需要找到对应的名字并选择*
-
-3. 点击 `Build` .
-4. 固件会以你键盘的名字命名并生成在本仓库的根目录下。 **对于用户来说，强烈推荐使用xxx_upgrade.uf2，否则你很有可能把键盘刷成砖。**
-
-### 烧录
+用户：不要使用除[Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite)以外的方式。
 
 开发者：推荐使用[WCH提供的工具](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html)。
-
-最终用户：不要使用除[Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite)以外的方式。
 
 ### 还不会？
 

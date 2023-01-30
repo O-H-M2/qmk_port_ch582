@@ -1,0 +1,133 @@
+# nrfjprog configuration.
+[log]
+    # level - A spdlog log level enumerator name. Case insensitive.
+    # pattern - A spdlog log formatting pattern.
+    # file - Target log file, will be written to in append mode. If file is a directory, or it's missing a file extension, "/log.log" will be appended to the log file path.
+    [log.dll]
+        # nrfjprogdll logger configuration
+        level = "TRACE"
+        pattern = "%v"
+    [log.file]
+        # nrfjprog executable file log sink configuration
+        file = "log.log"
+        level = "TRACE"
+        pattern = "[%Y-%b-%d %H:%M:%S] [%5l] %v"
+    [log.terminal]
+        # nrfjprog executable terminal log sink configuration
+        level = "ERROR"
+        pattern = "[%5l] %v"
+    
+[rtt]
+    # If true, NRFJPROG_rtt_stop invalidates the current RTT control block. 
+    # To restart RTT communication the target device must reinitialize the RTT control block before NRFJPROG_rtt_start is called.
+    invalidate_control_block_on_stop = true
+
+    # Set the period between rtt API calls in the async rtt worker threads. 
+    # Shorter periods may improve performance, but can overwhelm the J-Link debug probe.
+    async_read_period_ms = 10
+    async_write_period_ms = 10
+
+[jlink]
+    # If true, J-Link debug probe fw will be silently updated on NRFJPROG_connect_to_emu_with*().
+    auto_update_fw=true
+
+[target]
+    # Define the desired family of devices to use by default by nrfjprog.exe when -f or --family arguments are not used. 
+    # Family identifiers are case insensitive, no suffixes, for example NRF51, nRF52, Nrf53 are all valid. 
+    # If set to AUTO an automatic family detection will be performed. The autodetect family operation will take time, so it is advised to use correct family if known.
+    family = "AUTO"
+
+    # Define the desired clockspeed in kHz you want nrfjprog.exe use by default when -c or --clockspeed arguments are not used.
+    clockspeed = 2000
+
+[approtect]
+    # Configurations for devices with hardened ap-protection.
+
+    # Should nrfjprog write UICR APPROTECT registers after erasing?
+    # Certain devices perform this write in hardware, in this case this configuration does nothing.
+    write_uicr_approtect = true
+    # Should nrfjprog verify UICR APPROTECT registers?
+    # On certain devices UICR->APPROTECT is written automatically to some reset value != 0xFFFFFFFFF
+    # on erase. On these devices it's not possible to directly compare this NVM register to image file contents.
+    verify_uicr_approtect = false
+    # Should nrfjprog cli write an unlock image to NVM memory after --recover?
+    # Certain devices require this image to stay unlocked.
+    install_unlock_image = true
+
+# nrfjprog QSPI configuration.
+[qspi]
+    # Define the capacity of the non-volatile memory device in bytes. Set to 0 if no external memory device is present in your board.
+    mem_size = 0x800000
+
+    # Define the desired ReadMode. Valid options are FASTREAD, READ2O, READ2IO, READ4O and READ4IO
+    read_mode = "READ4IO"
+
+    # Define the desired WriteMode. Valid options are PP, PP2O, PP4O and PP4IO
+    write_mode = "PP4IO"
+
+    # Define the desired AddressMode. Valid options are BIT24 and BIT32
+    address_mode = "BIT24"
+
+    # Define the desired Frequency. Valid options are M2, M4, M8, M16 and M32
+    frequency = "M16"
+
+    # Define the desired SPI mode. Valid options are MODE0 and MODE3
+    spi_mode = "MODE0"
+
+
+    # Define SPI interface timing. Valid options are in the range of 0 to 7.
+    # This argument is only used for devices where the dll function NRFJPROG_qspi_set_rx_delay() is supported.
+    rx_delay = 2
+
+    # Define the Index of the Write In Progress (WIP) bit in the status register. Valid options are in the range of 0 to 7.
+    wip_index = 0
+
+    # Define page size for commands. Valid sizes are PAGE256 and PAGE512.
+    page_program_size = "PAGE256"
+    
+    # If retention is enabled, device RAM contents will be read and buffered during QSPI driver initialization.
+    # The buffered data will be written back to the device when unitializing the driver, restoring the original device RAM state.
+    # Enabled: retain_ram = true, Disabled: retain_ram = false
+    retain_ram = true
+
+    # Define the assigned pins for the QSPI peripheral. Valid options are those existing in your device
+    # For nRF53, QSPI pins are not configurable and these values are ignored.    
+    [qspi.sck]
+        # Define the desired SckDelay. Valid options are in the range 0 to 255
+        delay = 0x80
+        pin = 19
+        port = 0
+
+    [qspi.csn]
+        pin = 17
+        port = 0
+    [qspi.dio0]
+        pin = 20
+        port = 0
+    [qspi.dio1]
+        pin = 21
+        port = 0
+    [qspi.dio2]
+        pin = 22
+        port = 0
+    [qspi.dio3]
+        pin = 23
+        port = 0
+
+    [qspi.custom]
+        # Define the desired IO level for DIO2 and DIO3 during a custom instruction. Valid options are LEVEL_HIGH and LEVEL_LOW
+        io2_level = "LEVEL_LOW"
+        io3_level = "LEVEL_HIGH"
+
+        # Custom instructions to send to the external memory after initialization. Format is instruction code plus data to send in between optional brakets. 
+        # These instructions will be executed each time the qspi peripheral is initiated by nrfjprog. 
+        # To improve execution speed on consecutive interations with QSPI, you can run nrfjprog once with custom initialization, and then comment out the lines below.
+        # Numbers can be given in decimal, hex (starting with either 0x or 0X) and binary (starting with either 0b or 0B) formats. 
+        # The custom instructions will be executed in the order found. 
+        # This example includes two commands, first a WREN (WRite ENable) and then a WRSR (WRite Satus Register) enabling the Quad Operation and the High Performance
+        # mode for the MX25R6435F memory present in the nRF52840 DK.
+        instructions =  [
+            {command=0x06, data=[]},
+            {command=0x01, data=[0x40, 0, 0x2]}
+        ]
+

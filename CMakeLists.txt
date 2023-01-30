@@ -4,7 +4,27 @@ cmake_minimum_required(VERSION 3.20)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(QMK_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}/qmk_firmware" CACHE STRING "ENV" FORCE)
-include(utils/toolchain/toolchain.cmake)
+
+find_program(CCACHE_FOUND ccache)
+
+if(CCACHE_FOUND)
+    message(STATUS "Found ccache: ${CCACHE_FOUND}")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_FOUND}")
+endif(CCACHE_FOUND)
+
+if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
+    message(STATUS "Platform: Linux")
+    set(TOOLCHAIN_PATH ${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-embed-gcc/bin/riscv-none-embed-)
+    set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}gcc)
+    set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}g++)
+    set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PATH}gcc)
+    set(CMAKE_AR ${TOOLCHAIN_PATH}ar)
+    set(CMAKE_OBJCOPY ${TOOLCHAIN_PATH}objcopy)
+    set(CMAKE_OBJDUMP ${TOOLCHAIN_PATH}objdump)
+    set(SIZE ${TOOLCHAIN_PATH}size)
+else()
+    message(FATAL_ERROR "Unsupported platform!")
+endif()
 
 project(qmk_port_ch582 C CXX ASM)
 set(CMAKE_CXX_STANDARD 11)

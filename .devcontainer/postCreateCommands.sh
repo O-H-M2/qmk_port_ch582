@@ -2,6 +2,7 @@
 
 repo=$(pwd)
 
+sudo rm -vf /etc/apt/sources.list.d/yarn.list
 sudo add-apt-repository -y ppa:git-core/ppa
 
 sudo apt remove -y cmake && sudo apt update && sudo apt upgrade -y && sudo apt install -y ninja-build &&
@@ -11,14 +12,11 @@ sudo apt remove -y cmake && sudo apt update && sudo apt upgrade -y && sudo apt i
 cd ~/.oh-my-zsh/custom/plugins && git clone https://github.com/zsh-users/zsh-autosuggestions.git && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git &&
     sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
 
-cd ~ && wget https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x/10-18-1/nrf-command-line-tools-10.18.1_linux-amd64.tar.gz &&
-    tar -zxvf nrf-command-line-tools-10.18.1_linux-amd64.tar.gz && rm -f nrf-command-line-tools-10.18.1_linux-amd64.tar.gz &&
-    rm -f JLink_Linux_V780c_x86_64.deb && rm -f JLink_Linux_V780c_x86_64.rpm && rm -f JLink_Linux_V780c_x86_64.tgz && rm README.txt &&
-    sudo ln -s ~/nrf-command-line-tools/bin/mergehex /bin/mergehex
+sudo ln -s ${repo}/utils/nrf-command-line-tools-10.19.0_linux-amd64/bin/mergehex /bin/mergehex
 
 sudo rm /bin/sh && sudo ln -s /bin/zsh /bin/sh
 
-cd ${repo} && git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
+git config --global --add safe.directory '*' && cd ${repo} && git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
 
 pip3 install -r ./mcuboot/scripts/requirements.txt
 

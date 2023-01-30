@@ -1,0 +1,304 @@
+Release 10.19.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.18.2
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.18.1
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.18.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.17.3
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.17.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.16.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.15.4
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.15.3
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.15.1
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.15.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.14.1
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.13.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.12.2
+Changelog
+---------------------------------------
+- Fixed issue in hex file merging. Where in some circumstances, some addresses would have conflicting data, rendering the hex file invalid.
+
+Release 10.12.0
+Changelog
+---------------------------------------
+- Added support for .elf, .axf, and .bin file formats in merge and output arguments.
+
+Release 10.11.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.10.0
+Changelog
+---------------------------------------
+- Removed the restriction on how many hex files mergehex can merge at a time.
+    "mergehex --merge" now accepts 2 or more hex files with no further limits.
+
+Release 10.9.1
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.9.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.8.0
+Changelog
+---------------------------------------
+- (mergehex.exe) Added unicode support for CLI arguments
+
+Release 10.7.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.6.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.4.0
+Changelog
+---------------------------------------
+- (OSXRelease) Installing fails for nrf command line tools on macos due to postinstall script lacking execute permissions. Fixed.
+
+Release 10.3.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.2.2
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.1.1
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 10.1.0
+Changelog
+---------------------------------------
+- (LinuxRelease) Released Zip files used to have long internal folder structures. Fixed.
+
+- (OSXRelease) Released Zip files used to have long internal folder structures. Fixed.
+
+Release 10.0.0
+Changelog
+---------------------------------------
+- (LinuxRelease) Initial release of Linux .deb package.
+- (LinuxRelease) Bundle LICENSE file in zip, tar.gz, and .deb deliveries.
+
+- (OSXRelease) Initial release of OS X .dmg and .pkg packages.
+- (OSXRelease) Bundle LICENSE file in tar, .dmg, and .pkg deliveries.
+
+- (WindowsRelease) Install license file in installation folder.
+
+- (mergehex.exe) Change license to Nordic 5-Clause. See attached license file for new license agreement.
+- (mergehex.exe) Add license heading to mergehex.h header file.
+
+Release 9.8.0
+Changelog
+---------------------------------------
+- (WindowsRelease) Release 64-bit Windows installer for nRF5x-Command-Line-Tools.
+
+Release 9.7.3
+Changelog
+---------------------------------------
+- Mergehex failed to read .hex files encoded in UTF-8 with BOM. Fixed.
+
+Release 9.7.2
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.7.1
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.7.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.6.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.5.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.4.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.3.1
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.2.1
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.2.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.1.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 9.0.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 8.5.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 8.4.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 8.3.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 8.2.0
+Changelog
+---------------------------------------
+- OSX support.
+
+Release 8.1.0
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools.
+
+Release 8.0.0
+Changelog
+---------------------------------------
+- Linux support.
+
+Release 7.6.0
+Changelog
+---------------------------------------
+- Updated the help.
+
+Release 7.5.2
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools
+
+Release 7.5.1
+Changelog
+---------------------------------------
+- No changes, updated to synchronize with nRFTools
+
+Release 7.5.0
+Changelog
+---------------------------------------
+- Added the possibility of a third hex file to merge in the same command.
+
+Release 7.2.0
+Changelog
+---------------------------------------
+- Adapted mergehex to nRF52 devices.
+- Solved some bugs in parsing of the arguments.
+
+Release 1.1.4
+Changelog
+---------------------------------------
+- Modified a library. No change in  functionality.
+
+Release 1.1.3
+Changelog
+---------------------------------------
+- Modified a library. No change in  functionality.
+
+Release 1.1.2
+Changelog
+---------------------------------------
+- Modified a library. No change in  functionality.
+
+Release 1.1.1
+Changelog
+---------------------------------------
+- Corrected a minor typo in the help.
+
+Release 1.1.0
+Changelog
+---------------------------------------
+- Cleaned up general structure, and use the facilities existing developed for nrfjprog. 
+    It should now be faster to merge two files.
+
+Release 1.0.0
+Changelog
+---------------------------------------
+- First version of Mergehex.exe
+
