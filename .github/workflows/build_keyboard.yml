@@ -56,6 +56,9 @@ jobs:
         with:
           name: ${{inputs.keyboard}}.uf2
           path: ${{inputs.keyboard}}_upgrade.uf2
+      - name: Archive 2 (${{inputs.keyboard}})
+        uses: actions/upload-artifact@v3
+        with:
           name: ${{inputs.keyboard}}.hex
           path: ${{inputs.keyboard}}_upgrade.hex
 
