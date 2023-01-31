@@ -51,6 +51,10 @@ End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=boot
 
 Developers：You may use the [flashing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html).
 
+## Community
+
+[Discord](https://discord.gg/kaH6eRUFZS)
+
 ## 概述
 
 这是QMK固件向CH58x平台的移植，主要工作集中在应用层（QMK）和底层硬件之间的接合。
@@ -102,6 +106,6 @@ Fork我的仓库，手动将你的键盘配置文件上传到[keyboards](https:/
 
 开发者：推荐使用[WCH提供的工具](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html)。
 
-### 还不会？
+## 还不会？
 
 这有个交流群：860356332，欢迎加入。
