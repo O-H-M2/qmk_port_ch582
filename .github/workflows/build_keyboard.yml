@@ -56,6 +56,8 @@ jobs:
         with:
           name: ${{inputs.keyboard}}.uf2
           path: ${{inputs.keyboard}}_upgrade.uf2
+          name: ${{inputs.keyboard}}.hex
+          path: ${{inputs.keyboard}}_upgrade.hex
 
       # - name: Test
       #   working-directory: ${{github.workspace}}/build
