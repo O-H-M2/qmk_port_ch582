@@ -4,7 +4,7 @@
   // "forwardPorts": [],
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": ". ./.devcontainer/postCreateCommands.sh",
-  "postAttachCommand": "zsh",
+  // "postAttachCommand": "zsh",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {},
   "extensions": [
