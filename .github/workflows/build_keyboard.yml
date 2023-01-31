@@ -51,11 +51,17 @@ jobs:
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target all --
 
-      - name: Archive (${{inputs.keyboard}})
+      - name: UF2 Firmware (${{inputs.keyboard}})
         uses: actions/upload-artifact@v3
         with:
           name: ${{inputs.keyboard}}.uf2
           path: ${{inputs.keyboard}}_upgrade.uf2
+          
+      - name: Hex Firmware (${{inputs.keyboard}})
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{inputs.keyboard}}.hex
+          path: ${{inputs.keyboard}}_factory.hex
 
       # - name: Test
       #   working-directory: ${{github.workspace}}/build
