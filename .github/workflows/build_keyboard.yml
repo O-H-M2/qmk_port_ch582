@@ -60,7 +60,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{inputs.keyboard}}.hex
-          path: ${{inputs.keyboard}}.hex
+          path: ${{inputs.keyboard}}_factory.hex
 
       # - name: Test
       #   working-directory: ${{github.workspace}}/build
