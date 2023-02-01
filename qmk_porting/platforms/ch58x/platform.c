@@ -31,6 +31,7 @@ int8_t sendchar(uint8_t c)
     return 0;
 }
 
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
 void shutdown_user()
 {
     rgbled_power_off();
@@ -46,6 +47,7 @@ void shutdown_user()
     }
 #endif
 }
+#endif
 
 void platform_setup()
 {
@@ -97,19 +99,10 @@ void platform_setup()
     }
 
     bootloader_select_boot_mode();
-#ifdef USB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_usb) {
-        platform_initialize_usb();
+
+    ch582_interface_t *interface = ch582_get_protocol_interface();
+
+    if (interface) {
+        interface->ch582_platform_initialize();
     }
-#endif
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        platform_initialize_ble();
-    }
-#endif
-#ifdef ESB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_esb) {
-        platform_initialize_esb();
-    }
-#endif
 }

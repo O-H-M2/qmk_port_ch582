@@ -17,6 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#if __BUILDING_APP__
+#ifdef USB_ENABLE
+#include "protocol_usb.h"
+#endif
+#ifdef BLE_ENABLE
+#include "protocol_ble.h"
+#endif
+#ifdef ESB_ENABLE
+#include "protocol_esb.h"
+#endif
+#endif
+
 enum {
     BOOTLOADER_BOOT_MODE_IAP = 0x05,
     BOOTLOADER_BOOT_MODE_USB = 0x0A,

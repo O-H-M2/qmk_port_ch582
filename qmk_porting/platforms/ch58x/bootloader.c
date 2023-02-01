@@ -68,6 +68,7 @@ uint8_t bootloader_boot_mode_get()
     return buffer;
 }
 
+#if __BUILDING_APP__
 void bootloader_select_boot_mode()
 {
     uint8_t mode = bootloader_boot_mode_get();
@@ -101,18 +102,21 @@ void bootloader_select_boot_mode()
         case BOOTLOADER_BOOT_MODE_USB:
             // cable mode
             kbd_protocol_type = kbd_protocol_usb;
+            ch582_set_protocol_interface(&ch582_protocol_usb);
             break;
 #endif
 #ifdef BLE_ENABLE
         case BOOTLOADER_BOOT_MODE_BLE:
             // bluetooth mode
             kbd_protocol_type = kbd_protocol_ble;
+            ch582_set_protocol_interface(&ch582_protocol_ble);
             break;
 #endif
 #ifdef ESB_ENABLE
         case BOOTLOADER_BOOT_MODE_ESB:
             // 2.4g mode
             kbd_protocol_type = kbd_protocol_esb;
+            ch582_set_protocol_interface(&ch582_protocol_esb);
             break;
 #endif
         default:
@@ -123,6 +127,7 @@ void bootloader_select_boot_mode()
             __builtin_unreachable();
     }
 }
+#endif
 
 uint8_t bootloader_set_to_default_mode(const char *reason)
 {
@@ -155,20 +160,10 @@ void mcu_reset()
     SYS_ResetExecute();
 #endif
 #if __BUILDING_APP__
-#ifdef USB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_usb) {
-        platform_reboot_usb();
+    ch582_interface_t *interface = ch582_get_protocol_interface();
+
+    if (interface) {
+        interface->ch582_platform_reboot();
     }
-#endif
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        platform_reboot_ble();
-    }
-#endif
-#ifdef ESB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_esb) {
-        platform_reboot_esb();
-    }
-#endif
 #endif
 }

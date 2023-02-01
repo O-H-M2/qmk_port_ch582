@@ -1,15 +1,23 @@
+/*
+Copyright 2022 Huckies <https://github.com/Huckies>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #pragma once
 
 #include <stdint.h>
-#include "host.h"
+#include "protocol.h"
 
-void platform_initialize_usb();
-void protocol_init_usb();
-void protocol_task_usb();
-void platform_reboot_usb();
-
-void send_keyboard_usb(report_keyboard_t *report);
-void send_mouse_usb(report_mouse_t *report);
-void send_extra_usb(report_extra_t *report);
-void raw_hid_send_usb(uint8_t *data, uint8_t length);
-void rgb_raw_hid_send_usb(uint8_t *data, uint8_t length);
+extern const ch582_interface_t ch582_protocol_usb;
