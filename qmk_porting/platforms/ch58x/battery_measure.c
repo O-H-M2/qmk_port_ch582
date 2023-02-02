@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "battery_measure.h"
+#include "quantum.h"
 
 #ifdef BATTERY_MEASURE_PIN
 
@@ -119,9 +120,6 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
 #endif
     setPinInputLow(pin_a);
     setPinInputLow(pin_b);
-
-    extern void shutdown_user();
-
     shutdown_user();
 #endif
 #ifdef POWER_DETECT_PIN
