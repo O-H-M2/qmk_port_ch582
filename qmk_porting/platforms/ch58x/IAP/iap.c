@@ -171,6 +171,13 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
     PRINT("Writing flash address 0x%04x, len 0x%04x... ", addr, len);
     usb_counter = 0;
 
+    uint8_t handle_data[len];
+
+    my_memcpy(handle_data, data, len);
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+    iap_handle_data(addr, handle_data, len);
+#endif
+
     uint16_t offset = addr % EEPROM_BLOCK_SIZE;
 
     if (!offset) {
@@ -179,13 +186,13 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
     }
 
     for (;;) {
-        uint8_t ret = FLASH_ROM_WRITE(addr, (void *)data, len);
+        uint8_t ret = FLASH_ROM_WRITE(addr, (void *)handle_data, len);
 
         if (ret != SUCCESS) {
             goto fail;
         }
 
-        ret = FLASH_ROM_VERIFY(addr, (void *)data, len);
+        ret = FLASH_ROM_VERIFY(addr, (void *)handle_data, len);
 
         if (ret != SUCCESS) {
             goto fail;
@@ -194,7 +201,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
         // stage the data
         uint16_t actual_len = min(offset + len, EEPROM_BLOCK_SIZE) - offset;
 
-        my_memcpy(buffer + offset, data, actual_len);
+        my_memcpy(buffer + offset, handle_data, actual_len);
         PRINT("done\n");
         break;
 

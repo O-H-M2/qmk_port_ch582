@@ -43,11 +43,23 @@ endif()
 
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/qmk_porting/keyboards/${keyboard}/rules.cmake")
     set(keyboard_type "public" CACHE STRING "KB" FORCE)
-    message(STATUS "Compiling ${keyboard}:${keymap}")
+
+    if(BUILD_WIRELESS_LIB)
+        message(STATUS "Building library ${keyboard}:${keymap}")
+    else()
+        message(STATUS "Compiling ${keyboard}:${keymap}")
+    endif()
+
     include(qmk_porting/keyboards/${keyboard}/rules.cmake)
 elseif(EXISTS "${CMAKE_CURRENT_LIST_DIR}/qmk_porting/keyboards_private/${keyboard}/rules.cmake")
     set(keyboard_type "private" CACHE STRING "KB" FORCE)
-    message(STATUS "Compiling ${keyboard}:${keymap} from private")
+
+    if(BUILD_WIRELESS_LIB)
+        message(STATUS "Building library ${keyboard}:${keymap} from private")
+    else()
+        message(STATUS "Compiling ${keyboard}:${keymap} from private")
+    endif()
+
     include(qmk_porting/keyboards_private/${keyboard}/rules.cmake)
 else()
     message(FATAL_ERROR "You must select a keyboard and its keymap!")
