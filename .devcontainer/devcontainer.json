@@ -7,25 +7,6 @@
   // "postAttachCommand": "zsh",
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {},
-  "extensions": [
-    "jeff-hykin.better-cpp-syntax",
-    "aaron-bond.better-comments",
-    "ms-vscode.cpptools",
-    "xaver.clang-format",
-    "twxs.cmake",
-    "josetr.cmake-language-support-vscode",
-    "ms-vscode.cmake-tools",
-    "emilast.logfilehighlighter",
-    "stepanvanzuriak.mono",
-    "monokai.theme-monokai-pro-vscode",
-    "ms-python.vscode-pylance",
-    "ms-python.python",
-    "vscode-icons-team.vscode-icons",
-    "ibm.output-colorizer",
-    "christian-kohler.path-intellisense",
-    "2gua.rainbow-brackets",
-    "foxundermoon.shell-format"
-  ],
   "customizations": {
     "codespaces": {
       "repositories": {
@@ -33,6 +14,30 @@
           "permissions": "write-all"
         }
       }
+    },
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/zsh"
+      },
+      "extensions": [
+        "jeff-hykin.better-cpp-syntax",
+        "aaron-bond.better-comments",
+        "ms-vscode.cpptools",
+        "xaver.clang-format",
+        "twxs.cmake",
+        "josetr.cmake-language-support-vscode",
+        "ms-vscode.cmake-tools",
+        "emilast.logfilehighlighter",
+        "stepanvanzuriak.mono",
+        "monokai.theme-monokai-pro-vscode",
+        "ms-python.vscode-pylance",
+        "ms-python.python",
+        "vscode-icons-team.vscode-icons",
+        "ibm.output-colorizer",
+        "christian-kohler.path-intellisense",
+        "2gua.rainbow-brackets",
+        "foxundermoon.shell-format"
+      ]
     }
   }
 }
