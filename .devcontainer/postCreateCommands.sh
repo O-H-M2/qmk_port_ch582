@@ -2,22 +2,24 @@
 
 repo=$(pwd)
 
-sudo apt remove -y cmake && sudo apt update && sudo apt upgrade -y && sudo apt install -y ninja-build &&
+sudo rm /bin/sh && sudo ln -s /bin/zsh /bin/sh
+sudo rm -vf /etc/apt/sources.list.d/yarn.list
+sudo add-apt-repository -y ppa:git-core/ppa
+
+echo '.DS_Store\n.DS_Store?\n*/.DS_Store' >~/.gitignore_global
+git config --global core.excludesfile ${HOME}/.gitignore_global
+git config --global --add safe.directory '*'
+
+sudo apt remove -y cmake && sudo apt update && sudo apt upgrade -y && sudo apt install -y ninja-build ccache &&
     cd ~ && wget https://github.com/Kitware/CMake/releases/download/v3.25.0/cmake-3.25.0-linux-x86_64.sh && sudo chmod +x cmake-3.25.0-linux-x86_64.sh &&
     sudo ./cmake-3.25.0-linux-x86_64.sh --skip-license --exclude-subdir --prefix=/usr/local && rm -f cmake-3.25.0-linux-x86_64.sh
 
 cd ~/.oh-my-zsh/custom/plugins && git clone https://github.com/zsh-users/zsh-autosuggestions.git && git clone https://github.com/zsh-users/zsh-syntax-highlighting.git &&
     sed -i 's/plugins=(git)/plugins=(git zsh-autosuggestions zsh-syntax-highlighting)/' ~/.zshrc
 
-cd ~ && wget https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x/10-18-1/nrf-command-line-tools-10.18.1_linux-amd64.tar.gz &&
-    tar -zxvf nrf-command-line-tools-10.18.1_linux-amd64.tar.gz && rm -f nrf-command-line-tools-10.18.1_linux-amd64.tar.gz &&
-    rm -f JLink_Linux_V780c_x86_64.deb && rm -f JLink_Linux_V780c_x86_64.rpm && rm -f JLink_Linux_V780c_x86_64.tgz && rm README.txt &&
-    sudo ln -s ~/nrf-command-line-tools/bin/mergehex /bin/mergehex
-
-sudo rm /bin/sh && sudo ln -s /bin/zsh /bin/sh
-
 cd ${repo} && git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
 
-pip3 install -r ./mcuboot/scripts/requirements.txt
+sudo ln -s ${repo}/utils/nrf-command-line-tools-10.19.0_linux-amd64/bin/mergehex /bin/mergehex
+pip3 install -r ${repo}/mcuboot/scripts/requirements.txt
 
 echo "Configuration done!"

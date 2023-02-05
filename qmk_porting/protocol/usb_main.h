@@ -83,8 +83,6 @@ enum {
 #define USBD_MAX_POWER     100
 #define USBD_LANGID_STRING 0x0409
 
-extern uint8_t keyboard_led_state;
-
 void init_usb_driver();
 void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len);
 void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len);

@@ -4,8 +4,10 @@
  * Version            : V1.2
  * Date               : 2022/01/18
  * Description        : 硬件任务处理函数及BLE和硬件初始化
+ *********************************************************************************
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
- * SPDX-License-Identifier: Apache-2.0
+ * Attention: This software (modified or not) and binary are used for 
+ * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
 
 /******************************************************************************/
@@ -106,10 +108,10 @@ void CH58X_BLEInit(void)
     cfg.srandCB = SYS_GetSysTickCnt;
 #if(defined TEM_SAMPLE) && (TEM_SAMPLE == TRUE)
     cfg.tsCB = HAL_GetInterTempValue; // 根据温度变化校准RF和内部RC( 大于7摄氏度 )
-#endif
   #if(CLK_OSC32K)
     cfg.rcCB = Lib_Calibration_LSI; // 内部32K时钟校准
   #endif
+#endif
 #if(defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
     cfg.WakeUpTime = WAKE_UP_RTC_MAX_TIME;
     cfg.sleepCB = CH58X_LowPower; // 启用睡眠

@@ -1,7 +1,7 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : mesh_lib.h
  * Author             : WCH
- * Version            : V1.67
+ * Version            : V1.6
  * Date               : 2022/10/26
  * Description        :
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.

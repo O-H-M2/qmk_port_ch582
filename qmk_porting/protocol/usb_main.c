@@ -17,14 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "usb_main.h"
 #include "usb_descriptors.h"
-#ifdef RGB_RAW_ENABLE
-#include "auxiliary_rgb.h"
-#endif
-#ifdef RAW_ENABLE
-#include "raw_hid.h"
-#endif
+#include "usb_ch58x_usbfs_reg.h"
+#include "protocol.h"
 #if ESB_ENABLE == 2
-#include "protocol_esb.h"
 #include "config.h"
 #endif
 
@@ -66,11 +61,7 @@ void usbd_hid_kbd_in_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, kbd_out_buffer, KBD_OUT_EP_SIZE);
-#if ESB_ENABLE == 2
-    esb_send_keyboard(kbd_out_buffer[0]);
-#else
-    keyboard_led_state = kbd_out_buffer[0];
-#endif
+    keyboard_leds_set(kbd_out_buffer[0]);
 }
 
 #ifdef RGB_RAW_ENABLE
@@ -82,11 +73,7 @@ void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
-#if ESB_ENABLE == 2
-    esb_rgb_raw_hid_send(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
-#else
-    rgb_raw_hid_receive(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
-#endif
+    receive_rgb_raw(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
 }
 #endif
 
@@ -104,11 +91,7 @@ void usbd_hid_qmk_raw_in_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
     usbd_ep_start_read(ep, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
-#if ESB_ENABLE == 2
-    esb_raw_hid_send(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
-#else
-    raw_hid_receive(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
-#endif
+    receive_qmk_raw(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 }
 #endif
 

@@ -19,16 +19,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "print.h"
 #include "bootloader.h"
 #include "rgb_led.h"
-#if __BUILDING_APP__
-#ifdef USB_ENABLE
-#include "protocol_usb.h"
-#endif
-#ifdef BLE_ENABLE
-#include "protocol_ble.h"
-#endif
-#ifdef ESB_ENABLE
-#include "protocol_esb.h"
-#endif
-#endif
 
 void platform_setup();

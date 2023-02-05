@@ -15,140 +15,109 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "host.h"
+#include "protocol.h"
 #include "usb_device_state.h"
 #include "keycode_config.h"
 #include "platform_deps.h"
 
-uint8_t keyboard_led_state;
+static uint8_t keyboard_led_state;
+
+// make it overridable for dongle
+__attribute__((weak)) void keyboard_leds_set(uint8_t state)
+{
+    keyboard_led_state = state;
+}
 
 uint8_t keyboard_leds()
 {
     return keyboard_led_state;
 }
 
-host_driver_t ch582_driver = {
-    .keyboard_leds = keyboard_leds,
-};
+static ch582_interface_t ch582_interface = {};
 
-#ifdef RAW_ENABLE
-void (*ch582_driver_raw_hid_send)(uint8_t *, uint8_t);
-
-void raw_hid_send(uint8_t *data, uint8_t length)
+void ch582_set_protocol_interface(const ch582_interface_t *interface)
 {
-    ch582_driver_raw_hid_send(data, length);
-}
-#endif
-
-#ifdef RGB_RAW_ENABLE
-void (*ch582_driver_rgb_raw_hid_send)(uint8_t *, uint8_t);
-
-void rgb_raw_hid_send(uint8_t *data, uint8_t length)
-{
-    ch582_driver_rgb_raw_hid_send(data, length);
-}
-#endif
-
-void protocol_setup()
-{
-#ifdef USB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_usb) {
-        usb_device_state_init();
+    if (interface != NULL) {
+        memcpy(&ch582_interface, interface, sizeof(ch582_interface_t));
     }
-#endif
 }
 
-void protocol_pre_init()
+ch582_interface_t *ch582_get_protocol_interface()
 {
-#ifdef USB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_usb) {
-        ch582_driver.send_keyboard = send_keyboard_usb;
-        ch582_driver.send_mouse = send_mouse_usb;
-        ch582_driver.send_extra = send_extra_usb;
-#ifdef RAW_ENABLE
-        ch582_driver_raw_hid_send = raw_hid_send_usb;
-#endif
-#ifdef RGB_RAW_ENABLE
-        ch582_driver_rgb_raw_hid_send = rgb_raw_hid_send_usb;
-#endif
+    if (ch582_interface.ch582_platform_initialize) {
+        return &ch582_interface;
+    } else {
+        return NULL;
     }
-#endif
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        ch582_driver.send_keyboard = send_keyboard_ble;
-        ch582_driver.send_mouse = send_mouse_ble;
-        ch582_driver.send_extra = send_extra_ble;
-#ifdef RAW_ENABLE
-        ch582_driver_raw_hid_send = raw_hid_send_ble;
-#endif
-    }
-#endif
-#if defined ESB_ENABLE && ESB_ENABLE == 1
-    if (kbd_protocol_type == kbd_protocol_esb) {
-        ch582_driver.send_keyboard = send_keyboard_esb;
-        ch582_driver.send_mouse = send_mouse_esb;
-        ch582_driver.send_extra = send_extra_esb;
-#ifdef RAW_ENABLE
-        ch582_driver_raw_hid_send = raw_hid_send_esb;
-#endif
-    }
-#endif
-    host_set_driver(&ch582_driver);
 }
 
-void protocol_post_init()
-{
-#ifdef USB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_usb) {
-        protocol_init_usb();
-    }
-#endif
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        protocol_init_ble();
-    }
-#endif
-#ifdef ESB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_esb) {
-        protocol_init_esb();
-    }
-#endif
-}
-
-void protocol_toggle(uint8_t status)
+void ch582_toggle_qmk_protocol(bool status)
 {
     if (status) {
-        host_set_driver(&ch582_driver);
+        host_set_driver(&ch582_interface.ch582_common_driver);
     } else {
         host_set_driver(NULL);
     }
 }
 
-// void protocol_pre_task()
-// {
-// }
-
-// void protocol_post_task()
-// {
-// }
-
-void protocol_task()
+#ifdef RAW_ENABLE
+void raw_hid_send(uint8_t *data, uint8_t length)
 {
-#ifdef USB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_usb) {
-        protocol_task_usb();
+    if (ch582_interface.send_qmk_raw) {
+        ch582_interface.send_qmk_raw(data, length);
     }
-#endif
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        protocol_task_ble();
+}
+
+void receive_qmk_raw(uint8_t *data, uint8_t length)
+{
+    if (ch582_interface.receive_qmk_raw) {
+        ch582_interface.receive_qmk_raw(data, length);
     }
+}
 #endif
-#ifdef ESB_ENABLE
-    if (kbd_protocol_type == kbd_protocol_esb) {
-        protocol_task_esb();
+
+#ifdef RGB_RAW_ENABLE
+void rgb_raw_hid_send(uint8_t *data, uint8_t length)
+{
+    if (ch582_interface.send_rgb_raw) {
+        ch582_interface.send_rgb_raw(data, length);
     }
+}
+
+void receive_rgb_raw(uint8_t *data, uint8_t length)
+{
+    if (ch582_interface.receive_rgb_raw) {
+        ch582_interface.receive_rgb_raw(data, length);
+    }
+}
 #endif
+
+void protocol_setup()
+{
+    if (ch582_interface.ch582_protocol_setup) {
+        ch582_interface.ch582_protocol_setup();
+    }
+}
+
+void protocol_pre_init()
+{
+    host_set_driver(&ch582_interface.ch582_common_driver);
+}
+
+void protocol_post_init()
+{
+    if (ch582_interface.ch582_protocol_init) {
+        ch582_interface.ch582_protocol_init();
+    }
+}
+
+__HIGH_CODE void protocol_task()
+{
+    for (;;) {
+        if (ch582_interface.ch582_protocol_task) {
+            ch582_interface.ch582_protocol_task();
+        }
+    }
 }
 
 void keyboard_post_init_user()
@@ -159,7 +128,7 @@ void keyboard_post_init_user()
 }
 
 #if defined ESB_ENABLE && ESB_ENABLE == 2
-void protocol_init(void)
+void protocol_init()
 {
     // skip protocol_pre_init();
 
