@@ -51,7 +51,7 @@ inline uint32_t timer_elapsed32(uint32_t tlast)
 
 void timer_clear(void)
 {
-    ticks_offset = SYS_TO_MS(timer_readraw());
+    ticks_offset = timer_readraw();
 }
 
 __HIGH_CODE uint32_t timer_readraw(void)

@@ -83,7 +83,9 @@
         "action_code.h": "c",
         "raw_hid.h": "c",
         "auxiliary_rgb.h": "c",
-        "usb_descriptors.h": "c"
+        "usb_descriptors.h": "c",
+        "config_rp2040.h": "c",
+        "config_avr.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
