@@ -35,6 +35,17 @@ execute_process(COMMAND git rev-parse --short HEAD
     OUTPUT_VARIABLE GIT_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+execute_process(COMMAND git describe --abbrev=0 --tags
+    WORKING_DIRECTORY ${QMK_BASE_DIR}
+    TIMEOUT 5
+    OUTPUT_VARIABLE QMK_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+execute_process(COMMAND date +"%Y-%m-%d-%H:%M:%S"
+    TIMEOUT 5
+    OUTPUT_VARIABLE QMK_BUILDDATE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 
 # allow for manual override
 if(NOT keyboard OR(NOT keymap AND NOT BUILD_WIRELESS_LIB))

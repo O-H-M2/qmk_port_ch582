@@ -1,3 +1,7 @@
+add_definitions(-DQMK_VERSION="${QMK_VERSION}" -DQMK_BUILDDATE=${QMK_BUILDDATE} -DQMK_KEYBOARD_H="${keyboard}.h")
+message(STATUS "QMK Version ${QMK_VERSION}")
+message(STATUS "QMK Build date ${QMK_BUILDDATE}")
+
 include_directories(${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom)
 include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/drivers)

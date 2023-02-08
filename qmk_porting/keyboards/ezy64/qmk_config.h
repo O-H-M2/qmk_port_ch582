@@ -17,27 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-//* platform settings
-// #define DEBUG        Debug_UART1
-#define DCDC_ENABLE  1
-#define FREQ_SYS     40000000
-#define LSE_ENABLE   1
-#define BLE_SLOT_NUM 4
-// #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
-// #define LSE_LOAD_CAPACITANCE 7   // in pF unit
-// #define I2C_IO_REMAPPING
-#define SPI_IO_REMAPPING
-
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE
 #define PRODUCT_ID   0x0B91
 #define DEVICE_VER   0x0001
 #define MANUFACTURER ezy64
 #define PRODUCT      ezy64
-
-#define QMK_VERSION    "0.0.1"
-#define QMK_BUILDDATE  __DATE__
-#define QMK_KEYBOARD_H "ezy64.h"
 
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 14
@@ -147,4 +132,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_TAPPING
 //#define NO_ACTION_ONESHOT
 
+#include "mcuconf.h"
+#include "halconf.h"
 #include "pre_handler.h"
