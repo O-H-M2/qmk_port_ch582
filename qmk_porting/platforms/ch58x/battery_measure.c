@@ -107,27 +107,54 @@ __attribute__((weak)) __INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
     R16_PB_INT_IF = R16_PB_INT_IF;
 }
 
-__attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
+__attribute__((noinline)) static void battery_critical_prerequisite()
 {
-    uint8_t temp = RB_WAKE_EV_MODE;
-
-#if __BUILDING_APP__
-    uint32_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
+    pin_t pin_a_mask = GPIO_Pin_All, pin_b_mask = GPIO_Pin_All;
+    pin_t pin_a_status = GPIOA_ReadPort(), pin_b_status = GPIOB_ReadPort();
 
 #if defined LSE_ENABLE && LSE_ENABLE
-    pin_a &= ~bX32KI;
-    pin_a &= ~bX32KO;
+    pin_a_mask &= ~bX32KI;
+    pin_a_mask &= ~bX32KO;
 #endif
-    setPinInputLow(pin_a);
-    setPinInputLow(pin_b);
+#ifdef BATTERY_MEASURE_PIN
+    if (BATTERY_MEASURE_PIN & 0x80000000) {
+        pin_b_mask &= ~(BATTERY_MEASURE_PIN & 0x7FFFFFFF);
+    } else {
+        pin_a_mask &= ~(BATTERY_MEASURE_PIN & 0x7FFFFFFF);
+    }
+#endif
+    for (uint8_t i = 0; i < 32; i++) {
+        pin_t pin = (1UL << i);
+
+        if (pin & pin_a_mask) {
+            if (pin & pin_a_status) {
+                setPinInputHigh(pin);
+            } else {
+                setPinInputLow(pin);
+            }
+        }
+        if (pin & pin_b_mask) {
+            if (pin & pin_b_status) {
+                setPinInputHigh(pin | 0x80000000);
+            } else {
+                setPinInputLow(pin | 0x80000000);
+            }
+        }
+    }
+#if __BUILDING_APP__
     shutdown_user();
 #endif
+
+    uint8_t temp = RB_WAKE_EV_MODE;
+
 #ifdef POWER_DETECT_PIN
     temp |= RB_SLP_GPIO_WAKE;
     if (POWER_DETECT_PIN & 0x80000000) {
+        PFIC_DisableIRQ(GPIO_A_IRQn);
         PFIC_EnableIRQ(GPIO_B_IRQn);
     } else {
         PFIC_EnableIRQ(GPIO_A_IRQn);
+        PFIC_DisableIRQ(GPIO_B_IRQn);
     }
     setPinInputLow(POWER_DETECT_PIN);
     setPinInterruptRisingEdge(POWER_DETECT_PIN);
@@ -137,6 +164,11 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
         R8_SLP_WAKE_CTRL = temp;
         sys_safe_access_disable();
     } while (R8_SLP_WAKE_CTRL != temp);
+}
+
+__attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
+{
+    battery_critical_prerequisite();
 
     uint8_t x32Kpw, x32Mpw;
 

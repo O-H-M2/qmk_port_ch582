@@ -271,7 +271,7 @@ __HIGH_CODE int usbd_msc_sector_write(uint32_t sector, uint8_t *buffer, uint32_t
 
 __HIGH_CODE static void gpio_strap()
 {
-    uint32_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
+    pin_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
 
 #if defined LSE_ENABLE && LSE_ENABLE
     pin_a &= ~bX32KI;
@@ -279,21 +279,21 @@ __HIGH_CODE static void gpio_strap()
 #endif
 #ifdef WS2812
     if (WS2812_EN_PIN & 0x80000000) {
-        pin_b &= ~((WS2812_EN_PIN & 0x7FFFFFFF));
+        pin_b &= ~(WS2812_EN_PIN & 0x7FFFFFFF);
     } else {
-        pin_a &= ~((WS2812_EN_PIN & 0x7FFFFFFF));
+        pin_a &= ~(WS2812_EN_PIN & 0x7FFFFFFF);
     }
 #elif defined AW20216
     if (DRIVER_1_EN & 0x80000000) {
-        pin_b &= ~((DRIVER_1_EN & 0x7FFFFFFF));
+        pin_b &= ~(DRIVER_1_EN & 0x7FFFFFFF);
     } else {
-        pin_a &= ~((DRIVER_1_EN & 0x7FFFFFFF));
+        pin_a &= ~(DRIVER_1_EN & 0x7FFFFFFF);
     }
 #ifdef DRIVER_2_EN
     if (DRIVER_2_EN & 0x80000000) {
-        pin_b &= ~((DRIVER_2_EN & 0x7FFFFFFF));
+        pin_b &= ~(DRIVER_2_EN & 0x7FFFFFFF);
     } else {
-        pin_a &= ~((DRIVER_2_EN & 0x7FFFFFFF));
+        pin_a &= ~(DRIVER_2_EN & 0x7FFFFFFF);
     }
 #endif
 #endif

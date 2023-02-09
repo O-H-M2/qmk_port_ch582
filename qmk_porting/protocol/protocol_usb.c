@@ -101,7 +101,7 @@ static void platform_reboot()
     SYS_ResetExecute();
 }
 
-__HIGH_CODE static void protocol_task()
+static void protocol_task()
 {
     keyboard_task();
     housekeeping_task();

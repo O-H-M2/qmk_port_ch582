@@ -85,7 +85,8 @@
         "auxiliary_rgb.h": "c",
         "usb_descriptors.h": "c",
         "config_rp2040.h": "c",
-        "config_avr.h": "c"
+        "config_avr.h": "c",
+        "ch58x_gpio.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
