@@ -33,6 +33,7 @@ extern bool openrgb_command_handler(uint8_t *data, uint8_t length);
 void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
 {
     bool send = false;
+    extern int usbd_deinitialize();
 
     switch (*data) {
         case OPENRGB_GET_PROTOCOL_VERSION ... OPENRGB_DIRECT_MODE_SET_LEDS:
@@ -44,16 +45,20 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
         default:
 #ifdef RAW_ENABLE
             PRINT("\n **** Unhandled! ****\n\n");
-#if !defined ESB_ENABLE || ESB_ENABLE == 2
-            if (kbd_protocol_type == kbd_protocol_usb || kbd_protocol_type == kbd_protocol_esb) {
-                extern int usbd_deinitialize();
-
+#ifdef USB_ENABLE
+            if (kbd_protocol_type == kbd_protocol_usb) {
                 usbd_deinitialize();
                 init_usb_driver();
             }
-#elif ESB_ENABLE == 1
+#endif
+#ifdef ESB_ENABLE
             if (kbd_protocol_type == kbd_protocol_esb) {
+#if ESB_ENABLE == 1
                 reenumerate_dongle_esb();
+#elif ESB_ENABLE == 2
+                usbd_deinitialize();
+                init_usb_driver();
+#endif
             }
 #endif
 #endif
