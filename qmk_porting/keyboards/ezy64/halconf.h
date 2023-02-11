@@ -15,6 +15,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+// RB_PIN_UART0  -  UART0: PB4/PB7 ->  PA15/PA14
+// #define UART0_IO_REMAPPING
+
+// RB_PIN_UART1  -  UART1: PA8/PA9 ->  PB12/PB13
+// #define UART1_IO_REMAPPING
+
+// RB_PIN_UART2  -  UART2: PA6/PA7 ->  PB22/PB23
+// #define UART2_IO_REMAPPING
+
+// RB_PIN_UART3  -  UART3: PA4/PA5 ->  PB20/PB21
+// #define UART3_IO_REMAPPING
+
 /* I2C_IO_REMAPPING    -  I2C: PB13/PB12 -> PB21/PB20 */
 // #define I2C_IO_REMAPPING
 
