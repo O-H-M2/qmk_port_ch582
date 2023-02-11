@@ -495,7 +495,7 @@ __HIGH_CODE int main()
     adc = battery_calculate(adc);
     PRINT("Battery level: %d\n", adc);
 #endif
-
+#ifdef MATRIX_ROW_PINS
     // check if there is any existing bootmagic pin setting
     do {
         uint8_t buffer[2], ret;
@@ -538,6 +538,7 @@ __HIGH_CODE int main()
             R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
         }
     } while (0);
+#endif
 
     iap_decide_jump(false);
 #else

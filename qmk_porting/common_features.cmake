@@ -49,12 +49,24 @@ if(ENCODER_ENABLE)
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/encoder.c"
     )
-
+  
     # ENCODER_MAP_ENABLE
     if(ENCODER_MAP_ENABLE)
         add_definitions(-DENCODER_MAP_ENABLE)
         message(STATUS "ENCODER_MAP_ENABLE")
     endif()
+endif()
+
+if(UNICODEMAP_ENABLE)
+    add_definitions(-DUNICODEMAP_ENABLE)
+    add_definitions( -DUNICODE_COMMON_ENABLE)
+    message(STATUS "UNICODEMAP_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_unicodemap.c"
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_unicode_common.c"
+        "${QMK_BASE_DIR}/quantum/unicode/unicode.c"
+        "${QMK_BASE_DIR}/quantum/unicode/utf8.c"
+    )
 endif()
 
 # VIA_ENABLE
@@ -272,6 +284,13 @@ if(AW20216_REQUIRED)
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216.c"
         "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
+        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
+    )
+endif()
+
+if(SHIFT_REGISTERS)
+  message(STATUS "SHIFT REGISTERS ENABLED")
+    list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
     )
 endif()
