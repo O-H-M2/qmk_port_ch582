@@ -39,10 +39,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define BLE_TX_POWER LL_TX_POWEER_MINUS_5_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_MINUS_3_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_MINUS_1_DBM
-#define BLE_TX_POWER LL_TX_POWEER_0_DBM
+// #define BLE_TX_POWER LL_TX_POWEER_0_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_1_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_2_DBM
-// #define BLE_TX_POWER LL_TX_POWEER_3_DBM
+#define BLE_TX_POWER LL_TX_POWEER_3_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_4_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_5_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_6_DBM
