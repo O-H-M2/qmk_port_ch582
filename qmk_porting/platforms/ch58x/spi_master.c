@@ -33,24 +33,6 @@ static void spi_stop_internal()
 {
     if (currentSlavePin != NO_PIN) {
         writePinHigh(currentSlavePin);
-        // disable interrupt
-        R8_SPI0_INTER_EN = 0;
-        R8_SPI0_INT_FLAG = RB_SPI_IF_FST_BYTE | RB_SPI_IF_FIFO_OV | RB_SPI_IF_DMA_END | RB_SPI_IF_FIFO_HF | RB_SPI_IF_BYTE_END | RB_SPI_IF_CNT_END;
-        // disable DMA
-        R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
-        // unload all the data from fifo
-        R8_SPI0_CTRL_MOD |= RB_SPI_FIFO_DIR;
-        while (R8_SPI0_FIFO_COUNT) {
-            volatile uint8_t discard = R8_SPI0_FIFO;
-
-            (void)discard;
-        }
-
-        sys_safe_access_enable();
-        R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;
-        sys_safe_access_disable();
-
-        currentSlavePin = NO_PIN;
     }
     // disable interrupt
     R8_SPI0_INT_FLAG = RB_SPI_IF_FST_BYTE | RB_SPI_IF_FIFO_OV | RB_SPI_IF_DMA_END | RB_SPI_IF_FIFO_HF | RB_SPI_IF_BYTE_END | RB_SPI_IF_CNT_END;
@@ -194,6 +176,11 @@ spi_status_t spi_write(uint8_t data)
     R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
     R8_SPI0_BUFFER = data;
 
+<<<<<<< HEAD
+=======
+    uint16_t timeout_timer = timer_read();
+
+>>>>>>> 01a9071 (improved stability)
     while (R8_SPI0_FIFO_COUNT) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             PRINT("SPI write timeout.\n");
@@ -218,6 +205,11 @@ spi_status_t spi_read()
     R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
     R8_SPI0_BUFFER = 0xFF; // send a dummy byte
 
+<<<<<<< HEAD
+=======
+    uint16_t timeout_timer = timer_read();
+
+>>>>>>> 01a9071 (improved stability)
     while (R8_SPI0_FIFO_COUNT) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             PRINT("SPI read timeout.\n");
