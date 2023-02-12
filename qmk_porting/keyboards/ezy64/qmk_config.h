@@ -110,6 +110,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
 #endif
 
+#ifdef AW20216
+#define DRIVER_1_CS B20
+#define DRIVER_1_EN B21
+
+#define DRIVER_COUNT       1
+#define DRIVER_1_LED_TOTAL 64
+#define DRIVER_LED_TOTAL   (DRIVER_1_LED_TOTAL)
+#endif
+
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
