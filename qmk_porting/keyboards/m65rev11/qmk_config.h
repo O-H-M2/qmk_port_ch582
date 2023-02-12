@@ -25,14 +25,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define I2C_IO_REMAPPING
 // #define SPI_IO_REMAPPING
 
-#    define TAPPING_TOGGLE 2
-#    define PRODUCT_ID 0x6071
-#    define VENDOR_ID 0xBABA
-#    define PRODUCT "mlego/m65 rev11"
-#    define MANUFACTURER "Alin Elena"
-#    define DEVICE_VER 0x0001
+#define TAPPING_TOGGLE 2
+#define PRODUCT_ID 0x6071
+#define VENDOR_ID 0xBABA
+#define PRODUCT "mlego/m65 rev11"
+#define MANUFACTURER "Alin Elena"
+#define DEVICE_VER 0x0001
 
-#define QMK_VERSION    "0.0.1"
+#define QMK_VERSION    "19.9"
 #define QMK_BUILDDATE  __DATE__
 #define QMK_KEYBOARD_H "m65rev11.h"
 
@@ -45,7 +45,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
-
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \
     {                  \
@@ -57,14 +56,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 #define ENCODER_RESOLUTION 4
 #endif
-
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
-
+/*
 #define BATTERY_MEASURE_PIN A2
 #define POWER_DETECT_PIN    B12
-
-
+*/
 #define SPI_DRIVER SPID0
 
 #define SPI_LATCH_PIN A12
@@ -73,6 +70,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPI_MOSI_PIN A14
 
 #define SPI_DIVISOR 8
+
+#define LED_CAPS_LOCK_PIN A8
 
 #define DEBUG_MATRIX_SCAN_RATE
 

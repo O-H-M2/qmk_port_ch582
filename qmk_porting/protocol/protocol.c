@@ -146,6 +146,11 @@ void keyboard_post_init_user()
 #ifdef PLF_DEBUG
     print("Set log output for QMK.\n");
 #endif
+#ifdef CONSOLE_ENABLE
+  debug_enable = true;
+  debug_matrix = true;
+  debug_keyboard = true;
+#endif
 }
 
 #if defined ESB_ENABLE && ESB_ENABLE == 2
