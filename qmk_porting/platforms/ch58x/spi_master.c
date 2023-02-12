@@ -177,10 +177,13 @@ spi_status_t spi_write(uint8_t data)
     R8_SPI0_BUFFER = data;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     uint16_t timeout_timer = timer_read();
 
 >>>>>>> 01a9071 (improved stability)
+=======
+>>>>>>> 9fffcf2 (improved spi driver)
     while (R8_SPI0_FIFO_COUNT) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             PRINT("SPI write timeout.\n");
@@ -206,10 +209,13 @@ spi_status_t spi_read()
     R8_SPI0_BUFFER = 0xFF; // send a dummy byte
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     uint16_t timeout_timer = timer_read();
 
 >>>>>>> 01a9071 (improved stability)
+=======
+>>>>>>> 9fffcf2 (improved spi driver)
     while (R8_SPI0_FIFO_COUNT) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             PRINT("SPI read timeout.\n");
