@@ -37,7 +37,7 @@ SOFTWARE.
 // UF2 Configuration
 //--------------------------------------------------------------------+
 
-#define UF2_VERSION         "0.0.1"
+#define UF2_VERSION         MACRO2STR(__GIT_VERSION__)
 #define UF2_INDEX_URL       ""
 #define UF2_VOLUME_LABEL    "HucKeys"
 #define UF2_PRODUCT_NAME    MACRO2STR(PRODUCT)

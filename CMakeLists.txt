@@ -1,3 +1,18 @@
+# Copyright 2022 Huckies <https://github.com/Huckies>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_VERSION 1)
 cmake_minimum_required(VERSION 3.20)
@@ -54,6 +69,7 @@ endif()
 
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/qmk_porting/keyboards/${keyboard}/rules.cmake")
     set(keyboard_type "public" CACHE STRING "KB" FORCE)
+    set(KEYBOARD_ROOT "${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}" CACHE STRING "KB" FORCE)
 
     if(BUILD_WIRELESS_LIB)
         message(STATUS "Building library ${keyboard}:${keymap}")
@@ -64,6 +80,7 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/qmk_porting/keyboards/${keyboard}/rules.cma
     include(qmk_porting/keyboards/${keyboard}/rules.cmake)
 elseif(EXISTS "${CMAKE_CURRENT_LIST_DIR}/qmk_porting/keyboards_private/${keyboard}/rules.cmake")
     set(keyboard_type "private" CACHE STRING "KB" FORCE)
+    set(KEYBOARD_ROOT "${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}" CACHE STRING "KB" FORCE)
 
     if(BUILD_WIRELESS_LIB)
         message(STATUS "Building library ${keyboard}:${keymap} from private")
@@ -135,7 +152,7 @@ if(BUILD_WIRELESS_LIB)
     include(${WIRELESS_SUBMODULE_PATH}/gen_lib.cmake)
 else()
     if(NOT ESB_ENABLE OR(ESB_ENABLE AND ESB_ROLE STREQUAL "keyboard"))
-        set(LIB_FILE lib${keyboard}.a)
+        set(WIRELESS_LIB_FILE ${KEYBOARD_ROOT}/wireless/lib${keyboard}.a)
         set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
         set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_signed.hex)
         set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
@@ -144,7 +161,7 @@ else()
         set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
         set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
     else()
-        set(LIB_FILE lib${keyboard}_dongle.a)
+        set(WIRELESS_LIB_FILE ${KEYBOARD_ROOT}/wireless/lib${keyboard}_dongle.a)
         set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}_dongle.hex)
         set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_dongle_signed.hex)
         set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}_dongle.bin)
@@ -154,42 +171,38 @@ else()
         set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.bin)
     endif()
 
+    add_library(mcuboot_porting INTERFACE)
+    target_include_directories(mcuboot_porting INTERFACE
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting"
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/include"
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library"
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/boot/bootutil/include"
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/boot/bootutil/src"
+    )
+    file(GLOB mbedtls_sources
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x][^5]*.c"
+    )
+    file(GLOB bootutil_sources
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/boot/bootutil/src/*.c"
+    )
+    target_sources(mcuboot_porting INTERFACE
+        ${mbedtls_sources}
+        ${bootutil_sources}
+        "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting/mcuboot_port.c"
+    )
+    target_link_libraries(mcuboot_porting INTERFACE CH582_IAP)
+
     add_executable(${keyboard}.elf ${APP_SOURCES})
     add_executable(${keyboard}_IAP.elf ${IAP_SOURCES})
-
-    target_link_libraries(${keyboard}.elf PUBLIC CH582_APP)
-    target_link_libraries(${keyboard}_IAP.elf PUBLIC CH582_IAP)
 
     target_compile_definitions(${keyboard}.elf PUBLIC __BUILDING_APP__=1)
     target_compile_definitions(${keyboard}_IAP.elf PUBLIC __BUILDING_IAP__=1)
 
-    include_directories(
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting"
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/include"
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library"
-    )
+    target_link_libraries(${keyboard}.elf PUBLIC CH582_APP)
 
-    add_library(mbedtls INTERFACE)
-    file(GLOB mbedtls_sources
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x][^5]*.c"
-    )
-    target_sources(mbedtls INTERFACE
-        ${mbedtls_sources}
-    )
-
+    # target_link_libraries(${keyboard}_IAP.elf PUBLIC CH582_IAP)
     # target_link_libraries(${keyboard}.elf PUBLIC mbedtls)
-    target_link_libraries(${keyboard}_IAP.elf PUBLIC mbedtls)
-
-    file(GLOB mbedtls_sources
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x][^5]*.c"
-    )
-    target_sources(${keyboard}_IAP.elf PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting/mcuboot_port.c"
-    )
-
-    add_subdirectory(mcuboot/boot/bootutil EXCLUDE_FROM_ALL)
-    target_link_libraries(bootutil PUBLIC CH582_IAP)
-    target_link_libraries(${keyboard}_IAP.elf PUBLIC bootutil)
+    target_link_libraries(${keyboard}_IAP.elf PUBLIC mcuboot_porting)
 
     target_link_options(${keyboard}.elf PRIVATE
         -nostartfiles
@@ -208,50 +221,22 @@ else()
         --specs=nosys.specs
     )
 
-    if(${keyboard_type} STREQUAL "public")
-        target_precompile_headers(${keyboard}.elf PUBLIC
-            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
-        )
-        target_precompile_headers(${keyboard}_IAP.elf PUBLIC
-            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/qmk_config.h
-        )
+    target_precompile_headers(${keyboard}.elf PUBLIC
+        ${KEYBOARD_ROOT}/qmk_config.h
+    )
+    target_precompile_headers(${keyboard}_IAP.elf PUBLIC
+        ${KEYBOARD_ROOT}/qmk_config.h
+    )
 
-        if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-            target_include_directories(${keyboard}.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include
-            )
-            target_include_directories(${keyboard}_IAP.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/include
-            )
-            target_link_libraries(${keyboard}.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/${LIB_FILE}
-            )
-            target_link_libraries(${keyboard}_IAP.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards/${keyboard}/wireless/${LIB_FILE}
-            )
-        endif()
-    elseif(${keyboard_type} STREQUAL "private")
-        target_precompile_headers(${keyboard}.elf PUBLIC
-            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
+    if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
+        target_include_directories(${keyboard}.elf PUBLIC
+            ${KEYBOARD_ROOT}/wireless/include
         )
-        target_precompile_headers(${keyboard}_IAP.elf PUBLIC
-            ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/qmk_config.h
+        target_include_directories(${keyboard}_IAP.elf PUBLIC
+            ${KEYBOARD_ROOT}/wireless/include
         )
-
-        if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-            target_include_directories(${keyboard}.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/include
-            )
-            target_include_directories(${keyboard}_IAP.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/include
-            )
-            target_link_libraries(${keyboard}.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/${LIB_FILE}
-            )
-            target_link_libraries(${keyboard}_IAP.elf PUBLIC
-                ${PROJECT_SOURCE_DIR}/qmk_porting/keyboards_private/${keyboard}/wireless/${LIB_FILE}
-            )
-        endif()
+        target_link_libraries(${keyboard}.elf PUBLIC ${WIRELESS_LIB_FILE})
+        target_link_libraries(${keyboard}_IAP.elf PUBLIC ${WIRELESS_LIB_FILE})
     endif()
 
     add_custom_command(TARGET ${keyboard}.elf POST_BUILD
