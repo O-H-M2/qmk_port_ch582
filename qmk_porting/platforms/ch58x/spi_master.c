@@ -118,9 +118,6 @@ bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
         sys_safe_access_disable();
     } while (R8_SLP_CLK_OFF1 & RB_SLP_CLK_SPI0);
 
-    spi_master_pre_transmit_cb();
-
-    currentSlavePin = slavePin;
     switch (mode) {
         case 0:
             R8_SPI0_CTRL_MOD &= ~RB_SPI_MST_SCK_MOD;
@@ -146,13 +143,16 @@ bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
             PRINT("Unsupported SPI mode: %d\n", mode);
             return false;
     }
-
+    
+    currentSlavePin = slavePin;
     if (divisor >= 2 && divisor <= 255) {
         R8_SPI0_CLOCK_DIV = divisor;
     } else {
         PRINT("Invalid SPI divisor!\n");
         return false;
     }
+
+    spi_master_pre_transmit_cb();
 
     writePinLow(currentSlavePin);
     setPinOutput(currentSlavePin);
