@@ -111,7 +111,7 @@ void spi_master_pre_transmit_cb()
     aw20216_power_check();
 }
 
-void spi_master_post_transmit_cb()
+__HIGH_CODE void spi_master_post_transmit_cb()
 {
     aw20216_delayed_power_off_excute();
 }

@@ -89,7 +89,9 @@
         "ch58x_gpio.h": "c",
         "mcuconf.h": "c",
         "halconf.h": "c",
-        "aw20216_supplement.h": "c"
+        "aw20216_supplement.h": "c",
+        "aw20216.h": "c",
+        "typeinfo": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,

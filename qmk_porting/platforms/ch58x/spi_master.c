@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 static volatile pin_t currentSlavePin = NO_PIN;
 static volatile bool spi_transfering = false, spi_delayed_stop = false;
 
-__attribute__((weak)) void spi_master_pre_transmit_cb()
+__attribute__((weak)) __HIGH_CODE void spi_master_pre_transmit_cb()
 {
 }
 
-__attribute__((weak)) void spi_master_post_transmit_cb()
+__attribute__((weak)) __HIGH_CODE void spi_master_post_transmit_cb()
 {
 }
 
@@ -143,7 +143,7 @@ bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
             PRINT("Unsupported SPI mode: %d\n", mode);
             return false;
     }
-    
+
     currentSlavePin = slavePin;
     if (divisor >= 2 && divisor <= 255) {
         R8_SPI0_CLOCK_DIV = divisor;
@@ -164,7 +164,7 @@ spi_status_t spi_write(uint8_t data)
 {
     uint16_t timeout_timer = timer_read();
 
-    while (R8_SPI0_FIFO_COUNT) {
+    while (spi_transfering) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             return SPI_STATUS_TIMEOUT;
         }
@@ -186,7 +186,7 @@ spi_status_t spi_read()
 {
     uint16_t timeout_timer = timer_read();
 
-    while (R8_SPI0_FIFO_COUNT) {
+    while (spi_transfering) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             return SPI_STATUS_TIMEOUT;
         }

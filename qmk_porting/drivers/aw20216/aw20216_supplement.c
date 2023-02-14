@@ -20,12 +20,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static volatile bool aw20216_powered_on = true, aw20216_need_power_off = false;
 
-bool aw20216_power_status_get()
+inline bool aw20216_power_status_get()
 {
     return aw20216_powered_on;
 }
 
-void aw20216_power_toggle(bool status)
+inline void aw20216_power_toggle(bool status)
 {
     if (status) {
         writePinHigh(DRIVER_1_EN);
@@ -55,12 +55,13 @@ void aw20216_power_check()
     }
 }
 
-void aw20216_delayed_power_off_set()
+inline void aw20216_delayed_power_off_set()
 {
     aw20216_need_power_off = true;
 }
 
-void aw20216_delayed_power_off_excute()
+// this function is designed to be excuted from isr
+__HIGH_CODE void aw20216_delayed_power_off_excute()
 {
     if (aw20216_need_power_off) {
         aw20216_power_toggle(false);
