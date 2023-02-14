@@ -43,8 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define USBD_MAX_POWER     100
 #define USBD_LANGID_STRING 1033
 
-#define SUCCESS (0)
-
 #define USB_CONFIG_SIZE (9 + MSC_DESCRIPTOR_LEN)
 
 void my_memcpy(void *dst, const void *src, uint32_t l);
