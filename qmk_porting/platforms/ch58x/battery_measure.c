@@ -109,41 +109,10 @@ __attribute__((weak)) __INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
 
 __attribute__((noinline)) static void battery_critical_prerequisite()
 {
-    pin_t pin_a_mask = GPIO_Pin_All, pin_b_mask = GPIO_Pin_All;
-    pin_t pin_a_status = GPIOA_ReadPort(), pin_b_status = GPIOB_ReadPort();
-
-#if defined LSE_ENABLE && LSE_ENABLE
-    pin_a_mask &= ~bX32KI;
-    pin_a_mask &= ~bX32KO;
-#endif
-#ifdef BATTERY_MEASURE_PIN
-    if (BATTERY_MEASURE_PIN & 0x80000000) {
-        pin_b_mask &= ~(BATTERY_MEASURE_PIN & 0x7FFFFFFF);
-    } else {
-        pin_a_mask &= ~(BATTERY_MEASURE_PIN & 0x7FFFFFFF);
-    }
-#endif
-    for (uint8_t i = 0; i < 32; i++) {
-        pin_t pin = (1UL << i);
-
-        if (pin & pin_a_mask) {
-            if (pin & pin_a_status) {
-                setPinInputHigh(pin);
-            } else {
-                setPinInputLow(pin);
-            }
-        }
-        if (pin & pin_b_mask) {
-            if (pin & pin_b_status) {
-                setPinInputHigh(pin | 0x80000000);
-            } else {
-                setPinInputLow(pin | 0x80000000);
-            }
-        }
-    }
 #if __BUILDING_APP__
     shutdown_user();
 #endif
+    battery_critical_gpio_prerequisite();
 
     uint8_t temp = RB_WAKE_EV_MODE;
 

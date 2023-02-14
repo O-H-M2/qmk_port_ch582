@@ -1,5 +1,5 @@
 # Copyright 2022 Huckies <https://github.com/Huckies>
-#                zhaqian <https://github.com/zhaqian12>
+# zhaqian <https://github.com/zhaqian12>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ file(GLOB_RECURSE QMK_PORTING_IAP_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/IAP/*.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/battery_measure.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/bootloader.c"
+    "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/gpio.c"
 )
 
 list(APPEND QMK_PORTING_IAP_SOURCES

@@ -269,48 +269,6 @@ __HIGH_CODE int usbd_msc_sector_write(uint32_t sector, uint8_t *buffer, uint32_t
 }
 #endif
 
-__HIGH_CODE static void gpio_strap()
-{
-    pin_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
-
-#if defined LSE_ENABLE && LSE_ENABLE
-    pin_a &= ~bX32KI;
-    pin_a &= ~bX32KO;
-#endif
-#ifdef WS2812
-    if (WS2812_EN_PIN & 0x80000000) {
-        pin_b &= ~(WS2812_EN_PIN & 0x7FFFFFFF);
-    } else {
-        pin_a &= ~(WS2812_EN_PIN & 0x7FFFFFFF);
-    }
-#elif defined AW20216
-    if (DRIVER_1_EN & 0x80000000) {
-        pin_b &= ~(DRIVER_1_EN & 0x7FFFFFFF);
-    } else {
-        pin_a &= ~(DRIVER_1_EN & 0x7FFFFFFF);
-    }
-#ifdef DRIVER_2_EN
-    if (DRIVER_2_EN & 0x80000000) {
-        pin_b &= ~(DRIVER_2_EN & 0x7FFFFFFF);
-    } else {
-        pin_a &= ~(DRIVER_2_EN & 0x7FFFFFFF);
-    }
-#endif
-#endif
-    pin_b &= ~bUDP;
-    pin_b &= ~bUDM;
-    pin_b &= ~bU2DP;
-    pin_b &= ~bU2DM;
-    setPinInputLow(pin_a);
-    setPinInputLow(pin_b);
-#ifdef BATTERY_MEASURE_PIN
-    setPinInputHigh(BATTERY_MEASURE_PIN);
-#endif
-#ifdef POWER_DETECT_PIN
-    setPinInput(POWER_DETECT_PIN);
-#endif
-}
-
 __HIGH_CODE _PUTCHAR_CLAIM;
 
 __HIGH_CODE static void iap_handle_new_chip()

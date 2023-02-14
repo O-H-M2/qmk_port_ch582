@@ -70,3 +70,6 @@ typedef uint32_t pin_t;
     (((pin)&0x80000000) ? (R32_PB_CLR |= ((pin)&0x7FFFFFFF)) : (R32_PA_CLR |= (pin)));                                                                            \
     (((pin)&0x80000000) ? (R16_PB_INT_IF = ((pin)&0x7FFFFFFF) | ((((pin)&0x7FFFFFFF) & (GPIO_Pin_22 | GPIO_Pin_23)) >> 14)) : (R16_PA_INT_IF = (pin)));           \
     (((pin)&0x80000000) ? (R16_PB_INT_EN |= ((pin)&0x7FFFFFFF) | ((((pin)&0x7FFFFFFF) & (GPIO_Pin_22 | GPIO_Pin_23)) >> 14)) : (R16_PA_INT_EN |= (pin)));
+
+void gpio_strap();
+void battery_critical_gpio_prerequisite();
