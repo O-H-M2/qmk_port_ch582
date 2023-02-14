@@ -82,20 +82,22 @@ void spi_init()
 __INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
 {
     R8_SPI0_INTER_EN = 0;
-    R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
-    R8_SPI0_INT_FLAG = RB_SPI_IF_CNT_END;
-    if (spi_delayed_stop) {
-        spi_stop_internal();
-        spi_delayed_stop = false;
+    if (R8_SPI0_INT_FLAG & RB_SPI_IF_CNT_END) {
+        R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
+        R8_SPI0_INT_FLAG |= RB_SPI_IF_CNT_END;
+        if (spi_delayed_stop) {
+            spi_stop_internal();
+            spi_delayed_stop = false;
+        }
+        spi_master_post_transmit_cb();
+        spi_transfering = false;
     }
-    spi_master_post_transmit_cb();
-    spi_transfering = false;
 }
 
 bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
 {
     if (currentSlavePin != NO_PIN) {
-        PRINT("Former SPI transfer hasn't finished yet.\n");
+        PRINT("Former SPI transfer hasn't finished yet!\n");
 
         uint16_t timeout_timer = timer_read();
 
@@ -144,7 +146,6 @@ bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
             return false;
     }
 
-    currentSlavePin = slavePin;
     if (divisor >= 2 && divisor <= 255) {
         R8_SPI0_CLOCK_DIV = divisor;
     } else {
@@ -154,6 +155,7 @@ bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
 
     spi_master_pre_transmit_cb();
 
+    currentSlavePin = slavePin;
     writePinLow(currentSlavePin);
     setPinOutput(currentSlavePin);
 
@@ -166,6 +168,7 @@ spi_status_t spi_write(uint8_t data)
 
     while (spi_transfering) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
+            PRINT("SPI write timeout.\n");
             return SPI_STATUS_TIMEOUT;
         }
     }
@@ -175,6 +178,7 @@ spi_status_t spi_write(uint8_t data)
 
     while (R8_SPI0_FIFO_COUNT) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
+            PRINT("SPI write timeout.\n");
             return SPI_STATUS_TIMEOUT;
         }
     }
@@ -188,6 +192,7 @@ spi_status_t spi_read()
 
     while (spi_transfering) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
+            PRINT("SPI read timeout.\n");
             return SPI_STATUS_TIMEOUT;
         }
     }
@@ -197,6 +202,7 @@ spi_status_t spi_read()
 
     while (R8_SPI0_FIFO_COUNT) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
+            PRINT("SPI read timeout.\n");
             return SPI_STATUS_TIMEOUT;
         }
     }
@@ -211,6 +217,15 @@ spi_status_t spi_transmit(const uint8_t *data, uint16_t length)
     }
     if (length == 1) {
         return spi_write(data[0]);
+    }
+
+    uint16_t timeout_timer = timer_read();
+
+    while (spi_transfering) {
+        if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
+            PRINT("SPI transmit timeout.\n");
+            return SPI_STATUS_TIMEOUT;
+        }
     }
 
     spi_transfering = true;
@@ -242,6 +257,15 @@ spi_status_t spi_receive(uint8_t *data, uint16_t length)
         return ret;
     }
 
+    uint16_t timeout_timer = timer_read();
+
+    while (spi_transfering) {
+        if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
+            PRINT("SPI receive timeout.\n");
+            return SPI_STATUS_TIMEOUT;
+        }
+    }
+
     spi_transfering = true;
 
     R8_SPI0_CTRL_MOD |= RB_SPI_FIFO_DIR;
@@ -260,7 +284,8 @@ spi_status_t spi_receive(uint8_t *data, uint16_t length)
 void spi_stop()
 {
     if (currentSlavePin == NO_PIN) {
-        PRINT("No ongoing SPI transmission.\n");
+        PRINT("No ongoing SPI transmission, will skip.\n");
+        return;
     }
     if (spi_transfering) {
         spi_delayed_stop = true;
