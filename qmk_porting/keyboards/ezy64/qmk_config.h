@@ -111,6 +111,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef AW20216
+#define AW_GLOBAL_CURRENT_MAX 255
+#define AW_SCALING_MAX        255
+
 #define DRIVER_1_CS B20
 #define DRIVER_1_EN B21
 
