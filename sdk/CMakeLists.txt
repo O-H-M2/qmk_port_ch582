@@ -53,17 +53,17 @@ list(REMOVE_ITEM ch582_sdk_temp
     "${CMAKE_CURRENT_LIST_DIR}/StdPeriphDriver/CH58x_usbdev.c"
 )
 
-if(BUILD_WIRELESS_LIB)
+if(BUILD_WIRELESS_LIB OR NOT BLE_ENABLE AND NOT ESB_ENABLE)
     list(APPEND ch582_sdk_temp
         "${CMAKE_CURRENT_LIST_DIR}/HAL/MCU.c"
         "${CMAKE_CURRENT_LIST_DIR}/HAL/RTC.c"
     )
+    target_sources(CH582_APP INTERFACE
+        ${ch582_sdk_temp}
+        "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583.S"
+    )
 endif()
 
-target_sources(CH582_APP INTERFACE
-    ${ch582_sdk_temp}
-    "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583.S"
-)
 target_sources(CH582_IAP INTERFACE
     ${ch582_sdk_temp}
     "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583.S"
