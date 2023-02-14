@@ -1,5 +1,5 @@
 # Copyright 2022 Huckies <https://github.com/Huckies>
-#                zhaqian <https://github.com/zhaqian12>
+# zhaqian <https://github.com/zhaqian12>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -96,8 +96,8 @@ if(RGBLIGHT_ENABLE)
 
     if(RGBLIGHT_DRIVER STREQUAL "WS2812")
         set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
-    elseif(RGBLIGHT_DRIVER STREQUAL "AW20216")
-        set(AW20216_REQUIRED ON CACHE BOOL "QMK" FORCE)
+    else()
+        message(FATAL_ERROR "Unsupported RGBLIGHT driver!")
     endif()
 
     message(STATUS "RGBLIGHT_ENABLE")
@@ -260,11 +260,17 @@ endif()
 if(AW20216_REQUIRED)
     add_definitions(-DAW20216)
     message(STATUS "AW20216_REQUIRED")
-    include_directories(${QMK_BASE_DIR}/drivers/led)
-    list(APPEND quantum_SOURCES
-        "${QMK_BASE_DIR}/drivers/led/aw20216.c"
-    )
+
+    # include_directories(${QMK_BASE_DIR}/drivers/led)
+    # list(APPEND quantum_SOURCES
+    # "${QMK_BASE_DIR}/drivers/led/aw20216.c"
+    # )
+    # list(APPEND QMK_PORTING_SOURCES
+    # "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
+    # "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
+    # )
     list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216.c"
         "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
     )
