@@ -9,7 +9,7 @@
 
 static const uint16_t col_values[MATRIX_COLS] = COLS;
 static const uint8_t row_pins[MATRIX_ROWS] = ROWS;
-
+static uint8_t message[2] ;
 static const int msize = MATRIX_ROWS * sizeof(matrix_row_t);
 static matrix_row_t prev_matrix[MATRIX_ROWS];
 
@@ -24,7 +24,8 @@ static inline uint8_t read_rows(void) {
 
 static inline void shift_out(uint16_t value) {
 
-  uint8_t message[2]  = {(value >> 8) & 0xFF ,(uint8_t)(value & 0xFF) };
+  message[0] =   (uint8_t)(value >> 8) & 0xFF;
+  message[1] =   (uint8_t)(value & 0xFF) ;
 
   //writePinLow(SPI_LATCH_PIN);
   spi_start(SPI_LATCH_PIN, true, 3, SPI_DIVISOR);
