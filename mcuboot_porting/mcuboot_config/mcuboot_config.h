@@ -135,7 +135,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *    MCUBOOT_LOG_ERR > MCUBOOT_LOG_WRN > MCUBOOT_LOG_INF > MCUBOOT_LOG_DBG
  */
-#define MCUBOOT_HAVE_LOGGING 0
+// #define MCUBOOT_HAVE_LOGGING
 
 /*
  * Assertions

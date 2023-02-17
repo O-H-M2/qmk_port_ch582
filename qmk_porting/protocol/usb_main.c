@@ -21,12 +21,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "protocol.h"
 #if ESB_ENABLE == 2
 #include "config.h"
+#define memcmp(...) tmos_memcmp(__VA_ARGS__) ? 0 : 1
+#define strlen      tmos_strlen
+#define memset      tmos_memset
+#define memcpy      tmos_memcpy
 #endif
 
 uint8_t keyboard_protocol = 1;
 uint8_t keyboard_idle = 0;
 static uint8_t *hid_descriptor = NULL;
-/*!< hid state ! Data can be sent only when state is idle  */
+
 static struct usbd_interface keyboard_interface;
 #ifdef RGB_RAW_ENABLE
 static struct usbd_interface rgbraw_interface;
@@ -35,7 +39,7 @@ static struct usbd_interface extrakey_interface;
 #ifdef RAW_ENABLE
 static struct usbd_interface qmkraw_interface;
 #endif
-
+/*!< hid state ! Data can be sent only when state is idle  */
 static uint8_t keyboard_state = HID_STATE_IDLE;
 #ifdef RGB_RAW_ENABLE
 static uint8_t rgbraw_state = HID_STATE_IDLE;
@@ -112,6 +116,54 @@ void usb_dc_low_level_init()
     PFIC_EnableIRQ(USB_IRQn);
 }
 
+void usb_dc_low_level_deinit()
+{
+    PFIC_DisableIRQ(USB_IRQn);
+    R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
+    R32_USB_CONTROL = 0;
+    R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
+    DelayMs(10);
+    R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+}
+
+int usb_dc_deinit()
+{
+    usb_dc_low_level_deinit();
+    keyboard_protocol = 1;
+    keyboard_idle = 0;
+    if (hid_descriptor != NULL) {
+        free(hid_descriptor);
+        hid_descriptor = NULL;
+    }
+
+    memset(&keyboard_interface, 0x00, sizeof(keyboard_interface));
+#ifdef RGB_RAW_ENABLE
+    memset(&rgbraw_interface, 0x00, sizeof(rgbraw_interface));
+#endif
+    memset(&extrakey_interface, 0x00, sizeof(extrakey_interface));
+#ifdef RAW_ENABLE
+    memset(&qmkraw_interface, 0x00, sizeof(qmkraw_interface));
+#endif
+    keyboard_state = HID_STATE_IDLE;
+#ifdef RGB_RAW_ENABLE
+    rgbraw_state = HID_STATE_IDLE;
+#endif
+    extrakey_state = HID_STATE_IDLE;
+#ifdef RAW_ENABLE
+    qmkraw_state = HID_STATE_IDLE;
+#endif
+
+    memset(kbd_out_buffer, 0x00, sizeof(kbd_out_buffer));
+#ifdef RGB_RAW_ENABLE
+    memset(rgbraw_out_buffer, 0x00, sizeof(rgbraw_out_buffer));
+#endif
+#ifdef RAW_ENABLE
+    memset(qmkraw_out_buffer, 0x00, sizeof(qmkraw_out_buffer));
+#endif
+
+    return 0;
+}
+
 void init_usb_driver()
 {
     struct usbd_endpoint keyboard_in_ep = {
@@ -176,15 +228,9 @@ void init_usb_driver()
         free(hid_descriptor);
     }
     hid_descriptor = (uint8_t *)malloc(sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2) + sizeof(hid_descriptor_scratch_3));
-#if ESB_ENABLE == 2
-    tmos_memcpy(hid_descriptor, hid_descriptor_scratch_1, sizeof(hid_descriptor_scratch_1));
-    tmos_memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1), hid_descriptor_scratch_2, sizeof(hid_descriptor_scratch_2));
-    tmos_memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2), hid_descriptor_scratch_3, sizeof(hid_descriptor_scratch_3));
-#else
     memcpy(hid_descriptor, hid_descriptor_scratch_1, sizeof(hid_descriptor_scratch_1));
     memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1), hid_descriptor_scratch_2, sizeof(hid_descriptor_scratch_2));
     memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2), hid_descriptor_scratch_3, sizeof(hid_descriptor_scratch_3));
-#endif
 
     usbd_desc_register(hid_descriptor);
 

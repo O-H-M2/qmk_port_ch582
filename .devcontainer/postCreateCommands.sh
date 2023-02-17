@@ -22,4 +22,6 @@ cd ${repo} && git -c submodule."qmk_porting/keyboards_private".update=none submo
 sudo ln -s ${repo}/utils/nrf-command-line-tools-10.19.0_linux-amd64/bin/mergehex /bin/mergehex
 pip3 install -r ${repo}/mcuboot/scripts/requirements.txt
 
+ccache -M 10G
+
 echo "Configuration done!"

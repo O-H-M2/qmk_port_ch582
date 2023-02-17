@@ -36,9 +36,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef DEBUG
 #include <stdio.h>
 #include "printf.h"
-#define PRINT(X...)    printf(X)
+#define PRINT(X...) printf(X)
+#ifndef DEBUG_BAUDRATE
 #define DEBUG_BAUDRATE 460800
-#define PLF_DEBUG      DEBUG
+#endif
+#define PLF_DEBUG DEBUG
 #if DEBUG == Debug_UART0
 #define DBG_INIT         \
     writePinHigh(B7);    \
@@ -130,7 +132,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #else
 #define PRINT(X...)
 #define NO_PRINT
+#ifndef DEBUG_BAUDRATE
 #define DEBUG_BAUDRATE 460800
+#endif
 #define WAIT_FOR_DBG
 #define _PUTCHAR_CLAIM                              \
     void _putchar(char character)                   \
@@ -293,7 +297,7 @@ _Static_assert(BATTERY_INDICATOR_END_INDEX < RGBLED_NUM, "Invalid BATTERY_INDICA
 #define SLEEP_RTC_MAX_TIME (RTC_TIMER_MAX_VALUE - TMOS_TIME_VALID)
 
 #ifdef AW20216
-#define AW_SPI_DIVISOR FREQ_SYS / 10000000
+#define AW_SPI_DIVISOR FREQ_SYS / 5000000
 #endif
 
 #ifndef WS2812

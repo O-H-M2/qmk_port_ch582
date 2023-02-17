@@ -34,10 +34,12 @@ uint8_t keyboard_leds()
 }
 
 static ch582_interface_t ch582_interface = {};
+static ch582_interface_t *last_interface_used = NULL;
 
 void ch582_set_protocol_interface(const ch582_interface_t *interface)
 {
     if (interface != NULL) {
+        last_interface_used = (ch582_interface_t *)interface;
         memcpy(&ch582_interface, interface, sizeof(ch582_interface_t));
     }
 }
@@ -54,9 +56,27 @@ ch582_interface_t *ch582_get_protocol_interface()
 void ch582_toggle_qmk_protocol(bool status)
 {
     if (status) {
+        if (last_interface_used) {
+#ifdef RAW_ENABLE
+            ch582_interface.send_qmk_raw = last_interface_used->send_qmk_raw;
+            ch582_interface.receive_qmk_raw = last_interface_used->receive_qmk_raw;
+#endif
+#ifdef RGB_RAW_ENABLE
+            ch582_interface.send_rgb_raw = last_interface_used->send_rgb_raw;
+            ch582_interface.receive_rgb_raw = last_interface_used->receive_rgb_raw;
+#endif
+        }
         host_set_driver(&ch582_interface.ch582_common_driver);
     } else {
         host_set_driver(NULL);
+#ifdef RAW_ENABLE
+        ch582_interface.send_qmk_raw = NULL;
+        ch582_interface.receive_qmk_raw = NULL;
+#endif
+#ifdef RGB_RAW_ENABLE
+        ch582_interface.send_rgb_raw = NULL;
+        ch582_interface.receive_rgb_raw = NULL;
+#endif
     }
 }
 
@@ -101,14 +121,15 @@ void protocol_setup()
 
 void protocol_pre_init()
 {
-    host_set_driver(&ch582_interface.ch582_common_driver);
+    ch582_toggle_qmk_protocol(false);
+    if (ch582_interface.ch582_protocol_init) {
+        ch582_interface.ch582_protocol_init();
+    }
 }
 
 void protocol_post_init()
 {
-    if (ch582_interface.ch582_protocol_init) {
-        ch582_interface.ch582_protocol_init();
-    }
+    ch582_toggle_qmk_protocol(true);
 }
 
 __HIGH_CODE void protocol_task()

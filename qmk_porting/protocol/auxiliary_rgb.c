@@ -34,6 +34,7 @@ extern bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
 void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
 {
     bool send = false;
+    extern int usbd_deinitialize();
 
     switch (*data) {
         case OPENRGB_GET_PROTOCOL_VERSION ... OPENRGB_DIRECT_MODE_SET_LEDS:
@@ -46,11 +47,24 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
         default:
 #ifdef RAW_ENABLE
             PRINT("\n **** Unhandled! ****\n\n");
-            soft_reset_keyboard();
-// pass it to RAW interface
-// raw_hid_receive(data, QMKRAW_OUT_EP_SIZE);
+#ifdef USB_ENABLE
+            if (kbd_protocol_type == kbd_protocol_usb) {
+                usbd_deinitialize();
+                init_usb_driver();
+            }
 #endif
-            break;
+#ifdef ESB_ENABLE
+            if (kbd_protocol_type == kbd_protocol_esb) {
+#if ESB_ENABLE == 1
+                reenumerate_dongle_esb();
+#elif ESB_ENABLE == 2
+                usbd_deinitialize();
+                init_usb_driver();
+#endif
+            }
+#endif
+#endif
+            return;
     }
 
     if (send) {

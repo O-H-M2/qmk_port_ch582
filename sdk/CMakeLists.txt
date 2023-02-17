@@ -1,3 +1,18 @@
+# Copyright 2022 Huckies <https://github.com/Huckies>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 cmake_minimum_required(VERSION 3.20)
 
 # Debug message
@@ -38,17 +53,17 @@ list(REMOVE_ITEM ch582_sdk_temp
     "${CMAKE_CURRENT_LIST_DIR}/StdPeriphDriver/CH58x_usbdev.c"
 )
 
-if(BUILD_WIRELESS_LIB)
+if(BUILD_WIRELESS_LIB OR(NOT BLE_ENABLE AND NOT ESB_ENABLE))
     list(APPEND ch582_sdk_temp
         "${CMAKE_CURRENT_LIST_DIR}/HAL/MCU.c"
         "${CMAKE_CURRENT_LIST_DIR}/HAL/RTC.c"
     )
+    target_sources(CH582_APP INTERFACE
+        ${ch582_sdk_temp}
+        "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583.S"
+    )
 endif()
 
-target_sources(CH582_APP INTERFACE
-    ${ch582_sdk_temp}
-    "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583.S"
-)
 target_sources(CH582_IAP INTERFACE
     ${ch582_sdk_temp}
     "${CMAKE_CURRENT_LIST_DIR}/Startup/startup_CH583.S"

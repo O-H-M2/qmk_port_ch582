@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "CH58x_gpio.h"
 
-#define NO_PIN UINT32_MAX
+#define NO_PIN 0x00
 
 #define A0  (GPIO_Pin_0)
 #define A1  (GPIO_Pin_1)

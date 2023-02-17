@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MCUBOOT_LOG_LEVEL MCUBOOT_LOG_LEVEL_DEBUG
 #endif
 
-#if !MCUBOOT_HAVE_LOGGING
+#if !defined MCUBOOT_HAVE_LOGGING
 #undef MCUBOOT_LOG_LEVEL
 #define MCUBOOT_LOG_LEVEL MCUBOOT_LOG_LEVEL_OFF
 #endif

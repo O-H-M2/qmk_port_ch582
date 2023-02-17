@@ -96,6 +96,7 @@ void bootloader_select_boot_mode()
 
     //! TODO: for test only!
     // mode = BOOTLOADER_BOOT_MODE_BLE;
+    // mode = BOOTLOADER_BOOT_MODE_ESB;
 
     switch (mode) {
 #ifdef USB_ENABLE

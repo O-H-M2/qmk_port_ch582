@@ -83,7 +83,15 @@
         "action_code.h": "c",
         "raw_hid.h": "c",
         "auxiliary_rgb.h": "c",
-        "usb_descriptors.h": "c"
+        "usb_descriptors.h": "c",
+        "config_rp2040.h": "c",
+        "config_avr.h": "c",
+        "ch58x_gpio.h": "c",
+        "mcuconf.h": "c",
+        "halconf.h": "c",
+        "aw20216_supplement.h": "c",
+        "aw20216.h": "c",
+        "typeinfo": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,

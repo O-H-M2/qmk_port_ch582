@@ -38,6 +38,8 @@ typedef int16_t spi_status_t;
 extern "C" {
 #endif
 
+void spi_master_pre_transmit_cb();
+void spi_master_post_transmit_cb();
 void spi_init();
 bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor);
 spi_status_t spi_write(uint8_t data);

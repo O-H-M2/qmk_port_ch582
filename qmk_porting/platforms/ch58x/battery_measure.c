@@ -107,27 +107,23 @@ __attribute__((weak)) __INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
     R16_PB_INT_IF = R16_PB_INT_IF;
 }
 
-__attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
+__attribute__((noinline)) static void battery_critical_prerequisite()
 {
-    uint8_t temp = RB_WAKE_EV_MODE;
-
 #if __BUILDING_APP__
-    uint32_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
-
-#if defined LSE_ENABLE && LSE_ENABLE
-    pin_a &= ~bX32KI;
-    pin_a &= ~bX32KO;
-#endif
-    setPinInputLow(pin_a);
-    setPinInputLow(pin_b);
     shutdown_user();
 #endif
+    battery_critical_gpio_prerequisite();
+
+    uint8_t temp = RB_WAKE_EV_MODE;
+
 #ifdef POWER_DETECT_PIN
     temp |= RB_SLP_GPIO_WAKE;
     if (POWER_DETECT_PIN & 0x80000000) {
+        PFIC_DisableIRQ(GPIO_A_IRQn);
         PFIC_EnableIRQ(GPIO_B_IRQn);
     } else {
         PFIC_EnableIRQ(GPIO_A_IRQn);
+        PFIC_DisableIRQ(GPIO_B_IRQn);
     }
     setPinInputLow(POWER_DETECT_PIN);
     setPinInterruptRisingEdge(POWER_DETECT_PIN);
@@ -137,6 +133,11 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
         R8_SLP_WAKE_CTRL = temp;
         sys_safe_access_disable();
     } while (R8_SLP_WAKE_CTRL != temp);
+}
+
+__attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
+{
+    battery_critical_prerequisite();
 
     uint8_t x32Kpw, x32Mpw;
 
