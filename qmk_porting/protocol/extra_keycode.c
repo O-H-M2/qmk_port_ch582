@@ -44,32 +44,32 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
         return false;
     }
 
-    if (record->event.pressed) {
-        switch (keycode) {
+    switch (keycode) {
 #ifdef USB_ENABLE
-            case USB_MODE:
+        case USB_MODE:
+            if (record->event.pressed) {
                 if (kbd_protocol_type != kbd_protocol_usb) {
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
                     soft_reset_keyboard();
                 }
-                return false;
+            }
+            return false;
 #endif
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
 #ifdef BLE_ENABLE
-            case BLE_SLOT0 ...(BLE_SLOT0 + BLE_SLOT_NUM - 1):
-            case BLE_ALL_CLEAR:
+        case BLE_SLOT0 ...(BLE_SLOT0 + BLE_SLOT_NUM - 1):
+        case BLE_ALL_CLEAR:
 #endif
 #ifdef ESB_ENABLE
-            case ESB_MODE:
+        case ESB_MODE:
 #endif
 #ifdef BATTERY_MEASURE_PIN
-            case BATTERY_INDICATOR:
+        case BATTERY_INDICATOR:
 #endif
-                wireless_process_record(keycode, record);
+            wireless_process_record(keycode, record);
 #endif
-            default:
-                break;
-        }
+        default:
+            break;
     }
 
     return true;
