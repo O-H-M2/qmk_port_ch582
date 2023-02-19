@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
 // #define LSE_LOAD_CAPACITANCE 7   // in pF unit
 // #define I2C_IO_REMAPPING
+#undef SPI_IO_REMAPPING
 // #define SPI_IO_REMAPPING
 
 #define TAPPING_TOGGLE 2
@@ -64,6 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BATTERY_MEASURE_PIN A2
 #define POWER_DETECT_PIN    B12
 */
+
 #define SPI_DRIVER SPID0
 
 #define SPI_LATCH_PIN A12
@@ -71,7 +73,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPI_MISO_PIN A15
 #define SPI_MOSI_PIN A14
 
-#define SPI_DIVISOR 16
+#define SPI_DIVISOR 32
 
 #define LED_CAPS_LOCK_PIN A8
 
@@ -85,5 +87,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #define DEBOUNCE 5
+
+/*
+#define DEBUG                Debug_UART1
+#define DEBUG_BAUDRATE       460800
+*/
+#ifdef OLED_ENABLE
+#    define OLED_DISPLAY_128X32
+#define I2C1_SCL_PIN        GP7
+#define I2C1_SDA_PIN        GP6
+#define I2C_DRIVER I2CD2
+#define OLED_BRIGHTNESS 128
+#define OLED_FONT_H "keyboards/mlego/m65/lib/glcdfont.c"
+#endif
 
 #include "pre_handler.h"

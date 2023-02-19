@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include "print.h"
 #include "wait.h"
+
 const uint32_t PROGMEM unicode_map[] = {
     [la]  = 0x03B1 , // α
     [lA]  = 0x0307  //
@@ -31,7 +32,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       TT(_LWR),  TT(_RSE)),
 
   [_LWR] = LAYOUT_ortho_2x2(
-       XP(la,lA), KC_3,
+       XP(la,lA), KC_CAPS,
        _______,  _______ ),
 
   [_RSE] = LAYOUT_ortho_2x2(

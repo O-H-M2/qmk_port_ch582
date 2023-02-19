@@ -56,13 +56,13 @@ void set_led_toggle(const uint8_t, const bool);
 
 static inline void led_lwr(const bool on) {
 #ifdef LED_NUM_LOCK_PIN
-    writePin(LED_NUM_LOCK_PIN, !on);
+    writePin(LED_NUM_LOCK_PIN, on);
 #endif
 }
 
 static inline void led_rse(const bool on) {
 #ifdef LED_SCROLL_LOCK_PIN
-    writePin(LED_SCROLL_LOCK_PIN, !on);
+    writePin(LED_SCROLL_LOCK_PIN, on);
 #endif
 }
 static inline void led_caps(const bool on) {
