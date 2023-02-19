@@ -96,7 +96,9 @@
         "usb_interface.h": "c",
         "rgb_matrix.h": "c",
         "usb_ch58x_usbfs_reg.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "process_unicode_common.h": "c",
+        "unicode.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
