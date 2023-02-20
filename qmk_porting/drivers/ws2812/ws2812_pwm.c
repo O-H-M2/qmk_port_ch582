@@ -277,8 +277,6 @@ static void ws2812_init(void)
         ws2812_frame_buffer[i + WS2812_COLOR_BIT_N] = 0; // All reset bits are zero
 
     setPinOutput(RGB_DI_PIN);
-    writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
-    setPinOutput(WS2812_EN_PIN);
 
     WS2812_PWM_CNT_END_REG = WS2812_PWM_PERIOD;
     WS2812_DMA_CONFIG(ENABLE, ws2812_frame_buffer[0], ws2812_frame_buffer[WS2812_BIT_N + 1]);
@@ -337,6 +335,7 @@ void ws2812_power_toggle(bool status)
         return;
     }
 
+#ifdef WS2812_EN_PIN
     if (status) {
         writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
         setPinOutput(WS2812_EN_PIN);
@@ -344,5 +343,7 @@ void ws2812_power_toggle(bool status)
         writePin(WS2812_EN_PIN, WS2812_EN_LEVEL ? 0 : 1);
         setPinOutput(WS2812_EN_PIN);
     }
+#endif
+
     ws2812_powered_on = status;
 }
