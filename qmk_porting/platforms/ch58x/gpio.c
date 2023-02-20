@@ -25,7 +25,7 @@ __HIGH_CODE void gpio_strap()
     pin_a &= ~bX32KI;
     pin_a &= ~bX32KO;
 #endif
-#ifdef WS2812
+#if defined(WS2812) && defined(WS2812_EN_PIN)
     if (WS2812_EN_PIN & 0x80000000) {
         pin_b &= ~(WS2812_EN_PIN & 0x7FFFFFFF);
     } else {

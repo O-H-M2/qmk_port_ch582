@@ -11,7 +11,9 @@
 
 #ifndef WS2812_PWM_DRIVER
 #define WS2812_PWM_DRIVER 1 // TMR1
+#ifndef RGB_DI_PIN
 #define RGB_DI_PIN        A10
+#endif
 #endif
 
 static volatile bool ws2812_inited = false, ws2812_powered_on = false, ws2812_need_power_off = false;
