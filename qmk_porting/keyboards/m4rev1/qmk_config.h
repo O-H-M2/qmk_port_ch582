@@ -69,9 +69,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LED_NUM_LOCK_PIN A9
 #define LED_SCROLL_LOCK_PIN B15
 
+/*
+*/
+
+#ifdef RGBLIGHT_ENABLE
 #define WS2812_EN_PIN   B4
 #define WS2812_EN_LEVEL 1
-#ifdef RGBLIGHT_ENABLE
+#define RGB_DI_PIN B7
+#define RGBLIGHT_LAYERS
 #define RGBLED_NUM        20
 #define WS2812_BYTE_ORDER WS2812_BYTE_ORDER_RGB
 // #define RGBLIGHT_ANIMATIONS

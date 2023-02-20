@@ -129,28 +129,6 @@ static const char PROGMEM m65_logo[] = {
 
 #endif
 
-#ifdef RGBLIGHT_ENABLE
-
-void set_rgb_layers(layer_state_t state){
-
-    rgblight_set_layer_state(0, layer_state_cmp(state, _QW));
-    rgblight_set_layer_state(1, layer_state_cmp(state, _LWR));
-    rgblight_set_layer_state(2, layer_state_cmp(state, _RSE));
-    rgblight_set_layer_state(3, layer_state_cmp(state, _ADJ));
-
-}
-
-void set_default_rgb_layers(layer_state_t state){
-    rgblight_set_layer_state(0, layer_state_cmp(state, _QW));
-}
-
-const rgblight_segment_t * const* my_rgb(void){
-    return my_rgb_layers;
-}
-
-#endif
-
-
 #ifdef OLED_ENABLE
 
 void init_timer(void){
