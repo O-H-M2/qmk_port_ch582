@@ -20,7 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum_keycodes.h"
 #include "action.h"
 #include "quantum.h"
-#include "battery_measure.h"
 
 enum {
 #ifdef VIA_ENABLE
@@ -33,14 +32,18 @@ enum {
     BLE_SLOT1,
     BLE_SLOT2,
     BLE_SLOT3,
-    BLE_CLEAR_SLOT0,
-    BLE_CLEAR_SLOT1,
-    BLE_CLEAR_SLOT2,
-    BLE_CLEAR_SLOT3,
+    BLE_SLOT4,
+    BLE_SLOT5,
+    BLE_SLOT6,
+    BLE_SLOT7,
     BLE_ALL_CLEAR,
     ESB_MODE,
     BATTERY_INDICATOR,
+#ifdef VIA_ENABLE
     CUSTOM_MAX,
+#else
+    NEW_SAFE_RANGE,
+#endif
 };
 
 #ifdef VIA_ENABLE

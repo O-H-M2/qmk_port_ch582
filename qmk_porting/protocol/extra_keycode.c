@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 extern bool process_ble_passcode_kb(uint16_t keycode, keyrecord_t *record);
 #endif
 
-#ifdef BATTERY_MEASURE_PIN
-extern void battery_indicator_toggle(bool status);
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+bool wireless_process_record(uint16_t keycode, keyrecord_t *record);
 #endif
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record)
@@ -44,60 +44,32 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
         return false;
     }
 
-    if (record->event.pressed) {
-        switch (keycode) {
+    switch (keycode) {
 #ifdef USB_ENABLE
-            case USB_MODE:
+        case USB_MODE:
+            if (record->event.pressed) {
                 if (kbd_protocol_type != kbd_protocol_usb) {
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
                     soft_reset_keyboard();
                 }
-                return false;
+            }
+            return false;
 #endif
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
 #ifdef BLE_ENABLE
-            case BLE_SLOT0 ... BLE_SLOT3:
-                hogp_slot_switch(keycode - BLE_SLOT0);
-                if (kbd_protocol_type != kbd_protocol_ble) {
-                    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
-                    soft_reset_keyboard();
-                }
-                return false;
-            case BLE_CLEAR_SLOT0 ... BLE_CLEAR_SLOT3:
-                if (kbd_protocol_type == kbd_protocol_ble) {
-                    hogp_slot_clear(keycode - BLE_CLEAR_SLOT0);
-                }
-                return false;
-            case BLE_ALL_CLEAR:
-                if (kbd_protocol_type == kbd_protocol_ble) {
-                    hogp_slot_clear(UINT8_MAX);
-                }
-                return false;
+        case BLE_SLOT0 ...(BLE_SLOT0 + BLE_SLOT_NUM - 1):
+        case BLE_ALL_CLEAR:
 #endif
 #ifdef ESB_ENABLE
-            case ESB_MODE:
-                if (kbd_protocol_type != kbd_protocol_esb) {
-                    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
-                    soft_reset_keyboard();
-                }
-                return false;
+        case ESB_MODE:
 #endif
 #ifdef BATTERY_MEASURE_PIN
-            case BATTERY_INDICATOR:
-#ifdef BLE_ENABLE
-                if (kbd_protocol_type == kbd_protocol_ble) {
-                    battery_indicator_toggle(true);
-                }
+        case BATTERY_INDICATOR:
 #endif
-#ifdef ESB_ENABLE
-                if (kbd_protocol_type == kbd_protocol_esb) {
-                    battery_indicator_toggle(true);
-                }
+            wireless_process_record(keycode, record);
 #endif
-                return false;
-#endif
-            default:
-                break;
-        }
+        default:
+            break;
     }
 
     return true;

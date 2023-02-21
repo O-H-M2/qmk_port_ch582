@@ -45,6 +45,26 @@ project(qmk_port_ch582 C CXX ASM)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_C_STANDARD 99)
 
+add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
+add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
+add_compile_options(--param highcode-gen-section-name=1)
+add_compile_options(-Wall -Wno-comment -Wno-enum-compare)
+add_compile_options(-fdiagnostics-color=always)
+
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+    message(STATUS "Maximum optimization for speed")
+    add_compile_options(-Ofast)
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+    message(STATUS "Maximum optimization for speed, debug info included")
+    add_compile_options(-Ofast -g)
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
+    message(STATUS "Maximum optimization for size")
+    add_compile_options(-Os)
+else()
+    message(STATUS "Minimal optimization, debug info included")
+    add_compile_options(-Og -g)
+endif()
+
 execute_process(COMMAND git rev-parse --short HEAD
     TIMEOUT 5
     OUTPUT_VARIABLE GIT_VERSION
@@ -95,26 +115,6 @@ endif()
 
 add_definitions(-DKEYMAP_C="keymap.c")
 add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
-
-add_compile_options(-march=rv32imac -mabi=ilp32 -mcmodel=medany -msmall-data-limit=8 -mno-save-restore -std=gnu99)
-add_compile_options(-fmessage-length=0 -fsigned-char -ffunction-sections -fdata-sections -fno-common)
-add_compile_options(--param highcode-gen-section-name=1)
-add_compile_options(-Wall -Wno-comment -Wno-enum-compare)
-add_compile_options(-fdiagnostics-color=always)
-
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
-    message(STATUS "Maximum optimization for speed")
-    add_compile_options(-Ofast)
-elseif("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
-    message(STATUS "Maximum optimization for speed, debug info included")
-    add_compile_options(-Ofast -g)
-elseif("${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
-    message(STATUS "Maximum optimization for size")
-    add_compile_options(-Os)
-else()
-    message(STATUS "Minimal optimization, debug info included")
-    add_compile_options(-Og -g)
-endif()
 
 function(include_sub_directories_recursively root_dir)
     if(IS_DIRECTORY ${root_dir})
