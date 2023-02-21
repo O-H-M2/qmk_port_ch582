@@ -94,7 +94,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * even if no upgrade was performed. This is recommended if the boot
  * time penalty is acceptable.
  */
-#define MCUBOOT_VALIDATE_PRIMARY_SLOT
+/* #define MCUBOOT_VALIDATE_PRIMARY_SLOT */
 
 /*
  * Flash abstraction

@@ -43,6 +43,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AUXILIARY_RGB_STARTUP_BLUE 224
 #endif
 
+extern uint8_t auxiliary_rgb_tx_buffer[];
+
 void rgb_raw_hid_receive(uint8_t *data, uint8_t length);
 void rgb_raw_hid_send(uint8_t *data, uint8_t length);
 

@@ -64,8 +64,8 @@ void usbd_hid_kbd_in_callback(uint8_t ep, uint32_t nbytes)
 
 void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 {
-    usbd_ep_start_read(ep, kbd_out_buffer, KBD_OUT_EP_SIZE);
     keyboard_leds_set(kbd_out_buffer[0]);
+    usbd_ep_start_read(ep, kbd_out_buffer, KBD_OUT_EP_SIZE);
 }
 
 #ifdef RGB_RAW_ENABLE
@@ -76,8 +76,8 @@ void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 
 void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
-    usbd_ep_start_read(ep, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
     receive_rgb_raw(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
+    usbd_ep_start_read(ep, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
 }
 #endif
 
@@ -94,8 +94,8 @@ void usbd_hid_qmk_raw_in_callback(uint8_t ep, uint32_t nbytes)
 
 void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
-    usbd_ep_start_read(ep, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
     receive_qmk_raw(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
+    usbd_ep_start_read(ep, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 }
 #endif
 
