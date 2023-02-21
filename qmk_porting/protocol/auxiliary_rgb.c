@@ -27,21 +27,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // bool g_auxiliary_rgb_anim_playing = false;
 
 static RGB *auxiliary_rgb_color_buffer = NULL;
+uint8_t auxiliary_rgb_tx_buffer[RGBRAW_EP_SIZE] = {};
 
 extern bool openrgb_command_handler(uint8_t *data, uint8_t length);
 extern bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
 
 void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
 {
-    bool send = false;
+    bool need_response = false;
     extern int usbd_deinitialize();
 
     switch (*data) {
         case OPENRGB_GET_PROTOCOL_VERSION ... OPENRGB_DIRECT_MODE_SET_LEDS:
-            send = openrgb_command_handler(data, length);
+            need_response = openrgb_command_handler(data, length);
             break;
         case GET_QMK_VERSION ... GET_FIRMWARE_TYPE:
-             send = signal_rgb_command_handler(data, length);
+             need_response = signal_rgb_command_handler(data, length);
              break;
         
         default:
@@ -67,7 +68,7 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
             return;
     }
 
-    if (send) {
+    if (need_response) {
         rgb_raw_hid_send(data, length);
     }
 }
