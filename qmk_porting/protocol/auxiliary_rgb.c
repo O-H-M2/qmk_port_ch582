@@ -42,9 +42,9 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
             need_response = openrgb_command_handler(data, length);
             break;
         case GET_QMK_VERSION ... GET_FIRMWARE_TYPE:
-             need_response = signal_rgb_command_handler(data, length);
-             break;
-        
+            need_response = signal_rgb_command_handler(data, length);
+            break;
+
         default:
 #ifdef RAW_ENABLE
             PRINT("\n **** Unhandled! ****\n\n");
@@ -69,7 +69,7 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
     }
 
     if (need_response) {
-        rgb_raw_hid_send(data, length);
+        rgb_raw_hid_send(auxiliary_rgb_tx_buffer, length);
     }
 }
 
