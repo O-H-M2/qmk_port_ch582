@@ -1,3 +1,21 @@
+/*
+Copyright 2023 OctupusZ <https://github.com/OctupusZ>
+Copyright 2020 Kasper
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #pragma once
 
 #include "usb_main.h"
@@ -5,8 +23,7 @@
 #include "auxiliary_rgb.h"
 
 #define SINGALRGB_EPSIZE 64
-enum signalrgb_commands
-{
+enum signalrgb_commands {
     GET_QMK_VERSION = 0x21,
     GET_PROTOCOL_VERSION = 0x22,
     GET_UNIQUE_IDENTIFIER = 0x23,
@@ -28,17 +45,10 @@ enum signalrgb_responses //These are a bit clunky right now. Could use improveme
     DEVICE_UNIQUE_IDENTIFIER_BYTE_1 = 0,
     DEVICE_UNIQUE_IDENTIFIER_BYTE_2 = 0,
     DEVICE_UNIQUE_IDENTIFIER_BYTE_3 = 0,
-    FIRMWARE_TYPE_BYTE = 1, 
+    FIRMWARE_TYPE_BYTE = 1,
     DEVICE_ERROR_LEDS = 255, //Error code to show that there are more leds than a packet will allow.
 };
 bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
-void get_qmk_version(void);
-void get_signalrgb_protocol_version(void);
-void get_unique_identifier(void);
-void led_streaming(uint8_t *data);
-void signalrgb_mode_enable(void);
-void signalrgb_mode_disable(void);
-void get_total_leds(void);
 
 //Changelogs for Firmware Versions------------------------------------
 //V1.0.1 added detection for the total number of LEDs a board has. Plugins need a rewrite to make use of this change. Rewritten plugins will not function with older firmware.
