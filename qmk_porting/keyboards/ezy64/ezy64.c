@@ -111,11 +111,6 @@ void spi_master_pre_transmit_cb()
     aw20216_power_check();
 }
 
-__HIGH_CODE void spi_master_post_transmit_cb()
-{
-    aw20216_delayed_power_off_excute();
-}
-
 #endif
 
 /* clang-format off */

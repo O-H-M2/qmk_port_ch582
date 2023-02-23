@@ -14,7 +14,7 @@
 #define RGB_DI_PIN        A10
 #endif
 
-static volatile bool ws2812_inited = false, ws2812_powered_on = false, ws2812_need_power_off = false;
+static volatile bool ws2812_inited = false, ws2812_powered_on = false;
 
 #if WS2812_PWM_DRIVER == 1
 #define WS2812_PWM_CNT_END_REG R32_TMR1_CNT_END
@@ -29,13 +29,11 @@ __INTERRUPT __HIGH_CODE void TMR1_IRQHandler()
 {
     R8_TMR1_INTER_EN = 0;
     TMR1_ClearITFlag(RB_TMR_IF_DMA_END);
-    if (ws2812_need_power_off) {
-        ws2812_need_power_off = false;
-        ws2812_power_toggle(false);
+    do {
         sys_safe_access_enable();
         R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR1;
         sys_safe_access_disable();
-    }
+    } while (!(R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR1));
 }
 #elif WS2812_PWM_DRIVER == 2
 #define WS2812_PWM_CNT_END_REG R32_TMR2_CNT_END
@@ -50,13 +48,11 @@ __INTERRUPT __HIGH_CODE void TMR2_IRQHandler()
 {
     R8_TMR2_INTER_EN = 0;
     TMR2_ClearITFlag(RB_TMR_IF_DMA_END);
-    if (ws2812_need_power_off) {
-        ws2812_need_power_off = false;
-        ws2812_power_toggle(false);
+    do {
         sys_safe_access_enable();
         R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR2;
         sys_safe_access_disable();
-    }
+    } while (!(R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR2));
 }
 #else
 // Only TMR1 and TMR2 support DMA and PWM
@@ -287,13 +283,19 @@ static void ws2812_init(void)
 
 static void ws2812_write_led(uint16_t led_number, uint8_t r, uint8_t g, uint8_t b, uint8_t w)
 {
-    sys_safe_access_enable();
 #if WS2812_PWM_DRIVER == 1
-    R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR1;
+    do {
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR1;
+        sys_safe_access_disable();
+    } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR1);
 #elif WS2812_PWM_DRIVER == 2
-    R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR2;
+    do {
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR2;
+        sys_safe_access_disable();
+    } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR2);
 #endif
-    sys_safe_access_disable();
 
     // Write color to frame buffer
     for (uint8_t bit = 0; bit < 8; bit++) {
@@ -316,9 +318,6 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
         ws2812_power_toggle(true);
     }
 
-    if (!rgbled_status_check()) {
-        ws2812_need_power_off = true;
-    }
     for (uint16_t i = 0; i < leds; i++) {
 #ifdef RGBW
         ws2812_write_led(i, ledarray[i].r, ledarray[i].g, ledarray[i].b, ledarray[i].w);

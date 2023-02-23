@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 static volatile pin_t currentSlavePin = NO_PIN;
 static volatile bool spi_transfering = false, spi_delayed_stop = false;
 
-__attribute__((weak)) __HIGH_CODE void spi_master_pre_transmit_cb()
+__attribute__((weak)) void spi_master_pre_transmit_cb()
 {
 }
 

@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rgb_matrix.h"
 #include "aw20216_supplement.h"
 
-static volatile bool aw20216_powered_on = true, aw20216_need_power_off = false;
+static volatile bool aw20216_powered_on = true;
 extern bool AW20216_write(pin_t cs_pin, uint8_t page, uint8_t reg, uint8_t *data, uint8_t len);
 
 inline bool aw20216_power_status_get()
@@ -50,22 +50,5 @@ void aw20216_power_check()
 {
     if (!aw20216_power_status_get()) {
         aw20216_power_toggle(true);
-    }
-    if (!rgb_matrix_is_enabled()) {
-        aw20216_delayed_power_off_set();
-    }
-}
-
-inline void aw20216_delayed_power_off_set()
-{
-    aw20216_need_power_off = true;
-}
-
-// this function is designed to be excuted from isr
-__HIGH_CODE void aw20216_delayed_power_off_excute()
-{
-    if (aw20216_need_power_off) {
-        aw20216_power_toggle(false);
-        aw20216_need_power_off = false;
     }
 }
