@@ -129,11 +129,11 @@ i2c_status_t i2c_receive(uint8_t address, uint8_t *data, uint16_t length, uint16
         }
         if (i == length - 1) {
             I2C_AcknowledgeConfig(DISABLE);
+            i2c_stop();
         }
         data[i] = I2C_ReceiveData();
     }
 
-    i2c_stop();
     I2C_AcknowledgeConfig(ENABLE);
     return I2C_STATUS_SUCCESS;
 }
@@ -216,11 +216,11 @@ i2c_status_t i2c_readReg(uint8_t devaddr, uint8_t regaddr, uint8_t *data, uint16
         }
         if (i == length - 1) {
             I2C_AcknowledgeConfig(DISABLE);
+            i2c_stop();
         }
         data[i] = I2C_ReceiveData();
     }
 
-    i2c_stop();
     I2C_AcknowledgeConfig(ENABLE);
     return I2C_STATUS_SUCCESS;
 }
@@ -284,11 +284,11 @@ i2c_status_t i2c_readReg16(uint8_t devaddr, uint16_t regaddr, uint8_t *data, uin
         }
         if (i == length - 1) {
             I2C_AcknowledgeConfig(DISABLE);
+            i2c_stop();
         }
         data[i] = I2C_ReceiveData();
     }
 
-    i2c_stop();
     I2C_AcknowledgeConfig(ENABLE);
     return I2C_STATUS_SUCCESS;
 }
