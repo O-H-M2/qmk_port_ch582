@@ -91,7 +91,12 @@
         "halconf.h": "c",
         "aw20216_supplement.h": "c",
         "aw20216.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "protocol_usb.h": "c",
+        "usb_interface.h": "c",
+        "rgb_matrix.h": "c",
+        "usb_ch58x_usbfs_reg.h": "c",
+        "stdio.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,

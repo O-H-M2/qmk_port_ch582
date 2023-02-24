@@ -281,7 +281,6 @@ __HIGH_CODE static void iap_handle_new_chip()
     iap_handle_new_wireless_chip();
 #else
     bootloader_set_to_default_mode("Initializing a new keyboard");
-
 #endif
 }
 

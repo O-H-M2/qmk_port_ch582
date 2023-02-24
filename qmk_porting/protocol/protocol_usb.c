@@ -73,6 +73,9 @@ static void send_rgb_raw(uint8_t *data, uint8_t length)
 static void platform_initialize()
 {
 #ifndef PLF_DEBUG
+    while ((R8_UART1_LSR & RB_LSR_TX_ALL_EMP) == 0) {
+        __nop();
+    }
     UART1_Reset();
     setPinInput(A8);
     setPinInput(A9);
