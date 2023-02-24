@@ -121,6 +121,7 @@ void protocol_setup()
 
 void protocol_pre_init()
 {
+    // detach app with protocol interface before initialization is done
     ch582_toggle_qmk_protocol(false);
     if (ch582_interface.ch582_protocol_init) {
         ch582_interface.ch582_protocol_init();

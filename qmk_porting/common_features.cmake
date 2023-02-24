@@ -285,7 +285,8 @@ if(USB_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/port/ch32/usb_ch58x_dc_usbfs.c"
         "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/class/hid/usbd_hid.c"
         "${CMAKE_CURRENT_LIST_DIR}/protocol/protocol_usb.c"
-        "${CMAKE_CURRENT_LIST_DIR}/protocol/usb_main.c"
+        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/usb_main.c"
+        "${CMAKE_CURRENT_LIST_DIR}/protocol/usb_interface.c"
     )
 endif()
 

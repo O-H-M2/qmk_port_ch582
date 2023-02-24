@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "platform_deps.h"
 #include <stdio.h>
+#include "HAL.h"
 #include "gpio.h"
 #include "quantum_keycodes.h"
 #include "battery_measure.h"
@@ -103,6 +104,9 @@ void platform_setup()
     }
 
     bootloader_select_boot_mode();
+
+    CH58X_BLEInit();
+    HAL_Init();
 
     ch582_interface_t *interface = ch582_get_protocol_interface();
 

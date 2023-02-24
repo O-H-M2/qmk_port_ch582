@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 #include "rgb_matrix.h"
-#include "usb_main.h"
+#include "usb_interface.h"
 #include "auxiliary_rgb.h"
 #include "openrgb.h"
 

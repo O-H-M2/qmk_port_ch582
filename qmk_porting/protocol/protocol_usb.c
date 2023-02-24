@@ -15,18 +15,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "gpio.h"
 #include "protocol_usb.h"
-#include "keyboard.h"
 #include "usb_device_state.h"
 #include "keycode_config.h"
 #include "usb_main.h"
+#include "usb_interface.h"
 #ifdef RAW_ENABLE
 #include "raw_hid.h"
 #endif
 #ifdef RGB_RAW_ENABLE
 #include "auxiliary_rgb.h"
 #endif
+
+extern int usbd_deinitialize();
 
 static void send_keyboard(report_keyboard_t *report)
 {
@@ -77,17 +78,15 @@ static void platform_initialize()
         __nop();
     }
     UART1_Reset();
-    setPinInput(A8);
-    setPinInput(A9);
-#endif
-#if CLK_OSC32K
-    Calibration_LSI(Level_128);
+    setPinInputLow(A8);
+    setPinInputLow(A9);
 #endif
 }
 
 static void protocol_setup()
 {
     usb_device_state_init();
+    usb_task_init();
 }
 
 static void protocol_init()
@@ -104,17 +103,9 @@ static void platform_reboot()
     SYS_ResetExecute();
 }
 
-static void protocol_task()
+__HIGH_CODE static void protocol_task()
 {
-    keyboard_task();
-    housekeeping_task();
-#ifdef POWER_DETECT_PIN
-    if (!readPin(POWER_DETECT_PIN)) {
-        // cable removed
-        PRINT("Cable pulled out.\n");
-        platform_reboot();
-    }
-#endif
+    TMOS_SystemProcess();
 }
 
 const ch582_interface_t ch582_protocol_usb = {
