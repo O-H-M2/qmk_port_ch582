@@ -117,6 +117,11 @@ void protocol_setup()
     if (ch582_interface.ch582_protocol_setup) {
         ch582_interface.ch582_protocol_setup();
     }
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type != kbd_protocol_ble) {
+        ch582_protocol_ble.ch582_protocol_setup();
+    }
+#endif
 }
 
 void protocol_pre_init()
