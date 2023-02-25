@@ -175,6 +175,8 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
 
     my_memcpy(handle_data, data, len);
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+    extern void iap_handle_data(uint32_t start_address, uint8_t * data, uint32_t len);
+
     iap_handle_data(addr, handle_data, len);
 #endif
 
@@ -273,26 +275,14 @@ __HIGH_CODE _PUTCHAR_CLAIM;
 
 __HIGH_CODE static void iap_handle_new_chip()
 {
-    uint8_t ret = UserOptionByteConfig(DISABLE, ENABLE, DISABLE, 128);
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+    extern void iap_handle_new_wireless_chip();
 
-    if (ret == SUCCESS) {
-#if !defined ESB_ENABLE || ESB_ENABLE != 2
-        bootloader_set_to_default_mode("Initializing a new keyboard");
+    iap_handle_new_wireless_chip();
 #else
-        bootloader_set_to_default_mode("Initializing a new dongle");
+    bootloader_set_to_default_mode("Initializing a new keyboard");
+
 #endif
-    } else {
-        PRINT("Will reboot and try again.\n");
-    }
-    WAIT_FOR_DBG;
-    // construct a power on reset to make the config effective
-    FLASH_ROM_SW_RESET();
-    sys_safe_access_enable();
-    R16_INT32K_TUNE = 0xFFFF;
-    sys_safe_access_enable();
-    R8_RST_WDOG_CTRL |= RB_SOFTWARE_RESET;
-    sys_safe_access_disable();
-    __builtin_unreachable();
 }
 
 __HIGH_CODE static void iap_jump_app(uint8_t need_cleanup)

@@ -46,15 +46,4 @@ enum openrgb_responses {
     OPENRGB_END_OF_MESSAGE = 100,
 };
 
-// extern RGB g_openrgb_direct_mode_colors[DRIVER_LED_TOTAL];
 bool openrgb_command_handler(uint8_t *data, uint8_t length);
-void openrgb_get_protocol_version(void);
-void openrgb_get_qmk_version(void);
-void openrgb_get_device_info(void);
-void openrgb_get_mode_info(void);
-void openrgb_get_led_info(uint8_t *data);
-void openrgb_get_enabled_modes(void);
-
-void openrgb_set_mode(uint8_t *data);
-void openrgb_direct_mode_set_single_led(uint8_t *data);
-void openrgb_direct_mode_set_leds(uint8_t *data);

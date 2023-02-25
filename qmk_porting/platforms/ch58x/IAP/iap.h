@@ -48,7 +48,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 void my_memcpy(void *dst, const void *src, uint32_t l);
 void my_memset(void *dst, int c, uint32_t n);
 uint32_t my_get_sys_clock();
-void iap_handle_data(uint32_t start_address, uint8_t *data, uint32_t len);
 void board_flash_init();
 uint32_t board_flash_size();
 void board_flash_read(uint32_t addr, void *buffer, uint32_t len);

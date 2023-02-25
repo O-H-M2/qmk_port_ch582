@@ -152,6 +152,7 @@ if(BUILD_WIRELESS_LIB)
     include(${WIRELESS_SUBMODULE_PATH}/gen_lib.cmake)
 else()
     if(NOT ESB_ENABLE OR(ESB_ENABLE AND ESB_ROLE STREQUAL "keyboard"))
+        set(WIRELESS_LIB_INCLUDE ${KEYBOARD_ROOT}/wireless/include)
         set(WIRELESS_LIB_FILE ${KEYBOARD_ROOT}/wireless/lib${keyboard}.a)
         set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
         set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_signed.hex)
@@ -161,6 +162,7 @@ else()
         set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
         set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
     else()
+        set(WIRELESS_LIB_INCLUDE ${KEYBOARD_ROOT}/wireless/include)
         set(WIRELESS_LIB_FILE ${KEYBOARD_ROOT}/wireless/lib${keyboard}_dongle.a)
         set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}_dongle.hex)
         set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_dongle_signed.hex)
@@ -229,14 +231,12 @@ else()
     )
 
     if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-        target_include_directories(${keyboard}.elf PUBLIC
-            ${KEYBOARD_ROOT}/wireless/include
-        )
-        target_include_directories(${keyboard}_IAP.elf PUBLIC
-            ${KEYBOARD_ROOT}/wireless/include
-        )
-        target_link_libraries(${keyboard}.elf PUBLIC ${WIRELESS_LIB_FILE})
-        target_link_libraries(${keyboard}_IAP.elf PUBLIC ${WIRELESS_LIB_FILE})
+        add_library(wireless_lib STATIC IMPORTED)
+        set_property(TARGET wireless_lib PROPERTY IMPORTED_LOCATION ${WIRELESS_LIB_FILE})
+        target_include_directories(wireless_lib INTERFACE ${WIRELESS_LIB_INCLUDE})
+
+        target_link_libraries(${keyboard}.elf PUBLIC wireless_lib)
+        target_link_libraries(${keyboard}_IAP.elf PUBLIC wireless_lib)
     endif()
 
     add_custom_command(TARGET ${keyboard}.elf POST_BUILD

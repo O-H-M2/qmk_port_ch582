@@ -18,7 +18,7 @@
 #define PREAMBLE_SIZE 4
 
 __attribute__((aligned(4))) static uint8_t txbuf[PREAMBLE_SIZE + DATA_SIZE + RESET_SIZE] = { 0 };
-static volatile bool ws2812_inited = false, ws2812_powered_on = false, ws2812_need_power_off = false, spi_transfering = false;
+static volatile bool ws2812_inited = false, ws2812_powered_on = false, spi_transfering = false;
 
 static void ws2812_init()
 {
@@ -45,13 +45,11 @@ __INTERRUPT __HIGH_CODE void SPI0_IRQHandler()
     if (R8_SPI0_INT_FLAG & RB_SPI_IF_CNT_END) {
         R8_SPI0_CTRL_CFG &= ~RB_SPI_DMA_ENABLE;
         R8_SPI0_INT_FLAG |= RB_SPI_IF_CNT_END;
-        if (ws2812_need_power_off) {
-            ws2812_need_power_off = false;
-            ws2812_power_toggle(false);
+        do {
             sys_safe_access_enable();
-            R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI1 | RB_SLP_CLK_SPI0;
+            R8_SLP_CLK_OFF1 |= RB_SLP_CLK_SPI0;
             sys_safe_access_disable();
-        }
+        } while (!(R8_SLP_CLK_OFF1 & RB_SLP_CLK_SPI0));
         spi_transfering = false;
     }
 }
@@ -60,9 +58,11 @@ static void SPI0_StartDMA(uint8_t *pbuf, uint16_t len)
 {
     if (!spi_transfering) {
         spi_transfering = true;
-        sys_safe_access_enable();
-        R8_SLP_CLK_OFF1 &= ~RB_SLP_CLK_SPI0;
-        sys_safe_access_disable();
+        do {
+            sys_safe_access_enable();
+            R8_SLP_CLK_OFF1 &= ~RB_SLP_CLK_SPI0;
+            sys_safe_access_disable();
+        } while (R8_SLP_CLK_OFF1 & RB_SLP_CLK_SPI0);
         R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
         R16_SPI0_DMA_BEG = (uint32_t)pbuf;
         R16_SPI0_DMA_END = (uint32_t)(pbuf + len);
@@ -133,9 +133,6 @@ void ws2812_setleds(LED_TYPE *ledarray, uint16_t leds)
         ws2812_power_toggle(true);
     }
 
-    if (!rgbled_status_check()) {
-        ws2812_need_power_off = true;
-    }
     for (uint8_t i = 0; i < leds; i++) {
         set_led_color_rgb(ledarray[i], i);
     }

@@ -44,7 +44,6 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
         case SIGNALRGB_GET_QMK_VERSION ... SIGNALRGB_GET_FIRMWARE_TYPE:
             need_response = signal_rgb_command_handler(data, length);
             break;
-
         default:
 #ifdef RAW_ENABLE
             PRINT("\n **** Unhandled! ****\n\n");
