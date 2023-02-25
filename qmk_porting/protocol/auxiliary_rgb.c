@@ -41,7 +41,7 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
         case OPENRGB_GET_PROTOCOL_VERSION ... OPENRGB_DIRECT_MODE_SET_LEDS:
             need_response = openrgb_command_handler(data, length);
             break;
-        case GET_QMK_VERSION ... GET_FIRMWARE_TYPE:
+        case SIGNALRGB_GET_QMK_VERSION ... SIGNALRGB_GET_FIRMWARE_TYPE:
             need_response = signal_rgb_command_handler(data, length);
             break;
 

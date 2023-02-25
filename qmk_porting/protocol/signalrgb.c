@@ -16,10 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef RAW_ENABLE
-#error "RAW HID Communication is not enabled" //This should be impossible to run into afaik. Common_features ensures RAWHID is enabled.
-#endif
-
 #include "quantum.h"
 #include <string.h>
 #include "signalrgb.h"
@@ -28,7 +24,7 @@ static uint8_t packet[64];
 
 void get_qmk_version(void) //Grab the QMK Version the board's firmware is built off of
 {
-    packet[0] = GET_QMK_VERSION;
+    packet[0] = SIGNALRGB_GET_QMK_VERSION;
     packet[1] = QMK_VERSION_BYTE_1;
     packet[2] = QMK_VERSION_BYTE_2;
     packet[3] = QMK_VERSION_BYTE_3;
@@ -36,7 +32,7 @@ void get_qmk_version(void) //Grab the QMK Version the board's firmware is built 
 
 void get_signalrgb_protocol_version(void)
 {
-    packet[0] = GET_PROTOCOL_VERSION;
+    packet[0] = SIGNALRGB_GET_PROTOCOL_VERSION;
     packet[1] = PROTOCOL_VERSION_BYTE_1;
     packet[2] = PROTOCOL_VERSION_BYTE_2;
     packet[3] = PROTOCOL_VERSION_BYTE_3;
@@ -44,7 +40,7 @@ void get_signalrgb_protocol_version(void)
 
 void get_unique_identifier(void) //Grab the unique identifier for each specific model of keyboard.
 {
-    packet[0] = GET_UNIQUE_IDENTIFIER;
+    packet[0] = SIGNALRGB_GET_UNIQUE_IDENTIFIER;
     packet[1] = DEVICE_UNIQUE_IDENTIFIER_BYTE_1;
     packet[2] = DEVICE_UNIQUE_IDENTIFIER_BYTE_2;
     packet[3] = DEVICE_UNIQUE_IDENTIFIER_BYTE_3;
@@ -83,68 +79,48 @@ void signalrgb_mode_disable(void)
 
 void get_total_leds(void) //Grab total number of leds that a board has.
 {
-    packet[0] = GET_TOTAL_LEDS;
+    packet[0] = SIGNALRGB_GET_TOTAL_LEDS;
     packet[1] = RGB_MATRIX_LED_COUNT;
 }
 
 void get_firmware_type(void) //Grab which fork of qmk a board is running.
 {
-    packet[0] = GET_FIRMWARE_TYPE;
+    packet[0] = SIGNALRGB_GET_FIRMWARE_TYPE;
     packet[1] = FIRMWARE_TYPE_BYTE;
 }
 bool signal_rgb_command_handler(uint8_t *data, uint8_t length)
 {
     switch (*data) {
-        case GET_QMK_VERSION:
-
+        case SIGNALRGB_GET_QMK_VERSION:
             get_qmk_version();
-
             break;
-        case GET_PROTOCOL_VERSION:
-
+        case SIGNALRGB_GET_PROTOCOL_VERSION:
             get_signalrgb_protocol_version();
-
             break;
-        case GET_UNIQUE_IDENTIFIER:
-
+        case SIGNALRGB_GET_UNIQUE_IDENTIFIER:
             get_unique_identifier();
-
             break;
-        case STREAM_RGB_DATA:
+        case SIGNALRGB_STREAM_RGB_DATA:
             auxiliary_mode_confirm();
             led_streaming(data);
-
             break;
-
-        case SET_SIGNALRGB_MODE_ENABLE:
-
+        case SIGNALRGB_SET_SIGNALRGB_MODE_ENABLE:
             signalrgb_mode_enable();
-
             break;
-
-        case SET_SIGNALRGB_MODE_DISABLE:
-
+        case SIGNALRGB_SET_SIGNALRGB_MODE_DISABLE:
             signalrgb_mode_disable();
-
             break;
-
-        case GET_TOTAL_LEDS:
-
+        case SIGNALRGB_GET_TOTAL_LEDS:
             get_total_leds();
-
             break;
-
-        case GET_FIRMWARE_TYPE:
-
+        case SIGNALRGB_GET_FIRMWARE_TYPE:
             get_firmware_type();
-
             break;
-
         default:
             break;
     }
 
-    if (*data != STREAM_RGB_DATA) {
+    if (*data != SIGNALRGB_STREAM_RGB_DATA) {
         memcpy(data, packet, SINGALRGB_EPSIZE);
         memset(packet, 0x00, SINGALRGB_EPSIZE);
         return true;

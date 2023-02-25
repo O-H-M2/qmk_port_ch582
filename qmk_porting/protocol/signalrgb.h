@@ -24,14 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SINGALRGB_EPSIZE 64
 enum signalrgb_commands {
-    GET_QMK_VERSION = 0x21,
-    GET_PROTOCOL_VERSION = 0x22,
-    GET_UNIQUE_IDENTIFIER = 0x23,
-    STREAM_RGB_DATA = 0x24,
-    SET_SIGNALRGB_MODE_ENABLE = 0x25,
-    SET_SIGNALRGB_MODE_DISABLE = 0x26,
-    GET_TOTAL_LEDS = 0x27,
-    GET_FIRMWARE_TYPE = 0x28,
+    SIGNALRGB_GET_QMK_VERSION = 0x21,
+    SIGNALRGB_GET_PROTOCOL_VERSION = 0x22,
+    SIGNALRGB_GET_UNIQUE_IDENTIFIER = 0x23,
+    SIGNALRGB_STREAM_RGB_DATA = 0x24,
+    SIGNALRGB_SET_SIGNALRGB_MODE_ENABLE = 0x25,
+    SIGNALRGB_SET_SIGNALRGB_MODE_DISABLE = 0x26,
+    SIGNALRGB_GET_TOTAL_LEDS = 0x27,
+    SIGNALRGB_GET_FIRMWARE_TYPE = 0x28,
 };
 
 enum signalrgb_responses //These are a bit clunky right now. Could use improvement.
