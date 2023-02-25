@@ -25,9 +25,25 @@ static uint8_t packet[64];
 static void get_qmk_version(void) //Grab the QMK Version the board's firmware is built off of
 {
     packet[0] = SIGNALRGB_GET_QMK_VERSION;
-    packet[1] = QMK_VERSION_BYTE_1;
-    packet[2] = QMK_VERSION_BYTE_2;
-    packet[3] = QMK_VERSION_BYTE_3;
+
+    uint8_t current_byte = 1;
+    uint8_t qmk_ver = 0;
+    for (uint8_t i = 0; (i < (64 - 2)) && (QMK_VERSION[i] != 0); i++) {
+        
+        if(QMK_VERSION[i] == '.')
+        {
+            packet[current_byte] = qmk_ver;
+            qmk_ver = 0;
+            current_byte++;
+
+        }
+        else
+        {
+            qmk_ver = qmk_ver*10 + (QMK_VERSION[i]-'0');
+        }
+    }
+    packet[current_byte] = qmk_ver;
+ 
 }
 
 static void get_signalrgb_protocol_version(void)
