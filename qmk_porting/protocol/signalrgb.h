@@ -22,7 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "rgb_matrix.h"
 #include "auxiliary_rgb.h"
 
-#define SINGALRGB_EPSIZE 64
+#define SIGNALRGB_EPSIZE RGBRAW_EP_SIZE
+
 enum signalrgb_commands {
     SIGNALRGB_GET_QMK_VERSION = 0x21,
     SIGNALRGB_GET_PROTOCOL_VERSION = 0x22,
@@ -45,7 +46,8 @@ enum signalrgb_responses //These are a bit clunky right now. Could use improveme
     FIRMWARE_TYPE_BYTE = 1,
     DEVICE_ERROR_LEDS = 255, //Error code to show that there are more leds than a packet will allow.
 };
-bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
+
+bool signalrgb_command_handler(uint8_t *data, uint8_t length);
 
 //Changelogs for Firmware Versions------------------------------------
 //V1.0.1 added detection for the total number of LEDs a board has. Plugins need a rewrite to make use of this change. Rewritten plugins will not function with older firmware.
