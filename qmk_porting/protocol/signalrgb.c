@@ -1,6 +1,7 @@
 /*
-Copyright 2023 OctupusZ <https://github.com/OctupusZ>
 Copyright 2020 Kasper
+Copyright 2023 OctupusZ <https://github.com/OctupusZ>
+Copyright 2022 Huckies <https://github.com/Huckies>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
