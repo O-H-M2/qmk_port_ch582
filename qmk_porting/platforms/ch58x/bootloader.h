@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef ESB_ENABLE
 #include "protocol_esb.h"
 #endif
+#include "config.h"
 #endif
 
 enum {

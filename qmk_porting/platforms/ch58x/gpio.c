@@ -47,10 +47,6 @@ __HIGH_CODE void gpio_strap()
     setPinInputHigh(DRIVER_2_CS);
 #endif
 #endif
-    pin_b &= ~bUDP;
-    pin_b &= ~bUDM;
-    pin_b &= ~bU2DP;
-    pin_b &= ~bU2DM;
     setPinInputLow(pin_a);
     setPinInputLow(pin_b);
 #ifdef BATTERY_MEASURE_PIN

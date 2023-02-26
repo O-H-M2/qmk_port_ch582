@@ -15,7 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "usb_main.h"
+#include "gpio.h"
+#include "usb_interface.h"
 #include "usb_descriptors.h"
 #include "usb_ch58x_usbfs_reg.h"
 #include "protocol.h"
@@ -124,6 +125,13 @@ void usb_dc_low_level_deinit()
     R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
     DelayMs(10);
     R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+    do {
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF1 |= RB_SLP_CLK_USB;
+        sys_safe_access_disable();
+    } while (!(R8_SLP_CLK_OFF1 & RB_SLP_CLK_USB));
+    setPinInputLow(B10);
+    setPinInputLow(B11);
 }
 
 int usb_dc_deinit()
@@ -252,6 +260,15 @@ void init_usb_driver()
     usbd_add_endpoint(&qmkraw_in_ep);
     usbd_add_endpoint(&qmkraw_out_ep);
 #endif
+
+    do {
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF1 &= ~RB_SLP_CLK_USB;
+        sys_safe_access_disable();
+    } while (R8_SLP_CLK_OFF1 & RB_SLP_CLK_USB);
+
+    setPinInput(B10);
+    setPinInput(B11);
 
     usbd_initialize();
 }

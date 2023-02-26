@@ -281,7 +281,6 @@ __HIGH_CODE static void iap_handle_new_chip()
     iap_handle_new_wireless_chip();
 #else
     bootloader_set_to_default_mode("Initializing a new keyboard");
-
 #endif
 }
 
@@ -313,6 +312,8 @@ __HIGH_CODE static void iap_jump_app(uint8_t need_cleanup)
             R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
             my_delay_ms(10);
             R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+            setPinInputLow(B10);
+            setPinInputLow(B11);
         }
         ((void (*)(void))((int *)(image_off + header_size)))();
     } else {
@@ -539,6 +540,10 @@ __HIGH_CODE int main()
 
     usbd_desc_register(msc_ram_descriptor);
     usbd_add_interface(usbd_msc_init_intf(&intf0, MSC_OUT_EP, MSC_IN_EP));
+
+    setPinInput(B10);
+    setPinInput(B11);
+
     usbd_initialize();
 
     Main_Circulation();
