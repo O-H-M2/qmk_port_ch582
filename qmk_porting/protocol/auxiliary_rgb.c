@@ -1,6 +1,6 @@
 /*
-Copyright 2022 Huckies <https://github.com/Huckies>
 Copyright 2022 puterjam<puterjam@gmail.com>
+Copyright 2022 Huckies <https://github.com/Huckies>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,14 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usb_interface.h"
 #include "auxiliary_rgb.h"
 #include "openrgb.h"
+#include "signalrgb.h"
 
 // uint16_t g_auxiliary_rgb_timer = 0;
 // bool g_auxiliary_rgb_anim_playing = false;
 
 static RGB *auxiliary_rgb_color_buffer = NULL;
-
-extern bool openrgb_command_handler(uint8_t *data, uint8_t length);
-// extern bool signal_rgb_command_handler(uint8_t *data, uint8_t length);
 
 void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
 {
@@ -39,9 +37,9 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
         case OPENRGB_GET_PROTOCOL_VERSION ... OPENRGB_DIRECT_MODE_SET_LEDS:
             need_response = openrgb_command_handler(data, length);
             break;
-        // case 0x21 ... 0x28:
-        //     need_response = signal_rgb_command_handler(data, length);
-        //     break;
+        case SIGNALRGB_GET_QMK_VERSION ... SIGNALRGB_GET_FIRMWARE_TYPE:
+            need_response = signalrgb_command_handler(data, length);
+            break;
         default:
 #ifdef RAW_ENABLE
             PRINT("\n **** Unhandled! ****\n\n");
