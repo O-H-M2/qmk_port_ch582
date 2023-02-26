@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "usb_main.h"
+#include "usb_interface.h"
 #include "rgb_matrix.h"
 #include "auxiliary_rgb.h"
 
