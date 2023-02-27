@@ -378,7 +378,7 @@ __HIGH_CODE static void Main_Circulation()
     }
 }
 
-__HIGH_CODE int main()
+int main()
 {
 #ifdef HSE_LOAD_CAPACITANCE
 #if HSE_LOAD_CAPACITANCE == 10
