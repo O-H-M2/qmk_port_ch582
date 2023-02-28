@@ -31,7 +31,7 @@ inline uint16_t timer_read(void)
 
 uint32_t timer_read32(void)
 {
-    return SYS_TO_MS(timer_readraw() - ticks_offset);
+    return RTC_TO_MS(timer_readraw() - ticks_offset);
 }
 
 inline uint64_t timer_read64(void)
