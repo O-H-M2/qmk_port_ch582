@@ -243,7 +243,7 @@ const uint8_t hid_descriptor_scratch_1[] = {
                                 + 0x01
 #endif
                                 ),
-                               0x01, USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
+                               0x01, USB_CONFIG_REMOTE_WAKEUP | USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
 
     /************** Descriptor of Keyboard interface ****************/
     0x09,                     /* bLength */
