@@ -4,62 +4,63 @@
   "productId": "0x0B91",
   "customKeycodes": [
     {
-      "name": "USB_MODE",
-      "title": "USB_MODE",
-      "shortName": "USB_MODE"
+      "name": "USB",
+      "title": "USB MODE",
+      "shortName": "USB"
     },
     {
-      "name": "BLE_SLOT1",
-      "title": "BLE_SLOT1",
+      "name": "BLE1",
+      "title": "Tap = USB BLE slot 1, Hold = Clean BLE slot 1 binding",
       "shortName": "BLE1"
     },
     {
-      "name": "BLE_SLOT2",
-      "title": "BLE_SLOT2",
+      "name": "BLE2",
+      "title": "Tap = USB BLE slot 2, Hold = Clean BLE slot 2 binding",
       "shortName": "BLE2"
     },
     {
-      "name": "BLE_SLOT3",
-      "title": "BLE_SLOT3",
+      "name": "BLE3",
+      "title": "Tap = USB BLE slot 3, Hold = Clean BLE slot 3 binding",
       "shortName": "BLE3"
     },
     {
-      "name": "BLE_SLOT4",
-      "title": "BLE_SLOT4",
+      "name": "BLE4",
+      "title": "Tap = USB BLE slot 4, Hold = Clean BLE slot 4 binding",
       "shortName": "BLE4"
     },
     {
-      "name": "BLE_CLEAN1",
-      "title": "BLE_CLEAN1",
-      "shortName": "BC1"
+      "name": "BLE5",
+      "title": "Tap = USB BLE slot 5, Hold = Clean BLE slot 5 binding",
+      "shortName": "BLE5"
+    },{
+      "name": "BLE6",
+      "title": "Tap = USB BLE slot 6, Hold = Clean BLE slot 6 binding",
+      "shortName": "BLE6"
+    },{
+      "name": "BLE7",
+      "title": "Tap = USB BLE slot 7, Hold = Clean BLE slot 7 binding",
+      "shortName": "BLE7"
+    },{
+      "name": "BLE8",
+      "title": "Tap = USB BLE slot 8, Hold = Clean BLE slot 8 binding",
+      "shortName": "BLE8"
     },
     {
-      "name": "BLE_CLEAN2",
-      "title": "BLE_CLEAN2",
-      "shortName": "BC2"
+			"name": "BC_A",
+			"title": "Clean ALL BLE slot binding",
+			"shortName": "BC_A"
+		},
+    {
+      "name": "2.4G",
+      "title": "ESB MODE(2.4G mode)",
+      "shortName": "2.4G"
     },
     {
-      "name": "BLE_CLEAN3",
-      "title": "BLE_CLEAN3",
-      "shortName": "BC3"
-    },
-    {
-      "name": "BLE_CLEAN4",
-      "title": "BLE_CLEAN4",
-      "shortName": "BC3"
-    },
-    {
-      "name": "BLE_ALL_CLEAR",
-      "title": "BLE_ALL_CLEAR",
-      "shortName": "BC_A"
-    },
-    {
-      "name": "ESB_MODE",
-      "title": "ESB_MODE",
-      "shortName": "ESB_MODE"
-    }
+			"name": "BAT",
+			"title": "Enable battery lever indicator",
+			"shortName": "BAT"
+		}
   ],
-  "lighting": "qmk_rgblight",
   "matrix": {
     "rows": 5,
     "cols": 14
@@ -171,5 +172,7 @@
         "4,0"
       ]
     ]
-  }
+  },
+  "menus": ["qmk_rgb_matrix" ],
+  "keycodes": ["qmk_lighting"]
 }
