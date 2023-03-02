@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 static volatile uint8_t last_percentage = 100;
 
 __attribute__((weak)) const uint16_t battery_map[] = {
-    //2704 3.654V 0%
+    // 2704 3.654V 0%
     2704, 2710, 2716, 2722, 2728, 2734, 2739, 2745, 2751, 2757,
     2763, 2769, 2775, 2780, 2786, 2792, 2798, 2804, 2810, 2815,
     2821, 2827, 2833, 2839, 2845, 2851, 2856, 2862, 2868, 2874,
@@ -35,7 +35,7 @@ __attribute__((weak)) const uint16_t battery_map[] = {
     3114, 3120, 3126, 3131, 3137, 3143, 3149, 3155, 3161, 3166,
     3172, 3178, 3184, 3190, 3196, 3202, 3207, 3213, 3219, 3225,
     3231, 3237, 3243, 3248, 3254, 3260, 3266, 3272, 3278, 3283
-    //3283 4.1V 100%
+    // 3283 4.1V 100%
 };
 
 static inline void battery_config_channel(pin_t pin)
