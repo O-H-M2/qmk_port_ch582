@@ -106,7 +106,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENABLE_RGB_MATRIX_PIXEL_RAIN
 #define ENABLE_RGB_MATRIX_PIXEL_FLOW
 #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
-
 #endif
 #ifdef RGB_RAW_ENABLE
 #define AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
