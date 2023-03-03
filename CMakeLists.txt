@@ -76,14 +76,17 @@ execute_process(COMMAND git describe --abbrev=0 --tags
     OUTPUT_VARIABLE QMK_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-execute_process(COMMAND date +"%Y-%m-%d-%H:%M:%S"
-    TIMEOUT 5
-    OUTPUT_VARIABLE QMK_BUILDDATE
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+
+if(NOT DEFINED QMK_BUILDDATE)
+    execute_process(COMMAND date +"%Y-%m-%d-%H:%M:%S"
+        TIMEOUT 5
+        OUTPUT_VARIABLE QMK_BUILDDATE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+endif()
 
 # allow for manual override
-if(NOT keyboard OR(NOT keymap AND NOT BUILD_WIRELESS_LIB))
+if(NOT DEFINED keyboard OR(NOT DEFINED keymap AND NOT BUILD_WIRELESS_LIB))
     include(keyboard_target.cmake)
 endif()
 
