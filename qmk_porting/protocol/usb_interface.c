@@ -298,7 +298,9 @@ void init_usb_driver()
 
 void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
 {
-    usb_remote_wakeup();
+    if (usb_remote_wakeup()) {
+        return;
+    }
 
     int ret = usbd_ep_start_write(KBD_IN_EP, data, len);
 
@@ -316,7 +318,9 @@ void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len)
 #ifdef RGB_RAW_ENABLE
 void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
 {
-    usb_remote_wakeup();
+    if (usb_remote_wakeup()) {
+        return;
+    }
 
     int ret = usbd_ep_start_write(RGBRAW_IN_EP, data, len);
 
@@ -329,7 +333,9 @@ void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
 
 inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
 {
-    usb_remote_wakeup();
+    if (usb_remote_wakeup()) {
+        return;
+    }
 
     int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
 
@@ -342,7 +348,9 @@ inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
 #ifdef RAW_ENABLE
 void hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
 {
-    usb_remote_wakeup();
+    if (usb_remote_wakeup()) {
+        return;
+    }
 
     int ret = usbd_ep_start_write(QMKRAW_IN_EP, data, len);
 
