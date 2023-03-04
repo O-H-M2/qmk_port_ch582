@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 enum {
 #ifdef VIA_ENABLE
-    CUSTOM_START = USER00 - 1,
+    CUSTOM_START = QK_USER_0 - 1,
 #else
     CUSTOM_START = SAFE_RANGE,
 #endif
@@ -47,5 +47,5 @@ enum {
 };
 
 #ifdef VIA_ENABLE
-_Static_assert(CUSTOM_MAX <= USER15 + 1, "");
+_Static_assert(CUSTOM_MAX <= QK_USER_31 + 1, "");
 #endif
