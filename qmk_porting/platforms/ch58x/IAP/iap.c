@@ -65,7 +65,7 @@ static const uint8_t msc_ram_descriptor[] = {
     0x00
 };
 static WriteState _wr_state = { 0 };
-static uint8_t buffer[EEPROM_BLOCK_SIZE] = {};
+static uint8_t write_cache[EEPROM_BLOCK_SIZE] = {};
 
 /**
  * "Reload" some functions into IRAM to increase speed
@@ -184,7 +184,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
 
     if (!offset) {
         // a new block
-        my_memset(buffer, 0xFF, EEPROM_BLOCK_SIZE);
+        my_memset(write_cache, 0xFF, EEPROM_BLOCK_SIZE);
     }
 
     for (;;) {
@@ -203,7 +203,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
         // stage the data
         uint16_t actual_len = min(offset + len, EEPROM_BLOCK_SIZE) - offset;
 
-        my_memcpy(buffer + offset, handle_data, actual_len);
+        my_memcpy(write_cache + offset, handle_data, actual_len);
         PRINT("done\n");
         break;
 
@@ -212,7 +212,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
         do {
             ret = FLASH_ROM_ERASE(addr - offset, EEPROM_BLOCK_SIZE);
         } while (ret);
-        FLASH_ROM_WRITE(addr - offset, buffer, offset);
+        FLASH_ROM_WRITE(addr - offset, write_cache, offset);
         my_delay_ms(5);
         PRINT("Retry... ");
     }
