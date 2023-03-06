@@ -128,9 +128,9 @@ void LSECFG_Capacitance(LSECapTypeDef c)
  *
  * @brief   校准内部32K时钟
  *
- * @param   cali_Lv - 校准等级选择    Level_32  -   用时 1.2ms 1000ppm (32M 主频)  1100ppm (60M 主频)
- *                              Level_64  -   用时 2.2ms 800ppm  (32M 主频)  1000ppm (60M 主频)
- *                              Level_128 -   用时 4.2ms 600ppm  (32M 主频)  800ppm  (60M 主频)
+ * @param   cali_Lv - 校准等级选择    Level_32 ：2.4ms   1000ppm (32M 主频)  1100ppm (60M 主频)
+ *                                   Level_64 ：4.4ms   800ppm  (32M 主频)  1000ppm (60M 主频)
+ *                                   Level_128 ：8.4ms  600ppm  (32M 主频)  800ppm  (60M 主频)                                                         
  *
  * @return  none
  */
@@ -140,6 +140,7 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
     INT32  cnt_offset;
     UINT8  retry = 0;
     INT32  freq_sys;
+    UINT32 cnt_32k = 0;
 
     freq_sys = GetSysClock();
 
@@ -154,19 +155,35 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
     sys_safe_access_enable();
     R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
     R8_OSC_CAL_CTRL |= 1;
-    sys_safe_access_enable();
-    R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
-    R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
-    while( (R8_OSC_CAL_CTRL &RB_OSC_CNT_EN) == 0 )
+
+    while(1)
     {
         sys_safe_access_enable();
         R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
-    }
-    while(1)
-    {
-        while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
-        i = R16_OSC_CAL_CNT; // 用于丢弃
+        R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
+        R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
+        while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
+        {
+            sys_safe_access_enable();
+            R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+        }
+
+        while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT)); // 用于丢弃
+        
+        sys_safe_access_enable();
+        R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
+        R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+        R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
+        R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
+        while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
+        {
+            sys_safe_access_enable();
+            R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+        }
+
         while(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT);
+        cnt_32k = RTC_GetCycle32k();
+        while(RTC_GetCycle32k() == cnt_32k);
         R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
         while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
         i = R16_OSC_CAL_CNT; // 实时校准后采样值
@@ -184,26 +201,52 @@ void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
 
     // 细调
     // 配置细调参数后，丢弃2次捕获值（软件行为）上判断已有一次，这里只留一次
-    while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
-    i = R16_OSC_CAL_CNT; // 用于丢弃
-    R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
     sys_safe_access_enable();
     R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
     R8_OSC_CAL_CTRL |= cali_Lv;
-    while( (R8_OSC_CAL_CTRL&0x07) != cali_Lv )
+    while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_TOTAL) != cali_Lv )
     {
         sys_safe_access_enable();
         R8_OSC_CAL_CTRL |= cali_Lv;
     }
+
+    sys_safe_access_enable();
+    R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
+    R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+    R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
+    R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
+    while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
+    {
+        sys_safe_access_enable();
+        R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+    }
+
+    while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT)); // 用于丢弃
+
+    sys_safe_access_enable();
+    R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
+    R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+    R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
+    R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
+    while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
+    {
+        sys_safe_access_enable();
+        R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+    }
+
     while(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT);
+    cnt_32k = RTC_GetCycle32k();
+    while(RTC_GetCycle32k() == cnt_32k);
+    R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
     while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
+    sys_safe_access_enable();
+    R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
     i = R16_OSC_CAL_CNT; // 实时校准后采样值
 
-    cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF - 4000 * (1 << cali_Lv) * (freq_sys / 1000000) / 256 * 1000/(CAB_LSIFQ/256) ;
+    cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF -  4000 * (1 << cali_Lv) * (freq_sys / 1000000) / 256 * 1000/(CAB_LSIFQ/256);
     cnt_offset = (cnt_offset > 0) ? ((((cnt_offset * 2*(100 )) / (1366 * ((1 << cali_Lv)/8) * (freq_sys/1000) / 60000)) + 1) / 2)<<5 : ((((cnt_offset * 2*(100)) / (1366 * ((1 << cali_Lv)/8) * (freq_sys/1000) / 60000)) - 1) / 2)<<5;
     sys_safe_access_enable();
     R16_INT32K_TUNE += cnt_offset;
-    R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
 }
 
 /*********************************************************************
