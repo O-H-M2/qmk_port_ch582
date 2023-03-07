@@ -210,6 +210,7 @@ else()
     target_link_libraries(${keyboard}_IAP.elf PUBLIC mcuboot_porting)
 
     target_link_options(${keyboard}.elf PRIVATE
+        -march=rv32imac -mabi=ilp32
         -nostartfiles
         -Xlinker --gc-sections
         -Wl,--print-memory-usage
@@ -218,6 +219,7 @@ else()
         --specs=nosys.specs
     )
     target_link_options(${keyboard}_IAP.elf PRIVATE
+        -march=rv32imac -mabi=ilp32
         -nostartfiles
         -Xlinker --gc-sections
         -Wl,--print-memory-usage
