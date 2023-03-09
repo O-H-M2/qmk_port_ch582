@@ -286,6 +286,17 @@ __HIGH_CODE static void iap_handle_new_chip()
 
 __HIGH_CODE static void iap_jump_app(uint8_t need_cleanup)
 {
+    uint32_t jump_address = 0;
+
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+    extern bool iap_validate(uint32_t * address);
+
+    if (iap_validate(&jump_address)) {
+        PRINT("Validated.\n");
+        goto jump;
+    }
+#endif
+
     struct boot_rsp rsp;
     fih_int rc = boot_go(&rsp);
 
@@ -293,36 +304,47 @@ __HIGH_CODE static void iap_jump_app(uint8_t need_cleanup)
         uint32_t image_off = rsp.br_image_off, header_size = rsp.br_hdr->ih_hdr_size;
 
         PRINT("Image found.\n");
-#if FREQ_SYS != 60000000
-        WAIT_FOR_DBG;
-        SetSysClock(Fsys);
-        my_delay_ms(5);
-#ifdef PLF_DEBUG
-        DBG_BAUD_RECONFIG;
-#else
-        UART1_BaudRateCfg(DEBUG_BAUDRATE);
-#endif
-        PRINT("Resetting system clock to %d Hz before entering APP.\n", my_get_sys_clock());
-#endif
-        WAIT_FOR_DBG;
-        if (need_cleanup) {
-            PFIC_DisableIRQ(USB_IRQn);
-            R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
-            R32_USB_CONTROL = 0;
-            R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
-            my_delay_ms(10);
-            R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
-            setPinInputLow(B10);
-            setPinInputLow(B11);
-        }
-        ((void (*)(void))((int *)(image_off + header_size)))();
+        jump_address = image_off + header_size;
+        goto jump;
     } else {
         PRINT("Failed searching for a bootable image.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
-        WAIT_FOR_DBG;
-        mcu_reset();
+        goto fail;
     }
 
+jump:
+#if FREQ_SYS != 60000000
+    WAIT_FOR_DBG;
+    SetSysClock(Fsys);
+    my_delay_ms(5);
+#ifdef PLF_DEBUG
+    DBG_BAUD_RECONFIG;
+#else
+    UART1_BaudRateCfg(DEBUG_BAUDRATE);
+#endif
+    PRINT("Resetting system clock to %d Hz before entering APP.\n", my_get_sys_clock());
+#endif
+    WAIT_FOR_DBG;
+    if (need_cleanup) {
+        PFIC_DisableIRQ(USB_IRQn);
+        R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
+        R32_USB_CONTROL = 0;
+        R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
+        my_delay_ms(10);
+        R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+        setPinInputLow(B10);
+        setPinInputLow(B11);
+    }
+    ((void (*)(void))((int *)(jump_address)))();
+
+    while (1) {
+        __nop();
+    }
+    __builtin_unreachable();
+
+fail:
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
+    WAIT_FOR_DBG;
+    mcu_reset();
     while (1) {
         __nop();
     }
