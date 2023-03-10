@@ -1,7 +1,7 @@
 {
 	"name": "mk67lite",
 	"vendorId": "0xCAFE",
-	"productId": "0x0B91",
+	"productId": "0x0B93",
 	"customKeycodes": [
 		{
 			"name": "USB_MODE",
@@ -59,7 +59,6 @@
 			"shortName": "ESB_MODE"
 		}
 	],
-	"lighting": "qmk_rgblight",
 	"matrix": {
 		"rows": 5,
 		"cols": 15
