@@ -3,63 +3,64 @@
 	"vendorId": "0xCAFE",
 	"productId": "0xCAFE",
 	"customKeycodes": [
-		{
-			"name": "USB",
-			"title": "USB",
-			"shortName": "USB"
+    {
+      "name": "USB",
+      "title": "USB MODE",
+      "shortName": "USB"
+    },
+    {
+      "name": "BLE1",
+      "title": "Tap = Use BLE slot 1, Hold = Clean BLE slot 1 binding",
+      "shortName": "BLE1"
+    },
+    {
+      "name": "BLE2",
+      "title": "Tap = Use BLE slot 2, Hold = Clean BLE slot 2 binding",
+      "shortName": "BLE2"
+    },
+    {
+      "name": "BLE3",
+      "title": "Tap = Use BLE slot 3, Hold = Clean BLE slot 3 binding",
+      "shortName": "BLE3"
+    },
+    {
+      "name": "BLE4",
+      "title": "Tap = Use BLE slot 4, Hold = Clean BLE slot 4 binding",
+      "shortName": "BLE4"
+    },
+    {
+      "name": "BLE5",
+      "title": "Tap = Use BLE slot 5, Hold = Clean BLE slot 5 binding",
+      "shortName": "BLE5"
+    },{
+      "name": "BLE6",
+      "title": "Tap = Use BLE slot 6, Hold = Clean BLE slot 6 binding",
+      "shortName": "BLE6"
+    },{
+      "name": "BLE7",
+      "title": "Tap = Use BLE slot 7, Hold = Clean BLE slot 7 binding",
+      "shortName": "BLE7"
+    },{
+      "name": "BLE8",
+      "title": "Tap = Use BLE slot 8, Hold = Clean BLE slot 8 binding",
+      "shortName": "BLE8"
+    },
+    {
+			"name": "BC_A",
+			"title": "Clean ALL BLE slot binding",
+			"shortName": "BC_A"
 		},
-		{
-			"name": "BLE1",
-			"title": "BLE1",
-			"shortName": "BLE1"
-		},
-		{
-			"name": "BLE2",
-			"title": "BLE2",
-			"shortName": "BLE2"
-		},
-		{
-			"name": "BLE3",
-			"title": "BLE3",
-			"shortName": "BLE3"
-		},
-		{
-			"name": "BLE4",
-			"title": "BLE4",
-			"shortName": "BLE4"
-		},
-		{
-			"name": "BC1",
-			"title": "BC1",
-			"shortName": "BC1"
-		},
-		{
-			"name": "BC2",
-			"title": "BC2",
-			"shortName": "BC2"
-		},
-		{
-			"name": "BC3",
-			"title": "BC3",
-			"shortName": "BC3"
-		},
-		{
-			"name": "BC4",
-			"title": "BC4",
-			"shortName": "BC4"
-		},
-		{
-			"name": "BCA",
-			"title": "BCA",
-			"shortName": "BCA"
-		},
-		{
-			"name": "2.4G",
-			"title": "2.4G",
-			"shortName": "2.4G"
+    {
+      "name": "2.4G",
+      "title": "ESB MODE(2.4G mode)",
+      "shortName": "2.4G"
+    },
+    {
+			"name": "BAT",
+			"title": "Enable battery lever indicator",
+			"shortName": "BAT"
 		}
-	],
-	"lighting": "qmk_rgblight",
+  ],
 	"matrix": {
 		"rows": 6,
 		"cols": 15
