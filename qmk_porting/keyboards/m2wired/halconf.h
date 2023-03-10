@@ -1,5 +1,6 @@
 /*
 Copyright 2022 Huckies <https://github.com/Huckies>
+Copyright 2023 OctopusZ <https://github.com/OctopusZ>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define BLE_TX_POWER LL_TX_POWEER_0_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_1_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_2_DBM
-//#define BLE_TX_POWER LL_TX_POWEER_3_DBM
+// #define BLE_TX_POWER LL_TX_POWEER_3_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_4_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_5_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_6_DBM
