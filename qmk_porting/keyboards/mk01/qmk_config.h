@@ -145,4 +145,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_TAPPING
 //#define NO_ACTION_ONESHOT
 
+#include "mcuconf.h"
+#include "halconf.h"
 #include "pre_handler.h"
