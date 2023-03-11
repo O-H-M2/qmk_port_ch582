@@ -35,7 +35,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______,  _______ ),
 
   [_RSE] = LAYOUT_ortho_2x2(
-      KC_CAPS , KC_6  ,
+      RGB_MOD  , KC_CAPS,
       _______, _______),
 
   [_ADJ] = LAYOUT_ortho_2x2(
