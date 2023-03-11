@@ -72,7 +72,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SPI_SCK_PIN A13
 #define SPI_MISO_PIN A15
 #define SPI_MOSI_PIN A14
-#define SPI_DIVISOR 32
+#define SPI_DIVISOR 8
 #define SPI_MODE 3
 
 

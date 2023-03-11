@@ -8,15 +8,11 @@
 #endif
 
 static const uint16_t col_values[MATRIX_COLS] = COLS;
-static const uint8_t rows_values[MATRIX_ROWS] = ROWS;
+static const pin_t rows_values[MATRIX_ROWS] = ROWS;
 static const int msize = MATRIX_ROWS * sizeof(matrix_row_t);
 static matrix_row_t prev_matrix[MATRIX_ROWS];
 
 static inline uint8_t read_rows(void) {
-
-//    writePinLow(SPI_LATCH_PIN);
-//    matrix_output_select_delay();
-//    writePinHigh(SPI_LATCH_PIN);
 
     spi_start(SPI_CS_PIN, false, SPI_MODE, SPI_DIVISOR);
     spi_status_t read_result = spi_read();
@@ -35,12 +31,9 @@ static inline void shift_out(uint16_t value) {
 
   uint8_t message[2]  = {(value >> 8) & 0xFF ,(uint8_t)(value & 0xFF) };
 
- // writePinLow(SPI_LATCH_PIN);
   spi_start(SPI_CS_PIN, false, SPI_MODE, SPI_DIVISOR);
   spi_transmit(message,2);
   spi_stop();
-  //writePinHigh(SPI_LATCH_PIN);
-  //matrix_output_select_delay();
 
 }
 
