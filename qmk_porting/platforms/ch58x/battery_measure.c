@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef BATTERY_MEASURE_PIN
 
 static volatile uint8_t last_percentage = 100;
+static uint32_t last_measure = 0;
 
 __attribute__((weak)) const uint16_t battery_map[] = {
     // 2704 3.654V 0%
@@ -256,11 +257,22 @@ done:
 #else
     last_percentage = percent;
 #endif
+#if __BUILDING_APP__
+    last_measure = timer_read32();
+#endif
+
     return last_percentage;
 }
 
 uint8_t battery_get_last_percentage()
 {
+    if (timer_elapsed32(last_measure) > 10 * 1000) {
+        uint16_t temp;
+
+        battery_init();
+        temp = battery_measure();
+        battery_calculate(temp);
+    }
     return last_percentage;
 }
 
