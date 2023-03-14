@@ -148,14 +148,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef BATTERY_MEASURE_PIN
 #error "Battery measure pin undefined."
 #else
-#ifndef BATTERY_INDICATOR_START_INDEX
-#define BATTERY_INDICATOR_START_INDEX 1
-#endif
-#ifndef BATTERY_INDICATOR_END_INDEX
-#define BATTERY_INDICATOR_END_INDEX 10
-#endif
-_Static_assert(BATTERY_INDICATOR_START_INDEX >= 0, "Invalid BATTERY_INDICATOR_START_INDEX!");
-_Static_assert(BATTERY_INDICATOR_END_INDEX < RGBLED_NUM, "Invalid BATTERY_INDICATOR_END_INDEX!");
 #endif
 #ifndef POWER_DETECT_PIN
 #warning "Power detect pin undefined."
