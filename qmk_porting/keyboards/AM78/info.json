@@ -1,7 +1,7 @@
 {
 	"name": "aM78",
 	"vendorId": "0xCAFE",
-	"productId": "0xCAFE",
+	"productId": "0x0b96",
 	"customKeycodes": [
     {
       "name": "USB",

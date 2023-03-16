@@ -44,14 +44,19 @@ led_config_t g_led_config = {
 	}
 };
 /* clang-format on */
-
-bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
+bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
-    if (host_keyboard_led_state().num_lock) {
-        if (g_led_config.flags[0] & LED_FLAG_KEYLIGHT) {
-            rgb_matrix_set_color(0, RGB_RED);
-        }
+    if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
+        return false;
     }
+    if (host_keyboard_led_state().num_lock) {
+        RGB_MATRIX_INDICATOR_SET_COLOR(0, 0xFF, 0x00, 0x00);
+    }
+#if defined BATTERY_MEASURE_PIN || defined BLE_ENABLE
+    extern void wireless_rgb_indicator_task(uint8_t led_min, uint8_t led_max);
+
+    wireless_rgb_indicator_task(led_min, led_max);
+#endif
     return true;
 }
 #endif
@@ -363,3 +368,25 @@ bool oled_task_user(void)
     return false;
 }
 #endif
+
+int main()
+{
+    extern void protocol_setup();
+    extern void protocol_init();
+    extern void protocol_task();
+
+    platform_setup();
+
+    protocol_setup();
+#if !defined ESB_ENABLE || ESB_ENABLE != 2
+    keyboard_setup();
+#endif
+
+    protocol_init();
+
+    /* Main loop */
+    for (;;) {
+        protocol_task();
+        //! housekeeping_task() is handled by platform
+    }
+}
