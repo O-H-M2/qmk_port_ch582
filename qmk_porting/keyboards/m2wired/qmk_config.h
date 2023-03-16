@@ -121,7 +121,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
 #endif
 
-
 #ifdef AW20216
 #define AW_GLOBAL_CURRENT_MAX 255
 #define AW_SCALING_MAX        255
