@@ -17,22 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include "quantum.h"
-#include "extra_keycode.h"
-
-// clang-format off
-#define LAYOUT_all(         \
-	K000, K001, K002, K003, \
-	K100, K101, K102,       \
-	K200, K201, K202, K203, \
-	K300, K301, K302,       \
-	K400, K401, K402        \
-) \
-{ \
-    { K000, K001, K002, K003 }, \
-    { K100, K101, K102 },       \
-    { K200, K201, K202, K203 }, \
-    { K300, K301, K302       }, \
-    { K400, KC_NO, K401, K402 } \
-}
-// clang-format on
+// #define DEBUG                Debug_UART1
+#define DEBUG_BAUDRATE       460800
+#define DCDC_ENABLE          1
+#define FREQ_SYS             40000000
+#define LSE_ENABLE           0
+#define BLE_SLOT_NUM         4
+#define HSE_LOAD_CAPACITANCE 20 // in pF unit
+#define LSE_LOAD_CAPACITANCE 19 // in pF unit

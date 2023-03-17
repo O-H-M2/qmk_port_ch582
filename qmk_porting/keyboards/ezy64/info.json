@@ -32,34 +32,37 @@
       "name": "BLE5",
       "title": "Tap = Use BLE slot 5, Hold = Clean BLE slot 5 binding",
       "shortName": "BLE5"
-    },{
+    },
+    {
       "name": "BLE6",
       "title": "Tap = Use BLE slot 6, Hold = Clean BLE slot 6 binding",
       "shortName": "BLE6"
-    },{
+    },
+    {
       "name": "BLE7",
       "title": "Tap = Use BLE slot 7, Hold = Clean BLE slot 7 binding",
       "shortName": "BLE7"
-    },{
+    },
+    {
       "name": "BLE8",
       "title": "Tap = Use BLE slot 8, Hold = Clean BLE slot 8 binding",
       "shortName": "BLE8"
     },
     {
-			"name": "BC_A",
-			"title": "Clean ALL BLE slot binding",
-			"shortName": "BC_A"
-		},
+      "name": "BC_A",
+      "title": "Clean ALL BLE slot binding",
+      "shortName": "BC_A"
+    },
     {
       "name": "2.4G",
       "title": "ESB MODE(2.4G mode)",
       "shortName": "2.4G"
     },
     {
-			"name": "BAT",
-			"title": "Enable battery lever indicator",
-			"shortName": "BAT"
-		}
+      "name": "BAT",
+      "title": "Enable battery lever indicator",
+      "shortName": "BAT"
+    }
   ],
   "matrix": {
     "rows": 5,
@@ -173,6 +176,10 @@
       ]
     ]
   },
-  "menus": ["qmk_rgb_matrix" ],
-  "keycodes": ["qmk_lighting"]
+  "menus": [
+    "qmk_rgb_matrix"
+  ],
+  "keycodes": [
+    "qmk_lighting"
+  ]
 }
