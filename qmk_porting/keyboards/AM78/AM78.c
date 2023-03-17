@@ -39,10 +39,6 @@ led_config_t g_led_config = {
 
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
-    RGB_MATRIX_INDICATOR_SET_COLOR(0, 0x00, 0x00, 0x00);
-    RGB_MATRIX_INDICATOR_SET_COLOR(1, 0x00, 0x00, 0x00);
-    RGB_MATRIX_INDICATOR_SET_COLOR(2, 0x00, 0x00, 0x00);
-    RGB_MATRIX_INDICATOR_SET_COLOR(3, 0x00, 0x00, 0x00);
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
         return false;
     }
