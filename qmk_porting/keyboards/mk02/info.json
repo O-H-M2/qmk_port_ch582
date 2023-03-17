@@ -46,5 +46,11 @@
         "4,2"
       ]
     ]
-  }
+  },
+  "menus": [
+    "qmk_rgb_matrix"
+  ],
+  "keycodes": [
+    "qmk_lighting"
+  ]
 }

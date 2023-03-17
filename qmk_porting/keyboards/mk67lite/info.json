@@ -185,5 +185,11 @@
 				"4,14"
 			]
 		]
-	}
+	},
+	"menus": [
+		"qmk_rgb_matrix"
+	],
+	"keycodes": [
+		"qmk_lighting"
+	]
 }
