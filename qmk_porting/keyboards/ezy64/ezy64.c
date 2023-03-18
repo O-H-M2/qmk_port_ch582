@@ -142,7 +142,7 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
         return false;
     }
-    if (host_keyboard_led_state().caps_lock) {
+    if (led_min <= 28 && led_max >= 28 && host_keyboard_led_state().caps_lock) {
         RGB_MATRIX_INDICATOR_SET_COLOR(28, 0xFF, 0x00, 0x00);
     }
 #if defined BATTERY_MEASURE_PIN || defined BLE_ENABLE
