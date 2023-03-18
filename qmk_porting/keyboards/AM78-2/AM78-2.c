@@ -41,6 +41,10 @@ led_config_t g_led_config = {
 
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
+    if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
+        return false;
+    }
+
     if (led_min <= 0 && led_max >= 3) {
         RGB_MATRIX_INDICATOR_SET_COLOR(0, 0x00, 0x00, 0x00);
         RGB_MATRIX_INDICATOR_SET_COLOR(1, 0x00, 0x00, 0x00);
@@ -49,10 +53,6 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
         if (host_keyboard_led_state().caps_lock) {
             RGB_MATRIX_INDICATOR_SET_COLOR(3, 0xFF, 0x00, 0x00);
         }
-    }
-
-    if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
-        return false;
     }
 
 #if defined BATTERY_MEASURE_PIN || defined BLE_ENABLE
