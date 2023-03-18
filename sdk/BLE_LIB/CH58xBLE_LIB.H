@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT ******************************
  * File Name         : CH58xBLE_LIB.H
  * Author            : WCH
- * Version           : V1.70
- * Date              : 2023/01/10
+ * Version           : V1.80
+ * Date              : 2023/02/13
  * Description       : head file
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  *******************************************************************************/
@@ -179,7 +179,7 @@ typedef struct
 /*********************************************************************
  * GLOBAL MACROS
  */
-#define VER_FILE  "CH58x_BLE_LIB_V1.7"
+#define VER_FILE  "CH58x_BLE_LIB_V1.8"
 extern const uint8_t VER_LIB[];  // LIB version
 #define SYSTEM_TIME_MICROSEN            625   // unit of process event timer is 625us
 #define MS1_TO_SYSTEM_TIME(x)  ((x)*1000/SYSTEM_TIME_MICROSEN)   // transform unit in ms to unit in 625us ( attentional bias )
@@ -221,7 +221,7 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define ABS(n)     (((n) < 0) ? -(n) : (n))
 #endif
 
-/* TxPower define(Accuracy:ï¿½ï¿½2dBm) */
+/* TxPower define(Accuracy:¡À2dBm) */
 #define LL_TX_POWEER_MINUS_16_DBM       0x01
 #define LL_TX_POWEER_MINUS_12_DBM       0x02
 #define LL_TX_POWEER_MINUS_8_DBM        0x04
@@ -806,7 +806,7 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define TGAP_AUTH_TASK_ID                       24  //!< Task ID override for Task Authentication control (for stack internal use only)
 
 // v5.x
-#define TGAP_ADV_TX_POWER                       25  //!< Indicates the maximum power level Range: -127 ï¿½ï¿½ N ï¿½ï¿½ +126 Units: dBm.Default 127(Host has no preference).
+#define TGAP_ADV_TX_POWER                       25  //!< Indicates the maximum power level Range: -127 ¡Ü N ¡Ü +126 Units: dBm.Default 127(Host has no preference).
 #define TGAP_ADV_PRIMARY_PHY                    26  //!< Indicates the PHY on which the advertising packets are transmitted on the primary advertising channel.LE 1M/LE Coded.Default GAP_PHY_VAL_LE_1M.
 #define TGAP_ADV_SECONDARY_PHY                  27  //!< LE 1M/LE 2M/LE Coded. Default GAP_PHY_VAL_LE_1M.
 #define TGAP_ADV_SECONDARY_MAX_SKIP             28  //!< Maximum advertising events the Controller can skip before sending the AUX_ADV_IND packets on the secondary advertising channel. Default 0.
@@ -851,7 +851,13 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define TGAP_SCAN_MAX_LENGTH                    58  //!< Extended scan maximum data length.Default 460
 #define TGAP_AFH_CHANNEL_MDOE                   59  //!< whether t he Controller's channel assessment scheme is enabled or disabled.Default disabled.
 
-#define TGAP_PARAMID_MAX                        60  //!< ID MAX-valid Parameter ID
+// Constant Tone Extension Transmit
+#define TGAP_CTE_TYPE                           60  //!< The type of Constant Tone Extension.Default GAP_CTE_TYPE_AOA.
+#define TGAP_CTE_LENGTH                         61  //!< Constant Tone Extension length in 8Âµs units.Default 20.Range[2,20]
+#define TGAP_CTE_COUNT                          62  //!< resv
+#define TGAP_LENGTH_OF_SWITCHING_PATTERN        63  //!< The number of Antenna IDs in the pattern,only used when transmitting an AoD Constant Tone Extension.Default 0.
+
+#define TGAP_PARAMID_MAX                        64  //!< ID MAX-valid Parameter ID
 
 // GAP_DEVDISC_MODE_DEFINES GAP Device Discovery Modes
 #define DEVDISC_MODE_NONDISCOVERABLE            0x00  //!< No discoverable setting
@@ -901,6 +907,11 @@ extern const uint8_t VER_LIB[];  // LIB version
 
 // GAP_ADVERTISEMENT_TYPE_DEFINES GAP Periodic Advertising Properties
 #define GAP_PERI_PROPERTIES_INCLUDE_TXPOWER     (1<<6)
+
+// GAP_ADVERTISEMENT_TYPE_DEFINES GAP Connectionless CTE Transmit CTE type
+#define GAP_CTE_TYPE_AOA                        0x00  //!< AoA Constant Tone Extension
+#define GAP_CTE_TYPE_AOD_1US                    0x01  //!< AoD Constant Tone Extension with 1us slots
+#define GAP_CTE_TYPE_AOD_2US                    0x02  //!< AoD Constant Tone Extension with 2us slots
 
 // GAP Advertising Report Event Types
 #define GAP_ADVERTISEMENT_REPORT_TYPE_DEFINES
@@ -1056,6 +1067,7 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define GAPROLE_PERIODIC_ADVERT_DATA            0x315  //!< Periodic advertisement Data. Read/Write. Max size is B_MAX_ADV_PERIODIC_LEN. Default to all 0.
 #define GAPROLE_PERIODIC_ADVERT_ENABLED         0x316  //!< bit0:Enable/Disable Periodic Advertising. Read/Write. Size is uint8_t. Default is FALSE=Disable.
                                                        //!< bit1:Include the ADI field in AUX_SYNC_IND PDUs
+#define GAPROLE_CTE_CONNECTIONLESS_ENABLED      0x317  //!< Enable/Disable Connectionless CTE Transmit. Read/Write. Size is uint8_t. Default is FALSE=Disable.
 
 /************************************GAPBOND***********************************/
 // GAPBOND_PROFILE_PARAMETERS GAP Bond Manager Parameters
@@ -1134,7 +1146,7 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define SMP_PAIRING_FAILED_UNSPECIFIED          0x08 //!< Pairing failed due to an unspecified reason
 #define SMP_PAIRING_FAILED_REPEATED_ATTEMPTS    0x09 //!< Pairing or authentication procedure is disallowed because too little time has elapsed since the last pairing request or security request.
 #define SMP_PAIRING_FAILED_INVALID_PARAMERERS   0x0A //!< The Invalid Parameters error code indicates that the command length is invalid or that a parameter is outside of the specified range.
-#define SMP_PAIRING_FAILED_DHKEY_CHECK_FAILED   0x0B //!< Indicates to the remote device that the DHKey Check value received doesnï¿½ï¿½t match the one calculated by the local device.
+#define SMP_PAIRING_FAILED_DHKEY_CHECK_FAILED   0x0B //!< Indicates to the remote device that the DHKey Check value received doesn¡¯t match the one calculated by the local device.
 #define SMP_PAIRING_FAILED_NUMERIC_COMPARISON   0x0C //!< Indicates that the confirm values in the numeric comparison protocol do not match.
 #define SMP_PAIRING_FAILED_KEY_REJECTED         0x0F //!< Indicates that the device chose not to accept a distributed key.
 
@@ -2040,6 +2052,26 @@ typedef struct
 } gapScanReqReseiveEvent_t;
 
 /**
+ * GAP_CONNECTIONESS_CTE_DONE_EVENT message format.  This message is sent to the
+ * app when the Connectionless CTE Transmit config is complete.
+ */
+typedef struct
+{
+    tmos_event_hdr_t hdr; //!< GAP_MSG_EVENT and status
+    uint8_t opcode;          //!< GAP_CONNECTIONESS_CTE_DONE_EVENT
+} gapMakeConnectionlessCTERspEvent_t;
+
+/**
+ * GAP_END_PERIODIC_ADV_DONE_EVENT message format.  This message is sent to the
+ * app when the Periodic Advertising disable is complete.
+ */
+typedef struct
+{
+    tmos_event_hdr_t hdr; //!< GAP_MSG_EVENT and status
+    uint8_t opcode;          //!< GAP_END_CONNECTIONESS_CTE_DONE_EVENT
+} gapEndConnectionlessCTERspEvent_t;
+
+/**
  * GAP_ADV_DATA_UPDATE_DONE_EVENT message format.  This message is sent to the
  * app when Advertising Data Update is complete.
  */
@@ -2228,10 +2260,19 @@ typedef unsigned long gapRole_States_t;
 #define GAPROLE_PERIODIC_WAIT               (2<<4)  //!< Periodic advertising is started but disable
 #define GAPROLE_PERIODIC_ERROR              (3<<4)  //!< Periodic advertising error occurred
 
-// gapRole_States_t @ 16b'[23-8]- Reserved for future use
+// gapRole_States_t @ 4b'[11-8]-Connectionless CTE Transmit states
+// Connectionless CTE Transmit Enable,only effective when Periodic advertising valid
+#define GAPROLE_STATE_CTE_MASK              (0xF00) //!< gapRole_States_t Connectionless CTE defined
+#define GAPROLE_STATE_CTE_SHIFT             (8)     //!< Connectionless CTE Transmit states shift
+#define GAPROLE_CONNECTIONLESS_CTE_INVALID  (0<<8)  //!< Connectionless CTE Transmit Waiting to be started
+#define GAPROLE_CONNECTIONLESS_CTE_ENABLE   (1<<8)  //!< Connectionless CTE Transmit Enable
+#define GAPROLE_CONNECTIONLESS_CTE_WAIT     (2<<8)  //!< Connectionless CTE Transmit is started but disable
+#define GAPROLE_CONNECTIONLESS_CTE_ERROR    (3<<8)  //!< Connectionless CTE Transmit error occurred
+// gapRole_States_t @ 12b'[23-12]- Reserved for future use
 
 // gapRole_States_t @ 8b'[31-24] - indicates which fields change
 #define GAPROLE_PERIODIC_STATE_VALID        (1<<24) //!< indicates periodic advertising states change
+#define GAPROLE_CTE_T_STATE_VALID           (1<<25) //!< indicates Connectionless CTE Transmit states change
 
 /**
  * gapRole Event Structure

@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "gpio.h"
+#include "timer.h"
 #include "usb_interface.h"
 #include "usb_descriptors.h"
 #include "usb_ch58x_usbfs_reg.h"
@@ -99,6 +100,28 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
     usbd_ep_start_read(ep, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 }
 #endif
+
+static inline bool usb_remote_wakeup()
+{
+    if (!(R8_USB_MIS_ST & RB_UMS_SUSPEND)) {
+        return true;
+    }
+
+    R16_PIN_ANALOG_IE &= ~RB_PIN_USB_DP_PU;
+    R8_UDEV_CTRL |= RB_UD_LOW_SPEED;
+    DelayMs(2);
+    R8_UDEV_CTRL &= ~RB_UD_LOW_SPEED;
+    R16_PIN_ANALOG_IE |= RB_PIN_USB_DP_PU;
+
+    uint16_t timeout_timer = timer_read();
+
+    while (R8_USB_MIS_ST & RB_UMS_SUSPEND) {
+        if ((timer_elapsed(timeout_timer) > 2)) {
+            return false;
+        }
+    }
+    return true;
+}
 
 void usbd_configure_done_callback()
 {
@@ -275,6 +298,10 @@ void init_usb_driver()
 
 void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
 {
+    if (!usb_remote_wakeup()) {
+        return;
+    }
+
     int ret = usbd_ep_start_write(KBD_IN_EP, data, len);
 
     if (ret < 0) {
@@ -291,6 +318,10 @@ void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len)
 #ifdef RGB_RAW_ENABLE
 void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
 {
+    if (!usb_remote_wakeup()) {
+        return;
+    }
+
     int ret = usbd_ep_start_write(RGBRAW_IN_EP, data, len);
 
     if (ret < 0) {
@@ -302,6 +333,10 @@ void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
 
 inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
 {
+    if (!usb_remote_wakeup()) {
+        return;
+    }
+
     int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
 
     if (ret < 0) {
@@ -313,6 +348,10 @@ inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
 #ifdef RAW_ENABLE
 void hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
 {
+    if (!usb_remote_wakeup()) {
+        return;
+    }
+
     int ret = usbd_ep_start_write(QMKRAW_IN_EP, data, len);
 
     if (ret < 0) {

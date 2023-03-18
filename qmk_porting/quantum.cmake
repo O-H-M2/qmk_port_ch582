@@ -1,5 +1,5 @@
 # Copyright 2022 Huckies <https://github.com/Huckies>
-#                zhaqian <https://github.com/zhaqian12>
+# zhaqian <https://github.com/zhaqian12>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -63,7 +63,6 @@ file(GLOB_RECURSE quantum_SOURCES
     "${QMK_BASE_DIR}/quantum/send_string.c"
     "${QMK_BASE_DIR}/quantum/sync_timer.c"
 
-    # "${QMK_BASE_DIR}/quantum/utf8.c"
     # "${QMK_BASE_DIR}/quantum/variable_trace.c"
     # "${QMK_BASE_DIR}/quantum/velocikey.c"
     # "${QMK_BASE_DIR}/quantum/wpm.c"

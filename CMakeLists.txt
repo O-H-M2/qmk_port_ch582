@@ -76,14 +76,17 @@ execute_process(COMMAND git describe --abbrev=0 --tags
     OUTPUT_VARIABLE QMK_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-execute_process(COMMAND date +"%Y-%m-%d-%H:%M:%S"
-    TIMEOUT 5
-    OUTPUT_VARIABLE QMK_BUILDDATE
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+
+if(NOT DEFINED QMK_BUILDDATE)
+    execute_process(COMMAND date +"%Y-%m-%d-%H:%M:%S"
+        TIMEOUT 5
+        OUTPUT_VARIABLE QMK_BUILDDATE
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+endif()
 
 # allow for manual override
-if(NOT keyboard OR(NOT keymap AND NOT BUILD_WIRELESS_LIB))
+if(NOT DEFINED keyboard OR(NOT DEFINED keymap AND NOT BUILD_WIRELESS_LIB))
     include(keyboard_target.cmake)
 endif()
 
@@ -157,8 +160,8 @@ else()
         set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.hex)
         set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_signed.hex)
         set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}.bin)
-        set(UF2_FILE_APP ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade.uf2)
-        set(HEX_FILE_FACTORY ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory.hex)
+        set(UF2_FILE_APP ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_upgrade_${GIT_VERSION}.uf2)
+        set(HEX_FILE_FACTORY ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_factory_${GIT_VERSION}.hex)
         set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.hex)
         set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_IAP.bin)
     else()
@@ -207,6 +210,7 @@ else()
     target_link_libraries(${keyboard}_IAP.elf PUBLIC mcuboot_porting)
 
     target_link_options(${keyboard}.elf PRIVATE
+        -march=rv32imac -mabi=ilp32
         -nostartfiles
         -Xlinker --gc-sections
         -Wl,--print-memory-usage
@@ -215,6 +219,7 @@ else()
         --specs=nosys.specs
     )
     target_link_options(${keyboard}_IAP.elf PRIVATE
+        -march=rv32imac -mabi=ilp32
         -nostartfiles
         -Xlinker --gc-sections
         -Wl,--print-memory-usage
@@ -252,9 +257,9 @@ else()
         include(${WIRELESS_SUBMODULE_PATH}/post_build.cmake)
     else()
         add_custom_target(post_build ALL
-            COMMAND python3 ${PROJECT_SOURCE_DIR}/mcuboot/scripts/imgtool.py sign --header-size 0x1000 --align 4 --slot-size 0x2e000 --version 1.0.0 --pad-header ${HEX_FILE_APP} ${HEX_FILE_APP_SIGNED}
+            COMMAND python3 ${PROJECT_SOURCE_DIR}/mcuboot/scripts/imgtool.py sign --header-size 0x1000 --align 4 --slot-size 0x5e000 --version 1.0.0 --pad-header ${HEX_FILE_APP} ${HEX_FILE_APP_SIGNED}
             COMMAND python3 ${PROJECT_SOURCE_DIR}/utils/uf2conv.py ${HEX_FILE_APP_SIGNED} -c -f 0x1aa143c7 -o ${UF2_FILE_APP}
-            COMMAND mergehex --merge ${HEX_FILE_APP_SIGNED} ${HEX_FILE_IAP} ${CMAKE_CURRENT_LIST_DIR}/sdk/BLE_LIB/CH58xBLE_ROMx.hex --output ${HEX_FILE_FACTORY}
+            COMMAND mergehex --merge ${HEX_FILE_APP_SIGNED} ${HEX_FILE_IAP} --output ${HEX_FILE_FACTORY}
             DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
         )
     endif()

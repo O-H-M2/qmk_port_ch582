@@ -104,6 +104,7 @@ void bootloader_select_boot_mode()
             // cable mode
             kbd_protocol_type = kbd_protocol_usb;
             ch582_set_protocol_interface(&ch582_protocol_usb);
+            PRINT("Protocol select: USB\n");
             break;
 #endif
 #ifdef BLE_ENABLE
@@ -111,6 +112,7 @@ void bootloader_select_boot_mode()
             // bluetooth mode
             kbd_protocol_type = kbd_protocol_ble;
             ch582_set_protocol_interface(&ch582_protocol_ble);
+            PRINT("Protocol select: BLE\n");
             break;
 #endif
 #ifdef ESB_ENABLE
@@ -118,6 +120,7 @@ void bootloader_select_boot_mode()
             // 2.4g mode
             kbd_protocol_type = kbd_protocol_esb;
             ch582_set_protocol_interface(&ch582_protocol_esb);
+            PRINT("Protocol select: ESB\n");
             break;
 #endif
         default:

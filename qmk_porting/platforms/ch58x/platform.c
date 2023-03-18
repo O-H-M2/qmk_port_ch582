@@ -113,4 +113,9 @@ void platform_setup()
     if (interface) {
         interface->ch582_platform_initialize();
     }
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type != kbd_protocol_ble) {
+        ch582_protocol_ble.ch582_protocol_setup();
+    }
+#endif
 }

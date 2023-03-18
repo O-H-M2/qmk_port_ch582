@@ -65,7 +65,7 @@ static const uint8_t msc_ram_descriptor[] = {
     0x00
 };
 static WriteState _wr_state = { 0 };
-static uint8_t buffer[EEPROM_BLOCK_SIZE] = {};
+static uint8_t write_cache[EEPROM_BLOCK_SIZE] = {};
 
 /**
  * "Reload" some functions into IRAM to increase speed
@@ -184,7 +184,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
 
     if (!offset) {
         // a new block
-        my_memset(buffer, 0xFF, EEPROM_BLOCK_SIZE);
+        my_memset(write_cache, 0xFF, EEPROM_BLOCK_SIZE);
     }
 
     for (;;) {
@@ -203,7 +203,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
         // stage the data
         uint16_t actual_len = min(offset + len, EEPROM_BLOCK_SIZE) - offset;
 
-        my_memcpy(buffer + offset, handle_data, actual_len);
+        my_memcpy(write_cache + offset, handle_data, actual_len);
         PRINT("done\n");
         break;
 
@@ -212,7 +212,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
         do {
             ret = FLASH_ROM_ERASE(addr - offset, EEPROM_BLOCK_SIZE);
         } while (ret);
-        FLASH_ROM_WRITE(addr - offset, buffer, offset);
+        FLASH_ROM_WRITE(addr - offset, write_cache, offset);
         my_delay_ms(5);
         PRINT("Retry... ");
     }
@@ -286,6 +286,17 @@ __HIGH_CODE static void iap_handle_new_chip()
 
 __HIGH_CODE static void iap_jump_app(uint8_t need_cleanup)
 {
+    uint32_t jump_address = 0;
+
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+    extern bool iap_validate(uint32_t * address);
+
+    if (iap_validate(&jump_address)) {
+        PRINT("Validated.\n");
+        goto jump;
+    }
+#endif
+
     struct boot_rsp rsp;
     fih_int rc = boot_go(&rsp);
 
@@ -293,36 +304,47 @@ __HIGH_CODE static void iap_jump_app(uint8_t need_cleanup)
         uint32_t image_off = rsp.br_image_off, header_size = rsp.br_hdr->ih_hdr_size;
 
         PRINT("Image found.\n");
-#if FREQ_SYS != 60000000
-        WAIT_FOR_DBG;
-        SetSysClock(Fsys);
-        my_delay_ms(5);
-#ifdef PLF_DEBUG
-        DBG_BAUD_RECONFIG;
-#else
-        UART1_BaudRateCfg(DEBUG_BAUDRATE);
-#endif
-        PRINT("Resetting system clock to %d Hz before entering APP.\n", my_get_sys_clock());
-#endif
-        WAIT_FOR_DBG;
-        if (need_cleanup) {
-            PFIC_DisableIRQ(USB_IRQn);
-            R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
-            R32_USB_CONTROL = 0;
-            R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
-            my_delay_ms(10);
-            R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
-            setPinInputLow(B10);
-            setPinInputLow(B11);
-        }
-        ((void (*)(void))((int *)(image_off + header_size)))();
+        jump_address = image_off + header_size;
+        goto jump;
     } else {
         PRINT("Failed searching for a bootable image.\n");
-        bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
-        WAIT_FOR_DBG;
-        mcu_reset();
+        goto fail;
     }
 
+jump:
+#if FREQ_SYS != 60000000
+    WAIT_FOR_DBG;
+    SetSysClock(Fsys);
+    my_delay_ms(5);
+#ifdef PLF_DEBUG
+    DBG_BAUD_RECONFIG;
+#else
+    UART1_BaudRateCfg(DEBUG_BAUDRATE);
+#endif
+    PRINT("Resetting system clock to %d Hz before entering APP.\n", my_get_sys_clock());
+#endif
+    WAIT_FOR_DBG;
+    if (need_cleanup) {
+        PFIC_DisableIRQ(USB_IRQn);
+        R16_PIN_ANALOG_IE &= ~(RB_PIN_USB_IE | RB_PIN_USB_DP_PU);
+        R32_USB_CONTROL = 0;
+        R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
+        my_delay_ms(10);
+        R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
+        setPinInputLow(B10);
+        setPinInputLow(B11);
+    }
+    ((void (*)(void))((int *)(jump_address)))();
+
+    while (1) {
+        __nop();
+    }
+    __builtin_unreachable();
+
+fail:
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_IAP);
+    WAIT_FOR_DBG;
+    mcu_reset();
     while (1) {
         __nop();
     }
@@ -378,7 +400,7 @@ __HIGH_CODE static void Main_Circulation()
     }
 }
 
-__HIGH_CODE int main()
+int main()
 {
 #ifdef HSE_LOAD_CAPACITANCE
 #if HSE_LOAD_CAPACITANCE == 10

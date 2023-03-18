@@ -18,8 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <stdint.h>
-#include "core_riscv.h"
-#include "CH58x_sys.h"
 
 // Macro to help make GPIO and other controls atomic.
 
@@ -35,7 +33,9 @@ static uint32_t irq_status;
 
 static __inline__ uint8_t __interrupt_disable__(void)
 {
-    SYS_DisableAllIrq(&irq_status);
+    irq_status = (PFIC->ISR[0] >> 8) | (PFIC->ISR[1] << 24);
+    PFIC->IRER[0] = 0xffffffff;
+    PFIC->IRER[1] = 0xffffffff;
 
     return 1;
 }
@@ -44,13 +44,14 @@ static __inline__ void __interrupt_enable__(const uint8_t *__s)
 {
     (void)__s;
 
-    SYS_RecoverIrq(irq_status);
+    PFIC->IENR[0] = (irq_status << 8);
+    PFIC->IENR[1] = (irq_status >> 24);
+
     __nop();
 }
 
-#define ATOMIC_BLOCK(type) for (type, __ToDo = __interrupt_disable__(); __ToDo; __ToDo = 0)
-#define ATOMIC_FORCEON     uint8_t sreg_save __attribute__((__cleanup__(__interrupt_enable__))) = 0
-
+#define ATOMIC_BLOCK(type)        for (type, __ToDo = __interrupt_disable__(); __ToDo; __ToDo = 0)
+#define ATOMIC_FORCEON            uint8_t sreg_save __attribute__((__cleanup__(__interrupt_enable__))) = 0
 #define ATOMIC_BLOCK_RESTORESTATE _Static_assert(0, "ATOMIC_BLOCK_RESTORESTATE not implemented")
 #define ATOMIC_BLOCK_FORCEON      ATOMIC_BLOCK(ATOMIC_FORCEON)
 

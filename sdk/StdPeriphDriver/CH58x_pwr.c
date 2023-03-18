@@ -285,8 +285,11 @@ void LowPower_Halt(void)
 __HIGH_CODE
 void LowPower_Sleep(uint8_t rm)
 {
+    __attribute__((aligned(4))) uint8_t MacAddr[6] = {0};
     uint8_t x32Kpw, x32Mpw;
     uint16_t power_plan;
+
+    GetMACAddress(MacAddr);
 
     x32Kpw = R8_XT32K_TUNE;
     x32Mpw = R8_XT32M_TUNE;
@@ -319,13 +322,14 @@ void LowPower_Sleep(uint8_t rm)
         __nop();
         DelayUs(70);
 
-        uint8_t mac[6] = {0};
+        {
+            __attribute__((aligned(4))) uint8_t mac[6] = {0};
 
-        GetMACAddress(mac);
+            GetMACAddress(mac);
 
-        if(mac[5] != 0xff)
-            break;
-
+            if(*((uint32_t *)mac) == *((uint32_t *)MacAddr))
+                break;
+        }
     }while(1);
 
     sys_safe_access_enable();
