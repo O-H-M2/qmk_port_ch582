@@ -41,16 +41,20 @@ led_config_t g_led_config = {
 
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
-    RGB_MATRIX_INDICATOR_SET_COLOR(0, 0x00, 0x00, 0x00);
-    RGB_MATRIX_INDICATOR_SET_COLOR(1, 0x00, 0x00, 0x00);
-    RGB_MATRIX_INDICATOR_SET_COLOR(2, 0x00, 0x00, 0x00);
-    RGB_MATRIX_INDICATOR_SET_COLOR(3, 0x00, 0x00, 0x00);
+    if (led_min <= 0 && led_max >= 3) {
+        RGB_MATRIX_INDICATOR_SET_COLOR(0, 0x00, 0x00, 0x00);
+        RGB_MATRIX_INDICATOR_SET_COLOR(1, 0x00, 0x00, 0x00);
+        RGB_MATRIX_INDICATOR_SET_COLOR(2, 0x00, 0x00, 0x00);
+        RGB_MATRIX_INDICATOR_SET_COLOR(3, 0x00, 0x00, 0x00);
+        if (host_keyboard_led_state().caps_lock) {
+            RGB_MATRIX_INDICATOR_SET_COLOR(3, 0xFF, 0x00, 0x00);
+        }
+    }
+
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
         return false;
     }
-    if (host_keyboard_led_state().caps_lock) {
-        RGB_MATRIX_INDICATOR_SET_COLOR(3, 0xFF, 0x00, 0x00);
-    }
+
 #if defined BATTERY_MEASURE_PIN || defined BLE_ENABLE
     extern void wireless_rgb_indicator_task(uint8_t led_min, uint8_t led_max);
 
@@ -61,41 +65,12 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 
 #endif
 
-bool ulight_state = 0;
-
+// logo灯板会在USB固件下常亮，双模固件下跟随WS2812，不是bug
 void keyboard_pre_init_user(void)
 {
-    if (rgb_matrix_is_enabled()) {
-        ulight_state = 1;
-        writePinHigh(ULIGHT_IO);
-    } else {
-        ulight_state = 0;
-        writePinLow(ULIGHT_IO);
-    }
-}
+    writePinHigh(ULIGHT_IO);
 
-void ulight_tog()
-{
-    if (rgb_matrix_is_enabled()) {
-        ulight_state = 0;
-        writePinLow(ULIGHT_IO);
-    } else {
-        ulight_state = 1;
-        writePinHigh(ULIGHT_IO);
-    }
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t *record)
-{
-    switch (keycode) {
-        case RGB_TOG:
-            if (record->event.pressed) {
-                ulight_tog();
-            }
-            return false;
-        default:
-            return true;
-    }
+    setPinOutput(ULIGHT_IO);
 }
 
 int main()
