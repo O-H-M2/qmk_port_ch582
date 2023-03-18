@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VENDOR_ID    0xCAFE
 #define PRODUCT_ID   0x0B96
 #define DEVICE_VER   0x0001
-#define MANUFACTURER AM78
-#define PRODUCT      AM78
+#define MANUFACTURER AM78_2
+#define PRODUCT      AM78_2
 
 #define MATRIX_ROWS 6
 #define MATRIX_COLS 15
