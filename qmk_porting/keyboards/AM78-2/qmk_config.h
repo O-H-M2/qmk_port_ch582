@@ -66,6 +66,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 #ifdef RGB_MATRIX_ENABLE
+#define BLE_SLOT_1_INDICATOR [0][1]
+#define BLE_SLOT_2_INDICATOR [0][2]
+#define BLE_SLOT_3_INDICATOR [0][3]
+#define BLE_SLOT_4_INDICATOR [0][4]
 #define RGB_MATRIX_KEYPRESSES
 //#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define WS2812_SPI_DRIVER             2
