@@ -153,7 +153,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_ONESHOT
 
 #define ULIGHT_IO B23
-
-#include "mcuconf.h"
-#include "halconf.h"
-#include "pre_handler.h"

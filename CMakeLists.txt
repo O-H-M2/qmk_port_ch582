@@ -235,6 +235,31 @@ else()
         ${KEYBOARD_ROOT}/qmk_config.h
     )
 
+    if(EXISTS "${KEYBOARD_ROOT}/mcuconf.h")
+        target_precompile_headers(${keyboard}.elf PUBLIC
+            ${KEYBOARD_ROOT}/mcuconf.h
+        )
+        target_precompile_headers(${keyboard}_IAP.elf PUBLIC
+            ${KEYBOARD_ROOT}/mcuconf.h
+        )
+    endif()
+
+    if(EXISTS "${KEYBOARD_ROOT}/halconf.h")
+        target_precompile_headers(${keyboard}.elf PUBLIC
+            ${KEYBOARD_ROOT}/halconf.h
+        )
+        target_precompile_headers(${keyboard}_IAP.elf PUBLIC
+            ${KEYBOARD_ROOT}/halconf.h
+        )
+    endif()
+
+    target_precompile_headers(${keyboard}.elf PUBLIC
+        ${PROJECT_SOURCE_DIR}/qmk_porting/protocol/pre_handler.h
+    )
+    target_precompile_headers(${keyboard}_IAP.elf PUBLIC
+        ${PROJECT_SOURCE_DIR}/qmk_porting/protocol/pre_handler.h
+    )
+
     if(BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
         add_library(wireless_lib STATIC IMPORTED)
         set_property(TARGET wireless_lib PROPERTY IMPORTED_LOCATION ${WIRELESS_LIB_FILE})
