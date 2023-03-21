@@ -28,3 +28,4 @@ void battery_init();
 uint16_t battery_measure();
 uint8_t battery_calculate(uint16_t adcVal);
 uint8_t battery_get_last_percentage();
+uint32_t battery_get_last_measure();
