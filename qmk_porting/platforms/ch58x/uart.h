@@ -5,6 +5,8 @@
 #include "gpio.h"
 
 void uart_init(uint32_t baud);
+void uart_start();
+void uart_stop();
 void uart_write(uint8_t data);
 uint8_t uart_read();
 void uart_transmit(const uint8_t *data, uint16_t length);

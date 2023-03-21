@@ -14,6 +14,29 @@ void uart_init(uint32_t baud)
     R8_UART0_DIV = 1;
 }
 
+void uart_start()
+{
+    writePinHigh(B7);
+    setPinInputHigh(B4);
+    setPinOutput(B7);
+    do {
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_UART0;
+        sys_safe_access_enable();
+    } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_UART0);
+}
+
+void uart_stop()
+{
+    setPinInputLow(B7);
+    setPinInputLow(B4);
+    do {
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF0 |= RB_SLP_CLK_UART0;
+        sys_safe_access_enable();
+    } while (~(R8_SLP_CLK_OFF0 & RB_SLP_CLK_UART0));
+}
+
 void uart_write(uint8_t data)
 {
     while (R8_UART0_TFC == UART_FIFO_SIZE) {

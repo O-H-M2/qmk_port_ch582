@@ -97,7 +97,8 @@
         "rgb_matrix.h": "c",
         "usb_ch58x_usbfs_reg.h": "c",
         "stdio.h": "c",
-        "spi_master.h": "c"
+        "spi_master.h": "c",
+        "uart.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
