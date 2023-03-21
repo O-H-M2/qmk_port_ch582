@@ -276,4 +276,9 @@ uint8_t battery_get_last_percentage()
     return last_percentage;
 }
 
+uint32_t battery_get_last_measure()
+{
+    return last_measure;
+}
+
 #endif
