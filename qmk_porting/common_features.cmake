@@ -57,6 +57,48 @@ if(ENCODER_ENABLE)
     endif()
 endif()
 
+# UCIS_ENABLE
+if(UCIS_ENABLE)
+    add_definitions(-DUCIS_ENABLE)
+    set(UNICODE_COMMON_ENABLE ON CACHE BOOL "QMK" FORCE)
+    message(STATUS "UCIS_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_ucis.c"
+    )
+endif()
+
+# UNICODEMAP_ENABLE
+if(UNICODEMAP_ENABLE)
+    add_definitions(-DUNICODEMAP_ENABLE)
+    set(UNICODE_COMMON_ENABLE ON CACHE BOOL "QMK" FORCE)
+    message(STATUS "UNICODEMAP_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_unicodemap.c"
+    )
+endif()
+
+# UNICODE_ENABLE
+if(UNICODE_ENABLE)
+    add_definitions(-DUNICODE_ENABLE)
+    set(UNICODE_COMMON_ENABLE ON CACHE BOOL "QMK" FORCE)
+    message(STATUS "UNICODE_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_unicode.c"
+    )
+endif()
+
+# UNICODE_COMMON_ENABLE
+if(UNICODE_COMMON_ENABLE)
+    add_definitions(-DUNICODE_COMMON_ENABLE)
+    message(STATUS "UNICODE_COMMON_ENABLE")
+    include_directories(${QMK_BASE_DIR}/quantum/unicode)
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_unicode_common.c"
+        "${QMK_BASE_DIR}/quantum/unicode/unicode.c"
+        "${QMK_BASE_DIR}/quantum/unicode/utf8.c"
+    )
+endif()
+
 # VIA_ENABLE
 if(VIA_ENABLE)
     add_definitions(-DVIA_ENABLE -DRAW_ENABLE -DDYNAMIC_KEYMAP_ENABLE)
