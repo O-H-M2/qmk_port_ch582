@@ -57,6 +57,16 @@ if(ENCODER_ENABLE)
     endif()
 endif()
 
+# UCIS_ENABLE
+if(UCIS_ENABLE)
+    add_definitions(-DUCIS_ENABLE)
+    set(UNICODE_COMMON_ENABLE ON CACHE BOOL "QMK" FORCE)
+    message(STATUS "UCIS_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_ucis.c"
+    )
+endif()
+
 # UNICODEMAP_ENABLE
 if(UNICODEMAP_ENABLE)
     add_definitions(-DUNICODEMAP_ENABLE)
@@ -64,6 +74,16 @@ if(UNICODEMAP_ENABLE)
     message(STATUS "UNICODEMAP_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/process_keycode/process_unicodemap.c"
+    )
+endif()
+
+# UNICODE_ENABLE
+if(UNICODE_ENABLE)
+    add_definitions(-DUNICODE_ENABLE)
+    set(UNICODE_COMMON_ENABLE ON CACHE BOOL "QMK" FORCE)
+    message(STATUS "UNICODE_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_unicode.c"
     )
 endif()
 
