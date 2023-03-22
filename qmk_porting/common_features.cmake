@@ -331,6 +331,14 @@ if(SPI_MASTER_ENABLE)
     )
 endif()
 
+# UART_ENABLE
+if(UART_ENABLE)
+    message(STATUS "UART_ENABLE")
+    list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/uart.c"
+    )
+endif()
+
 # USB_ENABLE
 if(USB_ENABLE)
     add_definitions(-DUSB_ENABLE -DEP_NUMS=8)
