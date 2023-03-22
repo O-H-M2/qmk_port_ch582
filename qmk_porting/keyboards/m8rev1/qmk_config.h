@@ -86,7 +86,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //              1QA     2QA
 #define COLS { 0x0001, 0x0100}
 // the test revision had a mistake and all cols are on one register
-#define COLS { 0x0004, 0x0002}
+#define COLS { 0x0008, 0x0004}
 #define ROWS {3,2,1,0}
 
 #define DEBOUNCE 5
