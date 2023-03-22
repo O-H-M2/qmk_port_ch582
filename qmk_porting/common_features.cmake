@@ -234,6 +234,7 @@ if(EEPROM_ENABLE)
     elseif(EEPROM_DRIVER STREQUAL "wear_leveling")
         add_definitions(-DEEPROM_WEAR_LEVELING)
         include_directories(${QMK_BASE_DIR}/drivers/eeprom)
+        include_directories(${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/fnv)
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/eeprom_wear_leveling.c"
             "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/eeprom/wear_leveling_ch58x.c"
