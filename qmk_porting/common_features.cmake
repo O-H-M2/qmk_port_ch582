@@ -262,6 +262,7 @@ if(WS2812_REQUIRED)
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/drivers/ws2812/ws2812_spi.c"
         )
+        set(SPI_OCCUPIED ON CACHE BOOL "KB" FORCE)
     elseif(WS2812_DRIVER STREQUAL "pwm")
         add_definitions(-DWS2812_DRIVER_PWM)
         list(APPEND QMK_PORTING_SOURCES
@@ -310,11 +311,22 @@ if(AW20216_REQUIRED)
     # )
     # list(APPEND QMK_PORTING_SOURCES
     # "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
-    # "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
     # )
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216.c"
         "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
+    )
+    set(SPI_MASTER_ENABLE ON CACHE BOOL "KB" FORCE)
+endif()
+
+# SPI_MASTER_ENABLE
+if(SPI_MASTER_ENABLE)
+    if(SPI_OCCUPIED)
+        message(FATAL_ERROR "SPI controller has exclusive use!")
+    endif()
+
+    message(STATUS "SPI_MASTER_ENABLE")
+    list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
     )
 endif()

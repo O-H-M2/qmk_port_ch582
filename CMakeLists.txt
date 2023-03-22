@@ -137,6 +137,7 @@ include(qmk_porting/qmk_porting.cmake)
 include(qmk_porting/quantum.cmake)
 include(CherryUSB_porting/CherryUSB.cmake)
 include(qmk_porting/tmk_core.cmake)
+include(qmk_porting/default_rules.cmake)
 include(qmk_porting/common_features.cmake)
 add_subdirectory(sdk)
 
