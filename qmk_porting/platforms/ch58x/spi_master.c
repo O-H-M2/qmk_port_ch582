@@ -66,10 +66,12 @@ void spi_init()
     R16_PIN_ALTERNATE |= RB_PIN_SPI0;
     setPinOutput(B13);
     setPinOutput(B14);
+    setPinInputHigh(B15);
 #else
     R16_PIN_ALTERNATE &= ~RB_PIN_SPI0;
     setPinOutput(A13);
     setPinOutput(A14);
+    setPinInputHigh(A15);
 #endif
     R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
     R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE | RB_SPI_SCK_OE;
@@ -176,7 +178,7 @@ spi_status_t spi_write(uint8_t data)
     R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
     R8_SPI0_BUFFER = data;
 
-    while (R8_SPI0_FIFO_COUNT) {
+    while (!(R8_SPI0_INT_FLAG & RB_SPI_FREE)) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             PRINT("SPI write timeout.\n");
             return SPI_STATUS_TIMEOUT;
@@ -200,7 +202,7 @@ spi_status_t spi_read()
     R8_SPI0_CTRL_MOD &= ~RB_SPI_FIFO_DIR;
     R8_SPI0_BUFFER = 0xFF; // send a dummy byte
 
-    while (R8_SPI0_FIFO_COUNT) {
+    while (!(R8_SPI0_INT_FLAG & RB_SPI_FREE)) {
         if (timer_elapsed(timeout_timer) >= SPI_TIMEOUT) {
             PRINT("SPI read timeout.\n");
             return SPI_STATUS_TIMEOUT;

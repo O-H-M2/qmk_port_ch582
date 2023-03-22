@@ -32,9 +32,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 #define MATRIX_COL_PINS                                            \
     {                                                              \
-        A6, A0, A1, A2, A3, A15, A14, A13, A12, A7, B7, B6, B5, B4 \
+        B4, B5, B6, B7, A7, A12, A13, A14, A15, A3, A2, A1, A0, A6 \
     }
-
 #define DYNAMIC_KEYMAP_LAYER_COUNT 10
 
 #define DIODE_DIRECTION       COL2ROW
@@ -54,7 +53,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define POWER_DETECT_PIN    B12
 
 #ifdef RGB_MATRIX_ENABLE
-#define WS2812_SPI_DRIVER             2
+#define RGB_MATRIX_KEYPRESSES
+//#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define RGBLED_NUM                    64
 #define RGB_MATRIX_LED_COUNT          RGBLED_NUM
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 32
@@ -145,7 +145,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_LAYER
 //#define NO_ACTION_TAPPING
 //#define NO_ACTION_ONESHOT
-
-#include "mcuconf.h"
-#include "halconf.h"
-#include "pre_handler.h"

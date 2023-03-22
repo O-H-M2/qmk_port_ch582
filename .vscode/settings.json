@@ -98,7 +98,8 @@
         "usb_ch58x_usbfs_reg.h": "c",
         "stdio.h": "c",
         "process_unicode_common.h": "c",
-        "unicode.h": "c"
+        "unicode.h": "c",
+        "spi_master.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,

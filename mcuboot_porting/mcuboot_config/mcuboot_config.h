@@ -102,11 +102,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* Uncomment if your flash map API supports flash_area_get_sectors().
  * See the flash APIs for more details. */
-/* #define MCUBOOT_USE_FLASH_AREA_GET_SECTORS */
+#define MCUBOOT_USE_FLASH_AREA_GET_SECTORS
 
 /* Default maximum number of flash sectors per image slot; change
  * as desirable. */
-#define MCUBOOT_MAX_IMG_SECTORS 128
+#define MCUBOOT_MAX_IMG_SECTORS ((APP_CODE_END_ADDR - APP_CODE_START_ADDR) / FLASH_MIN_WR_SIZE)
 
 /* Default number of separately updateable images; change in case of
  * multiple images. */

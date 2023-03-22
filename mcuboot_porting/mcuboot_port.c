@@ -181,27 +181,27 @@ uint8_t flash_area_erased_val(const struct flash_area *area)
     return 0xff;
 }
 
-// int flash_area_get_sectors(int fa_id, uint32_t *count, struct flash_sector *sectors)
-// {
-//     const struct flash_area *fa = prv_lookup_flash_area(fa_id);
+int flash_area_get_sectors(int fa_id, uint32_t *count, struct flash_sector *sectors)
+{
+    const struct flash_area *fa = prv_lookup_flash_area(fa_id);
 
-//     if (fa->fa_device_id != FLASH_DEVICE_INTERNAL_FLASH) {
-//         return -1;
-//     }
+    if (fa->fa_device_id != FLASH_DEVICE_INTERNAL_FLASH) {
+        return -1;
+    }
 
-//     const uint32_t sector_size = FLASH_MIN_WR_SIZE;
-//     uint32_t total_count = 0;
+    const uint32_t sector_size = FLASH_MIN_WR_SIZE;
+    uint32_t total_count = 0;
 
-//     for (uint32_t off = 0; off < fa->fa_size; off += sector_size) {
-//         // Note: Offset here is relative to flash area, not device
-//         sectors[total_count].fs_off = off;
-//         sectors[total_count].fs_size = sector_size;
-//         total_count++;
-//     }
+    for (uint32_t off = 0; off < fa->fa_size; off += sector_size) {
+        // Note: Offset here is relative to flash area, not device
+        sectors[total_count].fs_off = off;
+        sectors[total_count].fs_size = sector_size;
+        total_count++;
+    }
 
-//     *count = total_count;
-//     return 0;
-// }
+    *count = total_count;
+    return 0;
+}
 
 int flash_area_id_from_multi_image_slot(int image_index, int slot)
 {
@@ -225,17 +225,9 @@ int flash_area_id_from_image_slot(int slot)
 
 int flash_area_to_sectors(int idx, int *cnt, struct flash_area *fa)
 {
-    MCUBOOT_LOG_DBG("%s: idx=%d, slot=%d", __func__, fa->fa_id);
+    MCUBOOT_LOG_ERR("%s: idx=%d, slot=%d", __func__, fa->fa_id);
 
-    int rc = 0;
-
-    if (fa->fa_device_id == FLASH_DEVICE_INTERNAL_FLASH) {
-        (void)idx;
-        (void)cnt;
-        rc = 0;
-    }
-
-    return rc;
+    return -1;
 }
 
 void example_assert_handler(const char *file, int line)

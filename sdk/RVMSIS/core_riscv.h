@@ -350,6 +350,7 @@ RV_STATIC_INLINE void PFIC_SystemReset(void)
 }
 
 #define SysTick_LOAD_RELOAD_Msk    (0xFFFFFFFFFFFFFFFF)
+#define SysTick_CTLR_SWIE          (1 << 31)
 #define SysTick_CTLR_INIT          (1 << 5)
 #define SysTick_CTLR_MODE          (1 << 4)
 #define SysTick_CTLR_STRE          (1 << 3)
