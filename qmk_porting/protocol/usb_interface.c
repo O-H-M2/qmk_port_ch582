@@ -42,13 +42,13 @@ static struct usbd_interface extrakey_interface;
 static struct usbd_interface qmkraw_interface;
 #endif
 /*!< hid state ! Data can be sent only when state is idle  */
-static uint8_t keyboard_state = HID_STATE_IDLE;
+static volatile uint8_t keyboard_state = HID_STATE_IDLE;
 #ifdef RGB_RAW_ENABLE
-static uint8_t rgbraw_state = HID_STATE_IDLE;
+static volatile uint8_t rgbraw_state = HID_STATE_IDLE;
 #endif
-static uint8_t extrakey_state = HID_STATE_IDLE;
+static volatile uint8_t extrakey_state = HID_STATE_IDLE;
 #ifdef RAW_ENABLE
-static uint8_t qmkraw_state = HID_STATE_IDLE;
+static volatile uint8_t qmkraw_state = HID_STATE_IDLE;
 #endif
 
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t kbd_out_buffer[CONFIG_USB_ALIGN_SIZE];
@@ -302,6 +302,10 @@ void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
         return;
     }
 
+    while (keyboard_state == HID_STATE_BUSY) {
+        __nop();
+    }
+
     int ret = usbd_ep_start_write(KBD_IN_EP, data, len);
 
     if (ret < 0) {
@@ -322,6 +326,10 @@ void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
         return;
     }
 
+    while (rgbraw_state == HID_STATE_BUSY) {
+        __nop();
+    }
+
     int ret = usbd_ep_start_write(RGBRAW_IN_EP, data, len);
 
     if (ret < 0) {
@@ -337,6 +345,10 @@ inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
         return;
     }
 
+    while (extrakey_state == HID_STATE_BUSY) {
+        __nop();
+    }
+
     int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
 
     if (ret < 0) {
@@ -350,6 +362,10 @@ void hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
 {
     if (!usb_remote_wakeup()) {
         return;
+    }
+
+    while (qmkraw_state == HID_STATE_BUSY) {
+        __nop();
     }
 
     int ret = usbd_ep_start_write(QMKRAW_IN_EP, data, len);
