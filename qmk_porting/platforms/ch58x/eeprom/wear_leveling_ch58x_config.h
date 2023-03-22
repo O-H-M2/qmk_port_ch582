@@ -23,12 +23,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BACKING_STORE_WRITE_SIZE 2
 #endif
 
-// 4kB backing space allocated
+// 8kB backing space allocated
 #ifndef WEAR_LEVELING_BACKING_SIZE
-#define WEAR_LEVELING_BACKING_SIZE 0x1000
+#define WEAR_LEVELING_BACKING_SIZE 0x2000
 #endif
 
-// 2kB logical EEPROM
+// 4kB logical EEPROM
 #ifndef WEAR_LEVELING_LOGICAL_SIZE
-#define WEAR_LEVELING_LOGICAL_SIZE 0x800
+#define WEAR_LEVELING_LOGICAL_SIZE 0x1000
 #endif
