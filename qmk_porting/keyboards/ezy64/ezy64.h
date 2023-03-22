@@ -20,11 +20,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 #include "extra_keycode.h"
 
-enum unicode_names {
-    la = 0,
-    lA
-};
-
 // clang-format off
 #define LAYOUT_all( \
 	K000, K001, K002, K003, K004, K005, K006, K007, K008, K009, K010, K011, K012, K013,   \

@@ -16,39 +16,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+
+enum unicode_names {
+    la = 0,
+    lA
+};
+
+const uint32_t PROGMEM unicode_map[] = {
+    [la] = 0x03B1, // α
+    [lA] = 0x0307  //
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT_all(/* 0: qwerty */
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A
-                     ),
+                     XP(la, lA), KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A),
     [1] = LAYOUT_all(/* 1: fn */
-                    KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A
-                    ),
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A),
     [2] = LAYOUT_all(/* 2: fn */
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A
-                     ),
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A),
     [3] = LAYOUT_all(/* 3: fn */
-                    KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,
-                     KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A,KC_A
-                     ),
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A,
+                     KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A, KC_A),
 
 };
 
@@ -62,4 +69,3 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
 };
 
 #endif
-

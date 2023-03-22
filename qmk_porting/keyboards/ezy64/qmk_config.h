@@ -42,8 +42,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
 
-#define UNICODE_SELECTED_MODES UNICODE_MODE_WINCOMPOSE
-
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
 #define WS2812_EN_PIN   A5
