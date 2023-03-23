@@ -99,7 +99,8 @@
         "stdio.h": "c",
         "process_unicode_common.h": "c",
         "unicode.h": "c",
-        "spi_master.h": "c"
+        "spi_master.h": "c",
+        "uart.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
