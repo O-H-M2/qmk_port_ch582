@@ -520,7 +520,6 @@ int main()
             break;
         }
 
-        bool bootmagic = false;
 #ifdef MATRIX_ROW_PINS
         pin_t rows[] = MATRIX_ROW_PINS;
 #if DIODE_DIRECTION == COL2ROW
@@ -529,13 +528,8 @@ int main()
         pin_t input_pin = rows[buffer[0]];
 #endif
 #else
-#if DIODE_DIRECTION == COL2ROW
-        pin_t output_pin = NO_PIN;
-#else
-        pin_t input_pin = NO_PIN;
+        break;
 #endif
-#endif
-
 #ifdef MATRIX_COL_PINS
         pin_t cols[] = MATRIX_COL_PINS;
 #if DIODE_DIRECTION == COL2ROW
@@ -544,33 +538,31 @@ int main()
         pin_t output_pin = cols[buffer[1]];
 #endif
 #else
-#if DIODE_DIRECTION == COL2ROW
-        pin_t input_pin = NO_PIN;
-#else
-        pin_t output_pin = NO_PIN;
+        break;
 #endif
-#endif
-        if ((input_pin != NO_PIN) && (output_pin != NO_PIN)) {
-            setPinInputHigh(input_pin);
-            writePinLow(output_pin);
-            setPinOutput(output_pin);
-            do {
-                if (readPin(input_pin)) {
-                    break;
-                }
-                my_delay_ms(DEBOUNCE * 3);
-                if (readPin(input_pin)) {
-                    break;
-                }
-                bootmagic = true;
-            } while (0);
-        }
+        setPinInputHigh(input_pin);
+        writePinLow(output_pin);
+        setPinOutput(output_pin);
+
+        bool bootmagic = false;
+
+        do {
+            if (readPin(input_pin)) {
+                break;
+            }
+            my_delay_ms(DEBOUNCE * 3);
+            if (readPin(input_pin)) {
+                break;
+            }
+            bootmagic = true;
+        } while (0);
         if (bootmagic) {
             PRINT("Entering DFU...\n");
             eeprom_driver_erase();
             R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
         }
     } while (0);
+
     iap_decide_jump(false);
 #else
     // TODO: implement judging condition for 2.4g dongle
