@@ -66,6 +66,10 @@ __HIGH_CODE void gpio_strap()
     setPinInputHigh(B12 | B13);
 #endif
 #endif
+#ifdef UART_ENABLE
+    pin_b &= ~((B4 | B7) & 0x7FFFFFFF);
+    setPinInputHigh(B4 | B7);
+#endif
     setPinInputLow(pin_a);
     setPinInputLow(pin_b);
 #ifdef BATTERY_MEASURE_PIN
@@ -112,6 +116,10 @@ __attribute__((noinline)) __attribute__((weak)) void battery_critical_gpio_prere
     pin_b &= ~((B12 | B13) & 0x7FFFFFFF);
     setPinInputHigh(B12 | B13);
 #endif
+#endif
+#ifdef UART_ENABLE
+    pin_b &= ~((B4 | B7) & 0x7FFFFFFF);
+    setPinInputHigh(B4 | B7);
 #endif
 #ifdef BATTERY_MEASURE_PIN
     if (BATTERY_MEASURE_PIN & 0x80000000) {
