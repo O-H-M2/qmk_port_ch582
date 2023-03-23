@@ -28,8 +28,8 @@ void uart_start()
 
 void uart_stop()
 {
-    setPinInputLow(B7);
-    setPinInputLow(B4);
+    setPinInputHigh(B7);
+    setPinInputHigh(B4);
     do {
         sys_safe_access_enable();
         R8_SLP_CLK_OFF0 |= RB_SLP_CLK_UART0;
