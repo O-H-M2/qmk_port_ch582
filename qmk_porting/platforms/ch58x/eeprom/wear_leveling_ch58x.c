@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "eeprom.h"
 
 static bool backing_store_locked = false;
+static uint32_t irq_status = 0;
 
 bool backing_store_init(void)
 {
@@ -30,6 +31,11 @@ bool backing_store_init(void)
 
 bool backing_store_unlock(void)
 {
+    if (!backing_store_locked) {
+        return true;
+    }
+
+    SYS_RecoverIrq(irq_status);
     backing_store_locked = false;
     return true;
 }
@@ -66,6 +72,11 @@ bool backing_store_write(uint32_t address, backing_store_int_t value)
 
 bool backing_store_lock(void)
 {
+    if (backing_store_locked) {
+        return true;
+    }
+
+    SYS_DisableAllIrq(&irq_status);
     backing_store_locked = true;
     return true;
 }
