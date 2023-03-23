@@ -342,6 +342,7 @@ endif()
 
 # UART_ENABLE
 if(UART_ENABLE)
+    add_definitions(-DUART_ENABLE)
     message(STATUS "UART_ENABLE")
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/uart.c"
