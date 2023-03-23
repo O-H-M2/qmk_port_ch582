@@ -37,6 +37,11 @@ __HIGH_CODE void gpio_strap()
     } else {
         pin_a &= ~(DRIVER_1_CS & 0x7FFFFFFF);
     }
+    // if (DRIVER_1_EN & 0x80000000) {
+    //     pin_b &= ~(DRIVER_1_EN & 0x7FFFFFFF);
+    // } else {
+    //     pin_a &= ~(DRIVER_1_EN & 0x7FFFFFFF);
+    // }
     setPinInputHigh(DRIVER_1_CS);
 #ifdef DRIVER_2_EN
     if (DRIVER_2_CS & 0x80000000) {
@@ -44,7 +49,21 @@ __HIGH_CODE void gpio_strap()
     } else {
         pin_a &= ~(DRIVER_2_CS & 0x7FFFFFFF);
     }
+    // if (DRIVER_2_EN & 0x80000000) {
+    //     pin_b &= ~(DRIVER_2_EN & 0x7FFFFFFF);
+    // } else {
+    //     pin_a &= ~(DRIVER_2_EN & 0x7FFFFFFF);
+    // }
     setPinInputHigh(DRIVER_2_CS);
+#endif
+#endif
+#ifdef I2C_MASTER_ENABLE
+#ifdef I2C_IO_REMAPPING
+    pin_b &= ~((B20 | B21) & 0x7FFFFFFF);
+    setPinInputHigh(B20 | B21);
+#else
+    pin_b &= ~((B12 | B13) & 0x7FFFFFFF);
+    setPinInputHigh(B12 | B13);
 #endif
 #endif
     setPinInputLow(pin_a);
@@ -57,38 +76,50 @@ __HIGH_CODE void gpio_strap()
 #endif
 }
 
-__attribute__((noinline)) void battery_critical_gpio_prerequisite()
+__attribute__((noinline)) __attribute__((weak)) void battery_critical_gpio_prerequisite()
 {
-    pin_t pin_a_mask = GPIO_Pin_All, pin_b_mask = GPIO_Pin_All;
-    pin_t pin_a_status = GPIOA_ReadPort(), pin_b_status = GPIOB_ReadPort();
+    pin_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;
 
 #if defined LSE_ENABLE && LSE_ENABLE
-    pin_a_mask &= ~bX32KI;
-    pin_a_mask &= ~bX32KO;
+    pin_a &= ~bX32KI;
+    pin_a &= ~bX32KO;
+#endif
+#ifdef WS2812
+    if (WS2812_EN_PIN & 0x80000000) {
+        pin_b &= ~(WS2812_EN_PIN & 0x7FFFFFFF);
+    } else {
+        pin_a &= ~(WS2812_EN_PIN & 0x7FFFFFFF);
+    }
+#elif defined AW20216
+    if (DRIVER_1_EN & 0x80000000) {
+        pin_b &= ~(DRIVER_1_EN & 0x7FFFFFFF);
+    } else {
+        pin_a &= ~(DRIVER_1_EN & 0x7FFFFFFF);
+    }
+#ifdef DRIVER_2_EN
+    if (DRIVER_2_EN & 0x80000000) {
+        pin_b &= ~(DRIVER_2_EN & 0x7FFFFFFF);
+    } else {
+        pin_a &= ~(DRIVER_2_EN & 0x7FFFFFFF);
+    }
+#endif
+#endif
+#ifdef I2C_MASTER_ENABLE
+#ifdef I2C_IO_REMAPPING
+    pin_b &= ~((B20 | B21) & 0x7FFFFFFF);
+    setPinInputHigh(B20 | B21);
+#else
+    pin_b &= ~((B12 | B13) & 0x7FFFFFFF);
+    setPinInputHigh(B12 | B13);
+#endif
 #endif
 #ifdef BATTERY_MEASURE_PIN
     if (BATTERY_MEASURE_PIN & 0x80000000) {
-        pin_b_mask &= ~(BATTERY_MEASURE_PIN & 0x7FFFFFFF);
+        pin_b &= ~(BATTERY_MEASURE_PIN & 0x7FFFFFFF);
     } else {
-        pin_a_mask &= ~(BATTERY_MEASURE_PIN & 0x7FFFFFFF);
+        pin_a &= ~(BATTERY_MEASURE_PIN & 0x7FFFFFFF);
     }
 #endif
-    for (uint8_t i = 0; i < 32; i++) {
-        pin_t pin = (1UL << i);
-
-        if (pin & pin_a_mask) {
-            if (pin & pin_a_status) {
-                setPinInputHigh(pin);
-            } else {
-                setPinInputLow(pin);
-            }
-        }
-        if (pin & pin_b_mask) {
-            if (pin & pin_b_status) {
-                setPinInputHigh(pin | 0x80000000);
-            } else {
-                setPinInputLow(pin | 0x80000000);
-            }
-        }
-    }
+    setPinInputLow(pin_a);
+    setPinInputLow(pin_b);
 }

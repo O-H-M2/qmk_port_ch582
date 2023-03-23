@@ -284,9 +284,7 @@ if(OLED_ENABLE)
         list(APPEND quantum_SOURCES
             "${QMK_BASE_DIR}/drivers/oled/ssd1306_sh1106.c"
         )
-        list(APPEND QMK_PORTING_SOURCES
-            "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/i2c_master.c"
-        )
+        set(I2C_MASTER_ENABLE ON CACHE BOOL "KB" FORCE)
     else()
         message(FATAL_ERROR "Unsupported OLED driver!")
     endif()
@@ -320,12 +318,22 @@ if(AW20216_REQUIRED)
     set(SPI_MASTER_ENABLE ON CACHE BOOL "KB" FORCE)
 endif()
 
+# I2C_MASTER_ENABLE
+if(I2C_MASTER_ENABLE)
+    add_definitions(-DI2C_MASTER_ENABLE)
+    message(STATUS "I2C_MASTER_ENABLE")
+    list(APPEND QMK_PORTING_SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/i2c_master.c"
+    )
+endif()
+
 # SPI_MASTER_ENABLE
 if(SPI_MASTER_ENABLE)
     if(SPI_OCCUPIED)
         message(FATAL_ERROR "SPI controller has exclusive use!")
     endif()
 
+    add_definitions(-DSPI_MASTER_ENABLE)
     message(STATUS "SPI_MASTER_ENABLE")
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/spi_master.c"
