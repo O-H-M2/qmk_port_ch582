@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef AW20216
 const aw_led PROGMEM g_aw_leds[DRIVER_LED_TOTAL] = {
-    
+
     { 0, CS1_SW12, CS3_SW12, CS2_SW12 },
     { 0, CS1_SW11, CS3_SW11, CS2_SW11 },
     { 0, CS1_SW10, CS3_SW10, CS2_SW10 },
@@ -82,7 +82,6 @@ const aw_led PROGMEM g_aw_leds[DRIVER_LED_TOTAL] = {
     { 0, CS10_SW2, CS12_SW2, CS11_SW2 },
     { 0, CS10_SW1, CS12_SW1, CS11_SW1 },
 
-    
     { 0, CS13_SW12, CS15_SW12, CS14_SW12 },
     { 0, CS13_SW11, CS15_SW11, CS14_SW11 },
     { 0, CS13_SW10, CS15_SW10, CS14_SW10 },
@@ -93,8 +92,7 @@ const aw_led PROGMEM g_aw_leds[DRIVER_LED_TOTAL] = {
     { 0, CS13_SW3, CS15_SW3, CS14_SW3 },
     { 0, CS13_SW2, CS15_SW2, CS14_SW2 },
     { 0, CS13_SW1, CS15_SW1, CS14_SW1 },
-    
-    
+
 };
 
 void spi_master_pre_transmit_cb()
