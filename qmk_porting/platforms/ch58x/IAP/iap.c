@@ -550,20 +550,20 @@ int main()
         pin_t output_pin = NO_PIN;
 #endif
 #endif
-        if ((input_pin != NO_PIN) && (output_pin != NO_PIN)){
-          setPinInputHigh(input_pin);
-          writePinLow(output_pin);
-          setPinOutput(output_pin);
-          do {
-            if (readPin(input_pin)) {
-                break;
-            }
-            my_delay_ms(DEBOUNCE * 3);
-            if (readPin(input_pin)) {
-                break;
-            }
-            bootmagic = true;
-          } while (0);
+        if ((input_pin != NO_PIN) && (output_pin != NO_PIN)) {
+            setPinInputHigh(input_pin);
+            writePinLow(output_pin);
+            setPinOutput(output_pin);
+            do {
+                if (readPin(input_pin)) {
+                    break;
+                }
+                my_delay_ms(DEBOUNCE * 3);
+                if (readPin(input_pin)) {
+                    break;
+                }
+                bootmagic = true;
+            } while (0);
         }
         if (bootmagic) {
             PRINT("Entering DFU...\n");
