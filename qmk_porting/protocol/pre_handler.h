@@ -40,8 +40,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DEBUG_BAUDRATE
 #define DEBUG_BAUDRATE 460800
 #endif
-#define PLF_DEBUG DEBUG
 #if DEBUG == Debug_UART0
+#define PLF_DEBUG Debug_UART0
 #define DBG_INIT         \
     writePinHigh(B7);    \
     setPinInputHigh(B4); \
@@ -63,6 +63,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         R8_UART0_THR = (uint8_t)character;       \
     }
 #elif DEBUG == Debug_UART1
+#define PLF_DEBUG Debug_UART1
 #define DBG_INIT         \
     writePinHigh(A9);    \
     setPinInputHigh(A8); \
@@ -84,6 +85,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         R8_UART1_THR = (uint8_t)character;       \
     }
 #elif DEBUG == Debug_UART2
+#define PLF_DEBUG Debug_UART2
 #define DBG_INIT         \
     writePinHigh(A7);    \
     setPinInputHigh(A6); \
@@ -105,6 +107,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         R8_UART2_THR = (uint8_t)character;       \
     }
 #elif DEBUG == Debug_UART3
+#define PLF_DEBUG Debug_UART3
 #define DBG_INIT         \
     writePinHigh(A5);    \
     setPinInputHigh(A4); \
