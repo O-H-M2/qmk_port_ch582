@@ -1,0 +1,198 @@
+{
+  "name": "EC61",
+  "vendorId": "0xCAFE",
+  "productId": "0x0B98",
+  "customKeycodes": [
+    {
+      "name": "USB",
+      "title": "USB MODE",
+      "shortName": "USB"
+    },
+    {
+      "name": "BLE1",
+      "title": "Tap = Use BLE slot 1, Hold = Clean BLE slot 1 binding",
+      "shortName": "BLE1"
+    },
+    {
+      "name": "BLE2",
+      "title": "Tap = Use BLE slot 2, Hold = Clean BLE slot 2 binding",
+      "shortName": "BLE2"
+    },
+    {
+      "name": "BLE3",
+      "title": "Tap = Use BLE slot 3, Hold = Clean BLE slot 3 binding",
+      "shortName": "BLE3"
+    },
+    {
+      "name": "BLE4",
+      "title": "Tap = Use BLE slot 4, Hold = Clean BLE slot 4 binding",
+      "shortName": "BLE4"
+    },
+    {
+      "name": "BLE5",
+      "title": "Tap = Use BLE slot 5, Hold = Clean BLE slot 5 binding",
+      "shortName": "BLE5"
+    },
+    {
+      "name": "BLE6",
+      "title": "Tap = Use BLE slot 6, Hold = Clean BLE slot 6 binding",
+      "shortName": "BLE6"
+    },
+    {
+      "name": "BLE7",
+      "title": "Tap = Use BLE slot 7, Hold = Clean BLE slot 7 binding",
+      "shortName": "BLE7"
+    },
+    {
+      "name": "BLE8",
+      "title": "Tap = Use BLE slot 8, Hold = Clean BLE slot 8 binding",
+      "shortName": "BLE8"
+    },
+    {
+      "name": "BC_A",
+      "title": "Clean ALL BLE slot binding",
+      "shortName": "BC_A"
+    },
+    {
+      "name": "2.4G",
+      "title": "ESB MODE(2.4G mode)",
+      "shortName": "2.4G"
+    },
+    {
+      "name": "BAT",
+      "title": "Enable battery lever indicator",
+      "shortName": "BAT"
+    }
+  ],
+  "matrix": {
+    "rows": 5,
+    "cols": 14
+  },
+  "layouts": {
+    "keymap": [
+      [
+        "0,0",
+        "0,1",
+        "0,2",
+        "0,3",
+        "0,4",
+        "0,5",
+        "0,6",
+        "0,7",
+        "0,8",
+        "0,9",
+        "0,10",
+        "0,11",
+        "0,12",
+        {
+          "w": 2
+        },
+        "0,13"
+      ],
+      [
+        {
+          "w": 1.5
+        },
+        "1,0",
+        "1,1",
+        "1,2",
+        "1,3",
+        "1,4",
+        "1,5",
+        "1,6",
+        "1,7",
+        "1,8",
+        "1,9",
+        "1,10",
+        "1,11",
+        "1,12",
+        {
+          "w": 1.5
+        },
+        "1,13"
+      ],
+      [
+        {
+          "w": 1.75
+        },
+        "2,0",
+        "2,2",
+        "2,3",
+        "2,4",
+        "2,5",
+        "2,6",
+        "2,7",
+        "2,8",
+        "2,9",
+        "2,10",
+        "2,11",
+        "2,12",
+        {
+          "w": 2.25
+        },
+        "2,13"
+      ],
+      [
+        {
+          "w": 2.25
+        },
+        "3,0",
+        "3,1",
+        "3,2",
+        "3,3",
+        "3,4",
+        "3,5",
+        "3,6",
+        "3,7",
+        "3,8",
+        "3,9",
+        "3,10",
+        {
+          "w": 2.75
+        },
+        "3,12"
+      ],
+      [
+        {
+          "w": 1.25
+        },
+        "4,0",
+        {
+          "w": 1.25
+        },
+        "4,1",
+        {
+          "w": 1.25
+        },
+        "4,2",
+        {
+          "w": 6.25
+        },
+        "4,5",
+        {
+          "w": 1.25
+        },
+        "4,9",
+        {
+          "w": 1.25
+        },
+        "4,10",
+        {
+          "w": 1.25
+        },
+        "4,11",
+        {
+          "w": 1.25
+        },
+        "4,12"
+      ]
+    ]
+    
+  },
+  "menus": [
+    "qmk_rgb_matrix"
+  ],
+  "keycodes": [
+    "qmk_lighting"
+  ]
+}
