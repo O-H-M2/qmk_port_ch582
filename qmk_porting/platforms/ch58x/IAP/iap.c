@@ -511,8 +511,6 @@ int main()
 
     // check if there is any existing bootmagic pin setting
     do {
-        uint8_t buffer[2], ret;
-
 #if defined(MATRIX_ROW_PINS) && defined(MATRIX_COL_PINS)
         pin_t rows[] = MATRIX_ROW_PINS;
         pin_t cols[] = MATRIX_COL_PINS;
@@ -526,6 +524,9 @@ int main()
 #else
         break;
 #endif
+
+        uint8_t buffer[2], ret;
+
         do {
             ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION + 1, buffer, sizeof(buffer));
         } while (ret);
