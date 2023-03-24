@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define VENDOR_ID    0xCAFE
 #define PRODUCT_ID   0x0B98
 #define DEVICE_VER   0x0001
-#define MANUFACTURER ezy61
-#define PRODUCT      ezy61
+#define MANUFACTURER EzyCarry
+#define PRODUCT      EC61
 
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 14
