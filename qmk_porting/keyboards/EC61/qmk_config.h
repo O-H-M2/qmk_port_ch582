@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_COLS 14
 #define MATRIX_ROW_PINS            \
     {                              \
-        B9, B8, B17, B16, B18, B19 \
+        B9, B8, B17, B16, B18      \
     }
 #define MATRIX_COL_PINS                                                \
     {                                                                  \
@@ -52,7 +52,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define RGBLED_NUM                    61
 #define RGB_MATRIX_LED_COUNT          RGBLED_NUM
-#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 32
+#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 255
 #define RGB_MATRIX_STARTUP_VAL        RGB_MATRIX_MAXIMUM_BRIGHTNESS
 #define RGB_MATRIX_HUE_STEP           10
 #define RGB_MATRIX_SAT_STEP           8
@@ -115,7 +115,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DRIVER_1_EN A5
 
 #define DRIVER_COUNT       1
-#define DRIVER_1_LED_TOTAL 64
+#define DRIVER_1_LED_TOTAL 61
 #define DRIVER_LED_TOTAL   (DRIVER_1_LED_TOTAL)
 #endif
 
