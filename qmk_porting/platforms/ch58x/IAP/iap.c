@@ -512,13 +512,6 @@ int main()
     do {
         uint8_t buffer[2], ret;
 
-        do {
-            ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION + 1, buffer, sizeof(buffer));
-        } while (ret);
-
-        if (buffer[0] >= MATRIX_ROWS && buffer[1] >= MATRIX_COLS) {
-            break;
-        }
 
 #ifdef MATRIX_ROW_PINS
         pin_t rows[] = MATRIX_ROW_PINS;
@@ -540,9 +533,17 @@ int main()
 #else
         break;
 #endif
+        do {
+            ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION + 1, buffer, sizeof(buffer));
+        } while (ret);
+
+        if (buffer[0] >= MATRIX_ROWS && buffer[1] >= MATRIX_COLS) {
+            break;
+        }
+
         setPinInputHigh(input_pin);
         writePinLow(output_pin);
-        setPinOutput(output_pin);
+        tsetPinOutput(output_pin);
 
         bool bootmagic = false;
 
