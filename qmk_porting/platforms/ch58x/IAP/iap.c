@@ -513,22 +513,13 @@ int main()
         uint8_t buffer[2], ret;
 
 
-#ifdef MATRIX_ROW_PINS
+#if defined(MATRIX_ROW_PINS) && defined(MATRIX_COL_PINS)
         pin_t rows[] = MATRIX_ROW_PINS;
+        pin_t cols[] = MATRIX_COL_PINS;
 #if DIODE_DIRECTION == COL2ROW
         pin_t output_pin = rows[buffer[0]];
 #else
         pin_t input_pin = rows[buffer[0]];
-#endif
-#else
-        break;
-#endif
-#ifdef MATRIX_COL_PINS
-        pin_t cols[] = MATRIX_COL_PINS;
-#if DIODE_DIRECTION == COL2ROW
-        pin_t input_pin = cols[buffer[1]];
-#else
-        pin_t output_pin = cols[buffer[1]];
 #endif
 #else
         break;
