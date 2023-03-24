@@ -543,7 +543,7 @@ int main()
 
         setPinInputHigh(input_pin);
         writePinLow(output_pin);
-        tsetPinOutput(output_pin);
+        setPinOutput(output_pin);
 
         bool bootmagic = false;
 
