@@ -511,6 +511,20 @@ int main()
 
     // check if there is any existing bootmagic pin setting
     do {
+#if defined(MATRIX_ROW_PINS) && defined(MATRIX_COL_PINS)
+        pin_t rows[] = MATRIX_ROW_PINS;
+        pin_t cols[] = MATRIX_COL_PINS;
+#if DIODE_DIRECTION == COL2ROW
+        pin_t input_pin = cols[buffer[1]];
+        pin_t output_pin = rows[buffer[0]];
+#else
+        pin_t input_pin = rows[buffer[0]];
+        pin_t output_pin = cols[buffer[1]];
+#endif
+#else
+        break;
+#endif
+
         uint8_t buffer[2], ret;
 
         do {
@@ -521,20 +535,12 @@ int main()
             break;
         }
 
-        bool bootmagic = false;
-        pin_t rows[] = MATRIX_ROW_PINS;
-        pin_t cols[] = MATRIX_COL_PINS;
-#if DIODE_DIRECTION == COL2ROW
-        pin_t input_pin = cols[buffer[1]];
-        pin_t output_pin = rows[buffer[0]];
-#else
-        pin_t input_pin = rows[buffer[0]];
-        pin_t output_pin = cols[buffer[1]];
-#endif
-
         setPinInputHigh(input_pin);
         writePinLow(output_pin);
         setPinOutput(output_pin);
+
+        bool bootmagic = false;
+
         do {
             if (readPin(input_pin)) {
                 break;
