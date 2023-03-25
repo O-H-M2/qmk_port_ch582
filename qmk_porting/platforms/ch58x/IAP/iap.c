@@ -524,6 +524,7 @@ int main()
         pin_t output_pin = cols[buffer[1]];
 #endif
 #else
+        // placeholder
         pin_t input_pin, output_pin;
         break;
 #endif
