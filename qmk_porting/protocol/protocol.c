@@ -131,6 +131,7 @@ void protocol_pre_init()
 void protocol_post_init()
 {
     ch582_toggle_qmk_protocol(true);
+    PRINT("Set log output for QMK.\n");
 }
 
 __HIGH_CODE void protocol_task()
@@ -140,13 +141,6 @@ __HIGH_CODE void protocol_task()
             ch582_interface.ch582_protocol_task();
         }
     }
-}
-
-void keyboard_post_init_user()
-{
-#ifdef PLF_DEBUG
-    print("Set log output for QMK.\n");
-#endif
 }
 
 #if defined ESB_ENABLE && ESB_ENABLE == 2
