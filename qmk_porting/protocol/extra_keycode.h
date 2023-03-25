@@ -47,11 +47,8 @@ enum {
     BLE_ALL_CLEAR,
     ESB_MODE,
     BATTERY_INDICATOR,
-#ifdef VIA_ENABLE
     CUSTOM_MAX,
-#else
-    NEW_SAFE_RANGE,
-#endif
+    NEW_SAFE_RANGE = CUSTOM_MAX,
 };
 
 #ifdef VIA_ENABLE
