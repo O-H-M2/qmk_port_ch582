@@ -2,6 +2,8 @@
 
 void uart_init(uint32_t baud)
 {
+    uart_start();
+
     uint32_t x;
 
     x = 10 * GetSysClock() / 8 / baud;
@@ -12,6 +14,8 @@ void uart_init(uint32_t baud)
     R8_UART0_LCR = RB_LCR_WORD_SZ;
     R8_UART0_IER = RB_IER_TXD_EN;
     R8_UART0_DIV = 1;
+
+    uart_stop();
 }
 
 void uart_start()
@@ -28,13 +32,17 @@ void uart_start()
 
 void uart_stop()
 {
+    while (R8_UART0_TFC) {
+        __nop();
+    }
+
     setPinInputHigh(B7);
     setPinInputHigh(B4);
     do {
         sys_safe_access_enable();
         R8_SLP_CLK_OFF0 |= RB_SLP_CLK_UART0;
         sys_safe_access_enable();
-    } while (~(R8_SLP_CLK_OFF0 & RB_SLP_CLK_UART0));
+    } while (!(R8_SLP_CLK_OFF0 & RB_SLP_CLK_UART0));
 }
 
 void uart_write(uint8_t data)
