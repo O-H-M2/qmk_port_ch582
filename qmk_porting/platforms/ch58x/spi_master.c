@@ -29,7 +29,7 @@ __attribute__((weak)) __HIGH_CODE void spi_master_post_transmit_cb()
 {
 }
 
-static void spi_stop_internal()
+__HIGH_CODE static void spi_stop_internal()
 {
     if (currentSlavePin != NO_PIN) {
         writePinHigh(currentSlavePin);
