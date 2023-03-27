@@ -51,17 +51,20 @@ jobs:
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target all --
 
+      - name: Get git version
+        run: echo "git_ver=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
       - name: UF2 Firmware (${{inputs.keyboard}})
         uses: actions/upload-artifact@v3
         with:
           name: ${{inputs.keyboard}}.uf2
-          path: ${{inputs.keyboard}}_upgrade.uf2
-          
+          path: ${{inputs.keyboard}}_upgrade_${{ env.git_ver }}.uf2
+
       - name: Hex Firmware (${{inputs.keyboard}})
         uses: actions/upload-artifact@v3
         with:
           name: ${{inputs.keyboard}}.hex
-          path: ${{inputs.keyboard}}_factory.hex
+          path: ${{inputs.keyboard}}_factory_${{ env.git_ver }}.hex
 
       # - name: Test
       #   working-directory: ${{github.workspace}}/build
