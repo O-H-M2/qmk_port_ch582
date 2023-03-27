@@ -118,7 +118,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DRIVER_1_LED_TOTAL 61
 #define DRIVER_LED_TOTAL   (DRIVER_1_LED_TOTAL)
 
-#define AW_SPI_DIVISOR 8
+#define AW_SPI_DIVISOR 5
 #endif
 
 /* define if matrix has ghost */
