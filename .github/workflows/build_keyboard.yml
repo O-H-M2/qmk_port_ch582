@@ -24,7 +24,17 @@ env:
   BUILD_TYPE: Release
 
 jobs:
+  collect_git_version:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get git version
+        run: echo "git_ver=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
   build:
+    needs: collect_git_version
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.
     # You can convert this to a matrix build if you need cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
@@ -55,13 +65,13 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{inputs.keyboard}}.uf2
-          path: ${{inputs.keyboard}}_upgrade.uf2
-          
+          path: ${{inputs.keyboard}}_upgrade_${{ env.git_ver }}.uf2
+
       - name: Hex Firmware (${{inputs.keyboard}})
         uses: actions/upload-artifact@v3
         with:
           name: ${{inputs.keyboard}}.hex
-          path: ${{inputs.keyboard}}_factory.hex
+          path: ${{inputs.keyboard}}_factory_${{ env.git_ver }}.hex
 
       # - name: Test
       #   working-directory: ${{github.workspace}}/build
