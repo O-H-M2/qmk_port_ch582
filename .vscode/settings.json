@@ -100,7 +100,16 @@
         "process_unicode_common.h": "c",
         "unicode.h": "c",
         "spi_master.h": "c",
-        "uart.h": "c"
+        "uart.h": "c",
+        "cycle_spiral_anim.h": "c",
+        "alpha_mods_anim.h": "c",
+        "solid_color_anim.h": "c",
+        "breathing_anim.h": "c",
+        "colorband_sat_anim.h": "c",
+        "hue_breathing_anim.h": "c",
+        "gradient_up_down_anim.h": "c",
+        "cycle_all_anim.h": "c",
+        "gradient_left_right_anim.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
