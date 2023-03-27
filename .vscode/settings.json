@@ -109,7 +109,8 @@
         "hue_breathing_anim.h": "c",
         "gradient_up_down_anim.h": "c",
         "cycle_all_anim.h": "c",
-        "gradient_left_right_anim.h": "c"
+        "gradient_left_right_anim.h": "c",
+        "effect_runner_i.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
