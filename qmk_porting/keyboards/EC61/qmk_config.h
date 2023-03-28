@@ -26,13 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 14
-#define MATRIX_ROW_PINS            \
-    {                              \
-        B9, B8, B17, B16, B18      \
+#define MATRIX_ROW_PINS       \
+    {                         \
+        B9, B8, B17, B16, B18 \
     }
-#define MATRIX_COL_PINS                                                \
-    {                                                                  \
-        A6, A0, A1, A2, A3, A15, A14, A13, A12, A7, B7, B6, B5, B4     \
+#define MATRIX_COL_PINS                                            \
+    {                                                              \
+        A6, A0, A1, A2, A3, A15, A14, A13, A12, A7, B7, B6, B5, B4 \
     }
 #define DYNAMIC_KEYMAP_LAYER_COUNT 10
 
@@ -117,6 +117,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DRIVER_COUNT       1
 #define DRIVER_1_LED_TOTAL 61
 #define DRIVER_LED_TOTAL   (DRIVER_1_LED_TOTAL)
+
+#define AW_SPI_DIVISOR 5
 #endif
 
 /* define if matrix has ghost */

@@ -181,7 +181,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define QMK_TASK_INTERVAL_MAX SYS_TICK_MS(15)
 #endif
 #ifndef QMK_TASK_INTERVAL_LED
-#define QMK_TASK_INTERVAL_LED SYS_TICK_MS(2)
+#define QMK_TASK_INTERVAL_LED 2
 #endif
 #ifndef BLE_SLOT_NUM
 #define BLE_SLOT_NUM 4
@@ -295,8 +295,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define SLEEP_RTC_MAX_TIME (RTC_TIMER_MAX_VALUE - TMOS_TIME_VALID)
 
-#ifdef AW20216
-#define AW_SPI_DIVISOR FREQ_SYS / 5000000
+#if defined AW20216 && !defined AW_SPI_DIVISOR
+#define AW_SPI_DIVISOR (FREQ_SYS / 5000000)
 #endif
 
 #ifndef WS2812
