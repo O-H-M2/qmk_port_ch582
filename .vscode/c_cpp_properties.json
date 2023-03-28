@@ -7,6 +7,7 @@
             ],
             "defines": [],
             "compilerPath": "${workspaceFolder}/utils/riscv-none-embed-gcc/bin/riscv-none-embed-gcc",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "cStandard": "gnu17",
             "cppStandard": "gnu++17",
             "intelliSenseMode": "linux-gcc-arm",
