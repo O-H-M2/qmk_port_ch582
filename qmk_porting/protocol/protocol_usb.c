@@ -20,11 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode_config.h"
 #include "usb_main.h"
 #include "usb_interface.h"
-#ifdef RAW_ENABLE
-#include "raw_hid.h"
-#endif
 #ifdef RGB_RAW_ENABLE
 #include "auxiliary_rgb.h"
+#endif
+#ifdef RAW_ENABLE
+#include "raw_hid.h"
 #endif
 
 extern int usbd_deinitialize();
