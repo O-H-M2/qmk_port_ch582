@@ -208,8 +208,17 @@ endif()
 
 # CIE1931_CURVE
 if(CIE1931_CURVE)
-    add_definitions(-DCIE1931_CURVE)
+    add_definitions(-DUSE_CIE1931_CURVE)
+    set(LED_TABLES ON CACHE BOOL "KB" FORCE)
     message(STATUS "CIE1931_CURVE")
+endif()
+
+# LED_TABLES
+if(LED_TABLES)
+    message(STATUS "LED_TABLES")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/led_tables.c"
+    )
 endif()
 
 # EEPROM_ENABLE
