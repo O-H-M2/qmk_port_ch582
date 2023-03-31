@@ -148,7 +148,7 @@ if(RGBLIGHT_ENABLE)
         "${QMK_BASE_DIR}/quantum/color.c"
         "${QMK_BASE_DIR}/quantum/process_keycode/process_rgb.c"
     )
-    set(CIE1931_CURVE ON CACHE BOOL "KB" FORCE)
+    set(CIE1931_CURVE ON CACHE BOOL "KB")
 endif()
 
 # RGB_MATRIX_ENABLE
@@ -170,7 +170,7 @@ if(RGB_MATRIX_ENABLE)
         "${QMK_BASE_DIR}/quantum/process_keycode/process_rgb.c"
         "${QMK_BASE_DIR}/lib/lib8tion/*.c"
     )
-    set(CIE1931_CURVE ON CACHE BOOL "KB" FORCE)
+    set(CIE1931_CURVE ON CACHE BOOL "KB")
 endif()
 
 # AUXILIARY_RGB_ENABLE
