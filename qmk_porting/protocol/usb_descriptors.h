@@ -32,10 +32,10 @@ enum {
 #ifdef RGB_RAW_ENABLE
     InterfaceNumber_rgb_raw,
 #endif
+    InterfaceNumber_extra_key,
 #ifdef RAW_ENABLE
     InterfaceNumber_qmk_raw,
 #endif
-    InterfaceNumber_extra_key,
 };
 
 const uint8_t KeyboardReport[] = {
@@ -96,29 +96,6 @@ const uint8_t RGBRawReport[] = {
 };
 #endif
 
-#ifdef RAW_ENABLE
-const uint8_t QMKRawReport[] = {
-    0x06, WBVAL(RAW_USAGE_PAGE), // Usage Page (Vendor Defined)
-    0x09, RAW_USAGE_ID,          // Usage (Vendor Defined)
-    0xA1, 0x01,                  // Collection (Application)
-    // Data to host
-    0x09, 0x62,       //   Usage (Vendor Defined)
-    0x15, 0x00,       //   Logical Minimum (0)
-    0x26, 0xFF, 0x00, //   Logical Maximum (255)
-    0x95, 0x20,       //   Report Count
-    0x75, 0x08,       //   Report Size (8)
-    0x81, 0x02,       //   Input (Data, Variable, Absolute)
-    // Data from host
-    0x09, 0x63,       //   Usage (Vendor Defined)
-    0x15, 0x00,       //   Logical Minimum (0)
-    0x26, 0xFF, 0x00, //   Logical Maximum (255)
-    0x95, 0x20,       //   Report Count
-    0x75, 0x08,       //   Report Size (8)
-    0x91, 0x02,       //   Output (Data, Variable, Absolute)
-    0xC0,             // End Collection
-};
-#endif
-
 const uint8_t ExtrakeyReport[] = {
 #ifdef MOUSE_ENABLE
     0x05, 0x01,            // Usage Page (Generic Desktop)
@@ -160,30 +137,30 @@ const uint8_t ExtrakeyReport[] = {
     0xC0,                  // End Collection
 #endif
     // Extrakeys report descriptor
-    0x05, 0x01,                                  // Usage Page (Generic Desktop)
-    0x09, 0x80,                                  // Usage (System Control)
-    0xA1, 0x01,                                  // Collection (Application)
-    0x85, REPORT_ID_SYSTEM,                      //   Report ID
-    0x19, 0x01,                                  //   Usage Minimum (Pointer)
-    0x2A, 0xB7, 0x00,                            //   Usage Maximum (System Display LCD Autoscale)
-    0x15, 0x01,                                  //   Logical Minimum
-    0x26, 0xB7, 0x00,                            //   Logical Maximum
-    0x95, 0x01,                                  //   Report Count (1)
-    0x75, 0x10,                                  //   Report Size (16)
-    0x81, 0x00,                                  //   Input (Data, Array, Absolute)
-    0xC0,                                        // End Collection
-    0x05, 0x0C,                                  // Usage Page (Consumer)
-    0x09, 0x01,                                  // Usage (Consumer Control)
-    0xA1, 0x01,                                  // Collection (Application)
-    0x85, REPORT_ID_CONSUMER,                    //   Report ID
-    0x19, 0x01,                                  //   Usage Minimum (Consumer Control)
-    0x2A, 0xA0, 0x02,                            //   Usage Maximum (AC Desktop Show All Applications)
-    0x15, 0x01,                                  //   Logical Minimum
-    0x26, 0xA0, 0x02,                            //   Logical Maximum
-    0x95, 0x01,                                  //   Report Count (1)
-    0x75, 0x10,                                  //   Report Size (16)
-    0x81, 0x00,                                  //   Input (Data, Array, Absolute)
-    0xC0,                                        // End Collection
+    0x05, 0x01,               // Usage Page (Generic Desktop)
+    0x09, 0x80,               // Usage (System Control)
+    0xA1, 0x01,               // Collection (Application)
+    0x85, REPORT_ID_SYSTEM,   //   Report ID
+    0x19, 0x01,               //   Usage Minimum (Pointer)
+    0x2A, 0xB7, 0x00,         //   Usage Maximum (System Display LCD Autoscale)
+    0x15, 0x01,               //   Logical Minimum
+    0x26, 0xB7, 0x00,         //   Logical Maximum
+    0x95, 0x01,               //   Report Count (1)
+    0x75, 0x10,               //   Report Size (16)
+    0x81, 0x00,               //   Input (Data, Array, Absolute)
+    0xC0,                     // End Collection
+    0x05, 0x0C,               // Usage Page (Consumer)
+    0x09, 0x01,               // Usage (Consumer Control)
+    0xA1, 0x01,               // Collection (Application)
+    0x85, REPORT_ID_CONSUMER, //   Report ID
+    0x19, 0x01,               //   Usage Minimum (Consumer Control)
+    0x2A, 0xA0, 0x02,         //   Usage Maximum (AC Desktop Show All Applications)
+    0x15, 0x01,               //   Logical Minimum
+    0x26, 0xA0, 0x02,         //   Logical Maximum
+    0x95, 0x01,               //   Report Count (1)
+    0x75, 0x10,               //   Report Size (16)
+    0x81, 0x00,               //   Input (Data, Array, Absolute)
+    0xC0,                     // End Collection
 #ifdef NKRO_ENABLE
     0x05, 0x01,                                  // Usage Page (Generic Desktop)
     0x09, 0x06,                                  // Usage (Keyboard)
@@ -209,6 +186,29 @@ const uint8_t ExtrakeyReport[] = {
 #endif
 };
 
+#ifdef RAW_ENABLE
+const uint8_t QMKRawReport[] = {
+    0x06, WBVAL(RAW_USAGE_PAGE), // Usage Page (Vendor Defined)
+    0x09, RAW_USAGE_ID,          // Usage (Vendor Defined)
+    0xA1, 0x01,                  // Collection (Application)
+    // Data to host
+    0x09, 0x62,       //   Usage (Vendor Defined)
+    0x15, 0x00,       //   Logical Minimum (0)
+    0x26, 0xFF, 0x00, //   Logical Maximum (255)
+    0x95, 0x20,       //   Report Count
+    0x75, 0x08,       //   Report Size (8)
+    0x81, 0x02,       //   Input (Data, Variable, Absolute)
+    // Data from host
+    0x09, 0x63,       //   Usage (Vendor Defined)
+    0x15, 0x00,       //   Logical Minimum (0)
+    0x26, 0xFF, 0x00, //   Logical Maximum (255)
+    0x95, 0x20,       //   Report Count
+    0x75, 0x08,       //   Report Size (8)
+    0x91, 0x02,       //   Output (Data, Variable, Absolute)
+    0xC0,             // End Collection
+};
+#endif
+
 /*!< config descriptor size */
 #define USB_HID_CONFIG_DESC_SIZ_SCRATCH (USB_SIZEOF_CONFIG_DESC +                                          \
                                          USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2 + \
@@ -219,10 +219,10 @@ const uint8_t ExtrakeyReport[] = {
 #ifdef RGB_RAW_ENABLE
 #define HID_RGBRAW_REPORT_DESC_SIZE sizeof(RGBRawReport)
 #endif
+#define HID_EXTRAKEY_REPORT_DESC_SIZE sizeof(ExtrakeyReport)
 #ifdef RAW_ENABLE
 #define HID_QMKRAW_REPORT_DESC_SIZE sizeof(QMKRawReport)
 #endif
-#define HID_EXTRAKEY_REPORT_DESC_SIZE sizeof(ExtrakeyReport)
 
 /*!< global descriptor */
 const uint8_t hid_descriptor_scratch_1[] = {
@@ -313,6 +313,32 @@ const uint8_t hid_descriptor_scratch_1[] = {
     RGBRAW_OUT_EP_INTERVAL,    /* bInterval */
 #endif
 
+    /************** Descriptor of EXTRAKEY interface *****************/
+    0x09,                      /* bLength */
+    0x04,                      /* bDescriptorType */
+    InterfaceNumber_extra_key, /* bInterfaceNumber */
+    0x00,                      /* bAlternateSetting */
+    0x01,                      /* bNumEndpoints */
+    0x03,                      /* bInterfaceClass */
+    0x00,                      /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x00,                      /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00,                      /* iInterface: Index of string descriptor */
+    /******************** Descriptor of EXTRAKEY HID ********************/
+    0x09,                                 /* bLength */
+    0x21,                                 /* bDescriptorType */
+    0x11, 0x01,                           /* bcdHID */
+    0x00,                                 /* bCountryCode */
+    0x01,                                 /* bNumDescriptors */
+    0x22,                                 /* bDescriptorType */
+    WBVAL(HID_EXTRAKEY_REPORT_DESC_SIZE), /* wItemLength */
+    /******************** Descriptor of EXTRAKEY in endpoint ********************/
+    0x07,                    /* bLength */
+    0x05,                    /* bDescriptorType */
+    EXKEY_IN_EP,             /* bEndpointAddress */
+    0x03,                    /* bmAttributes */
+    WBVAL(EXKEY_IN_EP_SIZE), /* wMaxPacketSize */
+    EXKEY_IN_EP_INTERVAL,    /* bInterval */
+
 #ifdef RAW_ENABLE
     /************** Descriptor of QMKRAW interface *****************/
     0x09,                    /* bLength */
@@ -347,32 +373,6 @@ const uint8_t hid_descriptor_scratch_1[] = {
     WBVAL(QMKRAW_OUT_EP_SIZE), /* wMaxPacketSize */
     QMKRAW_OUT_EP_INTERVAL,    /* bInterval */
 #endif
-
-    /************** Descriptor of EXTRAKEY interface *****************/
-    0x09,                      /* bLength */
-    0x04,                      /* bDescriptorType */
-    InterfaceNumber_extra_key, /* bInterfaceNumber */
-    0x00,                      /* bAlternateSetting */
-    0x01,                      /* bNumEndpoints */
-    0x03,                      /* bInterfaceClass */
-    0x00,                      /* bInterfaceSubClass : 1=BOOT, 0=no boot */
-    0x00,                      /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
-    0x00,                      /* iInterface: Index of string descriptor */
-    /******************** Descriptor of EXTRAKEY HID ********************/
-    0x09,                                 /* bLength */
-    0x21,                                 /* bDescriptorType */
-    0x11, 0x01,                           /* bcdHID */
-    0x00,                                 /* bCountryCode */
-    0x01,                                 /* bNumDescriptors */
-    0x22,                                 /* bDescriptorType */
-    WBVAL(HID_EXTRAKEY_REPORT_DESC_SIZE), /* wItemLength */
-    /******************** Descriptor of EXTRAKEY in endpoint ********************/
-    0x07,                    /* bLength */
-    0x05,                    /* bDescriptorType */
-    EXKEY_IN_EP,             /* bEndpointAddress */
-    0x03,                    /* bmAttributes */
-    WBVAL(EXKEY_IN_EP_SIZE), /* wMaxPacketSize */
-    EXKEY_IN_EP_INTERVAL,    /* bInterval */
 
     ///////////////////////////////////////
     /// string0 descriptor

@@ -36,10 +36,10 @@ enum {
 #ifdef RGB_RAW_ENABLE
     RGBRAW_IN_EP,
 #endif
+    EXKEY_IN_EP,
 #ifdef RAW_ENABLE
     QMKRAW_IN_EP,
 #endif
-    EXKEY_IN_EP,
 
     KBD_OUT_EP = KBD_IN_EP - 0x80,
 #ifdef RGB_RAW_ENABLE
@@ -65,20 +65,18 @@ enum {
 #define RGBRAW_OUT_EP_SIZE     RGBRAW_EP_SIZE
 #define RGBRAW_OUT_EP_INTERVAL 1
 
-#ifdef RAW_ENABLE
-#define QMKRAW_IN_SIZE     RAW_EPSIZE
-#define QMKRAW_IN_INTERVAL 1
-
-#define QMKRAW_OUT_EP_SIZE     RAW_EPSIZE
-#define QMKRAW_OUT_EP_INTERVAL 1
-#endif
-
 #ifdef NKRO_ENABLE
 #define EXKEY_IN_EP_SIZE SHARED_EPSIZE
 #else
 #define EXKEY_IN_EP_SIZE 8
 #endif
 #define EXKEY_IN_EP_INTERVAL 1
+
+#define QMKRAW_IN_SIZE     RAW_EPSIZE
+#define QMKRAW_IN_INTERVAL 1
+
+#define QMKRAW_OUT_EP_SIZE     RAW_EPSIZE
+#define QMKRAW_OUT_EP_INTERVAL 1
 
 #define USBD_VID           VENDOR_ID
 #define USBD_PID           PRODUCT_ID

@@ -37,20 +37,19 @@ static struct usbd_interface keyboard_interface;
 #ifdef RGB_RAW_ENABLE
 static struct usbd_interface rgbraw_interface;
 #endif
+static struct usbd_interface extrakey_interface;
 #ifdef RAW_ENABLE
 static struct usbd_interface qmkraw_interface;
 #endif
-static struct usbd_interface extrakey_interface;
-
 /*!< hid state ! Data can be sent only when state is idle  */
 static volatile uint8_t keyboard_state = HID_STATE_IDLE;
 #ifdef RGB_RAW_ENABLE
 static volatile uint8_t rgbraw_state = HID_STATE_IDLE;
 #endif
+static volatile uint8_t extrakey_state = HID_STATE_IDLE;
 #ifdef RAW_ENABLE
 static volatile uint8_t qmkraw_state = HID_STATE_IDLE;
 #endif
-static volatile uint8_t extrakey_state = HID_STATE_IDLE;
 
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t kbd_out_buffer[CONFIG_USB_ALIGN_SIZE];
 #ifdef RGB_RAW_ENABLE
@@ -84,6 +83,11 @@ void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 }
 #endif
 
+void usbd_hid_exkey_in_callback(uint8_t ep, uint32_t nbytes)
+{
+    extrakey_state = HID_STATE_IDLE;
+}
+
 #ifdef RAW_ENABLE
 void usbd_hid_qmk_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
@@ -96,11 +100,6 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
     usbd_ep_start_read(ep, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 }
 #endif
-
-void usbd_hid_exkey_in_callback(uint8_t ep, uint32_t nbytes)
-{
-    extrakey_state = HID_STATE_IDLE;
-}
 
 static inline bool usb_remote_wakeup()
 {
@@ -172,19 +171,18 @@ int usb_dc_deinit()
 #ifdef RGB_RAW_ENABLE
     memset(&rgbraw_interface, 0x00, sizeof(rgbraw_interface));
 #endif
+    memset(&extrakey_interface, 0x00, sizeof(extrakey_interface));
 #ifdef RAW_ENABLE
     memset(&qmkraw_interface, 0x00, sizeof(qmkraw_interface));
 #endif
-    memset(&extrakey_interface, 0x00, sizeof(extrakey_interface));
-
     keyboard_state = HID_STATE_IDLE;
 #ifdef RGB_RAW_ENABLE
     rgbraw_state = HID_STATE_IDLE;
 #endif
+    extrakey_state = HID_STATE_IDLE;
 #ifdef RAW_ENABLE
     qmkraw_state = HID_STATE_IDLE;
 #endif
-    extrakey_state = HID_STATE_IDLE;
 
     memset(kbd_out_buffer, 0x00, sizeof(kbd_out_buffer));
 #ifdef RGB_RAW_ENABLE
@@ -221,6 +219,11 @@ void init_usb_driver()
     };
 #endif
 
+    struct usbd_endpoint exkey_in_ep = {
+        .ep_cb = usbd_hid_exkey_in_callback,
+        .ep_addr = EXKEY_IN_EP
+    };
+
 #ifdef RAW_ENABLE
     struct usbd_endpoint qmkraw_in_ep = {
         .ep_cb = usbd_hid_qmk_raw_in_callback,
@@ -232,11 +235,6 @@ void init_usb_driver()
         .ep_addr = QMKRAW_OUT_EP
     };
 #endif
-
-    struct usbd_endpoint exkey_in_ep = {
-        .ep_cb = usbd_hid_exkey_in_callback,
-        .ep_addr = EXKEY_IN_EP
-    };
 
     // build descriptor according to the keyboard name
 #if ESB_ENABLE == 2
@@ -277,14 +275,14 @@ void init_usb_driver()
     usbd_add_endpoint(&rgbraw_out_ep);
 #endif
 
+    usbd_add_interface(usbd_hid_init_intf(&extrakey_interface, ExtrakeyReport, HID_EXTRAKEY_REPORT_DESC_SIZE));
+    usbd_add_endpoint(&exkey_in_ep);
+
 #ifdef RAW_ENABLE
     usbd_add_interface(usbd_hid_init_intf(&qmkraw_interface, QMKRawReport, HID_QMKRAW_REPORT_DESC_SIZE));
     usbd_add_endpoint(&qmkraw_in_ep);
     usbd_add_endpoint(&qmkraw_out_ep);
 #endif
-
-    usbd_add_interface(usbd_hid_init_intf(&extrakey_interface, ExtrakeyReport, HID_EXTRAKEY_REPORT_DESC_SIZE));
-    usbd_add_endpoint(&exkey_in_ep);
 
     do {
         sys_safe_access_enable();
@@ -341,6 +339,24 @@ void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
 }
 #endif
 
+inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
+{
+    if (!usb_remote_wakeup()) {
+        return;
+    }
+
+    while (extrakey_state == HID_STATE_BUSY) {
+        __nop();
+    }
+
+    int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
+
+    if (ret < 0) {
+        return;
+    }
+    extrakey_state = HID_STATE_BUSY;
+}
+
 #ifdef RAW_ENABLE
 void hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
 {
@@ -360,21 +376,3 @@ void hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
     qmkraw_state = HID_STATE_BUSY;
 }
 #endif
-
-inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
-{
-    if (!usb_remote_wakeup()) {
-        return;
-    }
-
-    while (extrakey_state == HID_STATE_BUSY) {
-        __nop();
-    }
-
-    int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
-
-    if (ret < 0) {
-        return;
-    }
-    extrakey_state = HID_STATE_BUSY;
-}
