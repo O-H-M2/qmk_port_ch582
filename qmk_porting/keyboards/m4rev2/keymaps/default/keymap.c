@@ -2,6 +2,9 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
+// let us assume we start with both layers off
+static bool toggle_lwr = false;
+static bool toggle_rse = false;
 
 const uint32_t PROGMEM unicode_map[] = {
     [la]  = 0x03B1 , // α
@@ -45,17 +48,11 @@ bool led_update_user(led_t led_state) {
 }
 
 void matrix_scan_user(void) {
-
-    toggle_leds();
-
+    toggle_leds(toggle_lwr, toggle_rse);
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
 
-  // If console is enabled, it will print the matrix position and status of each key pressed
-#ifdef CONSOLE_ENABLE
-    uprintf("KL: kc: 0x%04X, col: %2u, row: %2u, pressed: %u, time: %5u, int: %u, count: %u\n", keycode, record->event.key.col, record->event.key.row, record->event.pressed, record->event.time, record->tap.interrupted, record->tap.count);
-#endif
     switch (keycode) {
         case (TT(_LWR)):
             if (!record->event.pressed && record->tap.count == TAPPING_TOGGLE) {
@@ -95,3 +92,15 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 }
 
 #endif
+
+void keyboard_post_init_user(void) {
+#ifdef RGBLIGHT_ENABLE
+    init_rgb_layers();
+#endif
+
+    init_lwr_rse_led();
+
+#ifdef OLED_ENABLE
+    init_timer();
+#endif
+}

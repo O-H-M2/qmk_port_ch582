@@ -53,6 +53,15 @@ __HIGH_CODE int main()
 
 #endif
 
+void toggle_leds(const bool toggle_lwr, const bool toggle_rse) {
+    led_lwr(toggle_lwr);
+    led_rse(toggle_rse);
+    if (layer_state_is(_ADJ)) {
+        led_lwr(true);
+        led_rse(true);
+    }
+}
+
 
 
   #ifdef OLED_ENABLE
@@ -102,18 +111,6 @@ __HIGH_CODE int main()
       }
   }
 
-  void toggle_leds(void){
-
-      led_lwr(toggle_lwr);
-      led_rse(toggle_rse);
-      led_t led_state = host_keyboard_led_state();
-      led_caps(led_state.caps_lock);
-      if (layer_state_is(_ADJ)) {
-          led_lwr(true);
-          led_rse(true);
-      }
-
-  }
 
   #ifdef OLED_ENABLE
 
