@@ -4,28 +4,12 @@
 
 #pragma once
 
-#define DCDC_ENABLE  1
-#define FREQ_SYS     40000000
-#define LSE_ENABLE   0
-#define BLE_SLOT_NUM 4
-// #define HSE_LOAD_CAPACITANCE 7.5 // in pF unit
-// #define LSE_LOAD_CAPACITANCE 7   // in pF unit
-// #define I2C_IO_REMAPPING
-#undef SPI_IO_REMAPPING
-// #define SPI_IO_REMAPPING
 
-#define TAPPING_TOGGLE 2
 #define PRODUCT_ID 0x6071
 #define VENDOR_ID 0xBABA
+#define DEVICE_VER 0x0001
 #define PRODUCT "mlego/m8 rev1"
 #define MANUFACTURER "Alin Elena"
-#define DEVICE_VER 0x0001
-
-#define ROWS  {A4, A5}
-
-#define QMK_VERSION    "19.9"
-#define QMK_BUILDDATE  __DATE__
-#define QMK_KEYBOARD_H "m8rev1.h"
 
 #define MATRIX_ROWS 4
 #define MATRIX_COLS 2
@@ -37,22 +21,12 @@
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
 #ifdef ENCODER_ENABLE
-#define ENCODERS_PAD_A \
-    {                  \
-        A10            \
-    }
-#define ENCODERS_PAD_B \
-    {                  \
-        A11            \
-    }
+#define ENCODERS_PAD_A { A10 }
+#define ENCODERS_PAD_B { A11 }
 #define ENCODER_RESOLUTION 4
 #endif
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
-/*
-#define BATTERY_MEASURE_PIN A2
-#define POWER_DETECT_PIN    B12
-*/
 
 #define SPI_DRIVER SPID0
 
@@ -78,18 +52,3 @@
 #define ROWS {3,2,1,0}
 
 #define DEBOUNCE 5
-
-/*
-#define DEBUG                Debug_UART1
-#define DEBUG_BAUDRATE       460800
-*/
-#ifdef OLED_ENABLE
-#    define OLED_DISPLAY_128X32
-#define I2C1_SCL_PIN        GP7
-#define I2C1_SDA_PIN        GP6
-#define I2C_DRIVER I2CD2
-#define OLED_BRIGHTNESS 128
-#define OLED_FONT_H "keyboards/mlego/m65/lib/glcdfont.c"
-#endif
-
-#include "pre_handler.h"

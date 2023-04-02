@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 
 #include QMK_KEYBOARD_H
-#include "wait.h"
 
 const uint32_t PROGMEM unicode_map[] = {
     [la]  = 0x03B1 , // α
@@ -58,38 +57,6 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
 };
 #endif
 
-bool led_update_user(led_t led_state) {
-    // Disable the default LED update code, so that lock LEDs could be reused to show layer status.
-    return false;
-}
-
-void matrix_scan_user(void) {
-
-    toggle_leds();
-
-}
-
-bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-
-    switch (keycode) {
-        case (TT(_LWR)):
-            if (!record->event.pressed && record->tap.count == TAPPING_TOGGLE) {
-                // This runs before the TT() handler toggles the layer state, so the current layer state is the opposite of the final one after toggle.
-                set_led_toggle(_LWR, !layer_state_is(_LWR));
-            }
-            return true;
-            break;
-        case (TT(_RSE)):
-            if (record->event.pressed && record->tap.count == TAPPING_TOGGLE) {
-                set_led_toggle(_RSE, !layer_state_is(_RSE));
-            }
-            return true;
-            break;
-        default:
-            return true;
-    }
-}
-
 layer_state_t layer_state_set_user(layer_state_t state) {
 
 #ifdef RGBLIGHT_ENABLE
@@ -110,3 +77,10 @@ layer_state_t default_layer_state_set_user(layer_state_t state) {
 }
 
 #endif
+
+void keyboard_post_init_user(void) {
+#ifdef RGBLIGHT_ENABLE
+    // Enable the LED layers
+    rgblight_layers = my_rgb();
+#endif
+}
