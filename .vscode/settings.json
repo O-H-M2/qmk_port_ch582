@@ -117,5 +117,6 @@
     "C_Cpp.files.exclude": {
         "**/build": true,
         "**/build/*": true
-    }
+    },
+    "editor.defaultFormatter": "xaver.clang-format"
 }
