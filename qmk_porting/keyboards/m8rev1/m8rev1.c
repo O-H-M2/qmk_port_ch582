@@ -36,7 +36,7 @@ int main()
     }
 }
 
-  #ifdef RGBLIGHT_ENABLE
+#ifdef RGBLIGHT_ENABLE
 
   void set_rgb_layers(layer_state_t state){
 
@@ -55,5 +55,5 @@ int main()
       return my_rgb_layers;
   }
 
-  #endif
+#endif
 
