@@ -266,13 +266,6 @@ done:
 
 uint8_t battery_get_last_percentage()
 {
-    if (timer_elapsed32(last_measure) > 10 * 1000) {
-        uint16_t temp;
-
-        battery_init();
-        temp = battery_measure();
-        battery_calculate(temp);
-    }
     return last_percentage;
 }
 
