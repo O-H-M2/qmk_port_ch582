@@ -57,6 +57,16 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
 };
 #endif
 
+bool led_update_user(led_t led_state) {
+    // Disable the default LED update code, so that lock LEDs could be reused to show layer status.
+    return false;
+}
+
+void matrix_scan_user(void) {
+    led_t led_state = host_keyboard_led_state();
+    led_caps(led_state.caps_lock);
+}
+
 layer_state_t layer_state_set_user(layer_state_t state) {
 
 #ifdef RGBLIGHT_ENABLE

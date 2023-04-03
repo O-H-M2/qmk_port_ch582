@@ -40,3 +40,9 @@ void set_rgb_layers(layer_state_t);
 const rgblight_segment_t * const*  my_rgb(void);
 void set_default_rgb_layers(layer_state_t);
 #endif
+
+static inline void led_caps(const bool on) {
+#ifdef LED_CAPS_LOCK_PIN
+    writePin(LED_CAPS_LOCK_PIN, !on);
+#endif
+}
