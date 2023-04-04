@@ -3,9 +3,6 @@
 
 #include QMK_KEYBOARD_H
 
-
-#if !defined ESB_ENABLE || ESB_ENABLE != 2
-
 int main()
 {
     extern void protocol_setup();
@@ -15,7 +12,9 @@ int main()
     platform_setup();
 
     protocol_setup();
+#if !defined ESB_ENABLE || ESB_ENABLE != 2
     keyboard_setup();
+#endif
 
     protocol_init();
 
@@ -26,19 +25,6 @@ int main()
     }
 }
 
-#else
-
-__HIGH_CODE int main()
-{
-    platform_setup();
-
-    for (;;) {
-        TMOS_SystemProcess();
-    }
-}
-
-#endif
-
 void toggle_leds(const bool toggle_lwr, const bool toggle_rse) {
     led_lwr(toggle_lwr);
     led_rse(toggle_rse);
@@ -47,7 +33,6 @@ void toggle_leds(const bool toggle_lwr, const bool toggle_rse) {
         led_rse(true);
     }
 }
-
 
 void keyboard_post_init_kb(void) {
 
