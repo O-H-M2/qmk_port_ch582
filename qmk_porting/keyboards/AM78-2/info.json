@@ -49,6 +49,46 @@
       "shortName": "BLE8"
     },
     {
+      "name": "BLE9",
+      "title": "Tap = Use BLE slot 9, Hold = Clean BLE slot 9 binding",
+      "shortName": "BLE9"
+    },
+    {
+      "name": "BLE10",
+      "title": "Tap = Use BLE slot 10, Hold = Clean BLE slot 10 binding",
+      "shortName": "BLE10"
+    },
+    {
+      "name": "BLE11",
+      "title": "Tap = Use BLE slot 11, Hold = Clean BLE slot 11 binding",
+      "shortName": "BLE11"
+    },
+    {
+      "name": "BLE12",
+      "title": "Tap = Use BLE slot 12, Hold = Clean BLE slot 12 binding",
+      "shortName": "BLE12"
+    },
+    {
+      "name": "BLE13",
+      "title": "Tap = Use BLE slot 13, Hold = Clean BLE slot 13 binding",
+      "shortName": "BLE13"
+    },
+    {
+      "name": "BLE814",
+      "title": "Tap = Use BLE slot 14, Hold = Clean BLE slot 14 binding",
+      "shortName": "BLE14"
+    },
+    {
+      "name": "BLE815",
+      "title": "Tap = Use BLE slot 15, Hold = Clean BLE slot 15 binding",
+      "shortName": "BLE15"
+    },
+    {
+      "name": "BLE816",
+      "title": "Tap = Use BLE slot 16, Hold = Clean BLE slot 16 binding",
+      "shortName": "BLE16"
+    },
+    {
       "name": "BC_A",
       "title": "Clean ALL BLE slot binding",
       "shortName": "BC_A"
