@@ -28,15 +28,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MATRIX_COLS 14
 #define MATRIX_ROW_PINS       \
     {                         \
-        B9, B8, B17, B16, B18 \
+        A1, A2, A3, A4, A5 \
     }
 #define MATRIX_COL_PINS                                            \
     {                                                              \
-        B4, B5, B6, B7, A7, A12, A13, A14, A15, A3, A2, A1, A0, A6 \
+        B4, B5, B6, B7, B14, B15, B16, B17, B8, B9, A8, B18, B19, B20 \
     }
 #define DYNAMIC_KEYMAP_LAYER_COUNT 10
 
-#define DIODE_DIRECTION       COL2ROW
+#define DIODE_DIRECTION       ROW2COL
 #define BOOTMAGIC_LITE_ROW    0
 #define BOOTMAGIC_LITE_COLUMN 0
 // #define PERMISSIVE_HOLD
@@ -44,10 +44,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
-#define WS2812_EN_PIN   A5
+#define WS2812_EN_PIN   B3
 #define WS2812_EN_LEVEL 1
 
-#define BATTERY_MEASURE_PIN A4
+#define BATTERY_MEASURE_PIN A13
 #define POWER_DETECT_PIN    B12
 
 #ifdef RGB_MATRIX_ENABLE

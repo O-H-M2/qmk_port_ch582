@@ -31,7 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define I2C_IO_REMAPPING
 
 /* SPI_IO_REMAPPING   -  SPI0:  PA12/PA13/PA14/PA15 -> PB12/PB13/PB14/PB15 */
-#define SPI_IO_REMAPPING
+//#define SPI_IO_REMAPPING
 
 // #define BLE_TX_POWER LL_TX_POWEER_MINUS_16_DBM
 // #define BLE_TX_POWER LL_TX_POWEER_MINUS_12_DBM

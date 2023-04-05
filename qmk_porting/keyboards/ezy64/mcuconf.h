@@ -17,9 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-// #define DEBUG                Debug_UART1
+ #define DEBUG                Debug_UART1
 #define DEBUG_BAUDRATE       460800
-#define DCDC_ENABLE          1
+#define DCDC_ENABLE          0
 #define FREQ_SYS             40000000
 #define LSE_ENABLE           1
 #define BLE_SLOT_NUM         4

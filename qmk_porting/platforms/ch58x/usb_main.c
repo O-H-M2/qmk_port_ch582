@@ -8,10 +8,15 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
         keyboard_task();
         housekeeping_task();
 #ifdef POWER_DETECT_PIN
-        if (!readPin(POWER_DETECT_PIN)) {
+#error 1
+static uint8_t last_state = 0;
+uint8_t state = readPin(POWER_DETECT_PIN);
+
+        if (last_state!=state) {
             // cable removed
-            PRINT("Cable pulled out.\n");
-            mcu_reset();
+            PRINT("State changed to: %d\n",state);
+            // mcu_reset();
+            last_state = state;
         }
 #endif
         tmos_start_task(task_id, USB_RUN_QMK_TASK_EVT, 0);
