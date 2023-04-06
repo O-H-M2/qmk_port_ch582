@@ -1,0 +1,86 @@
+{
+	"name": "m8 rev1",
+	"vendorId": "0xBABA",
+	"productId": "0x6071",
+	"customKeycodes": [
+		{
+			"name": "USB_MODE",
+			"title": "USB_MODE",
+			"shortName": "USB_MODE"
+		},
+		{
+			"name": "BLE_SLOT0",
+			"title": "BLE_SLOT0",
+			"shortName": "BLE0"
+		},
+		{
+			"name": "BLE_SLOT1",
+			"title": "BLE_SLOT1",
+			"shortName": "BLE1"
+		},
+		{
+			"name": "BLE_SLOT2",
+			"title": "BLE_SLOT2",
+			"shortName": "BLE2"
+		},
+		{
+			"name": "BLE_SLOT3",
+			"title": "BLE_SLOT3",
+			"shortName": "BLE3"
+		},
+		{
+			"name": "BLE_CLEAN0",
+			"title": "BLE_CLEAN0",
+			"shortName": "BC0"
+		},
+		{
+			"name": "BLE_CLEAN1",
+			"title": "BLE_CLEAN1",
+			"shortName": "BC1"
+		},
+		{
+			"name": "BLE_CLEAN2",
+			"title": "BLE_CLEAN2",
+			"shortName": "BC2"
+		},
+		{
+			"name": "BLE_CLEAN3",
+			"title": "BLE_CLEAN3",
+			"shortName": "BC3"
+		},
+		{
+			"name": "BLE_ALL_CLEAR",
+			"title": "BLE_ALL_CLEAR",
+			"shortName": "BLE_ALL_CLEAR"
+		},
+		{
+			"name": "ESB_MODE",
+			"title": "ESB_MODE",
+			"shortName": "ESB_MODE"
+		}
+	],
+	"matrix": {
+		"rows": 4,
+		"cols": 2
+	},
+	"layouts": {
+		"keymap": [
+			[
+				"0,0",
+				"0,1"
+			],
+			[
+				"1,0",
+				"1,1"
+			],
+			[
+				"2,0",
+				"2,1"
+			],
+			[
+				"3,0",
+				"3,1"
+			]
+		]
+	}
+}
