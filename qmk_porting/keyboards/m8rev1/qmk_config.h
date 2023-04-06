@@ -4,18 +4,12 @@
 
 #pragma once
 
-#define DCDC_ENABLE  1
-#define FREQ_SYS     40000000
-#define LSE_ENABLE   0
-#define BLE_SLOT_NUM 4
-#undef SPI_IO_REMAPPING
-
-
+#define VENDOR_ID  0xBABA
 #define PRODUCT_ID 0x6071
-#define VENDOR_ID 0xBABA
-#define DEVICE_VER 0x0001
-#define PRODUCT "mlego/m8 rev1"
+
+#define DEVICE_VER   0x0001
 #define MANUFACTURER "Alin Elena"
+#define PRODUCT      "mlego/m8 rev1"
 
 #define MATRIX_ROWS 4
 #define MATRIX_COLS 2
@@ -23,25 +17,29 @@
 #define DIODE_DIRECTION       COL2ROW
 #define BOOTMAGIC_LITE_ROW    0
 #define BOOTMAGIC_LITE_COLUMN 0
-
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
-#ifdef ENCODER_ENABLE
-#define ENCODERS_PAD_A { A10 }
-#define ENCODERS_PAD_B { A11 }
-#define ENCODER_RESOLUTION 4
-#endif
+
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
+#ifdef ENCODER_ENABLE
+#define ENCODERS_PAD_A \
+    {                  \
+        A10            \
+    }
+#define ENCODERS_PAD_B \
+    {                  \
+        A11            \
+    }
+#define ENCODER_RESOLUTION 4
+#endif
 
-#define SPI_DRIVER SPID0
-
-#define SPI_CS_PIN A12
-#define SPI_SCK_PIN A13
+#define SPI_CS_PIN   A12
+#define SPI_SCK_PIN  A13
 #define SPI_MOSI_PIN A14
 #define SPI_MISO_PIN A15
-#define SPI_DIVISOR 32
-#define SPI_MODE 3
+#define SPI_DIVISOR  32
+#define SPI_MODE     3
 #define SPI_LSBFIRST false
 
 #define LED_CAPS_LOCK_PIN A8
@@ -54,7 +52,13 @@
 //              1QA     2QA
 // #define COLS { 0x0001, 0x0100}
 // the test revision had a mistake and all cols are on one register
-#define COLS { 0x0008, 0x0004}
-#define ROWS {3,2,1,0}
+#define COLS           \
+    {                  \
+        0x0008, 0x0004 \
+    }
+#define ROWS       \
+    {              \
+        3, 2, 1, 0 \
+    }
 
 #define DEBOUNCE 5

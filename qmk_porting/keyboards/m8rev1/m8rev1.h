@@ -6,12 +6,13 @@
 #include "quantum.h"
 #include "extra_keycode.h"
 
-#define LAYOUT_ortho_4x2(k0A, k0B, k1A, k1B, k2A, k2B, k3A, k3B ) {\
-   {k0A, k0B}, \
-   {k1A, k1B}, \
-   {k2A, k2B}, \
-   {k3A, k3B}, \
-}
+#define LAYOUT_ortho_4x2(k0A, k0B, k1A, k1B, k2A, k2B, k3A, k3B) \
+    {                                                            \
+        { k0A, k0B },                                            \
+            { k1A, k1B },                                        \
+            { k2A, k2B },                                        \
+            { k3A, k3B },                                        \
+    }
 
 enum unicode_names {
     la = NEW_SAFE_RANGE,
@@ -37,11 +38,12 @@ enum layer_names {
 
 #ifdef RGBLIGHT_ENABLE
 void set_rgb_layers(layer_state_t);
-const rgblight_segment_t * const*  my_rgb(void);
+const rgblight_segment_t *const *my_rgb(void);
 void set_default_rgb_layers(layer_state_t);
 #endif
 
-static inline void led_caps(const bool on) {
+static inline void led_caps(const bool on)
+{
 #ifdef LED_CAPS_LOCK_PIN
     writePin(LED_CAPS_LOCK_PIN, !on);
 #endif

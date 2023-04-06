@@ -28,26 +28,26 @@
 			"title": "BLE_SLOT3",
 			"shortName": "BLE3"
 		},
-    {
-      "name": "BLE_CLEAN0",
-      "title": "BLE_CLEAN0",
-      "shortName": "BC0"
-    },
-    {
-      "name": "BLE_CLEAN1",
-      "title": "BLE_CLEAN1",
-      "shortName": "BC1"
-    },
-    {
-      "name": "BLE_CLEAN2",
-      "title": "BLE_CLEAN2",
-      "shortName": "BC2"
-    },
-    {
-      "name": "BLE_CLEAN3",
-      "title": "BLE_CLEAN3",
-      "shortName": "BC3"
-    },
+		{
+			"name": "BLE_CLEAN0",
+			"title": "BLE_CLEAN0",
+			"shortName": "BC0"
+		},
+		{
+			"name": "BLE_CLEAN1",
+			"title": "BLE_CLEAN1",
+			"shortName": "BC1"
+		},
+		{
+			"name": "BLE_CLEAN2",
+			"title": "BLE_CLEAN2",
+			"shortName": "BC2"
+		},
+		{
+			"name": "BLE_CLEAN3",
+			"title": "BLE_CLEAN3",
+			"shortName": "BC3"
+		},
 		{
 			"name": "BLE_ALL_CLEAR",
 			"title": "BLE_ALL_CLEAR",

@@ -24,4 +24,3 @@ int main()
         //! housekeeping_task() is handled by platform
     }
 }
-
