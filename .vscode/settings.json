@@ -118,5 +118,8 @@
         "**/build": true,
         "**/build/*": true
     },
-    "editor.defaultFormatter": "xaver.clang-format"
+    "editor.defaultFormatter": "xaver.clang-format",
+    "[cmake]": {
+        "editor.defaultFormatter": "josetr.cmake-language-support-vscode"
+    }
 }
