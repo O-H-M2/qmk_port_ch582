@@ -241,13 +241,13 @@ else()
         ${KEYBOARD_ROOT}/qmk_config.h
     )
 
-    if(EXISTS "${KEYBOARD_ROOT}/${keymap}/qmk_config.h")
+    if(EXISTS "${KEYBOARD_ROOT}/keymaps/${keymap}/qmk_config.h")
         message(STATUS "Found keymap specified configs.")
         target_precompile_headers(${keyboard}.elf PUBLIC
-            ${KEYBOARD_ROOT}/${keymap}/qmk_config.h
+            ${KEYBOARD_ROOT}/keymaps/${keymap}/qmk_config.h
         )
         target_precompile_headers(${keyboard}_IAP.elf PUBLIC
-            ${KEYBOARD_ROOT}/${keymap}/qmk_config.h
+            ${KEYBOARD_ROOT}/keymaps/${keymap}/qmk_config.h
         )
     endif()
 
