@@ -17,9 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <stdbool.h>
 #include "pin_defs.h"
 
 typedef uint32_t pin_t;
+typedef struct _gpio_pin_record_t {
+    pin_t pin;
+    uint8_t pd_drv : 1;
+    uint8_t pu     : 1;
+    uint8_t dir    : 1;
+} gpio_pin_record_t;
 
 #define GPIO_FIELD_TO_BIT(_field) \
     ((_field) ? 1 : 0)
@@ -74,5 +81,7 @@ typedef uint32_t pin_t;
     (((pin)&0x80000000) ? (R16_PB_INT_IF = ((pin)&0x7FFFFFFF) | ((((pin)&0x7FFFFFFF) & (GPIO_Pin_22 | GPIO_Pin_23)) >> 14)) : (R16_PA_INT_IF = (pin)));           \
     (((pin)&0x80000000) ? (R16_PB_INT_EN |= ((pin)&0x7FFFFFFF) | ((((pin)&0x7FFFFFFF) & (GPIO_Pin_22 | GPIO_Pin_23)) >> 14)) : (R16_PA_INT_EN |= (pin)));
 
+bool gpio_record_pin_config(pin_t pin);
+void gpio_recover_pin_config();
 void gpio_strap();
 void battery_critical_gpio_prerequisite();
