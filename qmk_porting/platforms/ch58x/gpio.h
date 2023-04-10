@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 typedef uint32_t pin_t;
 
+#define GPIO_FIELD_TO_BIT(_field) \
+    ((_field) ? 1 : 0)
+
 #define setPinInput(pin)                                                                       \
     (((pin)&0x80000000) ? (R32_PB_PD_DRV &= ~((pin)&0x7FFFFFFF)) : (R32_PA_PD_DRV &= ~(pin))); \
     (((pin)&0x80000000) ? (R32_PB_PU &= ~((pin)&0x7FFFFFFF)) : (R32_PA_PU &= ~(pin)));         \
@@ -37,14 +40,14 @@ typedef uint32_t pin_t;
     (((pin)&0x80000000) ? (R32_PB_PD_DRV &= ~((pin)&0x7FFFFFFF)) : (R32_PA_PD_DRV &= ~(pin))); \
     (((pin)&0x80000000) ? (R32_PB_DIR |= ((pin)&0x7FFFFFFF)) : (R32_PA_DIR |= (pin)));
 #define setPinOutputOpenDrain(pin) _Static_assert(0, "WCH platform does not implement an open-drain output")
-#define setPinOutput(pin)          setPinOutputPushPull((pin))
+#define setPinOutput(pin)          setPinOutputPushPull(pin)
 
-#define writePinHigh(pin)    (((pin)&0x80000000) ? GPIOB_SetBits((pin)&0x7FFFFFFF) : GPIOA_SetBits((pin)))
-#define writePinLow(pin)     (((pin)&0x80000000) ? GPIOB_ResetBits((pin)&0x7FFFFFFF) : GPIOA_ResetBits((pin)))
-#define writePin(pin, level) ((level) ? writePinHigh((pin)) : writePinLow((pin)))
+#define writePinHigh(pin)    (((pin)&0x80000000) ? GPIOB_SetBits((pin)&0x7FFFFFFF) : GPIOA_SetBits(pin))
+#define writePinLow(pin)     (((pin)&0x80000000) ? GPIOB_ResetBits((pin)&0x7FFFFFFF) : GPIOA_ResetBits(pin))
+#define writePin(pin, level) ((level) ? writePinHigh(pin) : writePinLow(pin))
 
-#define readPin(pin)   ((((pin)&0x80000000) ? GPIOB_ReadPortPin((pin)&0x7FFFFFFF) : GPIOA_ReadPortPin((pin))) ? 1 : 0)
-#define togglePin(pin) (((pin)&0x80000000) ? GPIOB_InverseBits((pin)&0x7FFFFFFF) : GPIOA_InverseBits((pin)))
+#define readPin(pin)   (GPIO_FIELD_TO_BIT(((pin)&0x80000000) ? GPIOB_ReadPortPin((pin)&0x7FFFFFFF) : GPIOA_ReadPortPin(pin)))
+#define togglePin(pin) (((pin)&0x80000000) ? GPIOB_InverseBits((pin)&0x7FFFFFFF) : GPIOA_InverseBits(pin))
 
 /* self-defined functions */
 #define setPinInterruptRisingEdge(pin)                                                                                                                        \
