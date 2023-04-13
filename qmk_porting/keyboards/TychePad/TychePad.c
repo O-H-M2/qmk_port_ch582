@@ -45,6 +45,8 @@ led_config_t g_led_config = {
         4, 4, 
 	}
 };
+/* clang-format on */
+#endif
 static bool LCD_state = 1;
 
 void USB2LCD()
@@ -73,48 +75,49 @@ void LCD_off()
 
 void bat_send(uint8_t bat_num)
 {
-    if (LCD_state){
-    uint8_t TX_date[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
-    TX_date[5] = bat_num;
-    TX_date[3] = TX_date[5];//sum
+    if (LCD_state) {
+        uint8_t TX_date[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
+        TX_date[5] = bat_num;
+        TX_date[3] = TX_date[5]; //sum
 
-    uart_start();
-    DelayMs(1);
-    uart_transmit(TX_date, sizeof(TX_date) + 1);
-    uart_stop();
-    DelayMs(1);
+        uart_start();
+        DelayMs(1);
+        uart_transmit(TX_date, sizeof(TX_date) + 1);
+        uart_stop();
+        DelayMs(1);
     }
 }
 void layer_send(uint8_t layer_num)
 {
-    if (LCD_state){
-    uint8_t TX_date[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
-    TX_date[5] = layer_num;
-    TX_date[3] = TX_date[5];//sum
+    if (LCD_state) {
+        uint8_t TX_date[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
+        TX_date[5] = layer_num;
+        TX_date[3] = TX_date[5]; //sum
 
-    uart_start();
-    DelayMs(1);
-    uart_transmit(TX_date, sizeof(TX_date) + 1);
-    uart_stop();
-    DelayMs(1);
+        uart_start();
+        DelayMs(1);
+        uart_transmit(TX_date, sizeof(TX_date) + 1);
+        uart_stop();
+        DelayMs(1);
     }
 }
 void indicators_send(uint8_t indi)
 {
-    if (LCD_state){
-    uint8_t TX_date[] = { 0xfe,	0x02, 0x02,	0x01, 0x01,	0x01};
-    TX_date[5] = indi;
-    TX_date[3] = TX_date[5];//sum
+    if (LCD_state) {
+        uint8_t TX_date[] = { 0xfe, 0x02, 0x02, 0x01, 0x01, 0x01 };
+        TX_date[5] = indi;
+        TX_date[3] = TX_date[5]; //sum
 
-    uart_start();
-    DelayMs(1);
-    uart_transmit(TX_date, sizeof(TX_date) + 1);
-    uart_stop();
-    DelayMs(1);
+        uart_start();
+        DelayMs(1);
+        uart_transmit(TX_date, sizeof(TX_date) + 1);
+        uart_stop();
+        DelayMs(1);
     }
 }
 
-/* clang-format on */
+#ifdef RGB_MATRIX_ENABLE
+
 static bool numlocks = 0;
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
@@ -154,7 +157,7 @@ layer_state_t layer_state_set_user(layer_state_t state)
 
 void keyboard_post_init_kb()
 {
-    setPinInput(B12);
+    // setPinInput(B12);
     PRINT("init\n");
     uart_init(460800);
 
@@ -174,9 +177,6 @@ int main()
     extern void protocol_setup();
     extern void protocol_init();
     extern void protocol_task();
-
-    writePinHigh(LCD_EN);
-    setPinOutput(LCD_EN);
 
     platform_setup();
 
