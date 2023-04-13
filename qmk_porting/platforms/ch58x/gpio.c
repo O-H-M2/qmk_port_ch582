@@ -17,6 +17,72 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "gpio.h"
 
+static gpio_pin_record_t pin_record = {};
+
+bool gpio_record_pin_config(pin_t pin)
+{
+    if (pin_record.pin != NO_PIN) {
+        return false;
+    }
+
+    pin_record.pin = pin;
+
+    if (pin_record.pin & 0x80000000) {
+        pin_record.pd_drv = GPIO_FIELD_TO_BIT(R32_PB_PD_DRV & (pin & 0x7FFFFFFF));
+        pin_record.pu = GPIO_FIELD_TO_BIT(R32_PB_PU & (pin & 0x7FFFFFFF));
+        pin_record.dir = GPIO_FIELD_TO_BIT(R32_PB_DIR & (pin & 0x7FFFFFFF));
+    } else {
+        pin_record.pd_drv = GPIO_FIELD_TO_BIT(R32_PA_PD_DRV & pin);
+        pin_record.pu = GPIO_FIELD_TO_BIT(R32_PA_PU & pin);
+        pin_record.dir = GPIO_FIELD_TO_BIT(R32_PA_DIR & pin);
+    }
+
+    return true;
+}
+
+void gpio_recover_pin_config()
+{
+    if (pin_record.pin == NO_PIN) {
+        return;
+    }
+
+    if (pin_record.pin & 0x80000000) {
+        if (pin_record.pd_drv) {
+            R32_PB_PD_DRV |= pin_record.pin & 0x7FFFFFFF;
+        } else {
+            R32_PB_PD_DRV &= ~(pin_record.pin & 0x7FFFFFFF);
+        }
+        if (pin_record.pu) {
+            R32_PB_PU |= pin_record.pin & 0x7FFFFFFF;
+        } else {
+            R32_PB_PU &= ~(pin_record.pin & 0x7FFFFFFF);
+        }
+        if (pin_record.dir) {
+            R32_PB_DIR |= pin_record.pin & 0x7FFFFFFF;
+        } else {
+            R32_PB_DIR &= ~(pin_record.pin & 0x7FFFFFFF);
+        }
+    } else {
+        if (pin_record.pd_drv) {
+            R32_PA_PD_DRV |= pin_record.pin;
+        } else {
+            R32_PA_PD_DRV &= ~pin_record.pin;
+        }
+        if (pin_record.pu) {
+            R32_PA_PU |= pin_record.pin;
+        } else {
+            R32_PA_PU &= ~pin_record.pin;
+        }
+        if (pin_record.dir) {
+            R32_PA_DIR |= pin_record.pin;
+        } else {
+            R32_PA_DIR &= ~pin_record.pin;
+        }
+    }
+
+    pin_record.pin = NO_PIN;
+}
+
 __HIGH_CODE void gpio_strap()
 {
     pin_t pin_a = GPIO_Pin_All & 0x7FFFFFFF, pin_b = GPIO_Pin_All;

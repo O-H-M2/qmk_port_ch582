@@ -48,6 +48,10 @@
 #define WS2812_T0L (WS2812_TIMING - WS2812_T0H) // Width of a 0 bit in ns
 #endif
 
+#ifndef WS2812_TIMEOUT
+#define WS2812_TIMEOUT 100
+#endif
+
 /*
  * Older WS2812s can handle a reset time (TRST) of 50us, but recent
  * component revisions require a minimum of 280us.

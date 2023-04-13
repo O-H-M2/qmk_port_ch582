@@ -176,8 +176,8 @@ else()
         set(HEX_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}_dongle.hex)
         set(HEX_FILE_APP_SIGNED ${PROJECT_BINARY_DIR}/${keyboard}_dongle_signed.hex)
         set(BIN_FILE_APP ${PROJECT_BINARY_DIR}/${keyboard}_dongle.bin)
-        set(UF2_FILE_APP ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_dongle_upgrade.uf2)
-        set(HEX_FILE_FACTORY ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_dongle_factory.hex)
+        set(UF2_FILE_APP ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_dongle_upgrade_${GIT_VERSION}.uf2)
+        set(HEX_FILE_FACTORY ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_dongle_factory_${GIT_VERSION}.hex)
         set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.hex)
         set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.bin)
     endif()
@@ -240,6 +240,16 @@ else()
     target_precompile_headers(${keyboard}_IAP.elf PUBLIC
         ${KEYBOARD_ROOT}/qmk_config.h
     )
+
+    if(EXISTS "${KEYBOARD_ROOT}/keymaps/${keymap}/qmk_config.h")
+        message(STATUS "Found keymap specified configs.")
+        target_precompile_headers(${keyboard}.elf PUBLIC
+            ${KEYBOARD_ROOT}/keymaps/${keymap}/qmk_config.h
+        )
+        target_precompile_headers(${keyboard}_IAP.elf PUBLIC
+            ${KEYBOARD_ROOT}/keymaps/${keymap}/qmk_config.h
+        )
+    endif()
 
     if(EXISTS "${KEYBOARD_ROOT}/mcuconf.h")
         target_precompile_headers(${keyboard}.elf PUBLIC
