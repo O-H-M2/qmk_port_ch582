@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include "gpio.h"
 #include "uart.h"
+#include "wait.h"
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -81,10 +82,10 @@ void bat_send(uint8_t bat_num)
         TX_date[3] = TX_date[5]; //sum
 
         uart_start();
-        DelayMs(1);
+        wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
         uart_stop();
-        DelayMs(1);
+        wait_ms(1);
     }
 }
 void layer_send(uint8_t layer_num)
@@ -95,10 +96,10 @@ void layer_send(uint8_t layer_num)
         TX_date[3] = TX_date[5]; //sum
 
         uart_start();
-        DelayMs(1);
+        wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
         uart_stop();
-        DelayMs(1);
+        wait_ms(1);
     }
 }
 void indicators_send(uint8_t indi)
@@ -109,10 +110,10 @@ void indicators_send(uint8_t indi)
         TX_date[3] = TX_date[5]; //sum
 
         uart_start();
-        DelayMs(1);
+        wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
         uart_stop();
-        DelayMs(1);
+        wait_ms(1);
     }
 }
 
