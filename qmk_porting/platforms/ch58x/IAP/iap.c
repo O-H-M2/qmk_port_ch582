@@ -532,6 +532,7 @@ int main()
         pin_t output_pin = cols[buffer[1]];
 #endif
 #else
+        pin_t input_pin, output_pin;
         break;
 #endif
 
