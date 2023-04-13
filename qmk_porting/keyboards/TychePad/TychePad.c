@@ -16,6 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+#include "gpio.h"
+#include "uart.h"
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -34,7 +36,6 @@ led_config_t g_led_config = {
         {0,32},{75,32},{149,32},
         {149,48},{75,48},{0,48},
         {38,64},       {118,64}, {224,56},      
- 
 
 	}, {
 		4, 4, 4, 4, 
@@ -44,10 +45,87 @@ led_config_t g_led_config = {
         4, 4, 
 	}
 };
-/* clang-format on */
+static bool LCD_state = 1;
 
+void USB2LCD()
+{
+    writePinHigh(USB_SET);
+    setPinOutput(USB_SET);
+}
+
+void USB2MCU()
+{
+    writePinLow(USB_SET);
+    setPinOutput(USB_SET);
+}
+
+void LCD_on()
+{
+    writePinHigh(LCD_EN);
+    setPinOutput(LCD_EN);
+}
+
+void LCD_off()
+{
+    writePinLow(LCD_EN);
+    setPinOutput(LCD_EN);
+}
+
+void bat_send(uint8_t bat_num)
+{
+    if (LCD_state){
+    uint8_t TX_date[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
+    TX_date[5] = bat_num;
+    TX_date[3] = TX_date[5];//sum
+
+    uart_start();
+    DelayMs(1);
+    uart_transmit(TX_date, sizeof(TX_date) + 1);
+    uart_stop();
+    DelayMs(1);
+    }
+}
+void layer_send(uint8_t layer_num)
+{
+    if (LCD_state){
+    uint8_t TX_date[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
+    TX_date[5] = layer_num;
+    TX_date[3] = TX_date[5];//sum
+
+    uart_start();
+    DelayMs(1);
+    uart_transmit(TX_date, sizeof(TX_date) + 1);
+    uart_stop();
+    DelayMs(1);
+    }
+}
+void indicators_send(uint8_t indi)
+{
+    if (LCD_state){
+    uint8_t TX_date[] = { 0xfe,	0x02, 0x02,	0x01, 0x01,	0x01};
+    TX_date[5] = indi;
+    TX_date[3] = TX_date[5];//sum
+
+    uart_start();
+    DelayMs(1);
+    uart_transmit(TX_date, sizeof(TX_date) + 1);
+    uart_stop();
+    DelayMs(1);
+    }
+}
+
+/* clang-format on */
+static bool numlocks = 0;
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
+    if (numlocks != host_keyboard_led_state().num_lock) {
+        numlocks = host_keyboard_led_state().num_lock;
+        if (numlocks)
+            indicators_send(1);
+        else
+            indicators_send(0);
+    }
+
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
         return false;
     }
@@ -64,11 +142,41 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 
 #endif
 
+static uint8_t layer_num = 0;
+layer_state_t layer_state_set_user(layer_state_t state)
+{
+    if (layer_num != get_highest_layer(state)) {
+        layer_num = get_highest_layer(state);
+        layer_send(layer_num);
+    }
+    return state;
+}
+
+void keyboard_post_init_kb()
+{
+    setPinInput(B12);
+    PRINT("init\n");
+    uart_init(460800);
+    
+    writePinHigh(LCD_EN);
+    setPinOutput(LCD_EN);
+    
+    writePinLow(USB_SET);
+    setPinOutput(USB_SET);
+    //const uint8_t string[] = "init\n";
+    //uart_start();
+    //uart_transmit(string, sizeof(string));
+    //uart_stop();
+}
+
 int main()
 {
     extern void protocol_setup();
     extern void protocol_init();
     extern void protocol_task();
+
+    writePinHigh(LCD_EN);
+    setPinOutput(LCD_EN);
 
     platform_setup();
 
