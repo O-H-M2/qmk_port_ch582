@@ -157,10 +157,10 @@ void keyboard_post_init_kb()
     setPinInput(B12);
     PRINT("init\n");
     uart_init(460800);
-    
+
     writePinHigh(LCD_EN);
     setPinOutput(LCD_EN);
-    
+
     writePinLow(USB_SET);
     setPinOutput(USB_SET);
     //const uint8_t string[] = "init\n";

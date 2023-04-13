@@ -26,13 +26,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 4
-#define MATRIX_ROW_PINS            \
-    {                              \
+#define MATRIX_ROW_PINS       \
+    {                         \
         B9, B8, B17, B16, B18 \
     }
-#define MATRIX_COL_PINS                                                \
-    {                                                                  \
-        A6, A0, A1, A2 \
+#define MATRIX_COL_PINS \
+    {                   \
+        A6, A0, A1, A2  \
     }
 //#define DYNAMIC_KEYMAP_LAYER_COUNT 10
 
@@ -124,7 +124,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
 #endif
 
-
 /* define if matrix has ghost */
 //#define MATRIX_HAS_GHOST
 
@@ -147,5 +146,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //#define NO_ACTION_TAPPING
 //#define NO_ACTION_ONESHOT
 
-#define LCD_EN B22
+#define LCD_EN  B22
 #define USB_SET A7
