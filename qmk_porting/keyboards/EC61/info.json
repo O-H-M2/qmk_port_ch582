@@ -109,7 +109,7 @@
     "cols": 14
   },
   "layouts": {
-    "keymap":[
+    "keymap": [
       [
         "0,0",
         "0,1",
@@ -231,8 +231,7 @@
         },
         "4,12"
       ]
-    ]
-    ,
+    ],
     "labels": [
       "Split Right Shift"
     ]
