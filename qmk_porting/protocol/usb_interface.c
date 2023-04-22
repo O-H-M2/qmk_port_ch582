@@ -333,10 +333,8 @@ static inline void hid_keyboard_protocol_check(uint8_t target)
     }
 }
 
-void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
+static inline void hid_keyboard_generic_send(uint8_t *data, uint8_t len)
 {
-    hid_keyboard_protocol_check(0);
-
     if (!usb_remote_wakeup()) {
         return;
     }
@@ -353,24 +351,16 @@ void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
     keyboard_state = HID_STATE_BUSY;
 }
 
+void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
+{
+    hid_keyboard_protocol_check(0);
+    hid_keyboard_generic_send(data, len);
+}
+
 void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len)
 {
     hid_keyboard_protocol_check(1);
-
-    if (!usb_remote_wakeup()) {
-        return;
-    }
-
-    while (keyboard_state == HID_STATE_BUSY) {
-        __nop();
-    }
-
-    int ret = usbd_ep_start_write(KBD_IN_EP, data, len);
-
-    if (ret < 0) {
-        return;
-    }
-    keyboard_state = HID_STATE_BUSY;
+    hid_keyboard_generic_send(data, len);
 }
 
 #ifdef RGB_RAW_ENABLE
