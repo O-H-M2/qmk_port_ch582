@@ -160,8 +160,6 @@ void usb_dc_low_level_deinit()
 int usb_dc_deinit()
 {
     usb_dc_low_level_deinit();
-    keyboard_protocol = 1;
-    keyboard_idle = 0;
     if (hid_descriptor != NULL) {
         free(hid_descriptor);
         hid_descriptor = NULL;
@@ -236,13 +234,26 @@ void init_usb_driver()
     };
 #endif
 
-    // build descriptor according to the keyboard name
+    // build descriptor according to the keyboard's name and type
+    uint8_t hid_descriptor_scratch_2[USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2];
+
+#ifdef NKRO_ENABLE
+    if (keyboard_protocol) {
+        // nkro mode
+        memcpy(hid_descriptor_scratch_2, hid_descriptor_scratch_2_nkro, sizeof(hid_descriptor_scratch_2));
+    } else
+#endif
+    {
+        // bios mode
+        memcpy(hid_descriptor_scratch_2, hid_descriptor_scratch_2_bios, sizeof(hid_descriptor_scratch_2));
+    }
+
 #if ESB_ENABLE == 2
     uint8_t keyboard_name[] = MACRO2STR(PRODUCT) " dongle";
 #else
     uint8_t keyboard_name[] = MACRO2STR(PRODUCT);
 #endif
-    uint8_t hid_descriptor_scratch_2[((sizeof(keyboard_name) - 1) + 1) * 2] = {
+    uint8_t hid_descriptor_scratch_4[((sizeof(keyboard_name) - 1) + 1) * 2] = {
         ///////////////////////////////////////
         /// string2 descriptor
         ///////////////////////////////////////
@@ -251,21 +262,38 @@ void init_usb_driver()
     };
 
     for (uint8_t i = 0; i < (sizeof(keyboard_name) - 1); i++) {
-        hid_descriptor_scratch_2[2 + i * 2] = keyboard_name[i];
-        hid_descriptor_scratch_2[2 + i * 2 + 1] = 0x00;
+        hid_descriptor_scratch_4[2 + i * 2] = keyboard_name[i];
+        hid_descriptor_scratch_4[2 + i * 2 + 1] = 0x00;
     }
 
     if (hid_descriptor != NULL) {
         free(hid_descriptor);
     }
-    hid_descriptor = (uint8_t *)malloc(sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2) + sizeof(hid_descriptor_scratch_3));
+    hid_descriptor = (uint8_t *)malloc(sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2) +
+                                       sizeof(hid_descriptor_scratch_3) + sizeof(hid_descriptor_scratch_4) +
+                                       sizeof(hid_descriptor_scratch_5));
     memcpy(hid_descriptor, hid_descriptor_scratch_1, sizeof(hid_descriptor_scratch_1));
-    memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1), hid_descriptor_scratch_2, sizeof(hid_descriptor_scratch_2));
-    memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2), hid_descriptor_scratch_3, sizeof(hid_descriptor_scratch_3));
+    memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1),
+           hid_descriptor_scratch_2, sizeof(hid_descriptor_scratch_2));
+    memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2),
+           hid_descriptor_scratch_3, sizeof(hid_descriptor_scratch_3));
+    memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2) +
+               sizeof(hid_descriptor_scratch_3),
+           hid_descriptor_scratch_4, sizeof(hid_descriptor_scratch_4));
+    memcpy(hid_descriptor + sizeof(hid_descriptor_scratch_1) + sizeof(hid_descriptor_scratch_2) +
+               sizeof(hid_descriptor_scratch_3) + sizeof(hid_descriptor_scratch_4),
+           hid_descriptor_scratch_5, sizeof(hid_descriptor_scratch_5));
 
     usbd_desc_register(hid_descriptor);
 
-    usbd_add_interface(usbd_hid_init_intf(&keyboard_interface, KeyboardReport, HID_KEYBOARD_REPORT_DESC_SIZE));
+#ifdef NKRO_ENABLE
+    if (keyboard_protocol) {
+        usbd_add_interface(usbd_hid_init_intf(&keyboard_interface, NkroReport, sizeof(NkroReport)));
+    } else
+#endif
+    {
+        usbd_add_interface(usbd_hid_init_intf(&keyboard_interface, KeyboardReport, sizeof(KeyboardReport)));
+    }
     usbd_add_endpoint(&keyboard_in_ep);
     usbd_add_endpoint(&keyboard_out_ep);
 
@@ -296,8 +324,19 @@ void init_usb_driver()
     usbd_initialize();
 }
 
+static inline void hid_keyboard_protocol_check(uint8_t target)
+{
+    if (target != keyboard_protocol) {
+        keyboard_protocol = target;
+        usbd_deinitialize();
+        init_usb_driver();
+    }
+}
+
 void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
 {
+    hid_keyboard_protocol_check(0);
+
     if (!usb_remote_wakeup()) {
         return;
     }
@@ -316,7 +355,22 @@ void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
 
 void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len)
 {
-    hid_exkey_send_report(data, len);
+    hid_keyboard_protocol_check(1);
+
+    if (!usb_remote_wakeup()) {
+        return;
+    }
+
+    while (keyboard_state == HID_STATE_BUSY) {
+        __nop();
+    }
+
+    int ret = usbd_ep_start_write(KBD_IN_EP, data, len);
+
+    if (ret < 0) {
+        return;
+    }
+    keyboard_state = HID_STATE_BUSY;
 }
 
 #ifdef RGB_RAW_ENABLE

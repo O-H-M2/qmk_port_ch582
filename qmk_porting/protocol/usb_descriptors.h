@@ -73,6 +73,41 @@ const uint8_t KeyboardReport[] = {
     0xC0,             // End Collection
 };
 
+#ifdef NKRO_ENABLE
+const uint8_t NkroReport[] = {
+    0x05, 0x01,                                  // Usage Page (Generic Desktop)
+    0x09, 0x06,                                  // Usage (Keyboard)
+    0xA1, 0x01,                                  // Collection (Application),
+    0x85, REPORT_ID_NKRO,                        //   REPORT_ID
+    0x75, 0x01,                                  //   Report Size (1),
+    0x95, 0x08,                                  //   Report Count (8),
+    0x05, 0x07,                                  //   Usage Page (Key Codes),
+    0x19, 0xE0,                                  //   Usage Minimum (224),
+    0x29, 0xE7,                                  //   Usage Maximum (231),
+    0x15, 0x00,                                  //   Logical Minimum (0),
+    0x25, 0x01,                                  //   Logical Maximum (1),
+    0x81, 0x02,                                  //   Input (Data, Variable, Absolute), ;Modifier byte
+    0x95, KEYBOARD_REPORT_BITS * 8,              //   Report Count (),
+    0x75, 0x01,                                  //   Report Size (1),
+    0x15, 0x00,                                  //   Logical Minimum (0),
+    0x25, 0x01,                                  //   Logical Maximum(1),
+    0x05, 0x07,                                  //   Usage Page (Key Codes),
+    0x19, 0x00,                                  //   Usage Minimum (0),
+    0x29, (KEYBOARD_REPORT_BITS * 8 - 1) & 0xFF, //   Usage Maximum (),
+    0x81, 0x02,                                  //   Input (Data, Variable, Absolute),
+    0x05, 0x08,                                  //   Usage Page (LED)
+    0x19, 0x01,                                  //   Usage Minimum (Num Lock)
+    0x29, 0x05,                                  //   Usage Maximum (Kana)
+    0x95, 0x05,                                  //   Report Count (5)
+    0x75, 0x01,                                  //   Report Size (1)
+    0x91, 0x02,                                  //   Output (Data, Variable, Absolute)
+    0x95, 0x01,                                  //   Report Count (1)
+    0x75, 0x03,                                  //   Report Size (3)
+    0x91, 0x03,                                  //   Output (Constant)
+    0xC0,                                        // End Collection
+};
+#endif
+
 #ifdef RGB_RAW_ENABLE
 const uint8_t RGBRawReport[] = {
     0x06, WBVAL(RGB_RAW_USAGE_PAGE), // Usage Page (Vendor Defined)
@@ -137,62 +172,30 @@ const uint8_t ExtrakeyReport[] = {
     0xC0,                  // End Collection
 #endif
     // Extrakeys report descriptor
-    0x05, 0x01,                                  // Usage Page (Generic Desktop)
-    0x09, 0x80,                                  // Usage (System Control)
-    0xA1, 0x01,                                  // Collection (Application)
-    0x85, REPORT_ID_SYSTEM,                      //   Report ID
-    0x19, 0x01,                                  //   Usage Minimum (Pointer)
-    0x2A, 0xB7, 0x00,                            //   Usage Maximum (System Display LCD Autoscale)
-    0x15, 0x01,                                  //   Logical Minimum
-    0x26, 0xB7, 0x00,                            //   Logical Maximum
-    0x95, 0x01,                                  //   Report Count (1)
-    0x75, 0x10,                                  //   Report Size (16)
-    0x81, 0x00,                                  //   Input (Data, Array, Absolute)
-    0xC0,                                        // End Collection
-    0x05, 0x0C,                                  // Usage Page (Consumer)
-    0x09, 0x01,                                  // Usage (Consumer Control)
-    0xA1, 0x01,                                  // Collection (Application)
-    0x85, REPORT_ID_CONSUMER,                    //   Report ID
-    0x19, 0x01,                                  //   Usage Minimum (Consumer Control)
-    0x2A, 0xA0, 0x02,                            //   Usage Maximum (AC Desktop Show All Applications)
-    0x15, 0x01,                                  //   Logical Minimum
-    0x26, 0xA0, 0x02,                            //   Logical Maximum
-    0x95, 0x01,                                  //   Report Count (1)
-    0x75, 0x10,                                  //   Report Size (16)
-    0x81, 0x00,                                  //   Input (Data, Array, Absolute)
-    0xC0,                                        // End Collection
-#ifdef NKRO_ENABLE
-    0x05, 0x01,                                  // Usage Page (Generic Desktop)
-    0x09, 0x06,                                  // Usage (Keyboard)
-    0xA1, 0x01,                                  // Collection (Application),
-    0x85, REPORT_ID_NKRO,                        //   REPORT_ID
-    0x75, 0x01,                                  //   Report Size (1),
-    0x95, 0x08,                                  //   Report Count (8),
-    0x05, 0x07,                                  //   Usage Page (Key Codes),
-    0x19, 0xE0,                                  //   Usage Minimum (224),
-    0x29, 0xE7,                                  //   Usage Maximum (231),
-    0x15, 0x00,                                  //   Logical Minimum (0),
-    0x25, 0x01,                                  //   Logical Maximum (1),
-    0x81, 0x02,                                  //   Input (Data, Variable, Absolute), ;Modifier byte
-    0x95, KEYBOARD_REPORT_BITS * 8,              //   Report Count (),
-    0x75, 0x01,                                  //   Report Size (1),
-    0x15, 0x00,                                  //   Logical Minimum (0),
-    0x25, 0x01,                                  //   Logical Maximum(1),
-    0x05, 0x07,                                  //   Usage Page (Key Codes),
-    0x19, 0x00,                                  //   Usage Minimum (0),
-    0x29, (KEYBOARD_REPORT_BITS * 8 - 1) & 0xFF, //   Usage Maximum (),
-    0x81, 0x02,                                  //   Input (Data, Variable, Absolute),
-    0x05, 0x08,                                  //   Usage Page (LED)
-    0x19, 0x01,                                  //   Usage Minimum (Num Lock)
-    0x29, 0x05,                                  //   Usage Maximum (Kana)
-    0x95, 0x05,                                  //   Report Count (5)
-    0x75, 0x01,                                  //   Report Size (1)
-    0x91, 0x02,                                  //   Output (Data, Variable, Absolute)
-    0x95, 0x01,                                  //   Report Count (1)
-    0x75, 0x03,                                  //   Report Size (3)
-    0x91, 0x03,                                  //   Output (Constant)
-    0xC0,                                        // End Collection
-#endif
+    0x05, 0x01,               // Usage Page (Generic Desktop)
+    0x09, 0x80,               // Usage (System Control)
+    0xA1, 0x01,               // Collection (Application)
+    0x85, REPORT_ID_SYSTEM,   //   Report ID
+    0x19, 0x01,               //   Usage Minimum (Pointer)
+    0x2A, 0xB7, 0x00,         //   Usage Maximum (System Display LCD Autoscale)
+    0x15, 0x01,               //   Logical Minimum
+    0x26, 0xB7, 0x00,         //   Logical Maximum
+    0x95, 0x01,               //   Report Count (1)
+    0x75, 0x10,               //   Report Size (16)
+    0x81, 0x00,               //   Input (Data, Array, Absolute)
+    0xC0,                     // End Collection
+    0x05, 0x0C,               // Usage Page (Consumer)
+    0x09, 0x01,               // Usage (Consumer Control)
+    0xA1, 0x01,               // Collection (Application)
+    0x85, REPORT_ID_CONSUMER, //   Report ID
+    0x19, 0x01,               //   Usage Minimum (Consumer Control)
+    0x2A, 0xA0, 0x02,         //   Usage Maximum (AC Desktop Show All Applications)
+    0x15, 0x01,               //   Logical Minimum
+    0x26, 0xA0, 0x02,         //   Logical Maximum
+    0x95, 0x01,               //   Report Count (1)
+    0x75, 0x10,               //   Report Size (16)
+    0x81, 0x00,               //   Input (Data, Array, Absolute)
+    0xC0,                     // End Collection
 };
 
 #ifdef RAW_ENABLE
@@ -224,7 +227,6 @@ const uint8_t QMKRawReport[] = {
                                          USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC)
 
 /*!< report descriptor size */
-#define HID_KEYBOARD_REPORT_DESC_SIZE sizeof(KeyboardReport)
 #ifdef RGB_RAW_ENABLE
 #define HID_RGBRAW_REPORT_DESC_SIZE sizeof(RGBRawReport)
 #endif
@@ -253,7 +255,10 @@ const uint8_t hid_descriptor_scratch_1[] = {
 #endif
                                 ),
                                0x01, USB_CONFIG_REMOTE_WAKEUP | USB_CONFIG_BUS_POWERED, USBD_MAX_POWER),
+};
 
+#ifdef NKRO_ENABLE
+const uint8_t hid_descriptor_scratch_2_nkro[] = {
     /************** Descriptor of Keyboard interface ****************/
     0x09,                     /* bLength */
     0x04,                     /* bDescriptorType */
@@ -265,13 +270,49 @@ const uint8_t hid_descriptor_scratch_1[] = {
     0x01,                     /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
     0x00,                     /* iInterface: Index of string descriptor */
     /******************** Descriptor of Keyboard HID ********************/
-    0x09,                                 /* bLength */
-    0x21,                                 /* bDescriptorType */
-    0x11, 0x01,                           /* bcdHID */
-    0x00,                                 /* bCountryCode */
-    0x01,                                 /* bNumDescriptors */
-    0x22,                                 /* bDescriptorType */
-    WBVAL(HID_KEYBOARD_REPORT_DESC_SIZE), /* wItemLength */
+    0x09,                      /* bLength */
+    0x21,                      /* bDescriptorType */
+    0x11, 0x01,                /* bcdHID */
+    0x00,                      /* bCountryCode */
+    0x01,                      /* bNumDescriptors */
+    0x22,                      /* bDescriptorType */
+    WBVAL(sizeof(NkroReport)), /* wItemLength */
+    /******************** Descriptor of Keyboard in endpoint ********************/
+    0x07,                    /* bLength */
+    0x05,                    /* bDescriptorType */
+    KBD_IN_EP,               /* bEndpointAddress */
+    0x03,                    /* bmAttributes */
+    WBVAL(EXKEY_IN_EP_SIZE), /* wMaxPacketSize */
+    KBD_IN_EP_INTERVAL,      /* bInterval */
+    /******************** Descriptor of Keyboard out endpoint ********************/
+    0x07,                   /* bLength */
+    0x05,                   /* bDescriptorType */
+    KBD_OUT_EP,             /* bEndpointAddress */
+    0x03,                   /* bmAttributes */
+    WBVAL(KBD_OUT_EP_SIZE), /* wMaxPacketSize */
+    KBD_OUT_EP_INTERVAL,    /* bInterval */
+};
+#endif
+
+const uint8_t hid_descriptor_scratch_2_bios[] = {
+    /************** Descriptor of Keyboard interface ****************/
+    0x09,                     /* bLength */
+    0x04,                     /* bDescriptorType */
+    InterfaceNumber_keyboard, /* bInterfaceNumber */
+    0x00,                     /* bAlternateSetting */
+    0x02,                     /* bNumEndpoints */
+    0x03,                     /* bInterfaceClass */
+    0x01,                     /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x01,                     /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00,                     /* iInterface: Index of string descriptor */
+    /******************** Descriptor of Keyboard HID ********************/
+    0x09,                      /* bLength */
+    0x21,                      /* bDescriptorType */
+    0x11, 0x01,                /* bcdHID */
+    0x00,                      /* bCountryCode */
+    0x01,                      /* bNumDescriptors */
+    0x22,                      /* bDescriptorType */
+    WBVAL(sizeof(KeyboardReport)), /* wItemLength */
     /******************** Descriptor of Keyboard in endpoint ********************/
     0x07,                  /* bLength */
     0x05,                  /* bDescriptorType */
@@ -286,7 +327,9 @@ const uint8_t hid_descriptor_scratch_1[] = {
     0x03,                   /* bmAttributes */
     WBVAL(KBD_OUT_EP_SIZE), /* wMaxPacketSize */
     KBD_OUT_EP_INTERVAL,    /* bInterval */
+};
 
+const uint8_t hid_descriptor_scratch_3[] = {
 #ifdef RGB_RAW_ENABLE
     /************** Descriptor of RGB_RAW interface *****************/
     0x09,                    /* bLength */
@@ -401,7 +444,7 @@ const uint8_t hid_descriptor_scratch_1[] = {
     's', 0x00,                  /* wcChar6 */
 };
 
-const uint8_t hid_descriptor_scratch_3[] = {
+const uint8_t hid_descriptor_scratch_5[] = {
     ///////////////////////////////////////
     /// string3 descriptor//serial for vial
     ///////////////////////////////////////
