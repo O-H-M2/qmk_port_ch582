@@ -137,30 +137,30 @@ const uint8_t ExtrakeyReport[] = {
     0xC0,                  // End Collection
 #endif
     // Extrakeys report descriptor
-    0x05, 0x01,               // Usage Page (Generic Desktop)
-    0x09, 0x80,               // Usage (System Control)
-    0xA1, 0x01,               // Collection (Application)
-    0x85, REPORT_ID_SYSTEM,   //   Report ID
-    0x19, 0x01,               //   Usage Minimum (Pointer)
-    0x2A, 0xB7, 0x00,         //   Usage Maximum (System Display LCD Autoscale)
-    0x15, 0x01,               //   Logical Minimum
-    0x26, 0xB7, 0x00,         //   Logical Maximum
-    0x95, 0x01,               //   Report Count (1)
-    0x75, 0x10,               //   Report Size (16)
-    0x81, 0x00,               //   Input (Data, Array, Absolute)
-    0xC0,                     // End Collection
-    0x05, 0x0C,               // Usage Page (Consumer)
-    0x09, 0x01,               // Usage (Consumer Control)
-    0xA1, 0x01,               // Collection (Application)
-    0x85, REPORT_ID_CONSUMER, //   Report ID
-    0x19, 0x01,               //   Usage Minimum (Consumer Control)
-    0x2A, 0xA0, 0x02,         //   Usage Maximum (AC Desktop Show All Applications)
-    0x15, 0x01,               //   Logical Minimum
-    0x26, 0xA0, 0x02,         //   Logical Maximum
-    0x95, 0x01,               //   Report Count (1)
-    0x75, 0x10,               //   Report Size (16)
-    0x81, 0x00,               //   Input (Data, Array, Absolute)
-    0xC0,                     // End Collection
+    0x05, 0x01,                                  // Usage Page (Generic Desktop)
+    0x09, 0x80,                                  // Usage (System Control)
+    0xA1, 0x01,                                  // Collection (Application)
+    0x85, REPORT_ID_SYSTEM,                      //   Report ID
+    0x19, 0x01,                                  //   Usage Minimum (Pointer)
+    0x2A, 0xB7, 0x00,                            //   Usage Maximum (System Display LCD Autoscale)
+    0x15, 0x01,                                  //   Logical Minimum
+    0x26, 0xB7, 0x00,                            //   Logical Maximum
+    0x95, 0x01,                                  //   Report Count (1)
+    0x75, 0x10,                                  //   Report Size (16)
+    0x81, 0x00,                                  //   Input (Data, Array, Absolute)
+    0xC0,                                        // End Collection
+    0x05, 0x0C,                                  // Usage Page (Consumer)
+    0x09, 0x01,                                  // Usage (Consumer Control)
+    0xA1, 0x01,                                  // Collection (Application)
+    0x85, REPORT_ID_CONSUMER,                    //   Report ID
+    0x19, 0x01,                                  //   Usage Minimum (Consumer Control)
+    0x2A, 0xA0, 0x02,                            //   Usage Maximum (AC Desktop Show All Applications)
+    0x15, 0x01,                                  //   Logical Minimum
+    0x26, 0xA0, 0x02,                            //   Logical Maximum
+    0x95, 0x01,                                  //   Report Count (1)
+    0x75, 0x10,                                  //   Report Size (16)
+    0x81, 0x00,                                  //   Input (Data, Array, Absolute)
+    0xC0,                                        // End Collection
 #ifdef NKRO_ENABLE
     0x05, 0x01,                                  // Usage Page (Generic Desktop)
     0x09, 0x06,                                  // Usage (Keyboard)
@@ -182,6 +182,15 @@ const uint8_t ExtrakeyReport[] = {
     0x19, 0x00,                                  //   Usage Minimum (0),
     0x29, (KEYBOARD_REPORT_BITS * 8 - 1) & 0xFF, //   Usage Maximum (),
     0x81, 0x02,                                  //   Input (Data, Variable, Absolute),
+    0x05, 0x08,                                  //   Usage Page (LED)
+    0x19, 0x01,                                  //   Usage Minimum (Num Lock)
+    0x29, 0x05,                                  //   Usage Maximum (Kana)
+    0x95, 0x05,                                  //   Report Count (5)
+    0x75, 0x01,                                  //   Report Size (1)
+    0x91, 0x02,                                  //   Output (Data, Variable, Absolute)
+    0x95, 0x01,                                  //   Report Count (1)
+    0x75, 0x03,                                  //   Report Size (3)
+    0x91, 0x03,                                  //   Output (Constant)
     0xC0,                                        // End Collection
 #endif
 };
