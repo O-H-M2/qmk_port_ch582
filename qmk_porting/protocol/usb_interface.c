@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usb_interface.h"
 #include "usb_descriptors.h"
 #include "usb_ch58x_usbfs_reg.h"
+#include "keycode_config.h"
 #include "protocol.h"
 #if ESB_ENABLE == 2
 #include "config.h"
@@ -34,6 +35,7 @@ uint8_t keyboard_idle = 0;
 static uint8_t *hid_descriptor = NULL;
 
 static uint8_t keyboard_current_mode = KEYBOARD_MODE_NKRO;
+static uint8_t keyboard_last_bios_report[KEYBOARD_REPORT_SIZE] = {};
 static struct usbd_interface keyboard_interface;
 #ifdef RGB_RAW_ENABLE
 static struct usbd_interface rgbraw_interface;
@@ -327,10 +329,10 @@ void init_usb_driver()
     usbd_initialize();
 }
 
-// uint8_t usbh_hid_get_idle(uint8_t intf, uint8_t report_id)
-// {
-//     return keyboard_idle;
-// }
+uint8_t usbh_hid_get_idle(uint8_t intf, uint8_t report_id)
+{
+    return keyboard_idle;
+}
 
 uint8_t usbh_hid_get_protocol(uint8_t intf)
 {
@@ -341,15 +343,30 @@ uint8_t usbh_hid_get_protocol(uint8_t intf)
     }
 }
 
-// void usbh_hid_set_idle(uint8_t intf, uint8_t report_id, uint8_t duration)
-// {
-//     keyboard_idle = duration;
-// }
+void usbh_hid_set_idle(uint8_t intf, uint8_t report_id, uint8_t duration)
+{
+    keyboard_idle = duration;
+#ifdef NKRO_ENABLE
+    if (!keymap_config.nkro && keyboard_idle) {
+#else
+    if (keyboard_idle) {
+#endif
+        usb_start_periodical_bios_report();
+    }
+}
 
 void usbh_hid_set_protocol(uint8_t intf, uint8_t protocol)
 {
     if (intf == InterfaceNumber_keyboard) {
         keyboard_protocol = protocol;
+#ifdef NKRO_ENABLE
+        if (!keyboard_protocol && keyboard_idle) {
+#else
+        if (keyboard_idle) {
+#endif
+            /* arm the idle timer if boot protocol & idle */
+            usb_start_periodical_bios_report();
+        }
     }
 }
 
@@ -379,6 +396,15 @@ void hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
         return;
     }
     keyboard_state = HID_STATE_BUSY;
+    if (mode == KEYBOARD_MODE_BIOS) {
+        // record report for future use
+        memcpy(keyboard_last_bios_report, data, KEYBOARD_REPORT_SIZE);
+    }
+}
+
+void hid_keyboard_send_last_bios_report()
+{
+    hid_keyboard_send_report(KEYBOARD_MODE_BIOS, keyboard_last_bios_report, KEYBOARD_REPORT_SIZE);
 }
 
 #ifdef RGB_RAW_ENABLE
