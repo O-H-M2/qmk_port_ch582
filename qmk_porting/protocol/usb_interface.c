@@ -327,6 +327,32 @@ void init_usb_driver()
     usbd_initialize();
 }
 
+// uint8_t usbh_hid_get_idle(uint8_t intf, uint8_t report_id)
+// {
+//     return keyboard_idle;
+// }
+
+uint8_t usbh_hid_get_protocol(uint8_t intf)
+{
+    if (intf == InterfaceNumber_keyboard) {
+        return keyboard_protocol;
+    } else {
+        return 0;
+    }
+}
+
+// void usbh_hid_set_idle(uint8_t intf, uint8_t report_id, uint8_t duration)
+// {
+//     keyboard_idle = duration;
+// }
+
+void usbh_hid_set_protocol(uint8_t intf, uint8_t protocol)
+{
+    if (intf == InterfaceNumber_keyboard) {
+        keyboard_protocol = protocol;
+    }
+}
+
 void hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
 {
     if (mode != keyboard_current_mode) {
