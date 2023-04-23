@@ -33,6 +33,7 @@ uint8_t keyboard_protocol = 1;
 uint8_t keyboard_idle = 0;
 static uint8_t *hid_descriptor = NULL;
 
+static uint8_t keyboard_current_mode = KEYBOARD_MODE_NKRO;
 static struct usbd_interface keyboard_interface;
 #ifdef RGB_RAW_ENABLE
 static struct usbd_interface rgbraw_interface;
@@ -160,6 +161,8 @@ void usb_dc_low_level_deinit()
 int usb_dc_deinit()
 {
     usb_dc_low_level_deinit();
+    keyboard_protocol = 1;
+    keyboard_idle = 0;
     if (hid_descriptor != NULL) {
         free(hid_descriptor);
         hid_descriptor = NULL;
@@ -238,7 +241,7 @@ void init_usb_driver()
     uint8_t hid_descriptor_scratch_2[USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2];
 
 #ifdef NKRO_ENABLE
-    if (keyboard_protocol) {
+    if (keyboard_current_mode == KEYBOARD_MODE_NKRO) {
         // nkro mode
         memcpy(hid_descriptor_scratch_2, hid_descriptor_scratch_2_nkro, sizeof(hid_descriptor_scratch_2));
     } else
@@ -287,7 +290,7 @@ void init_usb_driver()
     usbd_desc_register(hid_descriptor);
 
 #ifdef NKRO_ENABLE
-    if (keyboard_protocol) {
+    if (keyboard_current_mode == KEYBOARD_MODE_NKRO) {
         usbd_add_interface(usbd_hid_init_intf(&keyboard_interface, NkroReport, sizeof(NkroReport)));
     } else
 #endif
@@ -324,17 +327,14 @@ void init_usb_driver()
     usbd_initialize();
 }
 
-static inline void hid_keyboard_protocol_check(uint8_t target)
+void hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
 {
-    if (target != keyboard_protocol) {
-        keyboard_protocol = target;
+    if (mode != keyboard_current_mode) {
+        keyboard_current_mode = mode;
         usbd_deinitialize();
         init_usb_driver();
     }
-}
 
-static inline void hid_keyboard_generic_send(uint8_t *data, uint8_t len)
-{
     if (!usb_remote_wakeup()) {
         return;
     }
@@ -349,18 +349,6 @@ static inline void hid_keyboard_generic_send(uint8_t *data, uint8_t len)
         return;
     }
     keyboard_state = HID_STATE_BUSY;
-}
-
-void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len)
-{
-    hid_keyboard_protocol_check(0);
-    hid_keyboard_generic_send(data, len);
-}
-
-void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len)
-{
-    hid_keyboard_protocol_check(1);
-    hid_keyboard_generic_send(data, len);
 }
 
 #ifdef RGB_RAW_ENABLE

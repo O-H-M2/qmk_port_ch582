@@ -33,11 +33,11 @@ static void send_keyboard(report_keyboard_t *report)
 {
 #ifdef NKRO_ENABLE
     if (keymap_config.nkro) {
-        hid_nkro_keyboard_send_report((uint8_t *)&report->nkro, EXKEY_IN_EP_SIZE);
+        hid_keyboard_send_report(KEYBOARD_MODE_NKRO, (uint8_t *)&report->nkro, EXKEY_IN_EP_SIZE);
     } else
 #endif
     {
-        hid_bios_keyboard_send_report((uint8_t *)report, KEYBOARD_REPORT_SIZE);
+        hid_keyboard_send_report(KEYBOARD_MODE_BIOS, (uint8_t *)report, KEYBOARD_REPORT_SIZE);
     }
 }
 
