@@ -166,6 +166,7 @@ int usb_dc_deinit()
     usb_dc_low_level_deinit();
     keyboard_protocol = 1;
     keyboard_idle = 0;
+    keyboard_leds_set(0);
     if (hid_descriptor != NULL) {
         free(hid_descriptor);
         hid_descriptor = NULL;
