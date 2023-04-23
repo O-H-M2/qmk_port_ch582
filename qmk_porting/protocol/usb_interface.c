@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "gpio.h"
 #include "timer.h"
+#include "usb_main.h"
 #include "usb_interface.h"
 #include "usb_descriptors.h"
 #include "usb_ch58x_usbfs_reg.h"
