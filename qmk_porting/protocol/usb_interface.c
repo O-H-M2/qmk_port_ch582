@@ -339,8 +339,12 @@ void hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
         return;
     }
 
+    uint16_t timeout_timer = timer_read();
+
     while (keyboard_state == HID_STATE_BUSY) {
-        __nop();
+        if ((timer_elapsed(timeout_timer) > 2)) {
+            return;
+        }
     }
 
     int ret = usbd_ep_start_write(KBD_IN_EP, data, len);
@@ -358,8 +362,12 @@ void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
         return;
     }
 
+    uint16_t timeout_timer = timer_read();
+
     while (rgbraw_state == HID_STATE_BUSY) {
-        __nop();
+        if ((timer_elapsed(timeout_timer) > 2)) {
+            return;
+        }
     }
 
     int ret = usbd_ep_start_write(RGBRAW_IN_EP, data, len);
@@ -377,8 +385,12 @@ inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
         return;
     }
 
+    uint16_t timeout_timer = timer_read();
+
     while (extrakey_state == HID_STATE_BUSY) {
-        __nop();
+        if ((timer_elapsed(timeout_timer) > 2)) {
+            return;
+        }
     }
 
     int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
@@ -396,8 +408,12 @@ void hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
         return;
     }
 
+    uint16_t timeout_timer = timer_read();
+
     while (qmkraw_state == HID_STATE_BUSY) {
-        __nop();
+        if ((timer_elapsed(timeout_timer) > 2)) {
+            return;
+        }
     }
 
     int ret = usbd_ep_start_write(QMKRAW_IN_EP, data, len);
