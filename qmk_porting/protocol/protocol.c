@@ -33,6 +33,21 @@ uint8_t keyboard_leds()
     return keyboard_led_state;
 }
 
+void keyboard_check_protocol_mode()
+{
+#ifdef NKRO_ENABLE
+    static uint8_t last_mode = 1;
+
+    if (last_mode != keymap_config.nkro) {
+        // send a keyboard report to trigger mode change
+        report_keyboard_t dummy_report = {};
+
+        host_keyboard_send(&dummy_report);
+        last_mode = keymap_config.nkro;
+    }
+#endif
+}
+
 static ch582_interface_t ch582_interface = {};
 static ch582_interface_t *last_interface_used = NULL;
 
