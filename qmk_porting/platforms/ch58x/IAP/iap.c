@@ -61,7 +61,6 @@ static const uint8_t msc_ram_descriptor[] = {
     0x02,                       /* bLength */
     USB_DESCRIPTOR_TYPE_STRING, /* bDescriptorType */
     // '2', 0x00,                  /* wcChar0 */
-
     0x00
 };
 static WriteState _wr_state = { 0 };
@@ -69,7 +68,7 @@ static uint8_t write_cache[EEPROM_BLOCK_SIZE] = {};
 
 /**
  * "Reload" some functions into IRAM to increase speed
-*/
+ */
 #if 1
 __HIGH_CODE static void my_delay_us(uint16_t t)
 {
@@ -123,7 +122,7 @@ __HIGH_CODE uint32_t my_get_sys_clock()
 
 /**
  * Flash APIs for uf2 library
-*/
+ */
 #if 1
 __HIGH_CODE void board_flash_init()
 {
@@ -221,7 +220,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
 
 /**
  * Callbacks for CherryUSB stack
-*/
+ */
 #if 1
 __HIGH_CODE void usbd_configure_done_callback(void)
 {

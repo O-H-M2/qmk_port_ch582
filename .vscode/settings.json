@@ -111,7 +111,8 @@
         "cycle_all_anim.h": "c",
         "gradient_left_right_anim.h": "c",
         "effect_runner_i.h": "c",
-        "suspend.h": "c"
+        "suspend.h": "c",
+        "type_traits": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
