@@ -50,18 +50,6 @@ led_config_t g_led_config = {
 #endif
 static bool LCD_state = 1;
 
-void USB2LCD()
-{
-    writePinHigh(USB_SET);
-    setPinOutput(USB_SET);
-}
-
-void USB2MCU()
-{
-    writePinLow(USB_SET);
-    setPinOutput(USB_SET);
-}
-
 void LCD_on()
 {
     writePinHigh(LCD_EN);
@@ -74,13 +62,24 @@ void LCD_off()
     setPinOutput(LCD_EN);
 }
 
+static void USB2LCD()
+{
+    writePinHigh(USB_SET);
+    setPinOutput(USB_SET);
+}
+
+static void USB2MCU()
+{
+    writePinLow(USB_SET);
+    setPinOutput(USB_SET);
+}
+
 void bat_send(uint8_t bat_num)
 {
     if (LCD_state) {
         uint8_t TX_date[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
         TX_date[5] = bat_num;
-        TX_date[3] = TX_date[5]; //sum
-
+        TX_date[3] = TX_date[5]; // sum
         uart_start();
         wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
@@ -93,8 +92,7 @@ void layer_send(uint8_t layer_num)
     if (LCD_state) {
         uint8_t TX_date[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
         TX_date[5] = layer_num;
-        TX_date[3] = TX_date[5]; //sum
-
+        TX_date[3] = TX_date[5]; // sum
         uart_start();
         wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
@@ -102,13 +100,12 @@ void layer_send(uint8_t layer_num)
         wait_ms(1);
     }
 }
-void indicators_send(uint8_t indi)
+static void indicators_send(uint8_t indi)
 {
     if (LCD_state) {
         uint8_t TX_date[] = { 0xfe, 0x02, 0x02, 0x01, 0x01, 0x01 };
         TX_date[5] = indi;
-        TX_date[3] = TX_date[5]; //sum
-
+        TX_date[3] = TX_date[5]; // sum
         uart_start();
         wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
@@ -160,17 +157,34 @@ void keyboard_post_init_kb()
 {
     // setPinInput(B12);
     PRINT("init\n");
-    uart_init(460800);
+    uart_init(115200);
 
     writePinHigh(LCD_EN);
     setPinOutput(LCD_EN);
 
     writePinLow(USB_SET);
     setPinOutput(USB_SET);
-    //const uint8_t string[] = "init\n";
-    //uart_start();
-    //uart_transmit(string, sizeof(string));
-    //uart_stop();
+}
+
+#define U2M 32277
+#define U2E 32278
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record)
+{
+    switch (keycode) {
+        case U2M:
+            if (record->event.pressed) {
+                USB2MCU();
+            }
+            return false;
+        case U2E:
+            if (record->event.pressed) {
+                USB2LCD();
+            }
+            return false;
+        default:
+            return true;
+    }
 }
 
 int main()

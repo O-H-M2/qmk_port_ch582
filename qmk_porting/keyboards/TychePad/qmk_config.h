@@ -19,9 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE
-#define PRODUCT_ID   0x0B91
+#define PRODUCT_ID   0x0B99
 #define DEVICE_VER   0x0001
-#define MANUFACTURER TychePad
+#define MANUFACTURER EZYEZII
 #define PRODUCT      TychePad
 
 #define MATRIX_ROWS 5
@@ -67,7 +67,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef RGB_MATRIX_ENABLE
 #define RGB_MATRIX_KEYPRESSES
 //#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
-#define RGBLED_NUM                    64
+#define RGBLED_NUM                    17
 #define RGB_MATRIX_LED_COUNT          RGBLED_NUM
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 32
 #define RGB_MATRIX_STARTUP_VAL        RGB_MATRIX_MAXIMUM_BRIGHTNESS

@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 	K100, K101, K102, K103, \
 	K200, K201, K202,       \
 	K300, K301, K302, K303, \
-	K400,       K402, K403       \
+	K400,       K402, K403  \
 ) \
 { \
     {K000, K001,  K002, K003}, \
