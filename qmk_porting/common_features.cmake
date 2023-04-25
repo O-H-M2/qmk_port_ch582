@@ -27,7 +27,7 @@ endif()
 
 # NKRO_ENABLE
 if(NKRO_ENABLE)
-    add_definitions(-DNKRO_ENABLE -DFORCE_NKRO)
+    add_definitions(-DNKRO_ENABLE)
     message(STATUS "NKRO_ENABLE")
     list(APPEND quantum_SOURCES
     )
@@ -386,8 +386,10 @@ if(BLE_ENABLE)
         message(STATUS "Dongle shouldn't have BLE_ENABLE, ignore")
     else()
         add_definitions(-DBLE_ENABLE)
-        message(STATUS "BLE_ENABLE: Nkro is forced enable")
-        add_definitions(-DNKRO_ENABLE -DFORCE_NKRO)
+
+        if(NOT DEFINED NKRO_ENABLE)
+            message(FATAL_ERROR "BLE_ENABLE requires NKRO_ENABLE!")
+        endif()
     endif()
 endif()
 

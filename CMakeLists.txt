@@ -157,6 +157,19 @@ file(GLOB IAP_SOURCES
     ${QMK_PORTING_IAP_SOURCES}
 )
 
+add_library(mbedtls INTERFACE)
+target_include_directories(mbedtls INTERFACE
+    "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting"
+    "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/include"
+    "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library"
+)
+file(GLOB mbedtls_sources
+    "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x][^5]*.c"
+)
+target_sources(mbedtls INTERFACE
+    ${mbedtls_sources}
+)
+
 if(BUILD_WIRELESS_LIB)
     include(${WIRELESS_SUBMODULE_PATH}/gen_lib.cmake)
 else()
@@ -185,22 +198,17 @@ else()
     add_library(mcuboot_porting INTERFACE)
     target_include_directories(mcuboot_porting INTERFACE
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting"
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/include"
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library"
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot/boot/bootutil/include"
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot/boot/bootutil/src"
-    )
-    file(GLOB mbedtls_sources
-        "${CMAKE_CURRENT_LIST_DIR}/mcuboot/ext/mbedtls/library/[^x][^5]*.c"
     )
     file(GLOB bootutil_sources
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot/boot/bootutil/src/*.c"
     )
     target_sources(mcuboot_porting INTERFACE
-        ${mbedtls_sources}
         ${bootutil_sources}
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting/mcuboot_port.c"
     )
+    target_link_libraries(mcuboot_porting INTERFACE mbedtls)
     target_link_libraries(mcuboot_porting INTERFACE CH582_IAP)
 
     add_executable(${keyboard}.elf ${APP_SOURCES})
@@ -212,7 +220,6 @@ else()
     target_link_libraries(${keyboard}.elf PUBLIC CH582_APP)
 
     # target_link_libraries(${keyboard}_IAP.elf PUBLIC CH582_IAP)
-    # target_link_libraries(${keyboard}.elf PUBLIC mbedtls)
     target_link_libraries(${keyboard}_IAP.elf PUBLIC mcuboot_porting)
 
     target_link_options(${keyboard}.elf PRIVATE
