@@ -369,6 +369,9 @@ void usbh_hid_set_protocol(uint8_t intf, uint8_t protocol)
             /* arm the idle timer if boot protocol & idle */
             usb_start_periodical_bios_report();
         }
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+        esb_set_keyboard_protocol(protocol);
+#endif
     }
 }
 
