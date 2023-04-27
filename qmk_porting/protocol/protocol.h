@@ -47,6 +47,7 @@ typedef struct _ch582_interface_t {
 
 void keyboard_leds_set(uint8_t state);
 uint8_t keyboard_leds();
+void keyboard_check_protocol_mode();
 
 void ch582_set_protocol_interface(const ch582_interface_t *interface);
 ch582_interface_t *ch582_get_protocol_interface();

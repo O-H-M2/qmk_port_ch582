@@ -61,7 +61,6 @@ static const uint8_t msc_ram_descriptor[] = {
     0x02,                       /* bLength */
     USB_DESCRIPTOR_TYPE_STRING, /* bDescriptorType */
     // '2', 0x00,                  /* wcChar0 */
-
     0x00
 };
 static WriteState _wr_state = { 0 };
@@ -69,7 +68,7 @@ static uint8_t write_cache[EEPROM_BLOCK_SIZE] = {};
 
 /**
  * "Reload" some functions into IRAM to increase speed
-*/
+ */
 #if 1
 __HIGH_CODE static void my_delay_us(uint16_t t)
 {
@@ -123,7 +122,7 @@ __HIGH_CODE uint32_t my_get_sys_clock()
 
 /**
  * Flash APIs for uf2 library
-*/
+ */
 #if 1
 __HIGH_CODE void board_flash_init()
 {
@@ -221,7 +220,7 @@ __HIGH_CODE void board_flash_write(uint32_t addr, void const *data, uint32_t len
 
 /**
  * Callbacks for CherryUSB stack
-*/
+ */
 #if 1
 __HIGH_CODE void usbd_configure_done_callback(void)
 {
@@ -513,6 +512,14 @@ int main()
     do {
         uint8_t buffer[2], ret;
 
+        do {
+            ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION + 1, buffer, sizeof(buffer));
+        } while (ret);
+
+        if (buffer[0] >= MATRIX_ROWS && buffer[1] >= MATRIX_COLS) {
+            break;
+        }
+
 #if defined(MATRIX_ROW_PINS) && defined(MATRIX_COL_PINS)
         pin_t rows[] = MATRIX_ROW_PINS;
         pin_t cols[] = MATRIX_COL_PINS;
@@ -524,18 +531,10 @@ int main()
         pin_t output_pin = cols[buffer[1]];
 #endif
 #else
-        // placeholder
         pin_t input_pin, output_pin;
         break;
 #endif
 
-        do {
-            ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION + 1, buffer, sizeof(buffer));
-        } while (ret);
-
-        if (buffer[0] >= MATRIX_ROWS && buffer[1] >= MATRIX_COLS) {
-            break;
-        }
         setPinInputHigh(input_pin);
         writePinLow(output_pin);
         setPinOutput(output_pin);

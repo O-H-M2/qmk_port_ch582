@@ -138,7 +138,7 @@ PenaltyReturnTypeOnItsOwnLine:	60
 # 指针和引用的对齐: Left, Right, Middle
 PointerAlignment:	Right
 # 允许重新排版注释
-ReflowComments:	false
+ReflowComments:	true
 # 允许排序#include
 SortIncludes:	false
 # 在C风格类型转换后添加空格
@@ -162,7 +162,7 @@ SpacesInParentheses:	false
 # 在方括号的[后和]前添加空格，lamda表达式和未指明大小的数组的声明不受影响
 SpacesInSquareBrackets:	false
 # 标准: Cpp03, Cpp11, Auto
-Standard:	Cpp03
+Standard:	Cpp11
 # tab宽度
 TabWidth:	4
 # 使用tab字符: Never, ForIndentation, ForContinuationAndIndentation, Always

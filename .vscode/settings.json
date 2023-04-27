@@ -110,7 +110,9 @@
         "gradient_up_down_anim.h": "c",
         "cycle_all_anim.h": "c",
         "gradient_left_right_anim.h": "c",
-        "effect_runner_i.h": "c"
+        "effect_runner_i.h": "c",
+        "suspend.h": "c",
+        "type_traits": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
@@ -118,5 +120,8 @@
         "**/build": true,
         "**/build/*": true
     },
-    "editor.defaultFormatter": "xaver.clang-format"
+    "editor.defaultFormatter": "xaver.clang-format",
+    "[cmake]": {
+        "editor.defaultFormatter": "josetr.cmake-language-support-vscode"
+    }
 }

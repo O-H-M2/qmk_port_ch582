@@ -31,6 +31,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBRAW_EP_SIZE 64
 
 enum {
+    KEYBOARD_MODE_BIOS = 0,
+    KEYBOARD_MODE_NKRO,
+};
+
+enum {
     IN_ENDPOINT_START = 0x81,
     KBD_IN_EP = IN_ENDPOINT_START,
 #ifdef RGB_RAW_ENABLE
@@ -84,8 +89,8 @@ enum {
 #define USBD_LANGID_STRING 0x0409
 
 void init_usb_driver();
-void hid_bios_keyboard_send_report(uint8_t *data, uint8_t len);
-void hid_nkro_keyboard_send_report(uint8_t *data, uint8_t len);
+void hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len);
+void hid_keyboard_send_last_bios_report();
 void raw_hid_send(uint8_t *data, uint8_t length);
 void hid_exkey_send_report(uint8_t *data, uint8_t len);
 void hid_qmk_raw_send_report(uint8_t *data, uint8_t len);

@@ -27,7 +27,7 @@ endif()
 
 # NKRO_ENABLE
 if(NKRO_ENABLE)
-    add_definitions(-DNKRO_ENABLE -DFORCE_NKRO)
+    add_definitions(-DNKRO_ENABLE)
     message(STATUS "NKRO_ENABLE")
     list(APPEND quantum_SOURCES
     )
@@ -286,7 +286,7 @@ endif()
 # OLED ENABLE
 if(OLED_ENABLE)
     if(OLED_DRIVER STREQUAL "SSD1306")
-        add_definitions(-DOLED_ENABLE -DOLED_DRIVER_SSD1306)
+        add_definitions(-DOLED_ENABLE)
         message(STATUS "OLED_ENABLE")
         message(STATUS "OLED_DRIVER = ${OLED_DRIVER}")
         include_directories(${QMK_BASE_DIR}/drivers/oled)
@@ -294,6 +294,14 @@ if(OLED_ENABLE)
             "${QMK_BASE_DIR}/drivers/oled/ssd1306_sh1106.c"
         )
         set(I2C_MASTER_ENABLE ON CACHE BOOL "KB" FORCE)
+    elseif(DEFINED OLED_DRIVER AND EXISTS "${OLED_DRIVER}")
+        add_definitions(-DOLED_ENABLE)
+        message(STATUS "OLED_ENABLE")
+        message(STATUS "CUSTOM_OLED_DRIVER: ${OLED_DRIVER}")
+        include_directories(${QMK_BASE_DIR}/drivers/oled)
+        list(APPEND QMK_PORTING_SOURCES
+            "${OLED_DRIVER}"
+        )
     else()
         message(FATAL_ERROR "Unsupported OLED driver!")
     endif()
@@ -378,8 +386,10 @@ if(BLE_ENABLE)
         message(STATUS "Dongle shouldn't have BLE_ENABLE, ignore")
     else()
         add_definitions(-DBLE_ENABLE)
-        message(STATUS "BLE_ENABLE: Nkro is forced enable")
-        add_definitions(-DNKRO_ENABLE -DFORCE_NKRO)
+
+        if(NOT DEFINED NKRO_ENABLE)
+            message(FATAL_ERROR "BLE_ENABLE requires NKRO_ENABLE!")
+        endif()
     endif()
 endif()
 
@@ -401,7 +411,7 @@ if(ESB_ENABLE)
 endif()
 
 # CUSTOM_MATRIX
-if(CUSTOM_MATRIX)
+if(DEFINED CUSTOM_MATRIX AND EXISTS "${CUSTOM_MATRIX}")
     add_definitions(-DCUSTOM_MATRIX)
     message(STATUS "CUSTOM_MATRIX: ${CUSTOM_MATRIX}")
     list(APPEND QMK_PORTING_SOURCES
