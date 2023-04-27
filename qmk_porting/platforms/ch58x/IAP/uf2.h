@@ -39,7 +39,7 @@ SOFTWARE.
 
 #define UF2_VERSION         MACRO2STR(__GIT_VERSION__)
 #define UF2_INDEX_URL       ""
-#define UF2_VOLUME_LABEL    MACRO2STR(PRODUCT) " DFU"
+#define UF2_VOLUME_LABEL    "HucKeys DFU"
 #define UF2_PRODUCT_NAME    MACRO2STR(PRODUCT)
 #define UF2_BOARD_ID        MACRO2STR(DEVICE_VER)
 #define BOARD_UF2_FAMILY_ID 0x1aa143c7
@@ -66,7 +66,7 @@ SOFTWARE.
 #define UF2_FLAG_NOFLASH  0x00000001
 #define UF2_FLAG_FAMILYID 0x00002000
 
-#define STATIC_ASSERT(_exp)  _Static_assert(_exp, "static assert failed")
+#define STATIC_ASSERT(_exp) _Static_assert(_exp, "static assert failed")
 #define UF2_ARRAY_SIZE(_arr) (sizeof(_arr) / sizeof(_arr[0]))
 #define UF2_DIV_CEIL(_v, _d) (((_v) / (_d)) + ((_v) % (_d) ? 1 : 0))
 
