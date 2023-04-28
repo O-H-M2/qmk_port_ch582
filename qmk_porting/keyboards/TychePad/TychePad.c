@@ -84,7 +84,6 @@ void bat_send(uint8_t bat_num)
         wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
         uart_stop();
-        wait_ms(1);
     }
 }
 void layer_send(uint8_t layer_num)
@@ -97,7 +96,6 @@ void layer_send(uint8_t layer_num)
         wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
         uart_stop();
-        wait_ms(1);
     }
 }
 static void indicators_send(uint8_t indi)
@@ -110,7 +108,6 @@ static void indicators_send(uint8_t indi)
         wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
         uart_stop();
-        wait_ms(1);
     }
 }
 
