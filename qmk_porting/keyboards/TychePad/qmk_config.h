@@ -65,6 +65,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define POWER_DETECT_PIN    B12
 
 #ifdef RGB_MATRIX_ENABLE
+
+#define BATTERY_INDICATOR_START_INDEX 0
+#define BATTERY_INDICATOR_END_INDEX   3
+
+#define BLE_SLOT_1_INDICATOR [0][1]
+#define BLE_SLOT_2_INDICATOR [0][2]
+#define BLE_SLOT_3_INDICATOR [0][3]
+#define BLE_SLOT_4_INDICATOR [0][4]
+
 #define RGB_MATRIX_KEYPRESSES
 // #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define RGBLED_NUM                    17
