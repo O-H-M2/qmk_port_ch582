@@ -54,12 +54,29 @@ void LCD_on()
 {
     writePinHigh(LCD_EN);
     setPinOutput(LCD_EN);
+    LCD_state = 1;
 }
 
 void LCD_off()
 {
     writePinLow(LCD_EN);
     setPinOutput(LCD_EN);
+    LCD_state = 0;
+}
+
+bool enter_power_level_2_kb()
+{
+    if (!LCD_state) {
+        return false;
+    }
+
+    LCD_off();
+    return true;
+}
+
+void quit_power_level_2_kb()
+{
+    LCD_on();
 }
 
 static void USB2LCD()
