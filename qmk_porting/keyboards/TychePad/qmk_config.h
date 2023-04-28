@@ -26,9 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MATRIX_ROWS 5
 #define MATRIX_COLS 4
-#define MATRIX_ROW_PINS       \
-    {                         \
-        B9, B8, B17, B16, B18 \
+#define MATRIX_ROW_PINS        \
+    {                          \
+        A3, A15, A14, A13, A12 \
     }
 #define MATRIX_COL_PINS \
     {                   \
