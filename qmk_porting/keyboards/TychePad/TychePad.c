@@ -97,10 +97,7 @@ void bat_send(uint8_t bat_num)
         uint8_t TX_date[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
         TX_date[5] = bat_num;
         TX_date[3] = TX_date[5]; // sum
-        uart_start();
-        wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
-        uart_stop();
     }
 }
 void layer_send(uint8_t layer_num)
@@ -109,10 +106,7 @@ void layer_send(uint8_t layer_num)
         uint8_t TX_date[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
         TX_date[5] = layer_num;
         TX_date[3] = TX_date[5]; // sum
-        uart_start();
-        wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
-        uart_stop();
     }
 }
 static void indicators_send(uint8_t indi)
@@ -121,10 +115,7 @@ static void indicators_send(uint8_t indi)
         uint8_t TX_date[] = { 0xfe, 0x02, 0x02, 0x01, 0x01, 0x01 };
         TX_date[5] = indi;
         TX_date[3] = TX_date[5]; // sum
-        uart_start();
-        wait_ms(1);
         uart_transmit(TX_date, sizeof(TX_date) + 1);
-        uart_stop();
     }
 }
 
@@ -172,7 +163,7 @@ void keyboard_post_init_kb()
     // setPinInput(B12);
     PRINT("init\n");
     uart_init(115200);
-
+    uart_start();
     writePinHigh(LCD_EN);
     setPinOutput(LCD_EN);
 
