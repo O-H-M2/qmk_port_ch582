@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 #define VENDOR_ID    0xAC26
-#define PRODUCT_ID   0x6625
+#define PRODUCT_ID   0x6402
 #define DEVICE_VER   0x0001
 #define MANUFACTURER imk64
 #define PRODUCT      imk64
