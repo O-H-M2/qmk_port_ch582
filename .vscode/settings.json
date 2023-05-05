@@ -112,7 +112,9 @@
         "gradient_left_right_anim.h": "c",
         "effect_runner_i.h": "c",
         "suspend.h": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "platform.h": "c",
+        "asn1.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
