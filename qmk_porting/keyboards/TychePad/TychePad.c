@@ -149,7 +149,7 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 #endif
 
 static uint8_t layer_num = 0;
-layer_state_t layer_state_set_user(layer_state_t state)
+layer_state_t layer_state_set_kb(layer_state_t state)
 {
     if (layer_num != get_highest_layer(state)) {
         layer_num = get_highest_layer(state);
@@ -158,17 +158,67 @@ layer_state_t layer_state_set_user(layer_state_t state)
     return state;
 }
 
+static uint16_t LCD_start_timer;
+static uint8_t LCD_start_state = 0;
 void keyboard_post_init_kb()
 {
     // setPinInput(B12);
     PRINT("init\n");
     uart_init(115200);
     uart_start();
+
     writePinHigh(LCD_EN);
     setPinOutput(LCD_EN);
 
     writePinLow(USB_SET);
     setPinOutput(USB_SET);
+
+    LCD_start_timer = timer_read();
+    LCD_start_state = 0;
+}
+
+void wireless_keyboard_pro_tasl()
+{
+    uart_init(115200);
+    uart_start();
+    LCD_start_timer = timer_read();
+    LCD_start_state = 0;
+}
+
+void housekeeping_task_kb(void)
+{
+    switch (LCD_start_state) {
+        case 0:
+            if (timer_elapsed(LCD_start_timer) > 50) {
+                LCD_start_timer = timer_read();
+                LCD_start_state++;
+                layer_send(layer_num);
+            }
+            break;
+        case 1:
+            if (timer_elapsed(LCD_start_timer) > 10) {
+                LCD_start_timer = timer_read();
+                LCD_start_state++;
+                numlocks = host_keyboard_led_state().num_lock;
+                if (numlocks)
+                    indicators_send(1);
+                else
+                    indicators_send(0);
+            }
+            break;
+        case 2:
+            if (timer_elapsed(LCD_start_timer) > 10) {
+                LCD_start_timer = timer_read();
+                LCD_start_state++;
+#ifdef BATTERY_MEASURE_PIN
+                bat_send(battery_get_last_percentage());
+#endif
+            }
+            break;
+
+        default:
+            break;
+    }
 }
 
 #define U2M 32277
