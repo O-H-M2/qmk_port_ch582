@@ -28,16 +28,6 @@ bool wireless_process_record(uint16_t keycode, keyrecord_t *record);
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record)
 {
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        bool ret = process_ble_passcode_kb(keycode, record);
-
-        if (!ret) {
-            return false;
-        }
-    }
-#endif
-
     bool ret = process_record_user(keycode, record);
 
     if (!ret) {
@@ -73,4 +63,15 @@ bool process_record_kb(uint16_t keycode, keyrecord_t *record)
     }
 
     return true;
+}
+
+void post_process_record_kb(uint16_t keycode, keyrecord_t *record)
+{
+#ifdef BLE_ENABLE
+    if (kbd_protocol_type == kbd_protocol_ble) {
+        extern bool process_ble_passcode(uint16_t keycode, keyrecord_t * record);
+
+        process_ble_passcode(keycode, record);
+    }
+#endif
 }
