@@ -1,3 +1,4 @@
+Copyright 2023 SharpSnail01 <https://github.com/SharpSnail01>
 {
     "files.associations": {
         "platform_deps.h": "c",
@@ -128,5 +129,8 @@
     },
     "[shellscript]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
     }
 }
