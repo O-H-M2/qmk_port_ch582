@@ -18,26 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "extra_keycode.h"
 
-#ifdef BLE_ENABLE
-extern bool process_ble_passcode_kb(uint16_t keycode, keyrecord_t *record);
-#endif
-
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
 bool wireless_process_record(uint16_t keycode, keyrecord_t *record);
 #endif
 
 bool process_record_kb(uint16_t keycode, keyrecord_t *record)
 {
-#ifdef BLE_ENABLE
-    if (kbd_protocol_type == kbd_protocol_ble) {
-        bool ret = process_ble_passcode_kb(keycode, record);
-
-        if (!ret) {
-            return false;
-        }
-    }
-#endif
-
     bool ret = process_record_user(keycode, record);
 
     if (!ret) {
