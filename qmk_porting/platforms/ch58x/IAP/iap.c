@@ -495,7 +495,7 @@ int main()
     setPinInputLow(A9);
 #endif
 
-#if !defined ESB_ENABLE || ESB_ENABLE != 2
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
 #ifdef BATTERY_MEASURE_PIN
     // do a power check, only on keyboard
 
