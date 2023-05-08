@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gpio.h"
 #include "uart.h"
 #include "wait.h"
+#include "battery_measure.h"
 
 #ifdef RGB_MATRIX_ENABLE
 
