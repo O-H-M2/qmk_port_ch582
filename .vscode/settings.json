@@ -1,3 +1,4 @@
+Copyright 2023 SharpSnail01 <https://github.com/SharpSnail01>
 {
     "files.associations": {
         "platform_deps.h": "c",
@@ -112,7 +113,9 @@
         "gradient_left_right_anim.h": "c",
         "effect_runner_i.h": "c",
         "suspend.h": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "platform.h": "c",
+        "asn1.h": "c"
     },
     "cmake.configureOnOpen": true,
     "git.ignoreLimitWarning": true,
@@ -126,5 +129,8 @@
     },
     "[shellscript]": {
         "editor.defaultFormatter": "foxundermoon.shell-format"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
     }
 }

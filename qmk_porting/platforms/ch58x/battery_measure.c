@@ -162,7 +162,7 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
     sys_safe_access_disable();
     SetSysClock(CLK_SOURCE_HSE_6_4MHz);
 
-    PFIC->SCTLR |= (1 << 2); //deep sleep
+    PFIC->SCTLR |= (1 << 2); // deep sleep
 
     sys_safe_access_enable();
     R8_SLP_POWER_CTRL = RB_RAM_RET_LV | 0x01;
@@ -259,6 +259,9 @@ done:
 #endif
 #if __BUILDING_APP__
     last_measure = timer_read32();
+    if (!last_measure) {
+        last_measure++;
+    }
 #endif
 
     return last_percentage;

@@ -495,7 +495,7 @@ int main()
     setPinInputLow(A9);
 #endif
 
-#if !defined ESB_ENABLE || ESB_ENABLE != 2
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
 #ifdef BATTERY_MEASURE_PIN
     // do a power check, only on keyboard
 
@@ -516,22 +516,22 @@ int main()
             ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION + 1, buffer, sizeof(buffer));
         } while (ret);
 
-        if (buffer[0] >= MATRIX_ROWS && buffer[1] >= MATRIX_COLS) {
+        if (buffer[0] >= MATRIX_ROWS || buffer[1] >= MATRIX_COLS) {
             break;
         }
 
+        pin_t input_pin, output_pin;
 #if defined(MATRIX_ROW_PINS) && defined(MATRIX_COL_PINS)
         pin_t rows[] = MATRIX_ROW_PINS;
         pin_t cols[] = MATRIX_COL_PINS;
 #if DIODE_DIRECTION == COL2ROW
-        pin_t input_pin = cols[buffer[1]];
-        pin_t output_pin = rows[buffer[0]];
+        input_pin = cols[buffer[1]];
+        output_pin = rows[buffer[0]];
 #else
-        pin_t input_pin = rows[buffer[0]];
-        pin_t output_pin = cols[buffer[1]];
+        input_pin = rows[buffer[0]];
+        output_pin = cols[buffer[1]];
 #endif
 #else
-        pin_t input_pin, output_pin;
         break;
 #endif
 

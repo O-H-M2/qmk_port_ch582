@@ -301,7 +301,8 @@ else()
         COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${keyboard}_IAP.elf> ${BIN_FILE_IAP}
     )
 
-    if(WIRELESS_SUBMODULE_PATH)
+    if((BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
+        AND WIRELESS_SUBMODULE_PATH)
         include(${WIRELESS_SUBMODULE_PATH}/post_build.cmake)
     else()
         add_custom_target(post_build ALL
