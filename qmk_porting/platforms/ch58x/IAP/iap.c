@@ -535,6 +535,9 @@ int main()
         break;
 #endif
 
+        writePinHigh(input_pin);
+        setPinOutput(input_pin);
+        my_delay_ms(5);
         setPinInputHigh(input_pin);
         writePinLow(output_pin);
         setPinOutput(output_pin);
