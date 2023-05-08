@@ -520,18 +520,18 @@ int main()
             break;
         }
 
+        pin_t input_pin, output_pin;
 #if defined(MATRIX_ROW_PINS) && defined(MATRIX_COL_PINS)
         pin_t rows[] = MATRIX_ROW_PINS;
         pin_t cols[] = MATRIX_COL_PINS;
 #if DIODE_DIRECTION == COL2ROW
-        pin_t input_pin = cols[buffer[1]];
-        pin_t output_pin = rows[buffer[0]];
+        input_pin = cols[buffer[1]];
+        output_pin = rows[buffer[0]];
 #else
-        pin_t input_pin = rows[buffer[0]];
-        pin_t output_pin = cols[buffer[1]];
+        input_pin = rows[buffer[0]];
+        output_pin = cols[buffer[1]];
 #endif
 #else
-        pin_t input_pin, output_pin;
         break;
 #endif
 
