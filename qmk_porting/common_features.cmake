@@ -377,6 +377,7 @@ if(USB_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/protocol/protocol_usb.c"
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/usb_main.c"
         "${CMAKE_CURRENT_LIST_DIR}/protocol/usb_interface.c"
+        "${CMAKE_CURRENT_LIST_DIR}/protocol/usb_util.c"
     )
 endif()
 
