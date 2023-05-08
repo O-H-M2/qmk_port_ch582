@@ -22,12 +22,13 @@ include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/drivers)
 include_sub_directories_recursively(${CMAKE_CURRENT_LIST_DIR}/protocol)
 
 file(GLOB QMK_PORTING_SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/battery_measure.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/bootloader.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/gpio.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/platform.c"
+    "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/retention_register.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/suspend.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/timer.c"
-    "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/battery_measure.c"
     "${CMAKE_CURRENT_LIST_DIR}/protocol/extra_keycode.c"
     "${CMAKE_CURRENT_LIST_DIR}/protocol/protocol.c"
 )
@@ -37,6 +38,7 @@ file(GLOB_RECURSE QMK_PORTING_IAP_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/battery_measure.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/bootloader.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/gpio.c"
+    "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/retention_register.c"
 )
 
 list(APPEND QMK_PORTING_IAP_SOURCES

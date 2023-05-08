@@ -14,11 +14,20 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
 
-#include "print.h"
-#include "bootloader.h"
-#include "rgb_led.h"
 #include "retention_register.h"
 
-void platform_setup();
+void retention_register_clear()
+{
+    R8_GLOB_RESET_KEEP = 0;
+}
+
+void retention_register_set_iap()
+{
+    R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
+}
+
+bool retention_register_get_iap()
+{
+    return (R8_GLOB_RESET_KEEP == BOOTLOADER_BOOT_MODE_IAP);
+}

@@ -125,7 +125,7 @@ void bootloader_select_boot_mode()
 #endif
         default:
             PRINT("IAP incomplete, will reboot back to IAP.\n");
-            R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
+            retention_register_set_iap();
             WAIT_FOR_DBG;
             SYS_ResetExecute();
             __builtin_unreachable();
@@ -154,7 +154,7 @@ uint8_t bootloader_set_to_default_mode(const char *reason)
 void bootloader_jump()
 {
     PRINT("Jumping IAP...\n");
-    R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
+    retention_register_set_iap();
     mcu_reset();
 }
 

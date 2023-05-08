@@ -155,7 +155,7 @@ __HIGH_CODE void board_flash_read(uint32_t addr, void *buffer, uint32_t len)
 __HIGH_CODE void board_flash_flush()
 {
     PRINT("Flashing done.\n");
-    R8_GLOB_RESET_KEEP = 0x00;
+    retention_register_clear();
     bootloader_set_to_default_mode("DFU done");
     usb_counter = 59000;
 }
@@ -352,8 +352,8 @@ fail:
 
 __HIGH_CODE static void iap_decide_jump(uint8_t need_cleanup)
 {
-    if (R8_GLOB_RESET_KEEP == BOOTLOADER_BOOT_MODE_IAP) {
-        R8_GLOB_RESET_KEEP = 0x00;
+    if (retention_register_get_iap()) {
+        retention_register_clear();
         return;
     }
 
@@ -557,7 +557,7 @@ int main()
         if (bootmagic) {
             PRINT("Entering DFU...\n");
             eeprom_driver_erase();
-            R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
+            retention_register_set_iap();
         }
     } while (0);
 
