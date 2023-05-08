@@ -516,7 +516,7 @@ int main()
             ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION + 1, buffer, sizeof(buffer));
         } while (ret);
 
-        if (buffer[0] >= MATRIX_ROWS && buffer[1] >= MATRIX_COLS) {
+        if (buffer[0] >= MATRIX_ROWS || buffer[1] >= MATRIX_COLS) {
             break;
         }
 
