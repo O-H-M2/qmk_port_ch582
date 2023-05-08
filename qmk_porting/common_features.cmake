@@ -387,6 +387,7 @@ if(BLE_ENABLE)
         message(STATUS "Dongle shouldn't have BLE_ENABLE, ignore")
     else()
         add_definitions(-DBLE_ENABLE)
+        message(STATUS "BLE_ENABLE")
 
         if(NOT DEFINED NKRO_ENABLE)
             message(FATAL_ERROR "BLE_ENABLE requires NKRO_ENABLE!")
