@@ -49,12 +49,26 @@ led_config_t g_led_config = {
 /* clang-format on */
 #endif
 static bool LCD_state = 1;
+static bool LCD_num_send = 0;
+static bool LCD_layer_send = 0;
+static bool LCD_bat_send = 0;
+
+static uint16_t LCD_start_timer;
+static uint8_t LCD_start_state = 0;
+static uint16_t LCD_send_timer;
+
+
+static uint8_t layer_num = 0;
+static bool numlocks = 0;
+static int8_t bat_percentage = 0;
 
 void LCD_on()
 {
     writePinHigh(LCD_EN);
     setPinOutput(LCD_EN);
     LCD_state = 1;
+    LCD_start_timer = timer_read();
+    LCD_start_state = 0;
 }
 
 void LCD_off()
@@ -62,6 +76,7 @@ void LCD_off()
     writePinLow(LCD_EN);
     setPinOutput(LCD_EN);
     LCD_state = 0;
+    uart_stop();
 }
 
 bool enter_power_level_2_kb()
@@ -69,7 +84,6 @@ bool enter_power_level_2_kb()
     if (!LCD_state) {
         return false;
     }
-
     LCD_off();
     return true;
 }
@@ -121,15 +135,11 @@ static void indicators_send(uint8_t indi)
 
 #ifdef RGB_MATRIX_ENABLE
 
-static bool numlocks = 0;
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
     if (numlocks != host_keyboard_led_state().num_lock) {
         numlocks = host_keyboard_led_state().num_lock;
-        if (numlocks)
-            indicators_send(1);
-        else
-            indicators_send(0);
+        LCD_num_send = 1;
     }
 
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
@@ -148,18 +158,15 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 
 #endif
 
-static uint8_t layer_num = 0;
 layer_state_t layer_state_set_kb(layer_state_t state)
 {
     if (layer_num != get_highest_layer(state)) {
         layer_num = get_highest_layer(state);
-        layer_send(layer_num);
+        LCD_layer_send = 1;
     }
     return state;
 }
 
-static uint16_t LCD_start_timer;
-static uint8_t LCD_start_state = 0;
 void keyboard_post_init_kb()
 {
     // setPinInput(B12);
@@ -167,57 +174,87 @@ void keyboard_post_init_kb()
     uart_init(115200);
     uart_start();
 
-    writePinHigh(LCD_EN);
-    setPinOutput(LCD_EN);
+    LCD_on();
 
     writePinLow(USB_SET);
     setPinOutput(USB_SET);
-
-    LCD_start_timer = timer_read();
-    LCD_start_state = 0;
 }
 
-void wireless_keyboard_pro_tasl()
+void wireless_keyboard_pro_task()
 {
-    uart_init(115200);
-    uart_start();
-    LCD_start_timer = timer_read();
-    LCD_start_state = 0;
+    if (LCD_state) {
+        if (LCD_layer_send || LCD_bat_send || LCD_num_send) {
+            uart_init(115200);
+            uart_start();
+            LCD_send_timer = timer_read();
+        }
+#ifdef BATTERY_MEASURE_PIN
+        if (bat_percentage != battery_get_last_percentage()) {
+            bat_percentage = battery_get_last_percentage();
+            LCD_bat_send = 1;
+        };
+#endif
+    }
 }
-
-void housekeeping_task_kb(void)
+void housekeeping_task_kb()
 {
-    switch (LCD_start_state) {
-        case 0:
-            if (timer_elapsed(LCD_start_timer) > 50) {
-                LCD_start_timer = timer_read();
-                LCD_start_state++;
+    if (LCD_state) {
+        switch (LCD_start_state) {
+            case 0:
+                if (timer_elapsed(LCD_start_timer) > 50) {
+                    LCD_start_timer = timer_read();
+                    LCD_start_state++;
+                    layer_send(layer_num);
+                }
+                break;
+            case 1:
+                if (timer_elapsed(LCD_start_timer) > 10) {
+                    LCD_start_timer = timer_read();
+                    LCD_start_state++;
+                    numlocks = host_keyboard_led_state().num_lock;
+                    if (numlocks)
+                        indicators_send(1);
+                    else
+                        indicators_send(0);
+                }
+                break;
+            case 2:
+                if (timer_elapsed(LCD_start_timer) > 10) {
+                    LCD_start_timer = timer_read();
+                    LCD_start_state++;
+#ifdef BATTERY_MEASURE_PIN
+                    bat_percentage = battery_get_last_percentage();
+                    bat_send(bat_percentage);
+#endif
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (LCD_layer_send) {
+            if (timer_elapsed(LCD_send_timer) > 1)
                 layer_send(layer_num);
-            }
-            break;
-        case 1:
-            if (timer_elapsed(LCD_start_timer) > 10) {
-                LCD_start_timer = timer_read();
-                LCD_start_state++;
-                numlocks = host_keyboard_led_state().num_lock;
+            LCD_layer_send = 0;
+        }
+        if (LCD_bat_send) {
+            if (timer_elapsed(LCD_send_timer) > 1)
+                bat_send(bat_percentage);
+            LCD_bat_send = 0;
+        }
+        if (LCD_num_send) {
+            if (timer_elapsed(LCD_send_timer) > 1) {
                 if (numlocks)
                     indicators_send(1);
                 else
                     indicators_send(0);
             }
-            break;
-        case 2:
-            if (timer_elapsed(LCD_start_timer) > 10) {
-                LCD_start_timer = timer_read();
-                LCD_start_state++;
-#ifdef BATTERY_MEASURE_PIN
-                bat_send(battery_get_last_percentage());
+            LCD_num_send = 0;
+        }
+#ifdef BLE_ENABLE
+        if (LCD_bat_send == 0 && LCD_layer_send == 0 && LCD_num_send == 0)
+            uart_stop();
 #endif
-            }
-            break;
-
-        default:
-            break;
     }
 }
 
