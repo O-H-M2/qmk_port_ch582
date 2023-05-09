@@ -1,5 +1,6 @@
 # Copyright 2022 Huckies <https://github.com/Huckies>
 # zhaqian <https://github.com/zhaqian12>
+# Copyright 2023 Jactry Zeng
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -431,5 +432,14 @@ if(DIP_SWITCH_ENABLE)
     message(STATUS "DIP_SWITCH_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/dip_switch.c"
+    )
+endif()
+
+# TAP_DANCE_ENABLE
+if(TAP_DANCE_ENABLE)
+    message(STATUS "TAP_DANCE_ENABLE")
+    add_definitions(-DTAP_DANCE_ENABLE)
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_tap_dance.c"
     )
 endif()
