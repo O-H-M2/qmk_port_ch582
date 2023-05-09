@@ -302,7 +302,8 @@ else()
     )
 
     if((BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-        AND WIRELESS_SUBMODULE_PATH)
+        AND WIRELESS_SUBMODULE_PATH
+        AND EXISTS "${WIRELESS_SUBMODULE_PATH}/post_build.cmake")
         include(${WIRELESS_SUBMODULE_PATH}/post_build.cmake)
     else()
         add_custom_target(post_build ALL
