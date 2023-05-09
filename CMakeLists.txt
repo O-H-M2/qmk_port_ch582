@@ -90,6 +90,10 @@ if(NOT DEFINED QMK_BUILDDATE)
     )
 endif()
 
+if(NOT ESB_ENABLE AND ESB_ROLE STREQUAL "dongle")
+    message(FATAL_ERROR "Invalid dongle role configuration, will skip.")
+endif()
+
 # allow for manual override
 if(NOT DEFINED keyboard OR(NOT DEFINED keymap AND NOT BUILD_WIRELESS_LIB))
     include(keyboard_target.cmake)
