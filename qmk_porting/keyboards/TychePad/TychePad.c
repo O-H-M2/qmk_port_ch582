@@ -183,17 +183,16 @@ void keyboard_post_init_kb()
 void wireless_keyboard_pre_task()
 {
     if (LCD_state) {
-        if (LCD_layer_send || LCD_bat_send || LCD_num_send) {
-            uart_start();
-            TMR1_TimerInit(FREQ_SYS / 1000);         // 设置定时时间 1ms
-            TMR1_ITCfg(ENABLE, TMR0_3_IT_CYC_END); // 开启中断
-            PFIC_EnableIRQ(TMR1_IRQn);
-            do {
-                sys_safe_access_enable();
-                R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR0;
-                sys_safe_access_disable();
-            } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR0);
-        }
+        uart_start();
+        TMR1_TimerInit(FREQ_SYS / 1000);       // 设置定时时间 1ms
+        TMR1_ITCfg(ENABLE, TMR0_3_IT_CYC_END); // 开启中断
+        PFIC_EnableIRQ(TMR1_IRQn);
+        do {
+            sys_safe_access_enable();
+            R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR0;
+            sys_safe_access_disable();
+        } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR0);
+
 #ifdef BATTERY_MEASURE_PIN
         if (bat_percentage != battery_get_last_percentage()) {
             bat_percentage = battery_get_last_percentage();
