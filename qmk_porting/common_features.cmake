@@ -1,5 +1,6 @@
 # Copyright 2022 Huckies <https://github.com/Huckies>
 # zhaqian <https://github.com/zhaqian12>
+# Copyright 2023 Jactry Zeng
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -96,6 +97,15 @@ if(UNICODE_COMMON_ENABLE)
         "${QMK_BASE_DIR}/quantum/process_keycode/process_unicode_common.c"
         "${QMK_BASE_DIR}/quantum/unicode/unicode.c"
         "${QMK_BASE_DIR}/quantum/unicode/utf8.c"
+    )
+endif()
+
+# TAP_DANCE_ENABLE
+if(TAP_DANCE_ENABLE)
+    add_definitions(-DTAP_DANCE_ENABLE)
+    message(STATUS "TAP_DANCE_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_tap_dance.c"
     )
 endif()
 
