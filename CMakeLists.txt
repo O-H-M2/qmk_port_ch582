@@ -170,6 +170,10 @@ target_sources(mbedtls INTERFACE
     ${mbedtls_sources}
 )
 
+if(NOT ESB_ENABLE AND ESB_ROLE STREQUAL "dongle")
+    message(FATAL_ERROR "Invalid dongle role configuration, will skip.")
+endif()
+
 if(BUILD_WIRELESS_LIB)
     include(${WIRELESS_SUBMODULE_PATH}/gen_lib.cmake)
 else()
@@ -193,10 +197,6 @@ else()
         set(HEX_FILE_FACTORY ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_dongle_factory_${GIT_VERSION}.hex)
         set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.hex)
         set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.bin)
-    endif()
-
-    if(NOT ESB_ENABLE AND ESB_ROLE STREQUAL "dongle")
-        message(FATAL_ERROR "Invalid dongle role configuration, will skip.")
     endif()
 
     add_library(mcuboot_porting INTERFACE)
