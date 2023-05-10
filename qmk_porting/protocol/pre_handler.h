@@ -146,7 +146,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 #endif
 
-#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+#if defined BLE_ENABLE || (defined ESB_ENABLE && ESB_ENABLE == 1)
 #define NO_USB_STARTUP_CHECK
 #ifndef BATTERY_MEASURE_PIN
 #error "Battery measure pin undefined."

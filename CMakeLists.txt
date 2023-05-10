@@ -195,6 +195,10 @@ else()
         set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.bin)
     endif()
 
+    if(NOT ESB_ENABLE AND ESB_ROLE STREQUAL "dongle")
+        message(FATAL_ERROR "Invalid dongle role configuration, will skip.")
+    endif()
+
     add_library(mcuboot_porting INTERFACE)
     target_include_directories(mcuboot_porting INTERFACE
         "${CMAKE_CURRENT_LIST_DIR}/mcuboot_porting"
@@ -302,7 +306,8 @@ else()
     )
 
     if((BLE_ENABLE OR(ESB_ENABLE AND((ESB_ROLE STREQUAL "keyboard") OR(ESB_ROLE STREQUAL "dongle"))))
-        AND WIRELESS_SUBMODULE_PATH)
+        AND WIRELESS_SUBMODULE_PATH
+        AND EXISTS "${WIRELESS_SUBMODULE_PATH}/post_build.cmake")
         include(${WIRELESS_SUBMODULE_PATH}/post_build.cmake)
     else()
         add_custom_target(post_build ALL

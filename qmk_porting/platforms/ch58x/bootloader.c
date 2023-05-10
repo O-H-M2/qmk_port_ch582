@@ -77,7 +77,9 @@ void bootloader_select_boot_mode()
         PRINT("Fatal: Boot mode tampering detected!\n");
         WAIT_FOR_DBG;
         __builtin_trap();
-    } else if (mode == BOOTLOADER_BOOT_MODE_USB) {
+    } else
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
+        if (mode == BOOTLOADER_BOOT_MODE_USB) {
 #ifdef POWER_DETECT_PIN
         if (!readPin(POWER_DETECT_PIN)) {
             PRINT("Cable not connected, USB mode is disabled.\n");
@@ -93,6 +95,12 @@ void bootloader_select_boot_mode()
         }
 #endif
     }
+#else
+        if (mode != BOOTLOADER_BOOT_MODE_ESB) {
+        PRINT("Dongle has fixed mode, will correct.\n");
+        mode = BOOTLOADER_BOOT_MODE_ESB;
+    }
+#endif
 
     //! TODO: for test only!
     // mode = BOOTLOADER_BOOT_MODE_BLE;
@@ -125,7 +133,7 @@ void bootloader_select_boot_mode()
 #endif
         default:
             PRINT("IAP incomplete, will reboot back to IAP.\n");
-            R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
+            retention_register_set_iap();
             WAIT_FOR_DBG;
             SYS_ResetExecute();
             __builtin_unreachable();
@@ -136,6 +144,7 @@ void bootloader_select_boot_mode()
 uint8_t bootloader_set_to_default_mode(const char *reason)
 {
     PRINT("%s, ", reason);
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
 #ifdef USB_ENABLE
     PRINT("default to USB.\n");
     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
@@ -149,12 +158,17 @@ uint8_t bootloader_set_to_default_mode(const char *reason)
     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
     return BOOTLOADER_BOOT_MODE_ESB;
 #endif
+#else
+    PRINT("default to ESB.\n");
+    bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
+    return BOOTLOADER_BOOT_MODE_ESB;
+#endif
 }
 
 void bootloader_jump()
 {
     PRINT("Jumping IAP...\n");
-    R8_GLOB_RESET_KEEP = BOOTLOADER_BOOT_MODE_IAP;
+    retention_register_set_iap();
     mcu_reset();
 }
 

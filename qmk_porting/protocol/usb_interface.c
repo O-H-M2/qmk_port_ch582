@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gpio.h"
 #include "timer.h"
 #include "usb_main.h"
+#include "usb_device_state.h"
 #include "usb_interface.h"
 #include "usb_descriptors.h"
 #include "usb_ch58x_usbfs_reg.h"
@@ -374,6 +375,28 @@ void usbh_hid_set_protocol(uint8_t intf, uint8_t protocol)
 
         esb_set_keyboard_protocol(protocol);
 #endif
+    }
+}
+
+void usbd_event_handler(uint8_t event)
+{
+    switch (event) {
+        case USBD_EVENT_RESET:
+            usb_device_state_set_reset();
+            break;
+        case USBD_EVENT_CONNECTED:
+            break;
+        case USBD_EVENT_DISCONNECTED:
+            break;
+        case USBD_EVENT_RESUME:
+            break;
+        case USBD_EVENT_SUSPEND:
+            break;
+        case USBD_EVENT_CONFIGURED:
+            usb_device_state_set_configuration(true, 1);
+            break;
+        default:
+            break;
     }
 }
 

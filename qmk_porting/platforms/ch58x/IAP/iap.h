@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gpio.h"
 #include "eeprom_driver.h"
 #include "bootloader.h"
+#include "retention_register.h"
 #include "config.h"
 #include "usbd_core.h"
 #include "usbd_msc.h"

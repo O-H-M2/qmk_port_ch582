@@ -14,11 +14,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
 
-#include "print.h"
-#include "bootloader.h"
-#include "rgb_led.h"
-#include "retention_register.h"
+#include "usb_util.h"
+#include "usbd_core.h"
 
-void platform_setup();
+bool usb_connected_state()
+{
+    return usb_device_is_configured();
+}

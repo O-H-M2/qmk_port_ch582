@@ -1,5 +1,6 @@
 # Copyright 2022 Huckies <https://github.com/Huckies>
 # zhaqian <https://github.com/zhaqian12>
+# Copyright 2023 Jactry Zeng
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -99,6 +100,15 @@ if(UNICODE_COMMON_ENABLE)
     )
 endif()
 
+# TAP_DANCE_ENABLE
+if(TAP_DANCE_ENABLE)
+    add_definitions(-DTAP_DANCE_ENABLE)
+    message(STATUS "TAP_DANCE_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_tap_dance.c"
+    )
+endif()
+
 # VIA_ENABLE
 if(VIA_ENABLE)
     add_definitions(-DVIA_ENABLE -DRAW_ENABLE -DDYNAMIC_KEYMAP_ENABLE)
@@ -108,6 +118,15 @@ if(VIA_ENABLE)
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/dynamic_keymap.c"
         "${QMK_BASE_DIR}/quantum/via.c"
+    )
+endif()
+
+# DIP_SWITCH_ENABLE
+if(DIP_SWITCH_ENABLE)
+    add_definitions(-DDIP_SWITCH_ENABLE)
+    message(STATUS "DIP_SWITCH_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/dip_switch.c"
     )
 endif()
 
@@ -377,6 +396,7 @@ if(USB_ENABLE)
         "${CMAKE_CURRENT_LIST_DIR}/protocol/protocol_usb.c"
         "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/usb_main.c"
         "${CMAKE_CURRENT_LIST_DIR}/protocol/usb_interface.c"
+        "${CMAKE_CURRENT_LIST_DIR}/protocol/usb_util.c"
     )
 endif()
 
@@ -386,6 +406,7 @@ if(BLE_ENABLE)
         message(STATUS "Dongle shouldn't have BLE_ENABLE, ignore")
     else()
         add_definitions(-DBLE_ENABLE)
+        message(STATUS "BLE_ENABLE")
 
         if(NOT DEFINED NKRO_ENABLE)
             message(FATAL_ERROR "BLE_ENABLE requires NKRO_ENABLE!")
@@ -420,14 +441,5 @@ if(DEFINED CUSTOM_MATRIX AND EXISTS "${CUSTOM_MATRIX}")
 else()
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/matrix.c"
-    )
-endif()
-
-# DIP_SWITCH_ENABLE
-if(DIP_SWITCH_ENABLE)
-    add_definitions(-DDIP_SWITCH_ENABLE)
-    message(STATUS "DIP_SWITCH_ENABLE")
-    list(APPEND quantum_SOURCES
-        "${QMK_BASE_DIR}/quantum/dip_switch.c"
     )
 endif()

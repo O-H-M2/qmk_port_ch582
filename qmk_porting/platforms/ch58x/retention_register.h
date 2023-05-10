@@ -14,11 +14,13 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #pragma once
 
-#include "print.h"
+#include <stdint.h>
+#include <stdbool.h>
 #include "bootloader.h"
-#include "rgb_led.h"
-#include "retention_register.h"
 
-void platform_setup();
+void retention_register_clear();
+void retention_register_set_iap();
+bool retention_register_get_iap();
