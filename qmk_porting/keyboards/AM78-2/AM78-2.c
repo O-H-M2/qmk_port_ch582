@@ -44,22 +44,22 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
         return false;
     }
-    if (led_min <= 0 && led_max >= 0) {
+    if (led_min <= 0 && led_max > 0) {
         RGB_MATRIX_INDICATOR_SET_COLOR(0, 0x00, 0x00, 0x00);
     }
-    if (led_min <= 1 && led_max >= 1) {
+    if (led_min <= 1 && led_max > 1) {
         RGB_MATRIX_INDICATOR_SET_COLOR(1, 0x00, 0x00, 0x00);
     }
-    if (led_min <= 2 && led_max >= 2) {
+    if (led_min <= 2 && led_max > 2) {
         RGB_MATRIX_INDICATOR_SET_COLOR(2, 0x00, 0x00, 0x00);
     }
-    if (led_min <= 3 && led_max >= 3) {
+    if (led_min <= 3 && led_max > 3) {
         RGB_MATRIX_INDICATOR_SET_COLOR(3, 0x00, 0x00, 0x00);
     }
-    if (led_min <= 4 && led_max >= 4 && host_keyboard_led_state().caps_lock) {
+    if (led_min <= 4 && led_max > 4 && host_keyboard_led_state().caps_lock) {
         RGB_MATRIX_INDICATOR_SET_COLOR(4, 0xFF, 0x00, 0x00);
     }
-    if (led_min <= 5 && led_max >= 5 && host_keyboard_led_state().caps_lock) {
+    if (led_min <= 5 && led_max > 5 && host_keyboard_led_state().caps_lock) {
         RGB_MATRIX_INDICATOR_SET_COLOR(5, 0xFF, 0x00, 0x00);
     }
 
