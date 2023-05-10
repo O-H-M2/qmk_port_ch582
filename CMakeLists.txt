@@ -90,10 +90,6 @@ if(NOT DEFINED QMK_BUILDDATE)
     )
 endif()
 
-if(NOT ESB_ENABLE AND ESB_ROLE STREQUAL "dongle")
-    message(FATAL_ERROR "Invalid dongle role configuration, will skip.")
-endif()
-
 # allow for manual override
 if(NOT DEFINED keyboard OR(NOT DEFINED keymap AND NOT BUILD_WIRELESS_LIB))
     include(keyboard_target.cmake)
@@ -197,6 +193,10 @@ else()
         set(HEX_FILE_FACTORY ${CMAKE_CURRENT_LIST_DIR}/${keyboard}_dongle_factory_${GIT_VERSION}.hex)
         set(HEX_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.hex)
         set(BIN_FILE_IAP ${PROJECT_BINARY_DIR}/${keyboard}_dongle_IAP.bin)
+    endif()
+
+    if(NOT ESB_ENABLE AND ESB_ROLE STREQUAL "dongle")
+        message(FATAL_ERROR "Invalid dongle role configuration, will skip.")
     endif()
 
     add_library(mcuboot_porting INTERFACE)
