@@ -121,6 +121,15 @@ if(VIA_ENABLE)
     )
 endif()
 
+# DIP_SWITCH_ENABLE
+if(DIP_SWITCH_ENABLE)
+    add_definitions(-DDIP_SWITCH_ENABLE)
+    message(STATUS "DIP_SWITCH_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/dip_switch.c"
+    )
+endif()
+
 # COMMAND_ENABLE
 if(COMMAND_ENABLE)
     add_definitions(-DCOMMAND_ENABLE)
@@ -432,14 +441,5 @@ if(DEFINED CUSTOM_MATRIX AND EXISTS "${CUSTOM_MATRIX}")
 else()
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/matrix.c"
-    )
-endif()
-
-# DIP_SWITCH_ENABLE
-if(DIP_SWITCH_ENABLE)
-    add_definitions(-DDIP_SWITCH_ENABLE)
-    message(STATUS "DIP_SWITCH_ENABLE")
-    list(APPEND quantum_SOURCES
-        "${QMK_BASE_DIR}/quantum/dip_switch.c"
     )
 endif()
