@@ -181,11 +181,10 @@ void keyboard_post_init_kb()
     setPinOutput(USB_SET);
 }
 
-void wireless_keyboard_pro_task()
+void wireless_keyboard_pre_task()
 {
     if (LCD_state) {
         if (LCD_layer_send || LCD_bat_send || LCD_num_send) {
-            uart_init(115200);
             uart_start();
             LCD_send_timer = timer_read();
         }
