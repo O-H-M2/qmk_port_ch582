@@ -100,6 +100,15 @@ if(UNICODE_COMMON_ENABLE)
     )
 endif()
 
+# TAP_DANCE_ENABLE
+if(TAP_DANCE_ENABLE)
+    add_definitions(-DTAP_DANCE_ENABLE)
+    message(STATUS "TAP_DANCE_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_tap_dance.c"
+    )
+endif()
+
 # VIA_ENABLE
 if(VIA_ENABLE)
     add_definitions(-DVIA_ENABLE -DRAW_ENABLE -DDYNAMIC_KEYMAP_ENABLE)
@@ -432,14 +441,5 @@ if(DIP_SWITCH_ENABLE)
     message(STATUS "DIP_SWITCH_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/dip_switch.c"
-    )
-endif()
-
-# TAP_DANCE_ENABLE
-if(TAP_DANCE_ENABLE)
-    message(STATUS "TAP_DANCE_ENABLE")
-    add_definitions(-DTAP_DANCE_ENABLE)
-    list(APPEND quantum_SOURCES
-        "${QMK_BASE_DIR}/quantum/process_keycode/process_tap_dance.c"
     )
 endif()
