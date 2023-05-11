@@ -186,8 +186,8 @@ void keyboard_post_init_kb()
     } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR0);
 }
 
-void keyboard_task_pre() // just for debug
-// void wireless_keyboard_pre_task()
+//void keyboard_task_pre() // just for debug
+void wireless_keyboard_pre_task()
 {
     if (LCD_state && uart_start_timeout == 0) {
         uart_start();
