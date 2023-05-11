@@ -59,9 +59,9 @@ static uint8_t LCD_start_state = 0;
 
 static uint8_t layer_num = 0;
 static bool numlocks = 0;
-static int8_t bat_percentage = 0;
+static uint8_t bat_percentage = 0;
 
-volatile bool uart_start_timeout = 0;
+volatile uint8_t uart_start_timeout = 0;
 void LCD_on()
 {
     writePinHigh(LCD_EN);
@@ -172,26 +172,30 @@ void keyboard_post_init_kb()
     // setPinInput(B12);
     PRINT("init\n");
     uart_init(115200);
-    uart_start();
+    // uart_start();
 
     LCD_on();
 
     writePinLow(USB_SET);
     setPinOutput(USB_SET);
+
+    do {
+        sys_safe_access_enable();
+        R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR0;
+        sys_safe_access_disable();
+    } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR0);
 }
 
-void wireless_keyboard_pre_task()
+void keyboard_task_pre() // just for debug
+// void wireless_keyboard_pre_task()
 {
-    if (LCD_state) {
+    if (LCD_state && uart_start_timeout == 0) {
         uart_start();
         TMR1_TimerInit(FREQ_SYS / 1000);       // 设置定时时间 1ms
         TMR1_ITCfg(ENABLE, TMR0_3_IT_CYC_END); // 开启中断
         PFIC_EnableIRQ(TMR1_IRQn);
-        do {
-            sys_safe_access_enable();
-            R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR0;
-            sys_safe_access_disable();
-        } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR0);
+
+        uart_start_timeout = 1;
 
 #ifdef BATTERY_MEASURE_PIN
         if (bat_percentage != battery_get_last_percentage()) {
@@ -206,15 +210,15 @@ void housekeeping_task_kb()
     if (LCD_state) {
         switch (LCD_start_state) {
             case 0:
-                if (timer_elapsed(LCD_start_timer) > 50 && uart_start_timeout) {
+                if (timer_elapsed(LCD_start_timer) > 50 && uart_start_timeout == 2) {
                     LCD_start_timer = timer_read();
                     LCD_start_state++;
                     layer_send(layer_num);
-                    uart_start_timeout = 0;
+                    uart_start_timeout = 3;
                 }
                 break;
             case 1:
-                if (timer_elapsed(LCD_start_timer) > 10 && uart_start_timeout) {
+                if (timer_elapsed(LCD_start_timer) > 10 && uart_start_timeout == 2) {
                     LCD_start_timer = timer_read();
                     LCD_start_state++;
                     numlocks = host_keyboard_led_state().num_lock;
@@ -222,18 +226,18 @@ void housekeeping_task_kb()
                         indicators_send(1);
                     else
                         indicators_send(0);
-                    uart_start_timeout = 0;
+                    uart_start_timeout = 3;
                 }
                 break;
             case 2:
-                if (timer_elapsed(LCD_start_timer) > 10 && uart_start_timeout) {
+                if (timer_elapsed(LCD_start_timer) > 10 && uart_start_timeout == 2) {
                     LCD_start_timer = timer_read();
                     LCD_start_state++;
 #ifdef BATTERY_MEASURE_PIN
                     bat_percentage = battery_get_last_percentage();
                     bat_send(bat_percentage);
 #endif
-                    uart_start_timeout = 0;
+                    uart_start_timeout = 3;
                 }
                 break;
             default:
@@ -241,30 +245,31 @@ void housekeeping_task_kb()
         }
 
         if (LCD_layer_send) {
-            if (uart_start_timeout == 1)
+            if (uart_start_timeout == 2)
                 layer_send(layer_num);
             LCD_layer_send = 0;
-            uart_start_timeout = 0;
+            uart_start_timeout = 3;
         }
         if (LCD_bat_send) {
-            if (uart_start_timeout == 1)
+            if (uart_start_timeout == 2)
                 bat_send(bat_percentage);
             LCD_bat_send = 0;
-            uart_start_timeout = 0;
+            uart_start_timeout = 3;
         }
         if (LCD_num_send) {
-            if (uart_start_timeout == 1) {
+            if (uart_start_timeout == 2) {
                 if (numlocks)
                     indicators_send(1);
                 else
                     indicators_send(0);
             }
             LCD_num_send = 0;
+            uart_start_timeout = 3;
+        }
+        if (uart_start_timeout == 3) {
+            uart_stop();
             uart_start_timeout = 0;
         }
-#ifdef BLE_ENABLE
-        uart_stop();
-#endif
     }
 }
 
@@ -314,12 +319,8 @@ int main()
 __INTERRUPT __HIGH_CODE void TMR1_IRQHandler()
 {
     // setPinInput(B12);
-    R8_TMR1_INTER_EN = 0;
-    uart_start_timeout = 1;
-
-    do {
-        sys_safe_access_enable();
-        R8_SLP_CLK_OFF0 |= RB_SLP_CLK_TMR1;
-        sys_safe_access_disable();
-    } while (!(R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR1));
+    
+    uart_start_timeout = 2;
+    TMR1_ITCfg(DISABLE, TMR0_3_IT_CYC_END); // 开启中断
+    PFIC_DisableIRQ(TMR1_IRQn);
 }
