@@ -23,25 +23,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                      KC_NUM, KC_KP_SLASH, KC_KP_ASTERISK, KC_KP_MINUS,
                      KC_KP_7, KC_KP_8, KC_KP_9, KC_KP_PLUS,
                      KC_KP_4, KC_KP_5, KC_KP_6,
-                     KC_KP_1, KC_KP_2, KC_KP_3, KC_PENT,
-                     LT(1, KC_KP_DOT), KC_KP_ENTER, KC_MUTE),
+                     LT(1, KC_KP_1),LT(2, KC_KP_2),KC_KP_3,KC_PENT,
+                     LT(3, KC_KP_0), KC_KP_DOT, KC_MUTE),
     [1] = LAYOUT_all(/* 1: fn */
-                     RGB_TOG, RGB_VAI, RGB_VAD, RGB_MODE_REVERSE,
-                     KC_PWR, KC_SLEP, KC_MUTE, RGB_MODE_FORWARD,
-                     BLE_SLOT3, _______, _______,
-                     BLE_SLOT0, BLE_SLOT1, BLE_SLOT2, _______,
-                     BLE_ALL_CLEAR, USB_MODE, KC_MUTE),
-    [2] = LAYOUT_all(/* 2: fn */
+                     _______, _______, _______, _______,
                      _______, _______, _______, _______,
                      _______, _______, _______,
                      _______, _______, _______, _______,
+                     _______, _______, _______),
+    [2] = LAYOUT_all(/* 2: fn */
+                     _______, _______, _______, _______,
+                     _______, _______, _______, _______,
+                     _______, _______, _______,
                      _______, _______, _______, _______,
                      _______, _______, _______),
     [3] = LAYOUT_all(/* 3: fn */
-                     _______, _______, _______, _______,
-                     _______, _______, _______,
-                     _______, _______, _______, _______,
-                     _______, _______, _______, _______,
+                     BLE_SLOT0, BLE_SLOT1, BLE_SLOT2, BLE_SLOT3,
+                     U2M    , _______,     U2E, BLE_ALL_CLEAR,
+                     _______, _______, _______, 
+                     _______, _______, _______, USB_MODE,
                      _______, _______, _______),
 
 };
@@ -49,10 +49,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #ifdef ENCODER_MAP_ENABLE
 
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
-    [0] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
-    [1] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-    [2] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
-    [3] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
+    [0] = { ENCODER_CCW_CW(KC_MPRV, KC_MNXT) },
+    [1] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [2] = { ENCODER_CCW_CW(KC_BRID, KC_BRIU) },
+    [3] = { ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
 };
 
 #endif
