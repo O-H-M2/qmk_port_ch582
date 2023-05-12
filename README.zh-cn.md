@@ -10,6 +10,7 @@
 - [编译](#编译)
   - [键盘生产商/QMK 固件用户](#键盘生产商qmk-固件用户)
   - [开发者](#开发者)
+    - [Debian GNU/Linux或Ubuntu](#debian-gnulinux-或-ubuntu)
 - [烧录](#烧录)
 - [社区](#社区)
 
@@ -57,6 +58,42 @@ Fork 我的仓库，手动将你的键盘配置文件上传到[keyboards](https:
 推荐使用 [Visual Studio Code](https://code.visualstudio.com/)。
 
 参照[这个](./VSCODE_DEVELOPMENT.md)搭建你的本机开发环境，也可选择 Codespace.
+
+或参照以下步骤在 Linux 系统上构建：
+
+#### Debian GNU/Linux 或 Ubuntu
+
+1. 安装依赖：
+
+```
+$ sudo apt update
+$ sudo apt install git cmake ccache python3 python3-click python3-cbor2 python3-intelhex
+```
+
+2. Clone 代码仓库：
+```
+$ git clone https://github.com/O-H-M2/qmk_port_ch582.git
+$ cd qmk_port_ch582
+$ git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
+```
+
+3. 创建构建目录：
+```
+$ mkdir build
+$ cd build
+```
+
+4. 运行 `cmake` 检查依赖和生成 Makefile
+```
+$ cmake -DCMAKE_BUILD_TYPE=Release -Dkeyboard=ezy64 -Dkeymap=default ..
+```
+你可以把 `ezy64` 和 `default` 替换成你的键盘和 keymap。
+
+5. 编译：
+```
+$ make -j$(nproc)
+```
+如果编译成功，`.uf2` and `.hex` 会在项目的最顶层目录被生成。
 
 ## 烧录
 

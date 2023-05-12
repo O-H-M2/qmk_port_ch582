@@ -10,6 +10,7 @@
 - [Building](#building)
   - [Keyboard manufacturers/QMK firmware users](#keyboard-manufacturersqmk-firmware-users)
   - [Developers](#developers)
+    - [Debian GNU/Linux or Ubuntu](#debian-gnulinux-or-ubuntu)
 - [Flashing](#flashing)
 - [Community](#community)
 
@@ -57,6 +58,43 @@ Fork this repository then manually upload you keyboard configuration file to [ke
 [Visual Studio Code](https://code.visualstudio.com/) is recommended.
 
 You can follow this [guide](./VSCODE_DEVELOPMENT.md) to set up a development environment locally. Or you can also use Codespace instead.
+
+Or follow these steps below to build it on your system:
+
+#### Debian GNU/Linux or Ubuntu
+
+1. Install some dependencies:
+
+```
+$ sudo apt update
+$ sudo apt install git cmake ccache python3 python3-click python3-cbor2 python3-intelhex
+```
+
+2. Clone this repository by:
+```
+$ git clone https://github.com/O-H-M2/qmk_port_ch582.git
+$ cd qmk_port_ch582
+$ git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
+```
+
+3. Create a directory for the building:
+```
+$ mkdir build
+$ cd build
+```
+
+4. Running cmake for dependenies checking and generating Makefile:
+```
+$ cmake -Dkeyboard=ezy64 -Dkeymap=default ..
+```
+You may replace `ezy64` and `default` in the above command with the names of your own keyboard and keymap.
+
+5. Build:
+```
+$ make -j$(nproc)
+```
+`.uf2` and `.hex` will be generated in the top directory of the project if the build succeeds.
+
 
 ## Flashing
 
