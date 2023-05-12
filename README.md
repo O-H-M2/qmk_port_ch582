@@ -1,36 +1,45 @@
 *Other languages: [English](README.md), [简体中文](README.zh-cn.md)*
 
-# QMK
+## Table of Contents
 
-with wireless support in a single chip.
+- [Overview](#overview)
+- [Directory Structure](#directory-structure)
+- [Code Branches](#code-branches)
+- [Highlights](#highlights)
+- [Supported hardware](#supported-hardware)
+- [Building](#building)
+  - [Keyboard manufacturers/QMK firmware users](#keyboard-manufacturersqmk-firmware-users)
+  - [Developers](#developers)
+- [Flashing](#flashing)
+- [Community](#community)
 
 ## Overview
 
-This is a porting of QMK keyboard firmware for CH58x series, currently support CH582.
+This is a porting of [QMK](https://github.com/qmk/qmk_firmware) keyboard firmware for CH58x series, with the main focus on bridging the application layer (QMK) and the underlying hardware.
 
 ## Directory Structure
 
-- CherryUSB, qmk_firmware, mcuboot: Components introduced as submodules, **NO any file** is modified. 
+- CherryUSB, qmk_firmware, mcuboot: Components introduced as submodules, **NO any file** is modified.
 
   *The qmk_firmware submodule should be able to keep up with upstream.*
 - CherryUSB_porting, mcuboot_porting: Files used to configure submodules and add them into the building system.
 - qmk_porting: The adapter layer for QMK to running on the CH58x chip.
-- SDK: Directory for placing WCH SDK, so no IDE is used.
+- sdk: Directory for placing WCH SDK.
 
-## Code Branch
+## Code Branches
 
-- Master: Support for USB and ws2812 is done, still in development.
+- via: All the basic functions needed by wired keyboards are done, including VIA support. For lights, only ws2812 is supported currently.
 - debug: Used for presenting specific issues, ignore if use of QMK is all you want.
 
 ## Highlights
 
-- BLE/USB/2.4G triple mode (in progress)
-- Capability to update along with the QMK repo
+- Support wired, Bluetooth, and triple mode 2.4G (WIP).
+- Capability to update along with the QMK repo, and supports most of the features of QMK.
 - Low power comsumption in wireless modes.
 
-## Hardware supporting
+## Supported hardware
 
-Currently only CH582M is tested.
+Currently only CH582M is tested, but it should also work for CH582F.
 
 ## Building
 
@@ -43,16 +52,19 @@ Fork this repository then manually upload you keyboard configuration file to [ke
 
 *Note that currently the configuration file is slightly different from the original QMK ones, you may take [this keyboard](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards/m2wired) as a start point.*
 
-### Platform developers
+### Developers
 
-Documentation about standard build & development flows using [Visual Studio Code](https://code.visualstudio.com/) can be found in [the development guide](./VSCODE_DEVELOPMENT.md).
+[Visual Studio Code](https://code.visualstudio.com/) is recommended.
+
+You can follow this [guide](./VSCODE_DEVELOPMENT.md) to set up a development environment locally. Or you can also use Codespace instead.
 
 ## Flashing
 
-End users: Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite) with `.uf2` only, or take your own risk of bricking your keyboard.
+For end users: Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite) with `.uf2` only, or take your own risk of bricking your keyboard.
 
-Developers: You may use the [flashing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html).
+For developers: You may use the [flashing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html) which is provided by WCH.
 
 ## Community
 
-[Discord](https://discord.gg/kaH6eRUFZS)
+- QQ group: 860356332
+- [Discord](https://discord.gg/kaH6eRUFZS)
