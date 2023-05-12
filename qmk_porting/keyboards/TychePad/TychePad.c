@@ -53,6 +53,7 @@ static bool LCD_state = 1;
 static bool LCD_num_send = 0;
 static bool LCD_layer_send = 0;
 static bool LCD_bat_send = 0;
+static bool LCD_mute_send = 0;
 
 static uint16_t LCD_start_timer;
 static uint8_t LCD_start_state = 0;
@@ -129,6 +130,14 @@ static void indicators_send(uint8_t indi)
         uint8_t TX_date[] = { 0xfe, 0x02, 0x02, 0x01, 0x01, 0x01 };
         TX_date[5] = indi;
         TX_date[3] = TX_date[5]; // sum
+        uart_transmit(TX_date, sizeof(TX_date) + 1);
+    }
+}
+
+static void mute_send(void)
+{
+    if (LCD_state) {
+        uint8_t TX_date[] = { 0xfe, 0x02, 0x05, 0x01, 0x01, 0x01 };
         uart_transmit(TX_date, sizeof(TX_date) + 1);
     }
 }
@@ -270,6 +279,12 @@ void housekeeping_task_kb()
             uart_stop();
             uart_start_timeout = 0;
         }
+        if (LCD_mute_send) {
+            if (uart_start_timeout == 2)
+                mute_send();
+            LCD_mute_send = 0;
+            uart_start_timeout = 3;
+        }
     }
 }
 
@@ -289,6 +304,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
                 USB2LCD();
             }
             return false;
+        case KC_MUTE:
+            LCD_mute_send = 1;
+            return true;
         default:
             return true;
     }
