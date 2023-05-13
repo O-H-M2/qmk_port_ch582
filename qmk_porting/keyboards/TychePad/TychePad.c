@@ -49,6 +49,7 @@ led_config_t g_led_config = {
 };
 /* clang-format on */
 #endif
+
 static bool LCD_state = 1;
 static bool LCD_num_send = 0;
 static bool LCD_layer_send = 0;
@@ -63,6 +64,7 @@ static bool numlocks = 0;
 static uint8_t bat_percentage = 0;
 
 volatile uint8_t uart_start_timeout = 0;
+
 void LCD_on()
 {
     writePinHigh(LCD_EN);
@@ -77,7 +79,6 @@ void LCD_off()
     writePinLow(LCD_EN);
     setPinOutput(LCD_EN);
     LCD_state = 0;
-    uart_stop();
 }
 
 bool enter_power_level_2_kb()
@@ -106,7 +107,7 @@ static void USB2MCU()
     setPinOutput(USB_SET);
 }
 
-void bat_send(uint8_t bat_num)
+static void bat_send(uint8_t bat_num)
 {
     if (LCD_state) {
         uint8_t TX_date[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
@@ -115,7 +116,8 @@ void bat_send(uint8_t bat_num)
         uart_transmit(TX_date, sizeof(TX_date) + 1);
     }
 }
-void layer_send(uint8_t layer_num)
+
+static void layer_send(uint8_t layer_num)
 {
     if (LCD_state) {
         uint8_t TX_date[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
@@ -124,6 +126,7 @@ void layer_send(uint8_t layer_num)
         uart_transmit(TX_date, sizeof(TX_date) + 1);
     }
 }
+
 static void indicators_send(uint8_t indi)
 {
     if (LCD_state) {
@@ -195,7 +198,7 @@ void keyboard_post_init_kb()
     } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR0);
 }
 
-//void keyboard_task_pre() // just for debug
+// void keyboard_task_pre() // just for debug
 void wireless_keyboard_pre_task()
 {
     if (LCD_state && uart_start_timeout == 0) {
@@ -337,7 +340,7 @@ int main()
 __INTERRUPT __HIGH_CODE void TMR1_IRQHandler()
 {
     // setPinInput(B12);
-    
+
     uart_start_timeout = 2;
     TMR1_ITCfg(DISABLE, TMR0_3_IT_CYC_END); // 开启中断
     PFIC_DisableIRQ(TMR1_IRQn);
