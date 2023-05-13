@@ -21,7 +21,6 @@ cd ~/.oh-my-zsh/custom/plugins && git clone https://github.com/zsh-users/zsh-aut
 
 cd ${repo} && git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
 
-sudo ln -s ${repo}/utils/nrf-command-line-tools-10.19.0_linux-amd64/bin/mergehex /bin/mergehex
 pip3 install -r ${repo}/mcuboot/scripts/requirements.txt
 
 ccache -M 10G
