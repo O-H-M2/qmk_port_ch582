@@ -29,7 +29,7 @@ This is a porting of [QMK](https://github.com/qmk/qmk_firmware) keyboard firmwar
 
 ## Code Branches
 
-- via: All the basic functions needed by wired keyboards are done, including VIA support. For lights, only ws2812 is supported currently.
+- via: All the basic functions needed by wired keyboards are done, including VIA support. For lights, WS2812 (both SPI and PWM driven) and AW20216S (SPI driven) are supported currently.
 - debug: Used for presenting specific issues, ignore if use of QMK is all you want.
 
 ## Highlights
