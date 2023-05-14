@@ -1,4 +1,5 @@
 # Copyright 2022 Huckies <https://github.com/Huckies>
+# Copyright 2023 Jactry Zeng
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,6 +27,10 @@ if(CCACHE_FOUND)
     message(STATUS "Found ccache: ${CCACHE_FOUND}")
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_FOUND}")
 endif(CCACHE_FOUND)
+
+file(GLOB NRF_BIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/nrf*/bin")
+find_program(MERGEHEX_PATH NAMES mergehex PATHS ${NRF_BIN_PATH} REQUIRED)
+message(STATUS "Found mergehex: ${MERGEHEX_PATH}")
 
 if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
     message(STATUS "Platform: Linux")
@@ -315,11 +320,6 @@ else()
         AND EXISTS "${WIRELESS_SUBMODULE_PATH}/post_build.cmake")
         include(${WIRELESS_SUBMODULE_PATH}/post_build.cmake)
     else()
-        if(NOT MERGEHEX_PATH)
-            file(GLOB NRF_BIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/nrf*/bin")
-            find_program(MERGEHEX_PATH NAMES mergehex PATHS ${NRF_BIN_PATH} REQUIRED)
-            message(STATUS "Found mergehex: ${MERGEHEX_PATH}")
-        endif()
         add_custom_target(post_build ALL
             COMMAND python3 ${PROJECT_SOURCE_DIR}/mcuboot/scripts/imgtool.py sign --header-size 0x1000 --align 4 --slot-size 0x5e000 --version 1.0.0 --pad-header ${HEX_FILE_APP} ${HEX_FILE_APP_SIGNED}
             COMMAND python3 ${PROJECT_SOURCE_DIR}/utils/uf2conv.py ${HEX_FILE_APP_SIGNED} -c -f 0x1aa143c7 -o ${UF2_FILE_APP}
