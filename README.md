@@ -1,34 +1,46 @@
-# QMK
+*Other languages: [English](README.md), [简体中文](README.zh-cn.md)*
 
-with wireless support in a single chip.
+## Table of Contents
+
+- [Overview](#overview)
+- [Directory Structure](#directory-structure)
+- [Code Branches](#code-branches)
+- [Highlights](#highlights)
+- [Supported hardware](#supported-hardware)
+- [Building](#building)
+  - [Keyboard manufacturers/QMK firmware users](#keyboard-manufacturersqmk-firmware-users)
+  - [Developers](#developers)
+    - [Debian GNU/Linux or Ubuntu](#debian-gnulinux-or-ubuntu)
+- [Flashing](#flashing)
+- [Community](#community)
 
 ## Overview
 
-This is a porting of QMK keyboard firmware for CH58x series, currently support CH582.
+This is a porting of [QMK](https://github.com/qmk/qmk_firmware) keyboard firmware for CH58x series, with the main focus on bridging the application layer (QMK) and the underlying hardware.
 
 ## Directory Structure
 
-- CherryUSB, qmk_firmware, mcuboot: Components introduced as submodules, **NO any file** is modified. 
+- CherryUSB, qmk_firmware, mcuboot: Components introduced as submodules, **NO any file** is modified.
 
   *The qmk_firmware submodule should be able to keep up with upstream.*
 - CherryUSB_porting, mcuboot_porting: Files used to configure submodules and add them into the building system.
 - qmk_porting: The adapter layer for QMK to running on the CH58x chip.
-- SDK: Directory for placing WCH SDK, so no IDE is used.
+- sdk: Directory for placing WCH SDK.
 
-## Code Branch
+## Code Branches
 
-- Master: Support for USB and ws2812 is done, still in development.
+- via: All the basic functions needed by wired keyboards are done, including VIA support. For lights, WS2812 (both SPI and PWM driven) and AW20216S (SPI driven) are supported currently.
 - debug: Used for presenting specific issues, ignore if use of QMK is all you want.
 
 ## Highlights
 
-- BLE/USB/2.4G triple mode (in progress)
-- Capability to update along with the QMK repo
+- Support wired, Bluetooth, and triple mode 2.4G (WIP).
+- Capability to update along with the QMK repo, and supports most of the features of QMK.
 - Low power comsumption in wireless modes.
 
-## Hardware supporting
+## Supported hardware
 
-Currently only CH582M is tested.
+Currently only CH582M is tested, but it should also work for CH582F.
 
 ## Building
 
@@ -41,71 +53,56 @@ Fork this repository then manually upload you keyboard configuration file to [ke
 
 *Note that currently the configuration file is slightly different from the original QMK ones, you may take [this keyboard](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards/m2wired) as a start point.*
 
-### Platform developers
+### Developers
 
-Documentation about standard build & development flows using [Visual Studio Code](https://code.visualstudio.com/) can be found in [the development guide](./VSCODE_DEVELOPMENT.md).
+[Visual Studio Code](https://code.visualstudio.com/) is recommended.
+
+You can follow this [guide](./VSCODE_DEVELOPMENT.md) to set up a development environment locally. Or you can also use Codespace instead.
+
+Or follow these steps below to build it on your system:
+
+#### Debian GNU/Linux or Ubuntu
+
+1. Install some dependencies:
+
+```
+$ sudo apt update
+$ sudo apt install git cmake ccache python3 python3-click python3-cbor2 python3-intelhex
+```
+
+2. Clone this repository by:
+```
+$ git clone https://github.com/O-H-M2/qmk_port_ch582.git
+$ cd qmk_port_ch582
+$ git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
+```
+
+3. Create a directory for the building:
+```
+$ mkdir build
+$ cd build
+```
+
+4. Running cmake for dependenies checking and generating Makefile:
+```
+$ cmake -Dkeyboard=ezy64 -Dkeymap=default ..
+```
+You may replace `ezy64` and `default` in the above command with the names of your own keyboard and keymap.
+
+5. Build:
+```
+$ make -j$(nproc)
+```
+`.uf2` and `.hex` will be generated in the top directory of the project if the build succeeds.
+
 
 ## Flashing
 
-End users：Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite) with `.uf2` only, or take your own risk of bricking your keyboard.
+For end users: Use [Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite) with `.uf2` only, or take your own risk of bricking your keyboard.
 
-Developers：You may use the [flashing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html).
+For developers: You may use the [flashing utility](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html) which is provided by WCH.
 
 ## Community
 
-[Discord](https://discord.gg/kaH6eRUFZS)
-
-## 概述
-
-这是QMK固件向CH58x平台的移植，主要工作集中在应用层（QMK）和底层硬件之间的接合。
-
-## 目录结构
-
-- CherryUSB, qmk_firmware, mcuboot: 子仓库，**没有修改任何代码**。
-
-  *其中，QMK固件应当能够随上游仓库随时更新。*
-- CherryUSB porting, mcuboot_porting: CherryUSB的配置文件。
-- qmk_porting: QMK和硬件之间的接合层
-- SDK: WCH的SDK, 目前版本V1.5。
-
-## 分支说明
-
-- Master: 完成了有线键盘所需的基本移植，包括VIA支持。灯目前只支持ws2812.
-- debug: 如果你只是来看QMK的，当它是空气即可。
-
-## 功能亮点
-
-- 三模支持 （无线功能暂不开放）
-- 可随QMK上游仓库随时更新，支持QMK的绝大多数功能
-- 无线低功耗
-
-## 硬件支持
-
-目前只测试了CH582M，CH582F应当能够正常工作。
-
-## 编译
-
-- WCH的工具链已经随附，当然你也可以选择使用[公版编译器](https://xpack.github.io/blog/2019/07/31/riscv-none-embed-gcc-v8-2-0-3-1-released). 但需要你自行处理构建系统调用问题。
-- *如果你确定要头铁，加一个全局宏定义`INT_SOFT`，否则中断很有可能不会正常工作*
-
-### 键盘生产商/QMK固件用户
-
-Fork我的仓库，手动将你的键盘配置文件上传到[keyboards](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards)目录下，然后使用页面上方的Actions来在线编译你的固件。
-
-*需要注意本仓库目前使用的配置文件与QMK的有一点轻微差异，你可以用[这个](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards/m2wired)作为模板自行修改。*
-
-### 开发者
-
-推荐使用[Visual Studio Code](https://code.visualstudio.com/)。
-
-参照[这个](./VSCODE_DEVELOPMENT.md)搭建你的本机开发环境，也可选择Codespace.
-
-## 烧录
-
-用户：不要使用除[Bootmagic Lite](https://docs.qmk.fm/#/feature_bootmagic?id=bootmagic-lite)以外的方式。
-
-开发者：推荐使用[WCH提供的工具](http://www.wch.cn/downloads/WCHISPTool_Setup_exe.html)。
-
-## 还不会？
-
-这有个交流群：860356332，欢迎加入。
+- QQ group: 860356332
+- [Discord](https://discord.gg/kaH6eRUFZS)
