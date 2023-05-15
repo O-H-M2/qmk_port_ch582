@@ -83,6 +83,23 @@ Or follow these steps below to build it on your system:
         $ source $HOME/.bashrc
         ```
 
+    - For macOS users:
+
+        Download and install the nrf command line tools from [here](https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download). And use the following commands to download and configure the compiler:
+
+        ```bash
+        $ curl -O http://file.mounriver.com/tools/MRS_Toolchain_MAC_V180.zip
+        $ unzip MRS_Toolchain_MAC_V180.zip -d $HOME/.local/opt
+        $ unzip $HOME/.local/opt/MRS_Toolchain_MAC_V180/xpack-riscv-none-embed-gcc-8.2.0.zip -d $HOME/.local/opt
+        ```
+
+        Next, add these programs to your `$PATH`. For `bash` users, this can typically be accomplished by:
+
+        ```bash
+        $ echo 'export PATH=$HOME/.local/opt/xpack-riscv-none-embed-gcc-8.2.0/bin/:$PATH' >> $HOME/.bashrc
+        $ source $HOME/.bashrc
+        ```
+
 2. Install some other dependencies:
 
     - For deb-based Linux distributions users:
@@ -90,6 +107,12 @@ Or follow these steps below to build it on your system:
         ```bash
         $ sudo apt update
         $ sudo apt install git cmake ccache python3 python3-click python3-cbor2 python3-intelhex
+        ```
+
+    - For macOS users, assuming XCode is installed here:
+
+        ```bash
+        $ pip3 install --user cryptography click cbor2 intelhex
         ```
 
 3. Clone this repository by:

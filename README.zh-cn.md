@@ -83,6 +83,23 @@ Fork 我的仓库，手动将你的键盘配置文件上传到 [keyboards](https
         $ source $HOME/.bashrc
         ```
 
+    - macOS 用户：
+
+        先从[这里](https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download)下载、安装 nrf 命令行工具。然后使用以下命令下载安装编译器：
+
+        ```bash
+        $ curl -O http://file.mounriver.com/tools/MRS_Toolchain_MAC_V180.zip
+        $ unzip MRS_Toolchain_MAC_V180.zip -d $HOME/.local/opt
+        $ unzip $HOME/.local/opt/MRS_Toolchain_MAC_V180/xpack-riscv-none-embed-gcc-8.2.0.zip -d $HOME/.local/opt
+        ```
+
+        最后，将这些程序添加到你的 `$PATH`。对于 `bash` 用户来说，通常可以通过这些命令完成：
+
+        ```bash
+        $ echo 'export PATH=$HOME/.local/opt/xpack-riscv-none-embed-gcc-8.2.0/bin/:$PATH' >> $HOME/.bashrc
+        $ source $HOME/.bashrc
+        ```
+
 2. 安装其他编译依赖：
 
     - 基于 deb 的 Linux 发行版用户：
@@ -90,6 +107,12 @@ Fork 我的仓库，手动将你的键盘配置文件上传到 [keyboards](https
         ```bash
         $ sudo apt update
         $ sudo apt install git cmake ccache python3 python3-click python3-cbor2 python3-intelhex
+        ```
+
+    - macOS 用户，假设已安装 XCode:
+
+        ```bash
+        $ pip3 install --user cryptography click cbor2 intelhex
         ```
 
 3. Clone 代码仓库：
