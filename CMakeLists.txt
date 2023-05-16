@@ -1,4 +1,5 @@
 # Copyright 2022 Huckies <https://github.com/Huckies>
+# Copyright 2023 Jactry Zeng
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,23 +28,24 @@ if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_FOUND}")
 endif(CCACHE_FOUND)
 
-if("${CMAKE_HOST_SYSTEM_NAME}" STREQUAL "Linux")
-    message(STATUS "Platform: Linux")
-    set(TOOLCHAIN_PATH ${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-embed-gcc/bin/riscv-none-embed-)
-elseif(DEFINED CUSTOM_TOOLCHAIN)
-    message(STATUS "Platform: Custom")
-    set(TOOLCHAIN_PATH ${CUSTOM_TOOLCHAIN})
-else()
-    message(FATAL_ERROR "Unsupported platform!")
-endif()
+file(GLOB NRF_BIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/nrf*/bin")
+find_program(MERGEHEX_PATH NAMES mergehex PATHS ${NRF_BIN_PATH} REQUIRED)
+message(STATUS "Found mergehex: ${MERGEHEX_PATH}")
 
-set(CMAKE_C_COMPILER ${TOOLCHAIN_PATH}gcc)
-set(CMAKE_CXX_COMPILER ${TOOLCHAIN_PATH}g++)
-set(CMAKE_ASM_COMPILER ${TOOLCHAIN_PATH}gcc)
-set(CMAKE_AR ${TOOLCHAIN_PATH}ar)
-set(CMAKE_OBJCOPY ${TOOLCHAIN_PATH}objcopy)
-set(CMAKE_OBJDUMP ${TOOLCHAIN_PATH}objdump)
-set(SIZE ${TOOLCHAIN_PATH}size)
+set(TOOLCHAIN_PREFIX riscv-none-embed)
+set(ADDITIONAL_TOOLCHAIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-embed-gcc/bin/")
+
+find_program(CMAKE_C_COMPILER NAMES ${TOOLCHAIN_PREFIX}-gcc PATHS ${ADDITIONAL_TOOLCHAIN_PATH} REQUIRED)
+message(STATUS "Found ${TOOLCHAIN_PREFIX}-gcc: ${CMAKE_C_COMPILER}")
+set(CMAKE_ASM_COMPILER ${CMAKE_C_COMPILER})
+find_program(CMAKE_CXX_COMPILER NAMES ${TOOLCHAIN_PREFIX}-g++ PATHS ${ADDITIONAL_TOOLCHAIN_PATH} REQUIRED)
+message(STATUS "Found ${TOOLCHAIN_PREFIX}-g++: ${CMAKE_CXX_COMPILER}")
+find_program(CMAKE_AR NAMES ${TOOLCHAIN_PREFIX}-ar PATHS ${ADDITIONAL_TOOLCHAIN_PATH} REQUIRED)
+message(STATUS "Found ${TOOLCHAIN_PREFIX}-ar: ${CMAKE_AR}")
+find_program(CMAKE_OBJCOPY NAMES ${TOOLCHAIN_PREFIX}-objcopy PATHS ${ADDITIONAL_TOOLCHAIN_PATH} REQUIRED)
+message(STATUS "Found ${TOOLCHAIN_PREFIX}-objcopy: ${CMAKE_OBJCOPY}")
+find_program(CMAKE_OBJDUMP NAMES ${TOOLCHAIN_PREFIX}-objdump PATHS ${ADDITIONAL_TOOLCHAIN_PATH} REQUIRED)
+message(STATUS "Found ${TOOLCHAIN_PREFIX}-objdump: ${CMAKE_OBJDUMP}")
 
 project(qmk_port_ch582 C CXX ASM)
 set(CMAKE_CXX_STANDARD 11)
@@ -318,7 +320,7 @@ else()
         add_custom_target(post_build ALL
             COMMAND python3 ${PROJECT_SOURCE_DIR}/mcuboot/scripts/imgtool.py sign --header-size 0x1000 --align 4 --slot-size 0x5e000 --version 1.0.0 --pad-header ${HEX_FILE_APP} ${HEX_FILE_APP_SIGNED}
             COMMAND python3 ${PROJECT_SOURCE_DIR}/utils/uf2conv.py ${HEX_FILE_APP_SIGNED} -c -f 0x1aa143c7 -o ${UF2_FILE_APP}
-            COMMAND mergehex --merge ${HEX_FILE_APP_SIGNED} ${HEX_FILE_IAP} --output ${HEX_FILE_FACTORY}
+            COMMAND ${MERGEHEX_PATH} --merge ${HEX_FILE_APP_SIGNED} ${HEX_FILE_IAP} --output ${HEX_FILE_FACTORY}
             DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
         )
     endif()

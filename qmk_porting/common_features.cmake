@@ -1,5 +1,5 @@
 # Copyright 2022 Huckies <https://github.com/Huckies>
-# zhaqian <https://github.com/zhaqian12>
+# Copyright 2022 zhaqian <https://github.com/zhaqian12>
 # Copyright 2023 Jactry Zeng
 #
 # This program is free software: you can redistribute it and/or modify
