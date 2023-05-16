@@ -185,18 +185,17 @@ void keyboard_post_init_kb()
 
     writePinLow(USB_SET);
     setPinOutput(USB_SET);
-
-    do {
-        sys_safe_access_enable();
-        R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR0;
-        sys_safe_access_disable();
-    } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR0);
 }
 
 // void keyboard_task_pre() // just for debug
 void wireless_keyboard_pre_task()
 {
     if (LCD_state && uart_start_timeout == 0) {
+        do {
+            sys_safe_access_enable();
+            R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR0;
+            sys_safe_access_disable();
+        } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR0);
         uart_start();
         TMR1_TimerInit(FREQ_SYS / 1000);       // 设置定时时间 1ms
         TMR1_ITCfg(ENABLE, TMR0_3_IT_CYC_END); // 开启中断
