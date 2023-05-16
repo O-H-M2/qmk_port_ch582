@@ -149,11 +149,6 @@ static void mute_send(void)
 
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
-    if (numlocks != host_keyboard_led_state().num_lock) {
-        numlocks = host_keyboard_led_state().num_lock;
-        LCD_num_send = 1;
-    }
-
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
         return false;
     }
@@ -219,7 +214,14 @@ void wireless_keyboard_pre_task()
 }
 void housekeeping_task_kb()
 {
+    if (numlocks != host_keyboard_led_state().num_lock) {
+        numlocks = host_keyboard_led_state().num_lock;
+        LCD_num_send = 1;
+    }
     if (LCD_state) {
+        if (LCD_num_send || LCD_layer_send || LCD_bat_send || LCD_mute_send)
+            while (uart_start_timeout != 2)
+                ;
         switch (LCD_start_state) {
             case 0:
                 if (timer_elapsed(LCD_start_timer) > 50 && uart_start_timeout == 2) {
@@ -278,15 +280,17 @@ void housekeeping_task_kb()
             LCD_num_send = 0;
             uart_start_timeout = 3;
         }
-        if (uart_start_timeout == 3) {
-            uart_stop();
-            uart_start_timeout = 0;
-        }
+
         if (LCD_mute_send) {
             if (uart_start_timeout == 2)
                 mute_send();
             LCD_mute_send = 0;
             uart_start_timeout = 3;
+        }
+
+        if (uart_start_timeout == 3) {
+            uart_stop();
+            uart_start_timeout = 0;
         }
     }
 }
