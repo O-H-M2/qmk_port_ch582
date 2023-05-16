@@ -50,40 +50,39 @@ led_config_t g_led_config = {
 /* clang-format on */
 #endif
 
-static bool LCD_state = 1;
-static bool LCD_num_send = 0;
-static bool LCD_layer_send = 0;
-static bool LCD_bat_send = 0;
-static bool LCD_mute_send = 0;
-
-static uint16_t LCD_start_timer;
-static uint8_t LCD_start_state = 0;
-
-static uint8_t layer_num = 0;
-static bool numlocks = 0;
-static uint8_t bat_percentage = 0;
-
-volatile uint8_t uart_start_timeout = 0;
+static struct LCD_env_t {
+    uint8_t state               : 1;
+    uint8_t numlock             : 1;
+    uint8_t layer               : 1;
+    uint8_t battery             : 1;
+    uint8_t mute                : 1;
+    uint8_t initial_sequence    : 3;
+    uint8_t last_numlock_record : 1;
+    uint8_t last_battery_record : 7;
+    uint8_t last_layer_record;
+    uint16_t auxiliary_timer;
+    uint32_t wake_tick;
+} LCD_env;
 
 void LCD_on()
 {
     writePinHigh(LCD_EN);
     setPinOutput(LCD_EN);
-    LCD_state = 1;
-    LCD_start_timer = timer_read();
-    LCD_start_state = 0;
+    LCD_env.state = 1;
+    LCD_env.initial_sequence = 0;
+    LCD_env.auxiliary_timer = timer_read();
 }
 
 void LCD_off()
 {
     writePinLow(LCD_EN);
     setPinOutput(LCD_EN);
-    LCD_state = 0;
+    LCD_env.state = 0;
 }
 
 bool enter_power_level_2_kb()
 {
-    if (!LCD_state) {
+    if (!LCD_env.state) {
         return false;
     }
     LCD_off();
@@ -95,13 +94,13 @@ void quit_power_level_2_kb()
     LCD_on();
 }
 
-static void USB2LCD()
+static inline void USB2LCD()
 {
     writePinHigh(USB_SET);
     setPinOutput(USB_SET);
 }
 
-static void USB2MCU()
+static inline void USB2MCU()
 {
     writePinLow(USB_SET);
     setPinOutput(USB_SET);
@@ -109,40 +108,52 @@ static void USB2MCU()
 
 static void bat_send(uint8_t bat_num)
 {
-    if (LCD_state) {
-        uint8_t TX_date[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
-        TX_date[5] = bat_num;
-        TX_date[3] = TX_date[5]; // sum
-        uart_transmit(TX_date, sizeof(TX_date) + 1);
+    if (!LCD_env.state) {
+        return;
     }
+
+    uint8_t TX_date[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
+
+    TX_date[5] = bat_num;
+    TX_date[3] = TX_date[5]; // sum
+    uart_transmit(TX_date, sizeof(TX_date) + 1);
 }
 
 static void layer_send(uint8_t layer_num)
 {
-    if (LCD_state) {
-        uint8_t TX_date[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
-        TX_date[5] = layer_num;
-        TX_date[3] = TX_date[5]; // sum
-        uart_transmit(TX_date, sizeof(TX_date) + 1);
+    if (!LCD_env.state) {
+        return;
     }
+
+    uint8_t TX_date[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
+
+    TX_date[5] = layer_num;
+    TX_date[3] = TX_date[5]; // sum
+    uart_transmit(TX_date, sizeof(TX_date) + 1);
 }
 
 static void indicators_send(uint8_t indi)
 {
-    if (LCD_state) {
-        uint8_t TX_date[] = { 0xfe, 0x02, 0x02, 0x01, 0x01, 0x01 };
-        TX_date[5] = indi;
-        TX_date[3] = TX_date[5]; // sum
-        uart_transmit(TX_date, sizeof(TX_date) + 1);
+    if (!LCD_env.state) {
+        return;
     }
+
+    uint8_t TX_date[] = { 0xfe, 0x02, 0x02, 0x01, 0x01, 0x01 };
+
+    TX_date[5] = indi;
+    TX_date[3] = TX_date[5]; // sum
+    uart_transmit(TX_date, sizeof(TX_date) + 1);
 }
 
 static void mute_send(void)
 {
-    if (LCD_state) {
-        uint8_t TX_date[] = { 0xfe, 0x02, 0x05, 0x01, 0x01, 0x01 };
-        uart_transmit(TX_date, sizeof(TX_date) + 1);
+    if (!LCD_env.state) {
+        return;
     }
+
+    uint8_t TX_date[] = { 0xfe, 0x02, 0x05, 0x01, 0x01, 0x01 };
+
+    uart_transmit(TX_date, sizeof(TX_date) + 1);
 }
 
 #ifdef RGB_MATRIX_ENABLE
@@ -167,135 +178,111 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 
 layer_state_t layer_state_set_kb(layer_state_t state)
 {
-    if (layer_num != get_highest_layer(state)) {
-        layer_num = get_highest_layer(state);
-        LCD_layer_send = 1;
+    if (LCD_env.last_layer_record != get_highest_layer(state)) {
+        LCD_env.last_layer_record = get_highest_layer(state);
+        LCD_env.layer = 1;
     }
-    return state;
+
+    return layer_state_set_user(state);
 }
 
 void keyboard_post_init_kb()
 {
-    // setPinInput(B12);
-    PRINT("init\n");
     uart_init(115200);
-    // uart_start();
-
+    uart_start();
     LCD_on();
-
-    writePinLow(USB_SET);
-    setPinOutput(USB_SET);
+    USB2MCU();
 }
 
-// void keyboard_task_pre() // just for debug
 void wireless_keyboard_pre_task()
 {
-    if (LCD_state && uart_start_timeout == 0) {
-        do {
-            sys_safe_access_enable();
-            R8_SLP_CLK_OFF0 &= ~RB_SLP_CLK_TMR0;
-            sys_safe_access_disable();
-        } while (R8_SLP_CLK_OFF0 & RB_SLP_CLK_TMR0);
-        uart_start();
-        TMR1_TimerInit(FREQ_SYS / 1000);       // 设置定时时间 1ms
-        TMR1_ITCfg(ENABLE, TMR0_3_IT_CYC_END); // 开启中断
-        PFIC_EnableIRQ(TMR1_IRQn);
-
-        uart_start_timeout = 1;
-
-#ifdef BATTERY_MEASURE_PIN
-        if (bat_percentage != battery_get_last_percentage()) {
-            bat_percentage = battery_get_last_percentage();
-            LCD_bat_send = 1;
-        };
-#endif
+    if (!LCD_env.state) {
+        return;
     }
+
+    SysTick_Config(SysTick_LOAD_RELOAD_Msk);
+    PFIC_DisableIRQ(SysTick_IRQn);
+    uart_start();
+    LCD_env.wake_tick = (SysTick->CNT) & 0xffffffff;
 }
+
 void housekeeping_task_kb()
 {
-    if (numlocks != host_keyboard_led_state().num_lock) {
-        numlocks = host_keyboard_led_state().num_lock;
-        LCD_num_send = 1;
-    }
-    if (LCD_state) {
-        if (LCD_num_send || LCD_layer_send || LCD_bat_send || LCD_mute_send)
-            while (uart_start_timeout != 2)
-                ;
-        switch (LCD_start_state) {
-            case 0:
-                if (timer_elapsed(LCD_start_timer) > 50 && uart_start_timeout == 2) {
-                    LCD_start_timer = timer_read();
-                    LCD_start_state++;
-                    layer_send(layer_num);
-                    uart_start_timeout = 3;
-                }
-                break;
-            case 1:
-                if (timer_elapsed(LCD_start_timer) > 10 && uart_start_timeout == 2) {
-                    LCD_start_timer = timer_read();
-                    LCD_start_state++;
-                    numlocks = host_keyboard_led_state().num_lock;
-                    if (numlocks)
-                        indicators_send(1);
-                    else
-                        indicators_send(0);
-                    uart_start_timeout = 3;
-                }
-                break;
-            case 2:
-                if (timer_elapsed(LCD_start_timer) > 10 && uart_start_timeout == 2) {
-                    LCD_start_timer = timer_read();
-                    LCD_start_state++;
 #ifdef BATTERY_MEASURE_PIN
-                    bat_percentage = battery_get_last_percentage();
-                    bat_send(bat_percentage);
+    if (LCD_env.last_battery_record != battery_get_last_percentage()) {
+        LCD_env.last_battery_record = battery_get_last_percentage();
+        LCD_env.battery = 1;
+    };
 #endif
-                    uart_start_timeout = 3;
-                }
-                break;
-            default:
-                break;
-        }
+    if (LCD_env.last_numlock_record != host_keyboard_led_state().num_lock) {
+        LCD_env.last_numlock_record = host_keyboard_led_state().num_lock;
+        LCD_env.numlock = 1;
+    }
 
-        if (LCD_layer_send) {
-            if (uart_start_timeout == 2)
-                layer_send(layer_num);
-            LCD_layer_send = 0;
-            uart_start_timeout = 3;
-        }
-        if (LCD_bat_send) {
-            if (uart_start_timeout == 2)
-                bat_send(bat_percentage);
-            LCD_bat_send = 0;
-            uart_start_timeout = 3;
-        }
-        if (LCD_num_send) {
-            if (uart_start_timeout == 2) {
-                if (numlocks)
-                    indicators_send(1);
-                else
-                    indicators_send(0);
+    if (!LCD_env.state ||
+        (LCD_env.initial_sequence >= 3 && !LCD_env.numlock && !LCD_env.layer && !LCD_env.battery && !LCD_env.mute)) {
+        return;
+    }
+
+    uint32_t target_tick = LCD_env.wake_tick + (uint32_t)FREQ_SYS / 1000;
+    uint32_t current_tick;
+
+    do {
+        current_tick = (SysTick->CNT) & 0xffffffff;
+    } while (current_tick < target_tick);
+
+    switch (LCD_env.initial_sequence) {
+        case 0:
+            if (timer_elapsed(LCD_env.auxiliary_timer) > 50) {
+                LCD_env.auxiliary_timer = timer_read();
+                LCD_env.initial_sequence++;
+                layer_send(LCD_env.last_layer_record);
             }
-            LCD_num_send = 0;
-            uart_start_timeout = 3;
-        }
+            return;
+        case 1:
+            if (timer_elapsed(LCD_env.auxiliary_timer) > 10) {
+                LCD_env.auxiliary_timer = timer_read();
+                LCD_env.initial_sequence++;
+                indicators_send(LCD_env.last_numlock_record);
+            }
+            return;
+        case 2:
+#ifdef BATTERY_MEASURE_PIN
+            if (timer_elapsed(LCD_env.auxiliary_timer) > 10) {
+                LCD_env.auxiliary_timer = timer_read();
+                LCD_env.initial_sequence++;
+                bat_send(LCD_env.last_battery_record);
+            }
+#else
+            LCD_env.initial_sequence++;
+#endif
+            return;
+        default:
+            break;
+    }
 
-        if (LCD_mute_send) {
-            if (uart_start_timeout == 2)
-                mute_send();
-            LCD_mute_send = 0;
-            uart_start_timeout = 3;
-        }
-
-        if (uart_start_timeout == 3) {
-            uart_stop();
-            uart_start_timeout = 0;
-        }
+    if (LCD_env.layer) {
+        layer_send(LCD_env.last_layer_record);
+        LCD_env.layer = 0;
+    }
+    if (LCD_env.battery) {
+        bat_send(LCD_env.last_battery_record);
+        LCD_env.battery = 0;
+    }
+    if (LCD_env.numlock) {
+        indicators_send(LCD_env.last_numlock_record);
+        LCD_env.numlock = 0;
+    }
+    if (LCD_env.mute) {
+        mute_send();
+        LCD_env.mute = 0;
     }
 }
 
-#define U2M 32277
-#define U2E 32278
+void wireless_keyboard_post_task()
+{
+    uart_stop();
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
@@ -311,7 +298,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
             }
             return false;
         case KC_MUTE:
-            LCD_mute_send = 1;
+            LCD_env.mute = 1;
             return true;
         default:
             return true;
@@ -338,13 +325,4 @@ int main()
         protocol_task();
         //! housekeeping_task() is handled by platform
     }
-}
-
-__INTERRUPT __HIGH_CODE void TMR1_IRQHandler()
-{
-    // setPinInput(B12);
-
-    uart_start_timeout = 2;
-    TMR1_ITCfg(DISABLE, TMR0_3_IT_CYC_END); // 开启中断
-    PFIC_DisableIRQ(TMR1_IRQn);
 }
