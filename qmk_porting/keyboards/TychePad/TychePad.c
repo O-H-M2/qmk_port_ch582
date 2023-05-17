@@ -113,11 +113,11 @@ static void bat_send(uint8_t bat_num)
         return;
     }
 
-    uint8_t TX_date[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
+    uint8_t TX_data[] = { 0xfe, 0x02, 0x04, 0x0A, 0x01, 100 };
 
-    TX_date[5] = bat_num;
-    TX_date[3] = TX_date[5]; // sum
-    uart_transmit(TX_date, sizeof(TX_date) + 1);
+    TX_data[5] = bat_num;
+    TX_data[3] = TX_data[5]; // sum
+    uart_transmit(TX_data, sizeof(TX_data) + 1);
 }
 
 static void layer_send(uint8_t layer_num)
@@ -126,11 +126,11 @@ static void layer_send(uint8_t layer_num)
         return;
     }
 
-    uint8_t TX_date[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
+    uint8_t TX_data[] = { 0xfe, 0x02, 0x03, 0x01, 0x01, 0x01 };
 
-    TX_date[5] = layer_num;
-    TX_date[3] = TX_date[5]; // sum
-    uart_transmit(TX_date, sizeof(TX_date) + 1);
+    TX_data[5] = layer_num;
+    TX_data[3] = TX_data[5]; // sum
+    uart_transmit(TX_data, sizeof(TX_data) + 1);
 }
 
 static void indicators_send(uint8_t indi)
@@ -139,11 +139,11 @@ static void indicators_send(uint8_t indi)
         return;
     }
 
-    uint8_t TX_date[] = { 0xfe, 0x02, 0x02, 0x01, 0x01, 0x01 };
+    uint8_t TX_data[] = { 0xfe, 0x02, 0x02, 0x01, 0x01, 0x01 };
 
-    TX_date[5] = indi;
-    TX_date[3] = TX_date[5]; // sum
-    uart_transmit(TX_date, sizeof(TX_date) + 1);
+    TX_data[5] = indi;
+    TX_data[3] = TX_data[5]; // sum
+    uart_transmit(TX_data, sizeof(TX_data) + 1);
 }
 
 static void mute_send(void)
@@ -152,9 +152,9 @@ static void mute_send(void)
         return;
     }
 
-    uint8_t TX_date[] = { 0xfe, 0x02, 0x05, 0x01, 0x01, 0x01 };
+    uint8_t TX_data[] = { 0xfe, 0x02, 0x05, 0x01, 0x01, 0x01 };
 
-    uart_transmit(TX_date, sizeof(TX_date) + 1);
+    uart_transmit(TX_data, sizeof(TX_data) + 1);
 }
 
 #ifdef RGB_MATRIX_ENABLE
