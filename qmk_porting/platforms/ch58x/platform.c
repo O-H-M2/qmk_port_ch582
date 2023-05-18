@@ -28,7 +28,7 @@ volatile uint8_t kbd_protocol_type = 0;
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 #endif
 
-_PUTCHAR_CLAIM;
+__HIGH_CODE _PUTCHAR_CLAIM;
 
 int8_t sendchar(uint8_t c)
 {
