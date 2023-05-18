@@ -10,7 +10,6 @@
 - [编译](#编译)
   - [键盘生产商/QMK 固件用户](#键盘生产商qmk-固件用户)
   - [开发者](#开发者)
-    - [Debian GNU/Linux或Ubuntu](#debian-gnulinux-或-ubuntu)
 - [烧录](#烧录)
 - [社区](#社区)
 
@@ -49,7 +48,7 @@
 
 ### 键盘生产商/QMK 固件用户
 
-Fork 我的仓库，手动将你的键盘配置文件上传到[keyboards](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards)目录下，然后使用页面上方的 Actions 来在线编译你的固件。
+Fork 我的仓库，手动将你的键盘配置文件上传到 [keyboards](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards) 目录下，然后使用页面上方的 Actions 来在线编译你的固件。
 
 *需要注意本仓库目前使用的配置文件与 QMK 的有一点轻微差异，你可以用[这个](https://github.com/O-H-M2/qmk_port_ch582/tree/via/qmk_porting/keyboards/m2wired)作为模板自行修改。*
 
@@ -61,38 +60,90 @@ Fork 我的仓库，手动将你的键盘配置文件上传到[keyboards](https:
 
 或参照以下步骤在 Linux 系统上构建：
 
-#### Debian GNU/Linux 或 Ubuntu
+1. 安装编译器和 nrf 命令行工具：
 
-1. 安装依赖：
+    下载、配置 WCH 提供的[编译器](http://mounriver.com/download)和 [nrf 命令行工具](https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download)。
 
-```
-$ sudo apt update
-$ sudo apt install git cmake ccache python3 python3-click python3-cbor2 python3-intelhex
-```
+    - 基于 deb 的 Linux 发行版用户（Debian GNU/Linux、Ubuntu 或 Ubuntu on WSL2）：
 
-2. Clone 代码仓库：
-```
+        以下命令将从他们的官网下载他们，并解压到 `$HOME/.local/opt` 目录。
+
+        ```bash
+        $ wget http://file.mounriver.com/tools/MRS_Toolchain_Linux_X64_V170.tar.xz
+        $ wget https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x/10-21-0/nrf-command-line-tools-10.21.0_linux-amd64.tar.gz
+        $ mkdir -p $HOME/.local/opt
+        $ tar xvf MRS_Toolchain_Linux_X64_V170.tar.xz -C $HOME/.local/opt
+        $ tar xvf nrf-command-line-tools-10.21.0_linux-amd64.tar.gz -C $HOME/.local/opt
+        ```
+
+        然后，将这些程序添加到你的 `$PATH`。对于 `bash` 用户来说，通常可以通过这些命令完成：
+
+        ```bash
+        $ echo 'export PATH=$HOME/.local/opt/MRS_Toolchain_Linux_x64_V1.70/RISC-V\ Embedded\ GCC/bin/:$HOME/.local/opt/nrf-command-line-tools/bin/:$PATH' >> $HOME/.bashrc
+        $ source $HOME/.bashrc
+        ```
+
+    - macOS 用户：
+
+        先从[这里](https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download)下载、安装 nrf 命令行工具。然后使用以下命令下载安装编译器：
+
+        ```bash
+        $ curl -O http://file.mounriver.com/tools/MRS_Toolchain_MAC_V180.zip
+        $ unzip MRS_Toolchain_MAC_V180.zip -d $HOME/.local/opt
+        $ unzip $HOME/.local/opt/MRS_Toolchain_MAC_V180/xpack-riscv-none-embed-gcc-8.2.0.zip -d $HOME/.local/opt
+        ```
+
+        最后，将这些程序添加到你的 `$PATH`。对于 `bash` 用户来说，通常可以通过这些命令完成：
+
+        ```bash
+        $ echo 'export PATH=$HOME/.local/opt/xpack-riscv-none-embed-gcc-8.2.0/bin/:$PATH' >> $HOME/.bashrc
+        $ source $HOME/.bashrc
+        ```
+
+2. 安装其他编译依赖：
+
+    - 基于 deb 的 Linux 发行版用户：
+
+        ```bash
+        $ sudo apt update
+        $ sudo apt install git cmake ccache python3 python3-click python3-cbor2 python3-intelhex
+        ```
+
+    - macOS 用户，假设已安装 XCode:
+
+        ```bash
+        $ pip3 install --user cryptography click cbor2 intelhex
+        ```
+
+3. Clone 代码仓库：
+
+```bash
 $ git clone https://github.com/O-H-M2/qmk_port_ch582.git
 $ cd qmk_port_ch582
 $ git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
 ```
 
-3. 创建构建目录：
-```
+4. 创建构建目录：
+
+```bash
 $ mkdir build
 $ cd build
 ```
 
-4. 运行 `cmake` 检查依赖和生成 Makefile
-```
+5. 运行 `cmake` 检查依赖和生成 Makefile
+
+```bash
 $ cmake -DCMAKE_BUILD_TYPE=Release -Dkeyboard=ezy64 -Dkeymap=default ..
 ```
+
 你可以把 `ezy64` 和 `default` 替换成你的键盘和 keymap。
 
-5. 编译：
-```
+6. 编译：
+
+```bash
 $ make -j$(nproc)
 ```
+
 如果编译成功，`.uf2` and `.hex` 会在项目的最顶层目录被生成。
 
 ## 烧录
@@ -103,5 +154,5 @@ $ make -j$(nproc)
 
 ## 社区
 
-- QQ 群： 860356332
+- QQ 群：860356332
 - [Discord](https://discord.gg/kaH6eRUFZS)

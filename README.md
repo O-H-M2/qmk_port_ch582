@@ -10,7 +10,6 @@
 - [Building](#building)
   - [Keyboard manufacturers/QMK firmware users](#keyboard-manufacturersqmk-firmware-users)
   - [Developers](#developers)
-    - [Debian GNU/Linux or Ubuntu](#debian-gnulinux-or-ubuntu)
 - [Flashing](#flashing)
 - [Community](#community)
 
@@ -61,38 +60,90 @@ You can follow this [guide](./VSCODE_DEVELOPMENT.md) to set up a development env
 
 Or follow these steps below to build it on your system:
 
-#### Debian GNU/Linux or Ubuntu
+1. Install compiler and nrf command line tools:
 
-1. Install some dependencies:
+    Download and configure the [compiler](http://mounriver.com/download) provided by WCH, and the [nrf command line tools](https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download).
 
-```
-$ sudo apt update
-$ sudo apt install git cmake ccache python3 python3-click python3-cbor2 python3-intelhex
-```
+    - For deb-based Linux distributions users (Debian GNU/Linux, Ubuntu, or Ubuntu on WSL2):
 
-2. Clone this repository by:
-```
+        The following commands will download them from their official websites and extract the files to the `$HOME/.local/opt` directory.
+
+        ```bash
+        $ wget http://file.mounriver.com/tools/MRS_Toolchain_Linux_X64_V170.tar.xz
+        $ wget https://nsscprodmedia.blob.core.windows.net/prod/software-and-other-downloads/desktop-software/nrf-command-line-tools/sw/versions-10-x-x/10-21-0/nrf-command-line-tools-10.21.0_linux-amd64.tar.gz
+        $ mkdir -p $HOME/.local/opt
+        $ tar xvf MRS_Toolchain_Linux_X64_V170.tar.xz -C $HOME/.local/opt
+        $ tar xvf nrf-command-line-tools-10.21.0_linux-amd64.tar.gz -C $HOME/.local/opt
+        ```
+
+        Next, add these programs to your `$PATH`. For `bash` users, this can typically be accomplished by:
+
+        ```bash
+        $ echo 'export PATH=$HOME/.local/opt/MRS_Toolchain_Linux_x64_V1.70/RISC-V\ Embedded\ GCC/bin/:$HOME/.local/opt/nrf-command-line-tools/bin/:$PATH' >> $HOME/.bashrc
+        $ source $HOME/.bashrc
+        ```
+
+    - For macOS users:
+
+        Download and install the nrf command line tools from [here](https://www.nordicsemi.com/Products/Development-tools/nrf-command-line-tools/download). And use the following commands to download and configure the compiler:
+
+        ```bash
+        $ curl -O http://file.mounriver.com/tools/MRS_Toolchain_MAC_V180.zip
+        $ unzip MRS_Toolchain_MAC_V180.zip -d $HOME/.local/opt
+        $ unzip $HOME/.local/opt/MRS_Toolchain_MAC_V180/xpack-riscv-none-embed-gcc-8.2.0.zip -d $HOME/.local/opt
+        ```
+
+        Next, add these programs to your `$PATH`. For `bash` users, this can typically be accomplished by:
+
+        ```bash
+        $ echo 'export PATH=$HOME/.local/opt/xpack-riscv-none-embed-gcc-8.2.0/bin/:$PATH' >> $HOME/.bashrc
+        $ source $HOME/.bashrc
+        ```
+
+2. Install some other dependencies:
+
+    - For deb-based Linux distributions users:
+
+        ```bash
+        $ sudo apt update
+        $ sudo apt install git cmake ccache python3 python3-click python3-cbor2 python3-intelhex
+        ```
+
+    - For macOS users, assuming XCode is installed here:
+
+        ```bash
+        $ pip3 install --user cryptography click cbor2 intelhex
+        ```
+
+3. Clone this repository by:
+
+```bash
 $ git clone https://github.com/O-H-M2/qmk_port_ch582.git
 $ cd qmk_port_ch582
 $ git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
 ```
 
-3. Create a directory for the building:
-```
+4. Create a directory for the building:
+
+```bash
 $ mkdir build
 $ cd build
 ```
 
-4. Running cmake for dependenies checking and generating Makefile:
-```
+5. Running cmake for dependencies checking and generating Makefile:
+
+```bash
 $ cmake -Dkeyboard=ezy64 -Dkeymap=default ..
 ```
+
 You may replace `ezy64` and `default` in the above command with the names of your own keyboard and keymap.
 
-5. Build:
-```
+6. Build:
+
+```bash
 $ make -j$(nproc)
 ```
+
 `.uf2` and `.hex` will be generated in the top directory of the project if the build succeeds.
 
 
