@@ -22,6 +22,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wait.h"
 #include "battery_measure.h"
 
+typedef union {
+    uint32_t raw;
+    struct {
+        bool lcd_state : 1;
+    };
+} user_config_t;
+
+user_config_t user_config;
+
+void eeconfig_init_user(void)
+{ // EEPROM is getting reset!
+    user_config.raw = 0;
+    user_config.lcd_state = 1;
+    eeconfig_update_user(user_config.raw); // Write default value to EEPROM now
+}
+
 #ifdef RGB_MATRIX_ENABLE
 
 /* clang-format off */
@@ -72,6 +88,10 @@ void LCD_on()
     LCD_env.state = 1;
     LCD_env.initial_sequence = 0;
     LCD_env.auxiliary_timer = timer_read();
+    if (LCD_env.state != user_config.lcd_state) {
+        user_config.lcd_state = 1;
+        eeconfig_update_user(user_config.raw); // write the setings to EEPROM
+    }
 }
 
 void LCD_off()
@@ -79,6 +99,11 @@ void LCD_off()
     writePinLow(LCD_EN);
     setPinOutput(LCD_EN);
     LCD_env.state = 0;
+
+    if (LCD_env.state != user_config.lcd_state) {
+        user_config.lcd_state = 0;
+        eeconfig_update_user(user_config.raw); // write the setings to EEPROM
+    }
 }
 
 bool enter_power_level_2_kb()
@@ -191,7 +216,11 @@ void keyboard_post_init_kb()
 {
     uart_init(115200);
     uart_start();
-    LCD_on();
+
+    user_config.raw = eeconfig_read_user();
+    LCD_env.state = user_config.lcd_state;
+    if (LCD_env.state == 1)
+        LCD_on();
     USB2MCU();
 }
 
@@ -298,6 +327,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
                 USB2LCD();
             }
             return false;
+        case KC_LCD_ON:
+            if (record->event.pressed) {
+                LCD_on();
+            }
+            return false;
+        case KC_LCD_OFF:
+            if (record->event.pressed) {
+                LCD_off();
+            }
+            return false;
+
         case KC_MUTE:
             LCD_env.mute = 1;
             return true;

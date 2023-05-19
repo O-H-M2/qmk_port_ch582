@@ -38,7 +38,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [3] = LAYOUT_all(/* 3: fn */
                      _______, _______, _______, _______,
                      U2M    , _______,     U2E, _______,
-                     _______, _______, _______, 
+                     KC_LCD_ON , _______, KC_LCD_OFF, 
                      _______, _______, _______, _______,
                      _______, _______, KC_MUTE),
 
