@@ -108,6 +108,8 @@ static uint16_t ck_left_gui = KC_NO;
 static uint16_t ck_left_alt = KC_NO;
 static uint16_t ck_right_gui = KC_NO;
 static uint16_t ck_right_alt = KC_NO;
+static int os_mode_led_cycle = 0;
+static bool user_rgb_state = FALSE;
 
 static void set_os_mode(int os_mode) {
     switch (os_mode) {
@@ -131,6 +133,12 @@ static void set_os_mode(int os_mode) {
             ck_right_alt = KC_RALT;
             break;
     }
+    if (!os_mode_led_cycle)  {
+        rgb_matrix_set_color_all(RGB_BLACK);
+        user_rgb_state = rgb_matrix_is_enabled();
+    }
+    rgb_matrix_enable_noeeprom();
+    os_mode_led_cycle = 500;
     user_config.os_mode = os_mode;
     eeconfig_update_user(user_config.raw);
 }
@@ -189,4 +197,31 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
     }
     return true;
+}
+
+bool rgb_matrix_indicators_kb() {
+    if (os_mode_led_cycle) {
+        os_mode_led_cycle--;
+        rgb_matrix_set_color_all(RGB_BLACK);
+        switch (os_mode) {
+            case MAC_MODE:
+                rgb_matrix_set_color(18, RGB_WHITE);
+                break;
+            case WIN_MODE:
+                rgb_matrix_set_color(18, RGB_BLUE);
+                break;
+            case LINUX_MODE:
+                rgb_matrix_set_color(18, RGB_YELLOW);
+                break;
+        }
+        if (os_mode_led_cycle  == 1) {
+            if (user_rgb_state) {
+                rgb_matrix_reload_from_eeprom();
+            }
+            else {
+                rgb_matrix_disable_noeeprom();
+            }
+        }
+    }
+    return false;
 }
