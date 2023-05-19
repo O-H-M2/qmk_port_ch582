@@ -31,6 +31,10 @@ tap_dance_action_t tap_dance_actions[] = {
 /* Some customize keys. */
 #define CK_LSFT TD(TD_LSFT_CAPS)
 
+enum custom_keycodes {
+    CK_OSMD = NEW_SAFE_RANGE,
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /*
    * ,-----------------------------------------------------------.
@@ -60,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______),
     [2] = LAYOUT_all(/* 2: fn */
         _______, KC_BRID, KC_BRIU, KC_MCTL, KC_LPAD, RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, KC_PSCR,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, CK_OSMD, _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______),
@@ -80,3 +84,109 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
     [3] = { ENCODER_CCW_CW(KC_TRNS, KC_TRNS) },
 };
 #endif
+
+enum OS_MODE {
+    FIRST_MODE = 0,
+    LINUX_MODE = FIRST_MODE,
+    MAC_MODE,
+    WIN_MODE,
+    LAST_MODE = WIN_MODE,
+};
+
+/* User settings structure for the EEPROM. */
+typedef union {
+    uint32_t raw;
+    struct {
+        uint8_t os_mode : 8;
+    };
+} user_config_t;
+
+user_config_t user_config;
+
+static int os_mode = FIRST_MODE;
+static uint16_t ck_left_gui = KC_NO;
+static uint16_t ck_left_alt = KC_NO;
+static uint16_t ck_right_gui = KC_NO;
+static uint16_t ck_right_alt = KC_NO;
+
+static void set_os_mode(int os_mode) {
+    switch (os_mode) {
+        case MAC_MODE:
+            ck_left_gui = KC_LOPT;
+            ck_left_alt = KC_LCMD;
+            ck_right_gui = KC_ROPT;
+            ck_right_alt = KC_RCMD;
+            break;
+        case WIN_MODE:
+            ck_left_gui = KC_LWIN;
+            ck_left_alt = KC_LALT;
+            ck_right_gui = KC_RWIN;
+            ck_right_alt = KC_RALT;
+            break;
+        case LINUX_MODE:
+        default:
+            ck_left_gui = KC_LGUI;
+            ck_left_alt = KC_LALT;
+            ck_right_gui = KC_RGUI;
+            ck_right_alt = KC_RALT;
+            break;
+    }
+    user_config.os_mode = os_mode;
+    eeconfig_update_user(user_config.raw);
+}
+
+void keyboard_post_init_user(void) {
+    user_config.raw = eeconfig_read_user();
+    os_mode = user_config.os_mode;
+    set_os_mode(os_mode);
+}
+
+void eeconfig_init_user(void) {
+    os_mode = FIRST_MODE;
+    user_config.raw = 0;
+    set_os_mode(os_mode);
+}
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case CK_OSMD:
+            if (++os_mode > LAST_MODE) {
+                os_mode = FIRST_MODE;
+            }
+            set_os_mode(os_mode);
+            return false;
+        case KC_LALT:
+            if (record->event.pressed) {
+                register_code(ck_left_alt);
+            }
+            else {
+                unregister_code(ck_left_alt);
+            }
+            return false;
+        case KC_LGUI:
+            if (record->event.pressed) {
+                register_code(ck_left_gui);
+            }
+            else {
+                unregister_code(ck_left_gui);
+            }
+            return false;
+        case KC_RALT:
+            if (record->event.pressed) {
+                register_code(ck_right_alt);
+            }
+            else {
+                unregister_code(ck_right_alt);
+            }
+            return false;
+        case KC_RGUI:
+            if (record->event.pressed) {
+                register_code(ck_right_gui);
+            }
+            else {
+                unregister_code(ck_right_gui);
+            }
+            return false;
+    }
+    return true;
+}
