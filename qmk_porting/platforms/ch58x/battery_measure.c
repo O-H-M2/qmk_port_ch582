@@ -141,6 +141,7 @@ __attribute__((noinline)) static void battery_critical_prerequisite()
 __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
 {
     battery_critical_prerequisite();
+    WAIT_FOR_DBG;
 
     uint8_t x32Kpw, x32Mpw;
 
@@ -151,8 +152,6 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
     if (R16_RTC_CNT_32K > 0x3fff) {      // 超过500ms
         x32Kpw = (x32Kpw & 0xfc) | 0x01; // LSE驱动电流降低到额定电流
     }
-
-    WAIT_FOR_DBG;
 
     sys_safe_access_enable();
     R8_BAT_DET_CTRL = 0;
