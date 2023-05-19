@@ -110,6 +110,7 @@ static uint16_t ck_right_gui = KC_NO;
 static uint16_t ck_right_alt = KC_NO;
 static int os_mode_led_cycle = 0;
 static bool user_rgb_state = FALSE;
+static bool override_atl_esc = FALSE;
 
 static void set_os_mode(int os_mode) {
     switch (os_mode) {
@@ -118,12 +119,14 @@ static void set_os_mode(int os_mode) {
             ck_left_alt = KC_LCMD;
             ck_right_gui = KC_ROPT;
             ck_right_alt = KC_RCMD;
+            override_atl_esc = FALSE;
             break;
         case WIN_MODE:
             ck_left_gui = KC_LWIN;
             ck_left_alt = KC_LALT;
             ck_right_gui = KC_RWIN;
             ck_right_alt = KC_RALT;
+            override_atl_esc = FALSE;
             break;
         case LINUX_MODE:
         default:
@@ -131,6 +134,7 @@ static void set_os_mode(int os_mode) {
             ck_left_alt = KC_LALT;
             ck_right_gui = KC_RGUI;
             ck_right_alt = KC_RALT;
+            override_atl_esc = TRUE;
             break;
     }
     if (!os_mode_led_cycle)  {
@@ -195,6 +199,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 unregister_code(ck_right_gui);
             }
             return false;
+        case QK_GESC:
+            if (override_atl_esc && get_mods() == MOD_BIT(KC_LALT)) {
+                if (record->event.pressed) {
+                    register_code(KC_GRV);
+                } else {
+                    unregister_code(KC_GRV);
+                }
+                return false;
+            }
+            return true;
     }
     return true;
 }
