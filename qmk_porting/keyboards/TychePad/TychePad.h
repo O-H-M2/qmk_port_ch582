@@ -22,10 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "extra_keycode.h"
 
 enum Tyche_keycodes {
-  U2M = BATTERY_INDICATOR+1,
-  U2E,
-  KC_LCD_ON,
-  KC_LCD_OFF
+    U2M = NEW_SAFE_RANGE,
+    U2E,
+    KC_LCD_ON,
+    KC_LCD_OFF
 };
 
 // clang-format off
