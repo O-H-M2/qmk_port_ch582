@@ -21,10 +21,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "quantum.h"
 #include "extra_keycode.h"
 
-#define U2M        32277
-#define U2E        32278
-#define KC_LCD_ON  32279
-#define KC_LCD_OFF 32280
+enum Tyche_keycodes {
+  U2M = BATTERY_INDICATOR+1,
+  U2E,
+  KC_LCD_ON,
+  KC_LCD_OFF
+};
 
 // clang-format off
 #define LAYOUT_all( \
