@@ -26,7 +26,12 @@ void eeprom_driver_init(void)
 
 void eeprom_driver_erase(void)
 {
+#if __BUILDING_IAP__
+    PRINT("eeprom_driver_erase\n");
+#endif
+#if __BUILDING_APP__
     print("eeprom_driver_erase\n");
+#endif
     EEPROM_ERASE(QMK_EEPROM_START_POSITION, EEPROM_SIZE);
 }
 
