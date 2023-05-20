@@ -22,20 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "wait.h"
 #include "battery_measure.h"
 
-typedef union {
+static union {
     uint32_t raw;
     struct {
         bool lcd_state : 1;
     };
-} user_config_t;
-user_config_t user_config = {};
-
-void eeconfig_init_user(void)
-{
-    // EEPROM is getting reset!
-    user_config.lcd_state = 1;
-    eeconfig_update_user(user_config.raw); // Write default value to EEPROM now
-}
+} user_config = {};
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -78,7 +70,7 @@ static struct LCD_env_t {
     uint8_t last_layer_record;
     uint16_t auxiliary_timer;
     uint32_t wake_tick;
-} LCD_env;
+} LCD_env = {};
 
 void LCD_on()
 {
@@ -87,6 +79,7 @@ void LCD_on()
     LCD_env.state = 1;
     LCD_env.initial_sequence = 0;
     LCD_env.auxiliary_timer = timer_read();
+
     if (LCD_env.state != user_config.lcd_state) {
         user_config.lcd_state = 1;
         eeconfig_update_user(user_config.raw); // write the setings to EEPROM
@@ -211,15 +204,22 @@ layer_state_t layer_state_set_kb(layer_state_t state)
     return layer_state_set_user(state);
 }
 
+void eeconfig_init_user()
+{
+    // EEPROM is getting reset!
+    user_config.lcd_state = 1;
+    eeconfig_update_user(user_config.raw); // Write default value to EEPROM now
+}
+
 void keyboard_post_init_kb()
 {
     uart_init(115200);
     uart_start();
-
     user_config.raw = eeconfig_read_user();
     LCD_env.state = user_config.lcd_state;
-    if (LCD_env.state == 1)
+    if (LCD_env.state == 1) {
         LCD_on();
+    }
     USB2MCU();
 }
 
