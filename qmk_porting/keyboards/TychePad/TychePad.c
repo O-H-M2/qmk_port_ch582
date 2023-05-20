@@ -28,12 +28,11 @@ typedef union {
         bool lcd_state : 1;
     };
 } user_config_t;
-
-user_config_t user_config;
+user_config_t user_config = {};
 
 void eeconfig_init_user(void)
-{ // EEPROM is getting reset!
-    user_config.raw = 0;
+{
+    // EEPROM is getting reset!
     user_config.lcd_state = 1;
     eeconfig_update_user(user_config.raw); // Write default value to EEPROM now
 }
