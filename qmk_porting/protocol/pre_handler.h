@@ -42,11 +42,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #if DEBUG == Debug_UART0
 #define PLF_DEBUG Debug_UART0
-#define DBG_INIT         \
-    writePinHigh(B7);    \
-    setPinInputHigh(B4); \
-    setPinOutput(B7);    \
-    UART0_DefInit();     \
+#define DBG_INIT      \
+    writePinHigh(B7); \
+    setPinInput(B4);  \
+    setPinOutput(B7); \
+    UART0_DefInit();  \
     UART0_BaudRateCfg(DEBUG_BAUDRATE);
 #define DBG_BAUD_RECONFIG \
     UART0_BaudRateCfg(DEBUG_BAUDRATE);
@@ -64,11 +64,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 #elif DEBUG == Debug_UART1
 #define PLF_DEBUG Debug_UART1
-#define DBG_INIT         \
-    writePinHigh(A9);    \
-    setPinInputHigh(A8); \
-    setPinOutput(A9);    \
-    UART1_DefInit();     \
+#define DBG_INIT      \
+    writePinHigh(A9); \
+    setPinInput(A8);  \
+    setPinOutput(A9); \
+    UART1_DefInit();  \
     UART1_BaudRateCfg(DEBUG_BAUDRATE);
 #define DBG_BAUD_RECONFIG \
     UART1_BaudRateCfg(DEBUG_BAUDRATE);
@@ -86,11 +86,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 #elif DEBUG == Debug_UART2
 #define PLF_DEBUG Debug_UART2
-#define DBG_INIT         \
-    writePinHigh(A7);    \
-    setPinInputHigh(A6); \
-    setPinOutput(A7);    \
-    UART2_DefInit();     \
+#define DBG_INIT      \
+    writePinHigh(A7); \
+    setPinInput(A6);  \
+    setPinOutput(A7); \
+    UART2_DefInit();  \
     UART2_BaudRateCfg(DEBUG_BAUDRATE);
 #define DBG_BAUD_RECONFIG \
     UART2_BaudRateCfg(DEBUG_BAUDRATE);
@@ -108,11 +108,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 #elif DEBUG == Debug_UART3
 #define PLF_DEBUG Debug_UART3
-#define DBG_INIT         \
-    writePinHigh(A5);    \
-    setPinInputHigh(A4); \
-    setPinOutput(A5);    \
-    UART3_DefInit();     \
+#define DBG_INIT      \
+    writePinHigh(A5); \
+    setPinInput(A4);  \
+    setPinOutput(A5); \
+    UART3_DefInit();  \
     UART3_BaudRateCfg(DEBUG_BAUDRATE);
 #define DBG_BAUD_RECONFIG \
     UART3_BaudRateCfg(DEBUG_BAUDRATE);
