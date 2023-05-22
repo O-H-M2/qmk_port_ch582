@@ -58,7 +58,7 @@ Fork 我的仓库，手动将你的键盘配置文件上传到 [keyboards](https
 
 参照[这个](./VSCODE_DEVELOPMENT.md)搭建你的本机开发环境，也可选择 Codespace.
 
-或参照以下步骤在 Linux 系统上构建：
+或参照以下步骤在你的系统上构建：
 
 1. 安装编译器和 nrf 命令行工具：
 
