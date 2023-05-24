@@ -76,7 +76,7 @@ elseif("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
     add_compile_options(-Og -g)
 endif()
 
-execute_process(COMMAND git rev-parse --short HEAD
+execute_process(COMMAND git describe --always --dirty
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     TIMEOUT 5
     OUTPUT_VARIABLE GIT_VERSION
