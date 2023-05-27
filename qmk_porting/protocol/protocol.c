@@ -160,7 +160,7 @@ __HIGH_CODE void protocol_task()
 #if defined ESB_ENABLE && ESB_ENABLE == 2
 void protocol_init()
 {
-    // skip protocol_pre_init();
+    protocol_pre_init();
 
     // skip keyboard_init()
 
