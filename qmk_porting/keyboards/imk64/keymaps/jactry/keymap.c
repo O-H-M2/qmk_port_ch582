@@ -213,7 +213,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-bool rgb_matrix_indicators_kb() {
+bool rgb_matrix_indicators_user() {
     if (os_mode_led_cycle) {
         os_mode_led_cycle--;
         rgb_matrix_set_color_all(RGB_BLACK);
