@@ -11,7 +11,7 @@
 
 #ifndef WS2812_PWM_DRIVER
 #define WS2812_PWM_DRIVER 1 // TMR1
-#define RGB_DI_PIN        A10
+#define WS2812_DI_PIN     A10
 #endif
 
 static volatile bool ws2812_inited = false, ws2812_powered_on = false;
@@ -61,7 +61,7 @@ __INTERRUPT __HIGH_CODE void TMR2_IRQHandler()
 #endif
 
 #ifndef WS2812_PWM_TARGET_PERIOD
-//#    define WS2812_PWM_TARGET_PERIOD 800000 // Original code is 800k...?
+// #    define WS2812_PWM_TARGET_PERIOD 800000 // Original code is 800k...?
 #define WS2812_PWM_TARGET_PERIOD 80000 // TODO: work out why 10x less on f303/f4x1
 #endif
 
@@ -272,7 +272,7 @@ static void ws2812_init(void)
     for (i = 0; i < WS2812_RESET_BIT_N; i++)
         ws2812_frame_buffer[i + WS2812_COLOR_BIT_N] = 0; // All reset bits are zero
 
-    setPinOutput(RGB_DI_PIN);
+    setPinOutput(WS2812_DI_PIN);
 
     WS2812_PWM_CNT_END_REG = WS2812_PWM_PERIOD;
     WS2812_DMA_CONFIG(ENABLE, ws2812_frame_buffer[0], ws2812_frame_buffer[WS2812_BIT_N + 1]);

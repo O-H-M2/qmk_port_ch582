@@ -339,16 +339,11 @@ endif()
 if(AW20216_REQUIRED)
     add_definitions(-DAW20216)
     message(STATUS "AW20216_REQUIRED")
-
-    # include_directories(${QMK_BASE_DIR}/drivers/led)
-    # list(APPEND quantum_SOURCES
-    # "${QMK_BASE_DIR}/drivers/led/aw20216.c"
-    # )
-    # list(APPEND QMK_PORTING_SOURCES
-    # "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
-    # )
+    include_directories(${QMK_BASE_DIR}/drivers/led)
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/drivers/led/aw20216.c"
+    )
     list(APPEND QMK_PORTING_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216.c"
         "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
     )
     set(SPI_MASTER_ENABLE ON CACHE BOOL "KB" FORCE)
