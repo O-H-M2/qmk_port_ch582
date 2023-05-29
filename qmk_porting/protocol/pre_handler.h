@@ -310,15 +310,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef WS2812_DRIVER_SPI
 #ifdef SPI_IO_REMAPPING
-#define RGB_DI_PIN B14
+#define WS2812_DI_PIN B14
 #else
-#define RGB_DI_PIN A14
+#define WS2812_DI_PIN A14
 #endif
 #elif defined WS2812_DRIVER_PWM
 #if WS2812_PWM_DRIVER == 1
-#define RGB_DI_PIN A10
+#define WS2812_DI_PIN A10
 #elif WS2812_PWM_DRIVER == 2
-#define RGB_DI_PIN A11
+#define WS2812_DI_PIN A11
 #endif
 #endif
 
