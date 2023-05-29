@@ -310,9 +310,17 @@ if(OLED_ENABLE)
         message(STATUS "OLED_DRIVER = ${OLED_DRIVER}")
         include_directories(${QMK_BASE_DIR}/drivers/oled)
         list(APPEND quantum_SOURCES
-            "${QMK_BASE_DIR}/drivers/oled/ssd1306_sh1106.c"
+            "${QMK_BASE_DIR}/drivers/oled/oled_driver.c"
         )
-        set(I2C_MASTER_ENABLE ON CACHE BOOL "KB" FORCE)
+        string(TOLOWER ${OLED_TRANSPORT} OLED_TRANSPORT)
+
+        if(OLED_TRANSPORT STREQUAL "i2c")
+            set(I2C_MASTER_ENABLE ON CACHE BOOL "KB" FORCE)
+            add_definitions(-DOLED_TRANSPORT_I2C)
+        elseif(OLED_TRANSPORT STREQUAL "spi")
+            set(SPI_MASTER_ENABLE ON CACHE BOOL "KB" FORCE)
+            add_definitions(-DOLED_TRANSPORT_SPI)
+        endif()
     elseif(DEFINED OLED_DRIVER AND EXISTS "${OLED_DRIVER}")
         add_definitions(-DOLED_ENABLE)
         message(STATUS "OLED_ENABLE")
