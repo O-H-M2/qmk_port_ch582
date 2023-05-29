@@ -79,11 +79,13 @@ void post_process_record_kb(uint16_t keycode, keyrecord_t *record)
 
 bool pre_process_record_kb(uint16_t keycode, keyrecord_t *record)
 {
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
     bool ret = wireless_pre_process_record_kb(keycode, record);
 
     if (!ret) {
         return false;
     }
+#endif
 
     return pre_process_record_user(keycode, record);
 }
