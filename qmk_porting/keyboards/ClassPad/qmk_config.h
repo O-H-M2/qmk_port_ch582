@@ -24,16 +24,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MANUFACTURER Class
 #define PRODUCT      ClassPad
 
-#define MATRIX_ROWS 6
-#define MATRIX_COLS 15
-#define MATRIX_ROW_PINS            \
+#define MATRIX_ROWS 5
+#define MATRIX_COLS 7
+#define MATRIX_ROW_PINS       \
+    {                         \
+        B9, B8, B17, B16, B18 \
+    }
+// for M2DK
+// #define MATRIX_COL_PINS { A6, A0, A1, A2, A3, A15, A14}
+// for ClassPad
+#define MATRIX_COL_PINS            \
     {                              \
-        B9, B8, B17, B16, B18, B19 \
+        A6, A0, A1, A2, B2, B3, B4 \
     }
-#define MATRIX_COL_PINS                                                \
-    {                                                                  \
-        A6, A0, A1, A2, A3, A15, A14, A13, A12, A7, B7, B6, B5, B4, B3 \
-    }
+
 #define DYNAMIC_KEYMAP_LAYER_COUNT 10
 
 #define DIODE_DIRECTION       COL2ROW
@@ -56,11 +60,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \
     {                  \
-        B22             \
+        B22            \
     }
 #define ENCODERS_PAD_B \
     {                  \
-        B23             \
+        B23            \
     }
 #define ENCODER_RESOLUTION 1
 #endif
@@ -73,7 +77,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BLE_SLOT_3_INDICATOR 2
 #define BLE_SLOT_4_INDICATOR 3
 #define RGB_MATRIX_KEYPRESSES
-//#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
+// #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define WS2812_SPI_DRIVER             2
 #define RGBLED_NUM                    4
 #define RGB_MATRIX_LED_COUNT          RGBLED_NUM
@@ -133,7 +137,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 /* define if matrix has ghost */
-//#define MATRIX_HAS_GHOST
+// #define MATRIX_HAS_GHOST
 
 /* Set 0 if debouncing isn't needed */
 #define DEBOUNCE 10
@@ -144,14 +148,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* disable debug print */
-//#define NO_DEBUG
+// #define NO_DEBUG
 
 /* disable print */
-//#define NO_PRINT
+// #define NO_PRINT
 
 /* disable action features */
-//#define NO_ACTION_LAYER
-//#define NO_ACTION_TAPPING
-//#define NO_ACTION_ONESHOT
+// #define NO_ACTION_LAYER
+// #define NO_ACTION_TAPPING
+// #define NO_ACTION_ONESHOT
 
-#define DIP_SWITCH_PINS { B0, B1 }
+#define DIP_SWITCH_PINS \
+    {                   \
+        B0, B1          \
+    }

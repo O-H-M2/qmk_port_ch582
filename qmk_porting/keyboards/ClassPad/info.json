@@ -1,0 +1,185 @@
+{
+  "name": "ClassPad",
+  "vendorId": "0xCAFE",
+  "productId": "0x0b9A",
+  "customKeycodes": [
+    {
+      "name": "USB",
+      "title": "USB MODE",
+      "shortName": "USB"
+    },
+    {
+      "name": "BLE1",
+      "title": "Tap = Use BLE slot 1, Hold = Clean BLE slot 1 binding",
+      "shortName": "BLE1"
+    },
+    {
+      "name": "BLE2",
+      "title": "Tap = Use BLE slot 2, Hold = Clean BLE slot 2 binding",
+      "shortName": "BLE2"
+    },
+    {
+      "name": "BLE3",
+      "title": "Tap = Use BLE slot 3, Hold = Clean BLE slot 3 binding",
+      "shortName": "BLE3"
+    },
+    {
+      "name": "BLE4",
+      "title": "Tap = Use BLE slot 4, Hold = Clean BLE slot 4 binding",
+      "shortName": "BLE4"
+    },
+    {
+      "name": "BLE5",
+      "title": "Tap = Use BLE slot 5, Hold = Clean BLE slot 5 binding",
+      "shortName": "BLE5"
+    },
+    {
+      "name": "BLE6",
+      "title": "Tap = Use BLE slot 6, Hold = Clean BLE slot 6 binding",
+      "shortName": "BLE6"
+    },
+    {
+      "name": "BLE7",
+      "title": "Tap = Use BLE slot 7, Hold = Clean BLE slot 7 binding",
+      "shortName": "BLE7"
+    },
+    {
+      "name": "BLE8",
+      "title": "Tap = Use BLE slot 8, Hold = Clean BLE slot 8 binding",
+      "shortName": "BLE8"
+    },
+    {
+      "name": "BLE9",
+      "title": "Tap = Use BLE slot 9, Hold = Clean BLE slot 9 binding",
+      "shortName": "BLE9"
+    },
+    {
+      "name": "BLE10",
+      "title": "Tap = Use BLE slot 10, Hold = Clean BLE slot 10 binding",
+      "shortName": "BLE10"
+    },
+    {
+      "name": "BLE11",
+      "title": "Tap = Use BLE slot 11, Hold = Clean BLE slot 11 binding",
+      "shortName": "BLE11"
+    },
+    {
+      "name": "BLE12",
+      "title": "Tap = Use BLE slot 12, Hold = Clean BLE slot 12 binding",
+      "shortName": "BLE12"
+    },
+    {
+      "name": "BLE13",
+      "title": "Tap = Use BLE slot 13, Hold = Clean BLE slot 13 binding",
+      "shortName": "BLE13"
+    },
+    {
+      "name": "BLE814",
+      "title": "Tap = Use BLE slot 14, Hold = Clean BLE slot 14 binding",
+      "shortName": "BLE14"
+    },
+    {
+      "name": "BLE815",
+      "title": "Tap = Use BLE slot 15, Hold = Clean BLE slot 15 binding",
+      "shortName": "BLE15"
+    },
+    {
+      "name": "BLE816",
+      "title": "Tap = Use BLE slot 16, Hold = Clean BLE slot 16 binding",
+      "shortName": "BLE16"
+    },
+    {
+      "name": "BC_A",
+      "title": "Clean ALL BLE slot binding",
+      "shortName": "BC_A"
+    },
+    {
+      "name": "2.4G",
+      "title": "ESB MODE(2.4G mode)",
+      "shortName": "2.4G"
+    },
+    {
+      "name": "BAT",
+      "title": "Enable battery lever indicator",
+      "shortName": "BAT"
+    }
+  ],
+  "matrix": {
+    "rows": 5,
+    "cols": 7
+  },
+  "layouts": {
+    "keymap": [
+      [
+        "0,0",
+        "0,1",
+        "0,2",
+        "0,3",
+        {
+          "x": 0.25
+        },
+        "0,4\n\n\n0,0",
+        "0,5\n\n\n0,0",
+        "0,6\n\n\n0,0",
+        {
+          "w": 1.5
+        },
+        "0,4\n\n\n0,1",
+        {
+          "w": 1.5
+        },
+        "0,6\n\n\n0,1"
+      ],
+      [
+        "1,0",
+        "1,1",
+        "1,2",
+        {
+          "h": 2
+        },
+        "2,3",
+        {
+          "x": 0.25,
+          "w": 1.5
+        },
+        "1,4\n\n\n1,0",
+        {
+          "w": 1.5
+        },
+        "1,6\n\n\n1,0",
+        "1,4\n\n\n1,1",
+        "1,5\n\n\n1,1",
+        "1,6\n\n\n1,1"
+      ],
+      [
+        "2,0",
+        "2,1",
+        "2,2"
+      ],
+      [
+        "3,0",
+        "3,1",
+        "3,2",
+        {
+          "h": 2
+        },
+        "4,3",
+        {
+          "x": 1.25
+        },
+        "2,5\n\n\n\n\n\n\n\n\ne0"
+      ],
+      [
+        {
+          "w": 2
+        },
+        "4,0",
+        "4,2"
+      ]
+    ],
+    "labels": [
+      "A",
+      "B"
+    ]
+  }
+}
