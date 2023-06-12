@@ -110,6 +110,9 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 }
 #endif
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 static inline bool usb_remote_wakeup()
 {
     if (!(R8_USB_MIS_ST & RB_UMS_SUSPEND)) {
@@ -416,6 +419,7 @@ bool hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
         return false;
     }
 
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
     uint16_t timeout_timer = timer_read();
 
     while (keyboard_state == HID_STATE_BUSY) {
@@ -423,6 +427,11 @@ bool hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
             return false;
         }
     }
+#else
+    if (keyboard_state == HID_STATE_BUSY) {
+        return false;
+    }
+#endif
 
     int ret = usbd_ep_start_write(KBD_IN_EP, data, len);
 
@@ -449,6 +458,7 @@ bool hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
         return false;
     }
 
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
     uint16_t timeout_timer = timer_read();
 
     while (rgbraw_state == HID_STATE_BUSY) {
@@ -456,6 +466,11 @@ bool hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
             return false;
         }
     }
+#else
+    if (rgbraw_state == HID_STATE_BUSY) {
+        return false;
+    }
+#endif
 
     int ret = usbd_ep_start_write(RGBRAW_IN_EP, data, len);
 
@@ -473,6 +488,7 @@ inline bool hid_exkey_send_report(uint8_t *data, uint8_t len)
         return false;
     }
 
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
     uint16_t timeout_timer = timer_read();
 
     while (extrakey_state == HID_STATE_BUSY) {
@@ -480,6 +496,11 @@ inline bool hid_exkey_send_report(uint8_t *data, uint8_t len)
             return false;
         }
     }
+#else
+    if (extrakey_state == HID_STATE_BUSY) {
+        return false;
+    }
+#endif
 
     int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
 
@@ -497,6 +518,7 @@ bool hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
         return false;
     }
 
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
     uint16_t timeout_timer = timer_read();
 
     while (qmkraw_state == HID_STATE_BUSY) {
@@ -504,6 +526,11 @@ bool hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
             return false;
         }
     }
+#else
+    if (qmkraw_state == HID_STATE_BUSY) {
+        return false;
+    }
+#endif
 
     int ret = usbd_ep_start_write(QMKRAW_IN_EP, data, len);
 
