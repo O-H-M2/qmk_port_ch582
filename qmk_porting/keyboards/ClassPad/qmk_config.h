@@ -60,11 +60,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \
     {                  \
-        B22            \
+        A3,A14         \
     }
 #define ENCODERS_PAD_B \
     {                  \
-        B23            \
+        A15,A13        \
     }
 #define ENCODER_RESOLUTION 1
 #endif

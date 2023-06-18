@@ -24,14 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define LAYOUT_all( \
 	K000,  K001,  K002,  K003,  K004,  K005,  K006,  \
 	K100,  K101,  K102,         K104,  K105,  K106,  \
-	K200,  K201,  K202,  K203,  K204,  K205,         \
+	K200,  K201,  K202,  K203,  K204,  K205,  K206,  \
 	K300,  K301,  K302,                              \
     K400,         K402,  K403                        \
 ) \
 { \
     {K000,  K001,  K002,  K003,  K004,  K005,  K006 },\
     {K100,  K101,  K102,  KC_NO, K104,  K105,  K106 },\
-    {K200,  K201,  K202,  K203,  K204,  K205,  KC_NO},\
+    {K200,  K201,  K202,  K203,  K204,  K205,  K206 },\
     {K300,  K301,  K302,  KC_NO, KC_NO, KC_NO, KC_NO},\
     {K400,  KC_NO, K402,  K403,  KC_NO, KC_NO, KC_NO}\
 }

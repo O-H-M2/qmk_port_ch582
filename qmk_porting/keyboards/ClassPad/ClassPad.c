@@ -68,7 +68,7 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 bool dip_switch_update_kb(uint8_t index, bool active) { 
     switch (index) {
         case 0:
-            if(active) 
+            if(active) //run once when tirggle
                 //switch to BLE mode 
             break;
         case 1:
