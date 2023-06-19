@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 #include "gpio.h"
+#include "extra_keycode.h"
 
 #ifdef RGB_MATRIX_ENABLE
 /* clang-format off */
@@ -64,18 +65,29 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 }
 
 #endif
-
-bool dip_switch_update_kb(uint8_t index, bool active) { 
+bool dip_switch_update_kb(uint8_t index, bool active)
+{
     switch (index) {
         case 0:
-            if(active) //run once when tirggle
-                tap_code(BLE_SLOT0);
-                //switch to BLE mode 
+            if (active) // run once when tirggle
+            {
+                if (kbd_protocol_type != kbd_protocol_ble) {
+                    // writePinHigh(B12); // for debug
+                    // setPinOutput(B12);
+                    tap_code16(BLE_SLOT0);
+                } 
+            }
+            // switch to BLE mode
             break;
         case 1:
-            if(active) 
-                tap_code(USB_MODE);
-                //switch to USB mode 
+            if (active) {
+                if (kbd_protocol_type != kbd_protocol_usb) {
+                    // writePinLow(B12); //for debug
+                    // setPinOutput(B12);
+                    tap_code16(USB_MODE);
+                } 
+            }
+            // switch to USB mode
             break;
     }
     return true;
