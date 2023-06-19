@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usb_device_state.h"
 #include "keycode_config.h"
 #include "platform_deps.h"
+#include "usb_interface.h"
 
 static uint8_t keyboard_led_state;
 
@@ -36,7 +37,11 @@ uint8_t keyboard_leds()
 void keyboard_check_protocol_mode()
 {
 #ifdef NKRO_ENABLE
-    static uint8_t last_mode = 1;
+#ifdef FORCE_NKRO
+    static uint8_t last_mode = KEYBOARD_MODE_NKRO;
+#else
+    static uint8_t last_mode = KEYBOARD_MODE_BIOS;
+#endif
 
     if (last_mode != keymap_config.nkro) {
         // send a keyboard report to trigger mode change

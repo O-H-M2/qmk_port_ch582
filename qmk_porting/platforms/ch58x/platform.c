@@ -44,10 +44,10 @@ void shutdown_user()
 #ifdef ENCODER_ENABLE
     pin_t encoders_pad_a[] = ENCODERS_PAD_A, encoders_pad_b[] = ENCODERS_PAD_B;
 
-    for (uint8_t i = 0; i < sizeof(encoders_pad_a); i++) {
+    for (uint8_t i = 0; i < sizeof(encoders_pad_a) / sizeof(encoders_pad_a[0]); i++) {
         setPinInputLow(encoders_pad_a[i]);
     }
-    for (uint8_t i = 0; i < sizeof(encoders_pad_b); i++) {
+    for (uint8_t i = 0; i < sizeof(encoders_pad_b) / sizeof(encoders_pad_b[0]); i++) {
         setPinInputLow(encoders_pad_b[i]);
     }
 #endif

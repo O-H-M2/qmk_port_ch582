@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Huckies <https://github.com/Huckies>
+Copyright 2023 Jactry Zeng
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,11 +15,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
-
-#include <stdbool.h>
-#include "gpio.h"
-
-bool aw20216_power_status_get();
-void aw20216_power_toggle(bool status);
-void aw20216_power_check();
+#define RGBLED_NUM 68

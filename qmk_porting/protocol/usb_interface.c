@@ -36,7 +36,11 @@ uint8_t keyboard_protocol = 1;
 uint8_t keyboard_idle = 0;
 static uint8_t *hid_descriptor = NULL;
 
+#ifdef FORCE_NKRO
 static uint8_t keyboard_current_mode = KEYBOARD_MODE_NKRO;
+#else
+static uint8_t keyboard_current_mode = KEYBOARD_MODE_BIOS;
+#endif
 static uint8_t keyboard_last_bios_report[KEYBOARD_REPORT_SIZE] = {};
 static struct usbd_interface keyboard_interface;
 #ifdef RGB_RAW_ENABLE
@@ -106,6 +110,9 @@ void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 }
 #endif
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 static inline bool usb_remote_wakeup()
 {
     if (!(R8_USB_MIS_ST & RB_UMS_SUSPEND)) {
@@ -400,7 +407,7 @@ void usbd_event_handler(uint8_t event)
     }
 }
 
-void hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
+bool hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
 {
     if (mode != keyboard_current_mode) {
         keyboard_current_mode = mode;
@@ -409,27 +416,34 @@ void hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
     }
 
     if (!usb_remote_wakeup()) {
-        return;
+        return false;
     }
 
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
     uint16_t timeout_timer = timer_read();
 
     while (keyboard_state == HID_STATE_BUSY) {
         if ((timer_elapsed(timeout_timer) > 2)) {
-            return;
+            return false;
         }
     }
+#else
+    if (keyboard_state == HID_STATE_BUSY) {
+        return false;
+    }
+#endif
 
     int ret = usbd_ep_start_write(KBD_IN_EP, data, len);
 
     if (ret < 0) {
-        return;
+        return false;
     }
     keyboard_state = HID_STATE_BUSY;
     if (mode == KEYBOARD_MODE_BIOS) {
         // record report for future use
         memcpy(keyboard_last_bios_report, data, KEYBOARD_REPORT_SIZE);
     }
+    return true;
 }
 
 void hid_keyboard_send_last_bios_report()
@@ -438,71 +452,92 @@ void hid_keyboard_send_last_bios_report()
 }
 
 #ifdef RGB_RAW_ENABLE
-void hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
+bool hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
 {
     if (!usb_remote_wakeup()) {
-        return;
+        return false;
     }
 
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
     uint16_t timeout_timer = timer_read();
 
     while (rgbraw_state == HID_STATE_BUSY) {
         if ((timer_elapsed(timeout_timer) > 2)) {
-            return;
+            return false;
         }
     }
+#else
+    if (rgbraw_state == HID_STATE_BUSY) {
+        return false;
+    }
+#endif
 
     int ret = usbd_ep_start_write(RGBRAW_IN_EP, data, len);
 
     if (ret < 0) {
-        return;
+        return false;
     }
     rgbraw_state = HID_STATE_BUSY;
+    return true;
 }
 #endif
 
-inline void hid_exkey_send_report(uint8_t *data, uint8_t len)
+inline bool hid_exkey_send_report(uint8_t *data, uint8_t len)
 {
     if (!usb_remote_wakeup()) {
-        return;
+        return false;
     }
 
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
     uint16_t timeout_timer = timer_read();
 
     while (extrakey_state == HID_STATE_BUSY) {
         if ((timer_elapsed(timeout_timer) > 2)) {
-            return;
+            return false;
         }
     }
+#else
+    if (extrakey_state == HID_STATE_BUSY) {
+        return false;
+    }
+#endif
 
     int ret = usbd_ep_start_write(EXKEY_IN_EP, data, len);
 
     if (ret < 0) {
-        return;
+        return false;
     }
     extrakey_state = HID_STATE_BUSY;
+    return true;
 }
 
 #ifdef RAW_ENABLE
-void hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
+bool hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
 {
     if (!usb_remote_wakeup()) {
-        return;
+        return false;
     }
 
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
     uint16_t timeout_timer = timer_read();
 
     while (qmkraw_state == HID_STATE_BUSY) {
         if ((timer_elapsed(timeout_timer) > 2)) {
-            return;
+            return false;
         }
     }
+#else
+    if (qmkraw_state == HID_STATE_BUSY) {
+        return false;
+    }
+#endif
 
     int ret = usbd_ep_start_write(QMKRAW_IN_EP, data, len);
 
     if (ret < 0) {
-        return;
+        return false;
     }
     qmkraw_state = HID_STATE_BUSY;
+    return true;
 }
 #endif
