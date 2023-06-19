@@ -69,10 +69,12 @@ bool dip_switch_update_kb(uint8_t index, bool active) {
     switch (index) {
         case 0:
             if(active) //run once when tirggle
+                tap_code(BLE_SLOT0);
                 //switch to BLE mode 
             break;
         case 1:
             if(active) 
+                tap_code(USB_MODE);
                 //switch to USB mode 
             break;
     }
