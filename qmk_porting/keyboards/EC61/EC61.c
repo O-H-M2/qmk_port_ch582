@@ -126,8 +126,8 @@ led_config_t g_led_config = {
 	}
 };
 /* clang-format on */
-uint8_t lowpower_state = 0;
-uint32_t lowpower_tick;
+static uint8_t lowpower_state = 0;
+static uint16_t lowpower_tick;
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
@@ -151,7 +151,6 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
     return true;
 }
 
-#endif
 void housekeeping_task_kb()
 {
     if (battery_get_last_percentage() < 5) {
@@ -179,6 +178,7 @@ void housekeeping_task_kb()
         lowpower_state = 0;
     }
 }
+#endif
 
 int main()
 {
