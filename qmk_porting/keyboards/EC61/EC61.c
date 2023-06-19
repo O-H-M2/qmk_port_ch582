@@ -126,15 +126,17 @@ led_config_t g_led_config = {
 	}
 };
 /* clang-format on */
+
 static uint8_t lowpower_state = 0;
 static uint16_t lowpower_tick;
+
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
         return false;
     }
     if (lowpower_state == 1) { // low power indicator breathing
-        for (size_t i = led_min; i < led_max; i++) {
+        for (uint8_t i = led_min; i < led_max; i++) {
             if (i != 0) {
                 RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
             }
