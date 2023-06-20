@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define strlen      tmos_strlen
 #define memset      tmos_memset
 #define memcpy      tmos_memcpy
+extern void esb_dongle_usb_report_sent(uint8_t interface);
 #endif
 
 uint8_t keyboard_protocol = 1;
@@ -71,6 +72,9 @@ USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t qmkraw_out_buffer[QMKRAW_OUT_EP_S
 void usbd_hid_kbd_in_callback(uint8_t ep, uint32_t nbytes)
 {
     keyboard_state = HID_STATE_IDLE;
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+    esb_dongle_usb_report_sent(0);
+#endif
 }
 
 void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
@@ -83,6 +87,9 @@ void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
     rgbraw_state = HID_STATE_IDLE;
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+    esb_dongle_usb_report_sent(1);
+#endif
 }
 
 void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
@@ -95,12 +102,18 @@ void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_exkey_in_callback(uint8_t ep, uint32_t nbytes)
 {
     extrakey_state = HID_STATE_IDLE;
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+    esb_dongle_usb_report_sent(2);
+#endif
 }
 
 #ifdef RAW_ENABLE
 void usbd_hid_qmk_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
     qmkraw_state = HID_STATE_IDLE;
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+    esb_dongle_usb_report_sent(3);
+#endif
 }
 
 void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
@@ -378,9 +391,9 @@ void usbh_hid_set_protocol(uint8_t intf, uint8_t protocol)
             usb_start_periodical_bios_report();
         }
 #if defined ESB_ENABLE && ESB_ENABLE == 2
-        extern void esb_set_keyboard_protocol(uint8_t protocol);
+        extern void esb_dongle_set_keyboard_protocol(uint8_t protocol);
 
-        esb_set_keyboard_protocol(protocol);
+        esb_dongle_set_keyboard_protocol(protocol);
 #endif
     }
 }
