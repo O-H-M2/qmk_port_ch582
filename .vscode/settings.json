@@ -1,4 +1,4 @@
-Copyright 2023 SharpSnail01 <https://github.com/SharpSnail01>
+Copyright 2023 SharpSnail01 <https: //github.com/SharpSnail01>
 {
     "files.associations": {
         "platform_deps.h": "c",
@@ -124,6 +124,12 @@ Copyright 2023 SharpSnail01 <https://github.com/SharpSnail01>
         "**/build/*": true
     },
     "editor.defaultFormatter": "xaver.clang-format",
+    "[C]": {
+        "editor.defaultFormatter": "xaver.clang-format",
+    },
+    "[cpp]": {
+        "editor.defaultFormatter": "xaver.clang-format",
+    },
     "[cmake]": {
         "editor.defaultFormatter": "josetr.cmake-language-support-vscode"
     },
