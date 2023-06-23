@@ -410,8 +410,10 @@ void usbd_event_handler(uint8_t event)
         case USBD_EVENT_DISCONNECTED:
             break;
         case USBD_EVENT_RESUME:
+            usb_device_state_set_resume(usb_device_is_configured(), 1);
             break;
         case USBD_EVENT_SUSPEND:
+            usb_device_state_set_suspend(usb_device_is_configured(), 1);
             break;
         case USBD_EVENT_CONFIGURED:
             usbd_configure_done_callback();
