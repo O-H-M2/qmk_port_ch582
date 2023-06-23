@@ -157,6 +157,7 @@ void usbd_configure_done_callback()
 #ifdef RAW_ENABLE
     usbd_ep_start_read(QMKRAW_OUT_EP, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #endif
+    usb_device_state_set_configuration(true, 1);
 }
 
 void usb_dc_low_level_init()
@@ -413,7 +414,11 @@ void usbd_event_handler(uint8_t event)
         case USBD_EVENT_SUSPEND:
             break;
         case USBD_EVENT_CONFIGURED:
-            usb_device_state_set_configuration(true, 1);
+            usbd_configure_done_callback();
+            break;
+        case USBD_EVENT_SET_REMOTE_WAKEUP:
+            break;
+        case USBD_EVENT_CLR_REMOTE_WAKEUP:
             break;
         default:
             break;
