@@ -73,7 +73,7 @@ void usbd_hid_kbd_in_callback(uint8_t ep, uint32_t nbytes)
 {
     keyboard_state = HID_STATE_IDLE;
 #if defined ESB_ENABLE && ESB_ENABLE == 2
-    esb_dongle_usb_report_sent(0);
+    esb_dongle_usb_report_sent(InterfaceNumber_keyboard);
 #endif
 }
 
@@ -88,7 +88,7 @@ void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
     rgbraw_state = HID_STATE_IDLE;
 #if defined ESB_ENABLE && ESB_ENABLE == 2
-    esb_dongle_usb_report_sent(1);
+    esb_dongle_usb_report_sent(InterfaceNumber_rgb_raw);
 #endif
 }
 
@@ -103,7 +103,7 @@ void usbd_hid_exkey_in_callback(uint8_t ep, uint32_t nbytes)
 {
     extrakey_state = HID_STATE_IDLE;
 #if defined ESB_ENABLE && ESB_ENABLE == 2
-    esb_dongle_usb_report_sent(2);
+    esb_dongle_usb_report_sent(InterfaceNumber_extra_key);
 #endif
 }
 
@@ -112,7 +112,7 @@ void usbd_hid_qmk_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
     qmkraw_state = HID_STATE_IDLE;
 #if defined ESB_ENABLE && ESB_ENABLE == 2
-    esb_dongle_usb_report_sent(3);
+    esb_dongle_usb_report_sent(InterfaceNumber_qmk_raw);
 #endif
 }
 
