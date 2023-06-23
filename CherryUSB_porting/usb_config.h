@@ -25,6 +25,7 @@
 
 #define USB_NOCACHE_RAM_SECTION __attribute__((section(".noncacheable")))
 #define USB_NUM_BIDIR_ENDPOINTS 8
+#define EP_NUMS                 ENDPOINT_TOTAL_ENDPOINTS
 
 /* USB DEVICE Configuration */
 /* core */
@@ -121,7 +122,7 @@
 #endif
 
 #define CONFIG_USBHOST_ASYNCH
-//#define CONFIG_USBHOST_GET_STRING_DESC
+// #define CONFIG_USBHOST_GET_STRING_DESC
 
 /* EHCI Configuration */
 #define CONFIG_USB_EHCI_HCCR_BASE (0x20072000)
