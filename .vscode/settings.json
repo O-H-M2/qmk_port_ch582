@@ -124,7 +124,7 @@ Copyright 2023 SharpSnail01 <https: //github.com/SharpSnail01>
         "**/build/*": true
     },
     "editor.defaultFormatter": "xaver.clang-format",
-    "[C]": {
+    "[c]": {
         "editor.defaultFormatter": "xaver.clang-format",
     },
     "[cpp]": {
