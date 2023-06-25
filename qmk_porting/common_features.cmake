@@ -390,7 +390,7 @@ endif()
 
 # USB_ENABLE
 if(USB_ENABLE)
-    add_definitions(-DUSB_ENABLE -DEP_NUMS=8)
+    add_definitions(-DUSB_ENABLE)
     message(STATUS "USB_ENABLE")
     list(APPEND QMK_PORTING_SOURCES
         "${CMAKE_CURRENT_LIST_DIR}/../CherryUSB/core/usbd_core.c"
