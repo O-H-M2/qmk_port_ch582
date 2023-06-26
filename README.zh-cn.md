@@ -2,6 +2,7 @@
 
 ## 目录
 
+- [目录](#目录)
 - [概述](#概述)
 - [目录结构](#目录结构)
 - [分支说明](#分支说明)
@@ -133,10 +134,10 @@ $ cd build
 5. 运行 `cmake` 检查依赖和生成 Makefile
 
 ```bash
-$ cmake -DCMAKE_BUILD_TYPE=Release -Dkeyboard=ezy64 -Dkeymap=default ..
+$ cmake -Dkeyboard=m2wired -Dkeymap=default ..
 ```
 
-你可以把 `ezy64` 和 `default` 替换成你的键盘和 keymap。
+你可以把 `m2wired` 和 `default` 替换成你的键盘和 keymap。
 
 6. 编译：
 

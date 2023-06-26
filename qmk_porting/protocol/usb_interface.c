@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define strlen      tmos_strlen
 #define memset      tmos_memset
 #define memcpy      tmos_memcpy
+extern void esb_dongle_usb_report_sent(uint8_t interface);
 #endif
 
 uint8_t keyboard_protocol = 1;
@@ -71,6 +72,9 @@ USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t qmkraw_out_buffer[QMKRAW_OUT_EP_S
 void usbd_hid_kbd_in_callback(uint8_t ep, uint32_t nbytes)
 {
     keyboard_state = HID_STATE_IDLE;
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+    esb_dongle_usb_report_sent(InterfaceNumber_keyboard);
+#endif
 }
 
 void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
@@ -83,6 +87,9 @@ void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
     rgbraw_state = HID_STATE_IDLE;
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+    esb_dongle_usb_report_sent(InterfaceNumber_rgb_raw);
+#endif
 }
 
 void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
@@ -95,12 +102,18 @@ void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 void usbd_hid_exkey_in_callback(uint8_t ep, uint32_t nbytes)
 {
     extrakey_state = HID_STATE_IDLE;
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+    esb_dongle_usb_report_sent(InterfaceNumber_extra_key);
+#endif
 }
 
 #ifdef RAW_ENABLE
 void usbd_hid_qmk_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
     qmkraw_state = HID_STATE_IDLE;
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+    esb_dongle_usb_report_sent(InterfaceNumber_qmk_raw);
+#endif
 }
 
 void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
@@ -144,6 +157,7 @@ void usbd_configure_done_callback()
 #ifdef RAW_ENABLE
     usbd_ep_start_read(QMKRAW_OUT_EP, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #endif
+    usb_device_state_set_configuration(true, 1);
 }
 
 void usb_dc_low_level_init()
@@ -378,9 +392,9 @@ void usbh_hid_set_protocol(uint8_t intf, uint8_t protocol)
             usb_start_periodical_bios_report();
         }
 #if defined ESB_ENABLE && ESB_ENABLE == 2
-        extern void esb_set_keyboard_protocol(uint8_t protocol);
+        extern void esb_dongle_set_keyboard_protocol(uint8_t protocol);
 
-        esb_set_keyboard_protocol(protocol);
+        esb_dongle_set_keyboard_protocol(protocol);
 #endif
     }
 }
@@ -396,11 +410,17 @@ void usbd_event_handler(uint8_t event)
         case USBD_EVENT_DISCONNECTED:
             break;
         case USBD_EVENT_RESUME:
+            usb_device_state_set_resume(usb_device_is_configured(), 1);
             break;
         case USBD_EVENT_SUSPEND:
+            usb_device_state_set_suspend(usb_device_is_configured(), 1);
             break;
         case USBD_EVENT_CONFIGURED:
-            usb_device_state_set_configuration(true, 1);
+            usbd_configure_done_callback();
+            break;
+        case USBD_EVENT_SET_REMOTE_WAKEUP:
+            break;
+        case USBD_EVENT_CLR_REMOTE_WAKEUP:
             break;
         default:
             break;

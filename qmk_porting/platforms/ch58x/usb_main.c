@@ -9,6 +9,11 @@ extern uint8_t keyboard_idle;
 static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
 {
     if (events & USB_RUN_QMK_TASK_EVT) {
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+        extern void wireless_indicator_daemon();
+
+        wireless_indicator_daemon();
+#endif
         keyboard_task();
         keyboard_check_protocol_mode();
         housekeeping_task();

@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Directory Structure](#directory-structure)
 - [Code Branches](#code-branches)
@@ -133,10 +134,10 @@ $ cd build
 5. Running cmake for dependencies checking and generating Makefile:
 
 ```bash
-$ cmake -Dkeyboard=ezy64 -Dkeymap=default ..
+$ cmake -Dkeyboard=m2wired -Dkeymap=default ..
 ```
 
-You may replace `ezy64` and `default` in the above command with the names of your own keyboard and keymap.
+You may replace `m2wired` and `default` in the above command with the names of your own keyboard and keymap.
 
 6. Build:
 
