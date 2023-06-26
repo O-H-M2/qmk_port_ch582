@@ -71,21 +71,33 @@ bool dip_switch_update_kb(uint8_t index, bool active)
         case 0:
             if (active) // run once when tirggle
             {
+#ifdef DEBUG
+                PRINT("DIP 0 active.\n");
+#endif
                 if (kbd_protocol_type != kbd_protocol_ble) {
+#ifdef DEBUG
+                    PRINT("tap_code16(BLE_SLOT0).\n");
+#endif
                     // writePinHigh(B12); // for debug
                     // setPinOutput(B12);
                     tap_code16(BLE_SLOT0);
-                } 
+                }
             }
             // switch to BLE mode
             break;
         case 1:
             if (active) {
+#ifdef DEBUG
+                PRINT("DIP 1 active.\n");
+#endif
                 if (kbd_protocol_type != kbd_protocol_usb) {
+#ifdef DEBUG
+                    PRINT("tap_code16(USB_MODE).\n");
+#endif
                     // writePinLow(B12); //for debug
                     // setPinOutput(B12);
                     tap_code16(USB_MODE);
-                } 
+                }
             }
             // switch to USB mode
             break;
