@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+#include "battery_measure.h"
 
 #ifdef RGB_MATRIX_ENABLE
 
@@ -126,10 +127,20 @@ led_config_t g_led_config = {
 };
 /* clang-format on */
 
+static uint8_t lowpower_state = 0;
+static uint16_t lowpower_tick;
+
 bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 {
     if (!rgb_matrix_indicators_advanced_user(led_min, led_max)) {
         return false;
+    }
+    if (lowpower_state == 1) { // low power indicator breathing
+        for (uint8_t i = led_min; i < led_max; i++) {
+            if (i != 0) {
+                RGB_MATRIX_INDICATOR_SET_COLOR(i, 0, 0, 0);
+            }
+        }
     }
     if (led_min <= 28 && led_max > 28 && host_keyboard_led_state().caps_lock) {
         RGB_MATRIX_INDICATOR_SET_COLOR(28, 0xFF, 0x00, 0x00);
@@ -142,6 +153,38 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
     return true;
 }
 
+void housekeeping_task_kb()
+{
+    if (battery_get_last_percentage() < 5) {
+        switch (lowpower_state) {
+            case 0:
+                lowpower_state = 1;
+                lowpower_tick = timer_read();
+                rgb_matrix_mode_noeeprom(RGB_MATRIX_BREATHING);
+                rgb_matrix_set_speed_noeeprom(255);
+                rgb_matrix_sethsv_noeeprom(0, 255, 255);
+                break;
+            case 1:
+                if (timer_elapsed(lowpower_tick) > 8000) {
+                    lowpower_state = 2;
+                    rgb_matrix_disable_noeeprom();
+                }
+                break;
+            case 2:
+                if (rgb_matrix_is_enabled()) {
+                    rgb_matrix_disable_noeeprom();
+                }
+                break;
+            default:
+                break;
+        }
+    } else {
+        if (lowpower_state == 2) {
+            rgb_matrix_reload_from_eeprom();
+        }
+        lowpower_state = 0;
+    }
+}
 #endif
 
 int main()
