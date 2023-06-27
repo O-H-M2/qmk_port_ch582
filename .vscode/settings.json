@@ -114,7 +114,12 @@
         "suspend.h": "c",
         "type_traits": "c",
         "platform.h": "c",
-        "asn1.h": "c"
+        "asn1.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "rope": "c",
+        "regex": "c"
     },
     "cmake.configureOnOpen": false,
     "git.ignoreLimitWarning": true,
@@ -137,5 +142,8 @@
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
     }
 }
