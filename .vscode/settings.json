@@ -116,7 +116,7 @@
         "platform.h": "c",
         "asn1.h": "c"
     },
-    "cmake.configureOnOpen": true,
+    "cmake.configureOnOpen": false,
     "git.ignoreLimitWarning": true,
     "C_Cpp.files.exclude": {
         "**/build": true,
