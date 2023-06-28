@@ -1,0 +1,4 @@
+#pragma once
+
+#define BATTERY_INDICATOR_START_INDEX 1
+#define BATTERY_INDICATOR_END_INDEX   5

@@ -47,9 +47,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BATTERY_MEASURE_PIN A4
 #define POWER_DETECT_PIN    B12
 
-#define BATTERY_INDICATOR_START_INDEX 1
-#define BATTERY_INDICATOR_END_INDEX   5
-
 #ifdef RGB_MATRIX_ENABLE
 
 #define BLE_INDICATOR_PREFIX
