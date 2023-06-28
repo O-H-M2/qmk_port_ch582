@@ -67,47 +67,28 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 #endif
 bool dip_switch_update_kb(uint8_t index, bool active)
 {
-    writePinLow(B22); // for debug
-    setPinOutput(B22);
     switch (index) {
         case 0:
             if (active) // run once when tirggle
             {
-#ifdef DEBUG
-                PRINT("DIP 0 active.\n");
-#endif
+                // writePinHigh(B12); // for debug
+                // setPinOutput(B12);
                 if (kbd_protocol_type != kbd_protocol_ble) {
-#ifdef DEBUG
-                    PRINT("tap_code16(BLE_SLOT0).\n");
-#endif
-                    togglePin(B20); // for debug
-                    setPinOutput(B20);
+                    wait_ms(50); // for debounce
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
                     soft_reset_keyboard();
                 }
-            }
-            // switch to BLE mode
-            break;
-        case 1:
-            if (active) {
-#ifdef DEBUG
-                PRINT("DIP 1 active.\n");
-#endif
+            } else {
+                // writePinLow(B12); // for debug
+                // setPinOutput(B12);
                 if (kbd_protocol_type != kbd_protocol_usb) {
-#ifdef DEBUG
-                    PRINT("tap_code16(USB_MODE).\n");
-#endif
-                    togglePin(B21); // for debug
-                    setPinOutput(B21);
+                    wait_ms(50); // for debounce
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);
                     soft_reset_keyboard();
                 }
             }
-            // switch to USB mode
             break;
     }
-    writePinHigh(B22); // for debug
-    setPinOutput(B22);
     return true;
 }
 
