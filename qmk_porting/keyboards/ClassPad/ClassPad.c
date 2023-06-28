@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "gpio.h"
 #include "extra_keycode.h"
 
+
 #ifdef RGB_MATRIX_ENABLE
 /* clang-format off */
 led_config_t g_led_config = {
@@ -67,6 +68,8 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 #endif
 bool dip_switch_update_kb(uint8_t index, bool active)
 {
+    writePinLow(B22); //for debug
+    setPinOutput(B22);
     switch (index) {
         case 0:
             if (active) // run once when tirggle
@@ -78,8 +81,8 @@ bool dip_switch_update_kb(uint8_t index, bool active)
 #ifdef DEBUG
                     PRINT("tap_code16(BLE_SLOT0).\n");
 #endif
-                    // writePinHigh(B12); // for debug
-                    // setPinOutput(B12);
+                     togglePin(B20); // for debug
+                     setPinOutput(B20);
                     tap_code16(BLE_SLOT0);
                 }
             }
@@ -94,15 +97,18 @@ bool dip_switch_update_kb(uint8_t index, bool active)
 #ifdef DEBUG
                     PRINT("tap_code16(USB_MODE).\n");
 #endif
-                    // writePinLow(B12); //for debug
-                    // setPinOutput(B12);
+                     togglePin(B21); //for debug
+                     setPinOutput(B21);
                     tap_code16(USB_MODE);
                 }
             }
             // switch to USB mode
             break;
     }
+    writePinHigh(B22); //for debug
+    setPinOutput(B22);
     return true;
+
 }
 
 int main()
