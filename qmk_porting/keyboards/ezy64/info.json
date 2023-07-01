@@ -331,7 +331,7 @@
               "type": "toggle",
               "options": [
                 254,
-                254
+                255
               ],
               "content": [
                 "id_custom_get_value",
