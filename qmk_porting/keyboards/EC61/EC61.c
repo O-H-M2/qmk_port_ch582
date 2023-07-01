@@ -144,6 +144,53 @@ bool rgb_matrix_indicators_advanced_kb(uint8_t led_min, uint8_t led_max)
 
 #endif
 
+void via_custom_value_command_kb(uint8_t *data, uint8_t length) {
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id        = &(data[0]);
+    uint8_t *channel_id        = &(data[1]);
+    uint8_t *value_id_and_data = &(data[2]);
+
+    if ( *channel_id == id_custom_channel ) {
+        switch ( *command_id )
+        {
+            case id_custom_set_value:
+            {
+                if(*value_id_and_data == 0xfe)
+                {
+                    
+                }
+                
+                break;
+            }
+            case id_custom_get_value:
+            {
+                
+                break;
+            }
+            case id_custom_save:
+            {
+                
+                break;
+            }
+            default:
+            {
+                // Unhandled message.
+                *command_id = id_unhandled;
+                break;
+            }
+        }
+        return;
+    }
+
+    // Return the unhandled state
+    *command_id = id_unhandled;
+
+    // DO NOT call raw_hid_send(data,length) here, let caller do this
+}
+
+
+
+
 int main()
 {
     extern void protocol_setup();
