@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode_config.h"
 #include "platform_deps.h"
 #include "usb_interface.h"
+#if ESB_ENABLE == 2
+#include "quantum.h"
+#endif
 
 static uint8_t keyboard_led_state;
 
@@ -101,6 +104,22 @@ void ch582_toggle_qmk_protocol(bool status)
 }
 
 #ifdef RAW_ENABLE
+void via_custom_value_command_kb(uint8_t *data, uint8_t length)
+{
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+    // data = [ command_id, channel_id, value_id, value_data ]
+    uint8_t *command_id = &(data[0]);
+    uint8_t *channel_id = &(data[1]);
+    uint8_t *value_id_and_data = &(data[2]);
+
+    if (*command_id == id_custom_set_value &&
+        *channel_id == id_custom_channel &&
+        *(uint16_t *)value_id_and_data == 0xFECA) {
+        bootloader_jump();
+    }
+#endif
+}
+
 void raw_hid_send(uint8_t *data, uint8_t length)
 {
     if (ch582_interface.send_qmk_raw) {
