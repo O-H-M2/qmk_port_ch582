@@ -33,9 +33,7 @@ find_program(MERGEHEX_PATH NAMES mergehex PATHS ${NRF_BIN_PATH} REQUIRED)
 message(STATUS "Found mergehex: ${MERGEHEX_PATH}")
 
 set(TOOLCHAIN_PREFIX riscv-none-embed)
-#set(ADDITIONAL_TOOLCHAIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-embed-gcc/bin/")
-set(ADDITIONAL_TOOLCHAIN_PATH /Users/a123/basic/xpack-riscv-none-embed-gcc-8.2.0/bin)
-
+set(ADDITIONAL_TOOLCHAIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-embed-gcc/bin/")
 
 find_program(CMAKE_C_COMPILER NAMES ${TOOLCHAIN_PREFIX}-gcc PATHS ${ADDITIONAL_TOOLCHAIN_PATH} REQUIRED)
 message(STATUS "Found ${TOOLCHAIN_PREFIX}-gcc: ${CMAKE_C_COMPILER}")
