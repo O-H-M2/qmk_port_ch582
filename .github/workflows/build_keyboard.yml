@@ -33,6 +33,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Fetch all
+        run: git fetch
+
       - name: Prepare Submodules
         run: git -c submodule."qmk_porting/keyboards_private".update=none submodule update --recursive --init
 
