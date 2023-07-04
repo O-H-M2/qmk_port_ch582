@@ -73,6 +73,7 @@ endif()
 
 add_definitions(-DQMK_VERSION="${QMK_VERSION}" -DQMK_KEYBOARD_H="${keyboard}.h")
 message(STATUS "QMK Version ${QMK_VERSION}")
+message(STATUS "Commit ${GIT_VERSION}")
 
 if(NOT BUILD_WIRELESS_LIB)
     add_definitions(-DQMK_BUILDDATE=${QMK_BUILDDATE})
