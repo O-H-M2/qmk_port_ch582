@@ -79,7 +79,7 @@ endif()
 
 execute_process(COMMAND git describe --always --dirty
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    TIMEOUT 5
+    TIMEOUT 60
     OUTPUT_VARIABLE GIT_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
