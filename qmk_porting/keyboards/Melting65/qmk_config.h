@@ -1,5 +1,5 @@
 /*
-Copyright 2022 OctopusZ <https://github.com/OctopusZ>
+Copyright 2023 OctopusZ <https://github.com/OctopusZ>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,13 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 /* USB Device descriptor parameter */
 #define VENDOR_ID    0xCAFE
-#define PRODUCT_ID   0x0B98
+#define PRODUCT_ID   0x0A91
 #define DEVICE_VER   0x0001
-#define MANUFACTURER EzyCarry
-#define PRODUCT      EC61
+#define MANUFACTURER Melting
+#define PRODUCT      Melting65
 
 #define MATRIX_ROWS 5
-#define MATRIX_COLS 14
+#define MATRIX_COLS 15
 #define MATRIX_ROW_PINS       \
     {                         \
         B9, B8, B17, B16, B18 \
@@ -44,20 +44,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define EARLY_INIT_PERFORM_BOOTLOADER_JUMP FALSE
 
+#define WS2812_EN_PIN   A5
+#define WS2812_EN_LEVEL 1
+
 #define BATTERY_MEASURE_PIN A4
 #define POWER_DETECT_PIN    B12
 
 #ifdef RGB_MATRIX_ENABLE
-
 #define RGB_MATRIX_KEYPRESSES
 // #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
-#define RGBLED_NUM                    61
+#define RGBLED_NUM                    66
 #define RGB_MATRIX_LED_COUNT          RGBLED_NUM
-#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 255
+#define RGB_MATRIX_MAXIMUM_BRIGHTNESS 32
 #define RGB_MATRIX_STARTUP_VAL        RGB_MATRIX_MAXIMUM_BRIGHTNESS
 #define RGB_MATRIX_HUE_STEP           10
-#define RGB_MATRIX_SAT_STEP           17
-#define RGB_MATRIX_VAL_STEP           17
+#define RGB_MATRIX_SAT_STEP           8
+#define RGB_MATRIX_VAL_STEP           4
 #define RGB_MATRIX_SPD_STEP           10
 #define RGB_DISABLE_WHEN_USB_SUSPENDED
 #define ENABLE_RGB_MATRIX_ALPHAS_MODS
@@ -103,25 +105,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENABLE_RGB_MATRIX_PIXEL_RAIN
 #define ENABLE_RGB_MATRIX_PIXEL_FLOW
 #define ENABLE_RGB_MATRIX_PIXEL_FRACTAL
-
-#define ESB_INDICATOR [1][5]
 #endif
 #ifdef RGB_RAW_ENABLE
 #define AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
-#endif
-
-#ifdef AW20216
-#define AW_GLOBAL_CURRENT_MAX 255
-#define AW_SCALING_MAX        255
-
-#define DRIVER_1_CS A9
-#define DRIVER_1_EN A5
-
-#define DRIVER_COUNT       1
-#define DRIVER_1_LED_TOTAL 61
-#define DRIVER_LED_TOTAL   (DRIVER_1_LED_TOTAL)
-
-#define AW_SPI_DIVISOR 5
 #endif
 
 /* define if matrix has ghost */
@@ -145,3 +131,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define NO_ACTION_LAYER
 // #define NO_ACTION_TAPPING
 // #define NO_ACTION_ONESHOT
+
+#ifdef ENCODER_ENABLE
+#define ENCODERS_PAD_A \
+    {                  \
+        B2             \
+    }
+#define ENCODERS_PAD_B \
+    {                  \
+        B1             \
+    }
+#define ENCODER_RESOLUTION 1
+#endif
