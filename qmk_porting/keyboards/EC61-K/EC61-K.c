@@ -16,10 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include QMK_KEYBOARD_H
+#include "battery_measure.h"
 
 #ifdef RGB_MATRIX_ENABLE
-
-
 
 /* clang-format off */
 led_config_t g_led_config = {
@@ -31,10 +30,10 @@ led_config_t g_led_config = {
         {  NO_LED,  NO_LED,  NO_LED,  NO_LED,  NO_LED,   NO_LED,   NO_LED,   NO_LED,   NO_LED,   NO_LED,   NO_LED,   NO_LED,   NO_LED,  NO_LED}, 
 	}, {
         {13,29}, 
-        {7,3},  {22,3},  {37,3},  {52,3}, // {67,3},   {82,3},
+        {7,3},  {22,3},  {37,3},  {52,3},  {67,3},   {82,3},
         
 	}, {
-		4,       4,       4,       4,//       4,        4,
+		4,       4,       4,       4,       4,        4,
         4,
 	}
 };
