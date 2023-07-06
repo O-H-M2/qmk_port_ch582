@@ -30,9 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {                         \
         B9, B8, B17, B16, B18 \
     }
-#define MATRIX_COL_PINS                                            \
-    {                                                              \
-        A6, A0, A1, A2, A3, A15, A14, A13, A12, A7, B7, B6, B5, B4 \
+#define MATRIX_COL_PINS                                                \
+    {                                                                  \
+        A6, A0, A1, A2, A3, A15, A14, A13, A12, A7, B7, B6, B5, B4, B3 \
     }
 #define DYNAMIC_KEYMAP_LAYER_COUNT 10
 
@@ -141,5 +141,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {                  \
         B1             \
     }
-#define ENCODER_RESOLUTION 1
+#define ENCODER_RESOLUTION 2
 #endif
