@@ -1,4 +1,3 @@
-Copyright 2023 SharpSnail01 <https: //github.com/SharpSnail01>
 {
     "files.associations": {
         "platform_deps.h": "c",
@@ -115,9 +114,14 @@ Copyright 2023 SharpSnail01 <https: //github.com/SharpSnail01>
         "suspend.h": "c",
         "type_traits": "c",
         "platform.h": "c",
-        "asn1.h": "c"
+        "asn1.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "rope": "c",
+        "regex": "c"
     },
-    "cmake.configureOnOpen": true,
+    "cmake.configureOnOpen": false,
     "git.ignoreLimitWarning": true,
     "C_Cpp.files.exclude": {
         "**/build": true,
@@ -138,5 +142,8 @@ Copyright 2023 SharpSnail01 <https: //github.com/SharpSnail01>
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python"
     }
 }

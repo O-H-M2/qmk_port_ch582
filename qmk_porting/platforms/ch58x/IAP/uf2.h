@@ -32,25 +32,25 @@ SOFTWARE.
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "partition_table.h"
 
 //--------------------------------------------------------------------+
 // UF2 Configuration
 //--------------------------------------------------------------------+
 
-#define UF2_VERSION         MACRO2STR(__GIT_VERSION__)
-#define UF2_INDEX_URL       ""
-#define UF2_VOLUME_LABEL    "HucKeys DFU"
-#define UF2_PRODUCT_NAME    MACRO2STR(PRODUCT)
-#define UF2_BOARD_ID        MACRO2STR(DEVICE_VER)
-#define BOARD_UF2_FAMILY_ID 0x1aa143c7
+#define UF2_VERSION      MACRO2STR(__GIT_VERSION__)
+#define UF2_INDEX_URL    ""
+#define UF2_VOLUME_LABEL "HucKeys DFU"
+#define UF2_PRODUCT_NAME MACRO2STR(PRODUCT)
+#define UF2_BOARD_ID     MACRO2STR(DEVICE_VER)
 
 #ifndef CFG_UF2_FLASH_SIZE
-#define CFG_UF2_FLASH_SIZE (400 * 1024)
+#define CFG_UF2_FLASH_SIZE (APP_CODE_END_ADDR - APP_SECTOR_START_ADDR)
 #endif
-// Number of 512-byte blocks in the exposed filesystem, default is just under 32MB
+// Number of 512-byte blocks in the exposed filesystem, default is just under 8MB
 // The filesystem needs space for the current file, text files, uploaded file, and FAT
 #ifndef CFG_UF2_NUM_BLOCKS
-#define CFG_UF2_NUM_BLOCKS (0x10109)
+#define CFG_UF2_NUM_BLOCKS (0x4043)
 #endif
 // Sectors per FAT cluster, must be increased proportionally for larger filesystems
 #ifndef CFG_UF2_SECTORS_PER_CLUSTER
@@ -66,7 +66,7 @@ SOFTWARE.
 #define UF2_FLAG_NOFLASH  0x00000001
 #define UF2_FLAG_FAMILYID 0x00002000
 
-#define STATIC_ASSERT(_exp) _Static_assert(_exp, "static assert failed")
+#define STATIC_ASSERT(_exp)  _Static_assert(_exp, "static assert failed")
 #define UF2_ARRAY_SIZE(_arr) (sizeof(_arr) / sizeof(_arr[0]))
 #define UF2_DIV_CEIL(_v, _d) (((_v) / (_d)) + ((_v) % (_d) ? 1 : 0))
 

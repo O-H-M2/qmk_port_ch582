@@ -20,6 +20,7 @@ cmake_minimum_required(VERSION 3.20)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(QMK_BASE_DIR "${CMAKE_CURRENT_LIST_DIR}/qmk_firmware" CACHE STRING "ENV" FORCE)
+set(UF2_FAMILY 0x1aa143c7)
 
 find_program(CCACHE_FOUND ccache)
 
@@ -78,7 +79,7 @@ endif()
 
 execute_process(COMMAND git describe --always --dirty
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-    TIMEOUT 5
+    TIMEOUT 10
     OUTPUT_VARIABLE GIT_VERSION
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
@@ -130,6 +131,7 @@ endif()
 
 add_definitions(-DKEYMAP_C="keymap.c")
 add_definitions(-D__GIT_VERSION__=${GIT_VERSION})
+add_definitions(-DBOARD_UF2_FAMILY_ID=${UF2_FAMILY})
 
 function(include_sub_directories_recursively root_dir)
     if(IS_DIRECTORY ${root_dir})
@@ -319,7 +321,7 @@ else()
     else()
         add_custom_target(post_build ALL
             COMMAND python3 ${PROJECT_SOURCE_DIR}/mcuboot/scripts/imgtool.py sign --header-size 0x1000 --align 4 --slot-size 0x5e000 --version 1.0.0 --pad-header ${HEX_FILE_APP} ${HEX_FILE_APP_SIGNED}
-            COMMAND python3 ${PROJECT_SOURCE_DIR}/utils/uf2conv.py ${HEX_FILE_APP_SIGNED} -c -f 0x1aa143c7 -o ${UF2_FILE_APP}
+            COMMAND python3 ${PROJECT_SOURCE_DIR}/utils/uf2conv.py ${HEX_FILE_APP_SIGNED} -c -f ${UF2_FAMILY} -o ${UF2_FILE_APP}
             COMMAND ${MERGEHEX_PATH} --merge ${HEX_FILE_APP_SIGNED} ${HEX_FILE_IAP} --output ${HEX_FILE_FACTORY}
             DEPENDS ${keyboard}.elf ${keyboard}_IAP.elf
         )
