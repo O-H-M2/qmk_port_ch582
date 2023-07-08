@@ -69,6 +69,9 @@ USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t rgbraw_out_buffer[RGBRAW_OUT_EP_S
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t qmkraw_out_buffer[QMKRAW_OUT_EP_SIZE];
 #endif
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void usbd_hid_kbd_in_callback(uint8_t ep, uint32_t nbytes)
 {
     keyboard_state = HID_STATE_IDLE;
@@ -77,6 +80,9 @@ void usbd_hid_kbd_in_callback(uint8_t ep, uint32_t nbytes)
 #endif
 }
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 {
     keyboard_leds_set(kbd_out_buffer[0]);
@@ -84,6 +90,9 @@ void usbd_hid_kbd_out_callback(uint8_t ep, uint32_t nbytes)
 }
 
 #ifdef RGB_RAW_ENABLE
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
     rgbraw_state = HID_STATE_IDLE;
@@ -92,6 +101,9 @@ void usbd_hid_rgb_raw_in_callback(uint8_t ep, uint32_t nbytes)
 #endif
 }
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
     receive_rgb_raw(rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
@@ -99,6 +111,9 @@ void usbd_hid_rgb_raw_out_callback(uint8_t ep, uint32_t nbytes)
 }
 #endif
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void usbd_hid_exkey_in_callback(uint8_t ep, uint32_t nbytes)
 {
     extrakey_state = HID_STATE_IDLE;
@@ -108,6 +123,9 @@ void usbd_hid_exkey_in_callback(uint8_t ep, uint32_t nbytes)
 }
 
 #ifdef RAW_ENABLE
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void usbd_hid_qmk_raw_in_callback(uint8_t ep, uint32_t nbytes)
 {
     qmkraw_state = HID_STATE_IDLE;
@@ -116,6 +134,9 @@ void usbd_hid_qmk_raw_in_callback(uint8_t ep, uint32_t nbytes)
 #endif
 }
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void usbd_hid_qmk_raw_out_callback(uint8_t ep, uint32_t nbytes)
 {
     receive_qmk_raw(qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
@@ -427,6 +448,9 @@ void usbd_event_handler(uint8_t event)
     }
 }
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 bool hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
 {
     if (mode != keyboard_current_mode) {
@@ -466,12 +490,18 @@ bool hid_keyboard_send_report(uint8_t mode, uint8_t *data, uint8_t len)
     return true;
 }
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void hid_keyboard_send_last_bios_report()
 {
     hid_keyboard_send_report(KEYBOARD_MODE_BIOS, keyboard_last_bios_report, KEYBOARD_REPORT_SIZE);
 }
 
 #ifdef RGB_RAW_ENABLE
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 bool hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
 {
     if (!usb_remote_wakeup()) {
@@ -502,6 +532,9 @@ bool hid_rgb_raw_send_report(uint8_t *data, uint8_t len)
 }
 #endif
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 inline bool hid_exkey_send_report(uint8_t *data, uint8_t len)
 {
     if (!usb_remote_wakeup()) {
@@ -532,6 +565,9 @@ inline bool hid_exkey_send_report(uint8_t *data, uint8_t len)
 }
 
 #ifdef RAW_ENABLE
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 bool hid_qmk_raw_send_report(uint8_t *data, uint8_t len)
 {
     if (!usb_remote_wakeup()) {
