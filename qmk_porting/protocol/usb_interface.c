@@ -25,11 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "keycode_config.h"
 #include "protocol.h"
 #if ESB_ENABLE == 2
-#include "config.h"
-#define memcmp(...) tmos_memcmp(__VA_ARGS__) ? 0 : 1
-#define strlen      tmos_strlen
-#define memset      tmos_memset
-#define memcpy      tmos_memcpy
 extern void esb_dongle_usb_report_sent(uint8_t interface);
 #endif
 
