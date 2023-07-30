@@ -366,3 +366,8 @@ enum {
 #if !defined USB_ENABLE && !defined BLE_ENABLE && !defined ESB_ENABLE
 #error "No interface enabled!"
 #endif
+
+#define memcmp(...)              tmos_memcmp(__VA_ARGS__) ? 0 : 1
+#define strlen(pString)          tmos_strlen((char *)(pString))
+#define memset(pDst, Value, len) tmos_memset(pDst, (int)(Value), (size_t)(len))
+#define memcpy                   tmos_memcpy

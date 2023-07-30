@@ -29,6 +29,9 @@ extern "C" {
 #ifndef GPIO_INPUT_PIN_DELAY
 #define GPIO_INPUT_PIN_DELAY (FREQ_SYS / 1000000L / 8)
 #endif
+#ifndef MATRIX_IO_DELAY
+#define MATRIX_IO_DELAY 5
+#endif
 
 #define waitInputPinDelay() SAFEOPERATE;
 

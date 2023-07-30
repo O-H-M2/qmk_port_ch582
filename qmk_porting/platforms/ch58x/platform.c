@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 volatile uint8_t kbd_protocol_type = 0;
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+extern void wireless_indicator_status_reset();
 #else
 __attribute__((aligned(4))) uint32_t MEM_BUF[BLE_MEMHEAP_SIZE / 4];
 #endif
@@ -40,6 +41,9 @@ int8_t sendchar(uint8_t c)
 void shutdown_user()
 {
     rgbled_power_off();
+#if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
+    wireless_indicator_status_reset();
+#endif
 
 #ifdef ENCODER_ENABLE
     pin_t encoders_pad_a[] = ENCODERS_PAD_A, encoders_pad_b[] = ENCODERS_PAD_B;
