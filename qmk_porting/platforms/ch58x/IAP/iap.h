@@ -39,6 +39,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define MSC_IN_EP          0x81
 #define MSC_OUT_EP         0x02
+#define MSC_MAX_MPS        64
 #define USBD_VID           VENDOR_ID
 #define USBD_PID           PRODUCT_ID
 #define USBD_MAX_POWER     100
