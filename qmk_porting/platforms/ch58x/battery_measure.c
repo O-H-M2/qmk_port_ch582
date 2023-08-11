@@ -82,6 +82,8 @@ static inline void battery_config_channel(pin_t pin)
         case A12:
             ADC_ChannelCfg(2);
             break;
+        default:
+            break;
     }
 }
 
@@ -178,7 +180,7 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
 
 __attribute__((weak)) void battery_init()
 {
-#ifdef BATTERY_MEASURE_PIN
+#if defined BATTERY_MEASURE_PIN && BATTERY_MEASURE_PIN != NO_PIN
     switch (BATTERY_MEASURE_PIN) {
         case A0:
         case A1:
@@ -199,7 +201,7 @@ __attribute__((weak)) void battery_init()
 
 __attribute__((weak)) uint16_t battery_measure()
 {
-#ifdef BATTERY_MEASURE_PIN
+#if defined BATTERY_MEASURE_PIN && BATTERY_MEASURE_PIN != NO_PIN
     uint16_t adcBuff[15];
     int16_t RoughCalib_Value = ADC_DataCalib_Rough();
 
