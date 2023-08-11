@@ -28,8 +28,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 extern void esb_dongle_usb_report_sent(uint8_t interface);
 #endif
 
-uint8_t keyboard_protocol = 1;
-uint8_t keyboard_idle = 0;
 static uint8_t *hid_descriptor = NULL;
 
 #ifdef FORCE_NKRO

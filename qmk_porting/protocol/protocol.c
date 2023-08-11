@@ -22,6 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "usb_interface.h"
 #include "quantum.h"
 
+uint8_t keyboard_protocol = 1;
+uint8_t keyboard_idle = 0;
 static uint8_t keyboard_led_state;
 
 // make it overridable for dongle

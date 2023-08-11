@@ -20,6 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdint.h>
 #include "host.h"
 
+extern uint8_t keyboard_protocol;
+extern uint8_t keyboard_idle;
+
 #ifdef RAW_ENABLE
 typedef void (*qmk_raw_handler_t)(uint8_t *, uint8_t);
 #endif

@@ -120,7 +120,8 @@
         "string_view": "c",
         "rope": "c",
         "regex": "c",
-        "streambuf": "c"
+        "streambuf": "c",
+        "variant": "c"
     },
     "cmake.configureOnOpen": false,
     "git.ignoreLimitWarning": true,
