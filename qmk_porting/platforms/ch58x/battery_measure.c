@@ -19,8 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "battery_measure.h"
 #include "quantum.h"
 
-#ifdef BATTERY_MEASURE_PIN
-
 static volatile uint8_t last_percentage = 100;
 static uint32_t last_measure = 0;
 
@@ -180,6 +178,7 @@ __attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
 
 __attribute__((weak)) void battery_init()
 {
+#ifdef BATTERY_MEASURE_PIN
     switch (BATTERY_MEASURE_PIN) {
         case A0:
         case A1:
@@ -195,10 +194,12 @@ __attribute__((weak)) void battery_init()
             break;
     }
     ADC_ExtSingleChSampInit(SampleFreq_3_2, ADC_PGA_2);
+#endif
 }
 
 __attribute__((weak)) uint16_t battery_measure()
 {
+#ifdef BATTERY_MEASURE_PIN
     uint16_t adcBuff[15];
     int16_t RoughCalib_Value = ADC_DataCalib_Rough();
 
@@ -220,6 +221,9 @@ __attribute__((weak)) uint16_t battery_measure()
     }
 
     return adc_data;
+#else
+    return 0;
+#endif
 }
 
 __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
@@ -275,5 +279,3 @@ uint32_t battery_get_last_measure()
 {
     return last_measure;
 }
-
-#endif
