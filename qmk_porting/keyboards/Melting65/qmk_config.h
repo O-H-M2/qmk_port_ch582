@@ -135,11 +135,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \
     {                  \
-        B2             \
+        B22            \
     }
 #define ENCODERS_PAD_B \
     {                  \
-        B1             \
+        B0             \
     }
-#define ENCODER_RESOLUTION 2
+#define ENCODER_RESOLUTION 1
 #endif
