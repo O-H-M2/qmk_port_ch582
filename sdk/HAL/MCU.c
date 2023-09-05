@@ -96,8 +96,10 @@ void CH58X_BLEInit(void)
     cfg.TxNumEvent = (uint32_t)BLE_TX_NUM_EVENT;
     cfg.TxPower = (uint32_t)BLE_TX_POWER;
 #if(defined(BLE_SNV)) && (BLE_SNV == TRUE)
+    _Static_assert((BLE_SNV_ADDR + BLE_SNV_BLOCK * BLE_SNV_NUM) <= (0x78000 - FLASH_ROM_MAX_SIZE), "SNV config error!");
     cfg.SNVAddr = (uint32_t)BLE_SNV_ADDR;
-    cfg.SNVNum = (uint32_t)((EEPROM_MAX_SIZE - BLE_SNV_ADDR) / EEPROM_PAGE_SIZE);
+    cfg.SNVBlock = (uint32_t)BLE_SNV_BLOCK;
+    cfg.SNVNum = (uint32_t)((EEPROM_MAX_SIZE - BLE_SNV_ADDR) / BLE_SNV_BLOCK);
     cfg.readFlashCB = Lib_Read_Flash;
     cfg.writeFlashCB = Lib_Write_Flash;
 #endif
