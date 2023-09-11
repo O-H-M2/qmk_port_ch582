@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "aw20216_supplement.h"
 
 static volatile bool aw20216_powered_on = true;
-extern bool AW20216_write(pin_t cs_pin, uint8_t page, uint8_t reg, uint8_t *data, uint8_t len);
 
 inline bool aw20216_power_status_get()
 {
