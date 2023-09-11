@@ -31,6 +31,8 @@ bool AUXILIARY_RGB(effect_params_t *params)
 {
     // skip this effect in bluetooth mode
 #ifdef BLE_ENABLE
+    extern volatile uint8_t kbd_protocol_type;
+
     if (kbd_protocol_type == kbd_protocol_ble) {
         return true;
     }
