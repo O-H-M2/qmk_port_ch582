@@ -367,6 +367,12 @@ void init_usb_driver()
     usbd_initialize();
 }
 
+void usbd_hid_get_report(uint8_t intf, uint8_t report_id, uint8_t report_type, uint8_t **data, uint32_t *len)
+{
+    (*data[0]) = 0;
+    *len = 1;
+}
+
 uint8_t usbd_hid_get_idle(uint8_t intf, uint8_t report_id)
 {
     return keyboard_idle;
@@ -379,6 +385,10 @@ uint8_t usbd_hid_get_protocol(uint8_t intf)
     } else {
         return 0;
     }
+}
+
+void usbd_hid_set_report(uint8_t intf, uint8_t report_id, uint8_t report_type, uint8_t *report, uint32_t report_len)
+{
 }
 
 void usbd_hid_set_idle(uint8_t intf, uint8_t report_id, uint8_t duration)
