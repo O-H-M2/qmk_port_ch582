@@ -88,16 +88,16 @@ bool transport_execute_transaction(int8_t id, const void *initiator2target_buf, 
 
 #else // USE_I2C
 
-// #    include "serial.h"
+#    include "serial.h"
 
 static split_shared_memory_t shared_memory;
 split_shared_memory_t *const split_shmem = &shared_memory;
 
 void transport_master_init(void) {
-    // soft_serial_initiator_init();
+    soft_serial_initiator_init();
 }
 void transport_slave_init(void) {
-    // soft_serial_target_init();
+    soft_serial_target_init();
 }
 
 bool transport_execute_transaction(int8_t id, const void *initiator2target_buf, uint16_t initiator2target_length, void *target2initiator_buf, uint16_t target2initiator_length) {
@@ -107,9 +107,9 @@ bool transport_execute_transaction(int8_t id, const void *initiator2target_buf, 
         memcpy(split_trans_initiator2target_buffer(trans), initiator2target_buf, len);
     }
 
-    // if (!soft_serial_transaction(id)) {
-    //     return false;
-    // }
+    if (!soft_serial_transaction(id)) {
+        return false;
+    }
 
     if (target2initiator_length > 0) {
         size_t len = trans->target2initiator_buffer_size < target2initiator_length ? trans->target2initiator_buffer_size : target2initiator_length;
