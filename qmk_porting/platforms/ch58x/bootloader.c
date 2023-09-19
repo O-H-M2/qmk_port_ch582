@@ -83,14 +83,14 @@ void bootloader_select_boot_mode()
 #ifdef POWER_DETECT_PIN
         if (!readPin(POWER_DETECT_PIN)) {
             PRINT("Cable not connected, USB mode is disabled.\n");
-#ifdef BLE_ENABLE
-            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
-            mode = BOOTLOADER_BOOT_MODE_BLE;
-            PRINT("Default to BLE.\n");
-#elif defined ESB_ENABLE
+#ifdef ESB_ENABLE
             bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
             mode = BOOTLOADER_BOOT_MODE_ESB;
             PRINT("Default to ESB.\n");
+#elif defined BLE_ENABLE
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
+            mode = BOOTLOADER_BOOT_MODE_BLE;
+            PRINT("Default to BLE.\n");
 #endif
         }
 #endif
