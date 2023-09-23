@@ -30,6 +30,23 @@
 
 static uint8_t i2c_address;
 
+static void i2c_power_toggle(bool state)
+{
+    if (state) {
+        while (R8_SLP_CLK_OFF1 & RB_SLP_CLK_I2C) {
+            sys_safe_access_enable();
+            R8_SLP_CLK_OFF1 &= ~RB_SLP_CLK_I2C;
+        }
+        sys_safe_access_disable();
+    } else {
+        while (!(R8_SLP_CLK_OFF1 & RB_SLP_CLK_I2C)) {
+            sys_safe_access_enable();
+            R8_SLP_CLK_OFF1 |= RB_SLP_CLK_I2C;
+        }
+        sys_safe_access_disable();
+    }
+}
+
 void i2c_init()
 {
 #ifdef I2C_IO_REMAPPING
@@ -45,10 +62,15 @@ void i2c_init()
     while (I2C_GetFlagStatus(I2C_FLAG_BUSY)) {
         __nop();
     }
+
+    wait_us(200);
+    i2c_power_toggle(false);
 }
 
 i2c_status_t i2c_start(uint8_t address, uint16_t timeout)
 {
+    i2c_power_toggle(true);
+
     uint16_t timeout_timer = timer_read();
 
     i2c_address = address;
@@ -59,6 +81,7 @@ i2c_status_t i2c_start(uint8_t address, uint16_t timeout)
             return I2C_STATUS_TIMEOUT;
         }
     }
+
     return I2C_STATUS_SUCCESS;
 }
 
@@ -98,12 +121,15 @@ i2c_status_t i2c_transmit(uint8_t address, const uint8_t *data, uint16_t length,
             return I2C_STATUS_TIMEOUT;
         }
     }
+
     i2c_stop();
+
+    wait_us(200);
+    i2c_power_toggle(false);
 
     return I2C_STATUS_SUCCESS;
 }
 
-// TODO: verify this
 i2c_status_t i2c_receive(uint8_t address, uint8_t *data, uint16_t length, uint16_t timeout)
 {
     i2c_status_t status = i2c_start(address, timeout);
@@ -135,6 +161,10 @@ i2c_status_t i2c_receive(uint8_t address, uint8_t *data, uint16_t length, uint16
     }
 
     I2C_AcknowledgeConfig(ENABLE);
+
+    wait_us(200);
+    i2c_power_toggle(false);
+
     return I2C_STATUS_SUCCESS;
 }
 
@@ -163,7 +193,6 @@ i2c_status_t i2c_writeReg16(uint8_t devaddr, uint16_t regaddr, const uint8_t *da
     return i2c_transmit(devaddr, (const uint8_t *)buffer, length + 2, timeout);
 }
 
-// TODO: verify this
 i2c_status_t i2c_readReg(uint8_t devaddr, uint8_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
 {
     i2c_status_t status = i2c_start(devaddr, timeout);
@@ -222,10 +251,13 @@ i2c_status_t i2c_readReg(uint8_t devaddr, uint8_t regaddr, uint8_t *data, uint16
     }
 
     I2C_AcknowledgeConfig(ENABLE);
+
+    wait_us(200);
+    i2c_power_toggle(false);
+
     return I2C_STATUS_SUCCESS;
 }
 
-// TODO: verify this
 i2c_status_t i2c_readReg16(uint8_t devaddr, uint16_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
 {
     i2c_status_t status = i2c_start(devaddr, timeout);
@@ -290,5 +322,9 @@ i2c_status_t i2c_readReg16(uint8_t devaddr, uint16_t regaddr, uint8_t *data, uin
     }
 
     I2C_AcknowledgeConfig(ENABLE);
+
+    wait_us(200);
+    i2c_power_toggle(false);
+
     return I2C_STATUS_SUCCESS;
 }
