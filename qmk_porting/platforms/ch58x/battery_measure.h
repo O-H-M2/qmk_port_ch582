@@ -24,8 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 uint16_t battery_get_min();
 uint16_t battery_get_max();
+void battery_handle_critical();
 void battery_init();
 uint16_t battery_measure();
 uint8_t battery_calculate(uint16_t adcVal);
+void battery_update_last_percentage(uint8_t percentage);
 uint8_t battery_get_last_percentage();
+void battery_update_last_measure();
 uint32_t battery_get_last_measure();

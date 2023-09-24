@@ -138,7 +138,7 @@ __attribute__((noinline)) static void battery_critical_prerequisite()
     } while (R8_SLP_WAKE_CTRL != temp);
 }
 
-__attribute__((noreturn)) __HIGH_CODE static void battery_handle_critical()
+__attribute__((noreturn)) __HIGH_CODE void battery_handle_critical()
 {
     battery_critical_prerequisite();
     WAIT_FOR_DBG;
@@ -253,28 +253,38 @@ done:
 #ifdef POWER_DETECT_PIN
     if (!readPin(POWER_DETECT_PIN)) {
         // with cable unpluged, battery level should get lower only
-        if (percent < last_percentage) {
-            last_percentage = percent;
+        if (percent < battery_get_last_percentage()) {
+            battery_update_last_percentage(percent);
         }
     } else {
-        last_percentage = percent;
+        battery_update_last_percentage(percent);
     }
 #else
-    last_percentage = percent;
+    battery_update_last_percentage(percent);
 #endif
 #if __BUILDING_APP__
-    last_measure = timer_read32();
-    if (!last_measure) {
-        last_measure++;
-    }
+    battery_update_last_measure();
 #endif
 
-    return last_percentage;
+    return battery_get_last_percentage();
+}
+
+void battery_update_last_percentage(uint8_t percentage)
+{
+    last_percentage = percentage;
 }
 
 uint8_t battery_get_last_percentage()
 {
     return last_percentage;
+}
+
+void battery_update_last_measure()
+{
+    last_measure = timer_read32();
+    if (!last_measure) {
+        last_measure++;
+    }
 }
 
 uint32_t battery_get_last_measure()
