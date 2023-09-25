@@ -29,6 +29,7 @@ file(GLOB QMK_PORTING_SOURCES
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/retention_register.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/suspend.c"
     "${CMAKE_CURRENT_LIST_DIR}/platforms/ch58x/timer.c"
+    "${CMAKE_CURRENT_LIST_DIR}/protocol/extra_indicator.c"
     "${CMAKE_CURRENT_LIST_DIR}/protocol/extra_keycode.c"
     "${CMAKE_CURRENT_LIST_DIR}/protocol/protocol.c"
 )
