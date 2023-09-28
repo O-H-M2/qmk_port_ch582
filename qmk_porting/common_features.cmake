@@ -65,6 +65,7 @@ if(UCIS_ENABLE)
     message(STATUS "UCIS_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/process_keycode/process_ucis.c"
+        "${QMK_BASE_DIR}/quantum/unicode/ucis.c"
     )
 endif()
 
@@ -75,6 +76,7 @@ if(UNICODEMAP_ENABLE)
     message(STATUS "UNICODEMAP_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/process_keycode/process_unicodemap.c"
+        "${QMK_BASE_DIR}/quantum/unicode/unicodemap.c"
     )
 endif()
 
