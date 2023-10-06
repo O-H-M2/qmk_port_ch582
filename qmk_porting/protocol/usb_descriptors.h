@@ -31,6 +31,7 @@ enum {
     InterfaceNumber_keyboard = InterfaceNumber_start,
 #ifdef RGB_RAW_ENABLE
     InterfaceNumber_rgb_raw,
+    InterfaceNumber_dynamic_lighting,
 #endif
     InterfaceNumber_extra_key,
 #ifdef RAW_ENABLE
@@ -128,6 +129,164 @@ const uint8_t RGBRawReport[] = {
     0x75, 0x08,       //   Report Size (8)
     0x91, 0x02,       //   Output (Data, Variable, Absolute)
     0xC0,             // End Collection
+};
+
+const uint8_t DynamicLightingReport[] = {
+    0x05, 0x59,                   // Usage Page (LightingAndIllumination)
+    0x09, 0x01,                   // Usage (LampArray)
+    0xa1, 0x01,                   // Collection (Application)
+    0x85, 0x01,                   //   REPORT_ID
+    0x09, 0x02,                   //   Usage (LampArrayAttributesReport)
+    0xa1, 0x02,                   //   Collection (Logical)
+    0x09, 0x03,                   //     Usage (LampCount)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x27, 0xff, 0xff, 0x00, 0x00, //     Logical Maximum (65535)
+    0x75, 0x10,                   //     Report Size (16)
+    0x95, 0x01,                   //     Report Count (1)
+    0xb1, 0x03,                   //     Feature (Cnst,Var,Abs)
+    0x09, 0x04,                   //     Usage (BoundingBoxWidthInMicrometers)
+    0x09, 0x05,                   //     Usage (BoundingBoxHeightInMicrometers)
+    0x09, 0x06,                   //     Usage (BoundingBoxDepthInMicrometers)
+    0x09, 0x07,                   //     Usage (LampArrayKind)
+    0x09, 0x08,                   //     Usage (MinUpdateIntervalInMicroseconds)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x27, 0xff, 0xff, 0xff, 0x7f, //     Logical Maximum (2147483647)
+    0x75, 0x20,                   //     Report Size (32)
+    0x95, 0x05,                   //     Report Count (5)
+    0xb1, 0x03,                   //     Feature (Cnst,Var,Abs)
+    0xc0,                         //   End Collection
+    0x85, 0x02,                   //   REPORT_ID
+    0x09, 0x20,                   //   Usage (LampAttributesRequestReport)
+    0xa1, 0x02,                   //   Collection (Logical)
+    0x09, 0x21,                   //     Usage (LampId)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x27, 0xff, 0xff, 0x00, 0x00, //     Logical Maximum (65535)
+    0x75, 0x10,                   //     Report Size (16)
+    0x95, 0x01,                   //     Report Count (1)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0xc0,                         //   End Collection
+    0x85, 0x03,                   //   REPORT_ID
+    0x09, 0x22,                   //   Usage (LampAttributesReponseReport)
+    0xa1, 0x02,                   //   Collection (Logical)
+    0x09, 0x21,                   //     Usage (LampId)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x27, 0xff, 0xff, 0x00, 0x00, //     Logical Maximum (65535)
+    0x75, 0x10,                   //     Report Size (16)
+    0x95, 0x01,                   //     Report Count (1)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0x09, 0x23,                   //     Usage (PositionXInMicrometers)
+    0x09, 0x24,                   //     Usage (PositionYInMicrometers)
+    0x09, 0x25,                   //     Usage (PositionZInMicrometers)
+    0x09, 0x27,                   //     Usage (UpdateLatencyInMicroseconds)
+    0x09, 0x26,                   //     Usage (LampPurposes)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x27, 0xff, 0xff, 0xff, 0x7f, //     Logical Maximum (2147483647)
+    0x75, 0x20,                   //     Report Size (32)
+    0x95, 0x05,                   //     Report Count (5)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0x09, 0x28,                   //     Usage (RedLevelCount)
+    0x09, 0x29,                   //     Usage (GreenLevelCount)
+    0x09, 0x2a,                   //     Usage (BlueLevelCount)
+    0x09, 0x2b,                   //     Usage (IntensityLevelCount)
+    0x09, 0x2c,                   //     Usage (IsProgrammable)
+    0x09, 0x2d,                   //     Usage (InputBinding)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x26, 0xff, 0x00,             //     Logical Maximum (255)
+    0x75, 0x08,                   //     Report Size (8)
+    0x95, 0x06,                   //     Report Count (6)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0xc0,                         //   End Collection
+    0x85, 0x04,                   //   REPORT_ID
+    0x09, 0x50,                   //   Usage (LampMultiUpdateReport)
+    0xa1, 0x02,                   //   Collection (Logical)
+    0x09, 0x03,                   //     Usage (LampCount)
+    0x09, 0x55,                   //     Usage (LampUpdateFlags)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x25, 0x08,                   //     Logical Maximum (8)
+    0x75, 0x08,                   //     Report Size (8)
+    0x95, 0x02,                   //     Report Count (2)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0x09, 0x21,                   //     Usage (LampId)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x27, 0xff, 0xff, 0x00, 0x00, //     Logical Maximum (65535)
+    0x75, 0x10,                   //     Report Size (16)
+    0x95, 0x08,                   //     Report Count (8)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0x09, 0x51,                   //     Usage (RedUpdateChannel)
+    0x09, 0x52,                   //     Usage (GreenUpdateChannel)
+    0x09, 0x53,                   //     Usage (BlueUpdateChannel)
+    0x09, 0x54,                   //     Usage (IntensityUpdateChannel)
+    0x09, 0x51,                   //     Usage (RedUpdateChannel)
+    0x09, 0x52,                   //     Usage (GreenUpdateChannel)
+    0x09, 0x53,                   //     Usage (BlueUpdateChannel)
+    0x09, 0x54,                   //     Usage (IntensityUpdateChannel)
+    0x09, 0x51,                   //     Usage (RedUpdateChannel)
+    0x09, 0x52,                   //     Usage (GreenUpdateChannel)
+    0x09, 0x53,                   //     Usage (BlueUpdateChannel)
+    0x09, 0x54,                   //     Usage (IntensityUpdateChannel)
+    0x09, 0x51,                   //     Usage (RedUpdateChannel)
+    0x09, 0x52,                   //     Usage (GreenUpdateChannel)
+    0x09, 0x53,                   //     Usage (BlueUpdateChannel)
+    0x09, 0x54,                   //     Usage (IntensityUpdateChannel)
+    0x09, 0x51,                   //     Usage (RedUpdateChannel)
+    0x09, 0x52,                   //     Usage (GreenUpdateChannel)
+    0x09, 0x53,                   //     Usage (BlueUpdateChannel)
+    0x09, 0x54,                   //     Usage (IntensityUpdateChannel)
+    0x09, 0x51,                   //     Usage (RedUpdateChannel)
+    0x09, 0x52,                   //     Usage (GreenUpdateChannel)
+    0x09, 0x53,                   //     Usage (BlueUpdateChannel)
+    0x09, 0x54,                   //     Usage (IntensityUpdateChannel)
+    0x09, 0x51,                   //     Usage (RedUpdateChannel)
+    0x09, 0x52,                   //     Usage (GreenUpdateChannel)
+    0x09, 0x53,                   //     Usage (BlueUpdateChannel)
+    0x09, 0x54,                   //     Usage (IntensityUpdateChannel)
+    0x09, 0x51,                   //     Usage (RedUpdateChannel)
+    0x09, 0x52,                   //     Usage (GreenUpdateChannel)
+    0x09, 0x53,                   //     Usage (BlueUpdateChannel)
+    0x09, 0x54,                   //     Usage (IntensityUpdateChannel)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x26, 0xff, 0x00,             //     Logical Maximum (255)
+    0x75, 0x08,                   //     Report Size (8)
+    0x95, 0x20,                   //     Report Count (32)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0xc0,                         //   End Collection
+    0x85, 0x05,                   //   REPORT_ID
+    0x09, 0x60,                   //   Usage (LampRangeUpdateReport)
+    0xa1, 0x02,                   //   Collection (Logical)
+    0x09, 0x55,                   //     Usage (LampUpdateFlags)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x25, 0x08,                   //     Logical Maximum (8)
+    0x75, 0x08,                   //     Report Size (8)
+    0x95, 0x01,                   //     Report Count (1)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0x09, 0x61,                   //     Usage (LampIdStart)
+    0x09, 0x62,                   //     Usage (LampIdEnd)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x27, 0xff, 0xff, 0x00, 0x00, //     Logical Maximum (65535)
+    0x75, 0x10,                   //     Report Size (16)
+    0x95, 0x02,                   //     Report Count (2)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0x09, 0x51,                   //     Usage (RedUpdateChannel)
+    0x09, 0x52,                   //     Usage (GreenUpdateChannel)
+    0x09, 0x53,                   //     Usage (BlueUpdateChannel)
+    0x09, 0x54,                   //     Usage (IntensityUpdateChannel)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x26, 0xff, 0x00,             //     Logical Maximum (255)
+    0x75, 0x08,                   //     Report Size (8)
+    0x95, 0x04,                   //     Report Count (4)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0xc0,                         //   End Collection
+    0x85, 0x06,                   //   REPORT_ID
+    0x09, 0x70,                   //   Usage (LampArrayControlReport)
+    0xa1, 0x02,                   //   Collection (Logical)
+    0x09, 0x71,                   //     Usage (AutonomousMode)
+    0x15, 0x00,                   //     Logical Minimum (0)
+    0x25, 0x01,                   //     Logical Maximum (1)
+    0x75, 0x08,                   //     Report Size (8)
+    0x95, 0x01,                   //     Report Count (1)
+    0xb1, 0x02,                   //     Feature (Data,Var,Abs)
+    0xc0,                         //   End Collection
+    0xc0                          // End Collection
 };
 #endif
 
@@ -228,7 +387,8 @@ const uint8_t QMKRawReport[] = {
 
 /*!< report descriptor size */
 #ifdef RGB_RAW_ENABLE
-#define HID_RGBRAW_REPORT_DESC_SIZE sizeof(RGBRawReport)
+#define HID_RGBRAW_REPORT_DESC_SIZE          sizeof(RGBRawReport)
+#define HID_DYNAMICLIGHTING_REPORT_DESC_SIZE sizeof(DynamicLightingReport)
 #endif
 #define HID_EXTRAKEY_REPORT_DESC_SIZE sizeof(ExtrakeyReport)
 #ifdef RAW_ENABLE
@@ -240,7 +400,8 @@ const uint8_t hid_descriptor_scratch_1[] = {
     USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, DEVICE_VER, 0x01),
     USB_CONFIG_DESCRIPTOR_INIT((USB_HID_CONFIG_DESC_SIZ_SCRATCH
 #ifdef RGB_RAW_ENABLE
-                                + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
+                                + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2 +
+                                USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
 #endif
 #ifdef RAW_ENABLE
                                 + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
@@ -248,7 +409,8 @@ const uint8_t hid_descriptor_scratch_1[] = {
                                 ),
                                (0x02
 #ifdef RGB_RAW_ENABLE
-                                + 0x01
+                                + 0x01 +
+                                0x01
 #endif
 #ifdef RAW_ENABLE
                                 + 0x01
@@ -306,12 +468,12 @@ const uint8_t hid_descriptor_scratch_2_bios[] = {
     0x01,                     /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
     0x00,                     /* iInterface: Index of string descriptor */
     /******************** Descriptor of Keyboard HID ********************/
-    0x09,                      /* bLength */
-    0x21,                      /* bDescriptorType */
-    0x11, 0x01,                /* bcdHID */
-    0x00,                      /* bCountryCode */
-    0x01,                      /* bNumDescriptors */
-    0x22,                      /* bDescriptorType */
+    0x09,                          /* bLength */
+    0x21,                          /* bDescriptorType */
+    0x11, 0x01,                    /* bcdHID */
+    0x00,                          /* bCountryCode */
+    0x01,                          /* bNumDescriptors */
+    0x22,                          /* bDescriptorType */
     WBVAL(sizeof(KeyboardReport)), /* wItemLength */
     /******************** Descriptor of Keyboard in endpoint ********************/
     0x07,                  /* bLength */
@@ -363,6 +525,39 @@ const uint8_t hid_descriptor_scratch_3[] = {
     0x03,                      /* bmAttributes */
     WBVAL(RGBRAW_OUT_EP_SIZE), /* wMaxPacketSize */
     RGBRAW_OUT_EP_INTERVAL,    /* bInterval */
+
+    /************** Descriptor of DYNAMIC_LIGHTING interface *****************/
+    0x09,                             /* bLength */
+    0x04,                             /* bDescriptorType */
+    InterfaceNumber_dynamic_lighting, /* bInterfaceNumber */
+    0x00,                             /* bAlternateSetting */
+    0x02,                             /* bNumEndpoints */
+    0x03,                             /* bInterfaceClass */
+    0x00,                             /* bInterfaceSubClass : 1=BOOT, 0=no boot */
+    0x00,                             /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
+    0x00,                             /* iInterface: Index of string descriptor */
+    /******************** Descriptor of DYNAMIC_LIGHTING HID ********************/
+    0x09,                                        /* bLength */
+    0x21,                                        /* bDescriptorType */
+    0x11, 0x01,                                  /* bcdHID */
+    0x00,                                        /* bCountryCode */
+    0x01,                                        /* bNumDescriptors */
+    0x22,                                        /* bDescriptorType */
+    WBVAL(HID_DYNAMICLIGHTING_REPORT_DESC_SIZE), /* wItemLength */
+    /******************** Descriptor of DYNAMIC_LIGHTING in endpoint ********************/
+    0x07,                           /* bLength */
+    0x05,                           /* bDescriptorType */
+    DYNAMICLIGHTING_IN_EP,          /* bEndpointAddress */
+    0x03,                           /* bmAttributes */
+    WBVAL(DYNAMICLIGHTING_IN_SIZE), /* wMaxPacketSize */
+    DYNAMICLIGHTING_IN_INTERVAL,    /* bInterval */
+    /******************** Descriptor of DYNAMIC_LIGHTING out endpoint ********************/
+    0x07,                               /* bLength */
+    0x05,                               /* bDescriptorType */
+    DYNAMICLIGHTING_OUT_EP,             /* bEndpointAddress */
+    0x03,                               /* bmAttributes */
+    WBVAL(DYNAMICLIGHTING_OUT_EP_SIZE), /* wMaxPacketSize */
+    DYNAMICLIGHTING_OUT_EP_INTERVAL,    /* bInterval */
 #endif
 
     /************** Descriptor of EXTRAKEY interface *****************/
