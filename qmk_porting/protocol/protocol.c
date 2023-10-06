@@ -87,6 +87,8 @@ void ch582_toggle_qmk_protocol(bool status)
 #ifdef RGB_RAW_ENABLE
             ch582_interface.send_rgb_raw = last_interface_used->send_rgb_raw;
             ch582_interface.receive_rgb_raw = last_interface_used->receive_rgb_raw;
+            ch582_interface.control_send_rgb_raw = last_interface_used->control_send_rgb_raw;
+            ch582_interface.receive_rgb_raw_control = last_interface_used->receive_rgb_raw_control;
 #endif
         }
         host_set_driver(&ch582_interface.ch582_common_driver);
@@ -99,6 +101,8 @@ void ch582_toggle_qmk_protocol(bool status)
 #ifdef RGB_RAW_ENABLE
         ch582_interface.send_rgb_raw = NULL;
         ch582_interface.receive_rgb_raw = NULL;
+        ch582_interface.control_send_rgb_raw = NULL;
+        ch582_interface.receive_rgb_raw_control = NULL;
 #endif
     }
 }
@@ -151,6 +155,20 @@ void receive_rgb_raw(uint8_t *data, uint8_t length)
 {
     if (ch582_interface.receive_rgb_raw) {
         ch582_interface.receive_rgb_raw(data, length);
+    }
+}
+
+void rgb_raw_control_send(uint8_t report_id, uint8_t **data, uint32_t *len)
+{
+    if (ch582_interface.control_send_rgb_raw) {
+        ch582_interface.control_send_rgb_raw(report_id, data, len);
+    }
+}
+
+void receive_rgb_raw_control(uint8_t report_id, uint8_t *data, uint32_t len)
+{
+    if (ch582_interface.receive_rgb_raw_control) {
+        ch582_interface.receive_rgb_raw_control(report_id, data, len);
     }
 }
 #endif

@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 #ifdef RGB_RAW_ENABLE
 #include "auxiliary_rgb.h"
+#include "dynamic_lighting.h"
 #endif
 
 extern int usbd_deinitialize();
@@ -68,6 +69,11 @@ static void send_qmk_raw(uint8_t *data, uint8_t length)
 static void send_rgb_raw(uint8_t *data, uint8_t length)
 {
     hid_rgb_raw_send_report(data, length);
+}
+
+static void control_send_rgb_raw(uint8_t report_id, uint8_t **data, uint32_t *len)
+{
+    dynamic_lighting_handle_get_report(report_id, data, len);
 }
 #endif
 
@@ -120,6 +126,8 @@ const ch582_interface_t ch582_protocol_usb = {
 #ifdef RGB_RAW_ENABLE
     .send_rgb_raw = send_rgb_raw,
     .receive_rgb_raw = rgb_raw_hid_receive,
+    .control_send_rgb_raw = control_send_rgb_raw,
+    .receive_rgb_raw_control = rgb_raw_control_receive,
 #endif
     .ch582_platform_initialize = platform_initialize,
     .ch582_protocol_setup = protocol_setup,

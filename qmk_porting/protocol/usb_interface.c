@@ -412,9 +412,15 @@ void init_usb_driver()
 
 void usbd_hid_get_report(uint8_t intf, uint8_t report_id, uint8_t report_type, uint8_t **data, uint32_t *len)
 {
-    (*data[0]) = 0;
-    *len = 1;
-    PRINT("%s: intf %d, report_id %d, type %d, len %d\n", __func__, report_id, report_type);
+#ifdef RGB_RAW_ENABLE
+    if (intf == InterfaceNumber_dynamic_lighting && report_type == USB_REQUEST_SET_FEATURE) {
+        rgb_raw_control_send(report_id, data, len);
+    } else
+#endif
+    {
+        (*data[0]) = 0;
+        *len = 1;
+    }
 }
 
 uint8_t usbd_hid_get_idle(uint8_t intf, uint8_t report_id)
@@ -433,7 +439,11 @@ uint8_t usbd_hid_get_protocol(uint8_t intf)
 
 void usbd_hid_set_report(uint8_t intf, uint8_t report_id, uint8_t report_type, uint8_t *report, uint32_t report_len)
 {
-    PRINT("%s: intf %d, report_id %d, type %d, len %d\n", __func__, report_id, report_type, report_len);
+#ifdef RGB_RAW_ENABLE
+    if (intf == InterfaceNumber_dynamic_lighting && report_type == USB_REQUEST_SET_FEATURE) {
+        receive_rgb_raw_control(report_id, report, report_len);
+    }
+#endif
 }
 
 void usbd_hid_set_idle(uint8_t intf, uint8_t report_id, uint8_t duration)

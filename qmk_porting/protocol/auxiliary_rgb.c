@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "auxiliary_rgb.h"
 #include "openrgb.h"
 #include "signalrgb.h"
+#include "dynamic_lighting.h"
 
 // uint16_t g_auxiliary_rgb_timer = 0;
 // bool g_auxiliary_rgb_anim_playing = false;
@@ -65,6 +66,26 @@ void rgb_raw_hid_receive(uint8_t *data, uint8_t length)
 
     if (need_response) {
         rgb_raw_hid_send(data, length);
+    }
+}
+
+void rgb_raw_control_receive(uint8_t report_id, uint8_t *data, uint32_t len)
+{
+    switch (report_id) {
+        case LAMP_ATTRIBUTES_REQUEST_REPORT_ID:
+            dynamic_lighting_UpdateRequestLampFromLampAttributesRequestReport(data, len);
+            break;
+        case LAMP_MULTI_UPDATE_REPORT_ID:
+            dynamic_lighting_UpdateLampStateCacheFromMultiUpdateReport(data, len);
+            break;
+        case LAMP_RANGE_UPDATE_REPORT_ID:
+            dynamic_lighting_UpdateLampStateCacheFromRangeUpdateReport(data, len);
+            break;
+        case LAMP_ARRAY_CONTROL_REPORT_ID:
+            dynamic_lighting_ProcessControlReport(data, len);
+            break;
+        default:
+            break;
     }
 }
 

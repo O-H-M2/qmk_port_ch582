@@ -121,7 +121,9 @@
         "rope": "c",
         "regex": "c",
         "streambuf": "c",
-        "variant": "c"
+        "variant": "c",
+        "thread": "c",
+        "charconv": "c"
     },
     "cmake.configureOnOpen": false,
     "git.ignoreLimitWarning": true,
