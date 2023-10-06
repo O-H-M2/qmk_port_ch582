@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static uint16_t m_lastLampIdRequested = 0;
 static bool m_isAutonomousMode = true;
+static uint8_t LampArrayReportBuffer[64] = {};
+
 __attribute__((weak)) const LampArrayAttributesReport lampArrayAttributesReport = {
     .ReportId = LAMP_ARRAY_ATTRIBUTES_REPORT_ID,
     .LampCount = 61,
@@ -100,6 +102,7 @@ static inline void dynamic_lighting_local_state_reset()
 {
     m_lastLampIdRequested = 0;
     m_isAutonomousMode = true;
+    memset(LampArrayReportBuffer, 0x00, sizeof(LampArrayReportBuffer));
 }
 
 void dynamic_lighting_UpdateRequestLampFromLampAttributesRequestReport(uint8_t *data, uint16_t length)
@@ -170,8 +173,9 @@ void dynamic_lighting_ProcessControlReport(uint8_t *data, uint16_t length)
 void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint32_t *len)
 {
     switch (report_id) {
-        case LAMP_ARRAY_ATTRIBUTES_REPORT_ID: {
-            static const LampArrayAttributesReport lampArrayAttributesReportSubmit = {
+        case LAMP_ARRAY_ATTRIBUTES_REPORT_ID:
+            dynamic_lighting_local_state_reset();
+            *(LampArrayAttributesReport *)LampArrayReportBuffer = (LampArrayAttributesReport){
                 .ReportId = lampArrayAttributesReport.ReportId,
                 .LampCount = lampArrayAttributesReport.LampCount,
                 .BoundingBoxWidthInMillimeters = MILLIMETERS_TO_MICROMETERS(lampArrayAttributesReport.BoundingBoxWidthInMillimeters),
@@ -181,29 +185,27 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
                 .MinUpdateIntervalInMilliseconds = MILLISECONDS_TO_MICROSECONDS(lampArrayAttributesReport.MinUpdateIntervalInMilliseconds),
             };
 
-            *data = (uint8_t *)&lampArrayAttributesReportSubmit;
+            *data = LampArrayReportBuffer;
             *len = sizeof(LampArrayAttributesReport);
-            dynamic_lighting_local_state_reset();
             break;
-        }
-        case LAMP_ATTRIBUTES_RESPONSE_REPORT_ID: {
-            static LampAttributesResponseReport lampAttributeReportSubmit = { 0 };
+        case LAMP_ATTRIBUTES_RESPONSE_REPORT_ID:
+            *(LampAttributesResponseReport *)LampArrayReportBuffer = (LampAttributesResponseReport){
+                .ReportId = LAMP_ATTRIBUTES_RESPONSE_REPORT_ID,
+                .Attributes.LampId = m_lampAttributes[m_lastLampIdRequested].LampId,
+                .Attributes.PositionXInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionXInMillimeters),
+                .Attributes.PositionYInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionYInMillimeters),
+                .Attributes.PositionZInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionZInMillimeters),
+                .Attributes.UpdateLatencyInMilliseconds = MILLISECONDS_TO_MICROSECONDS(m_lampAttributes[m_lastLampIdRequested].UpdateLatencyInMilliseconds),
+                .Attributes.LampPurposes = m_lampAttributes[m_lastLampIdRequested].LampPurposes,
+                .Attributes.RedLevelCount = m_lampAttributes[m_lastLampIdRequested].RedLevelCount,
+                .Attributes.GreenLevelCount = m_lampAttributes[m_lastLampIdRequested].GreenLevelCount,
+                .Attributes.BlueLevelCount = m_lampAttributes[m_lastLampIdRequested].BlueLevelCount,
+                .Attributes.IntensityLevelCount = m_lampAttributes[m_lastLampIdRequested].IntensityLevelCount,
+                .Attributes.IsProgrammable = m_lampAttributes[m_lastLampIdRequested].IsProgrammable,
+                .Attributes.LampKey = m_lampAttributes[m_lastLampIdRequested].LampKey,
+            };
 
-            lampAttributeReportSubmit.ReportId = LAMP_ATTRIBUTES_RESPONSE_REPORT_ID;
-            lampAttributeReportSubmit.Attributes.LampId = m_lampAttributes[m_lastLampIdRequested].LampId;
-            lampAttributeReportSubmit.Attributes.PositionXInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionXInMillimeters);
-            lampAttributeReportSubmit.Attributes.PositionYInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionYInMillimeters);
-            lampAttributeReportSubmit.Attributes.PositionZInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionZInMillimeters);
-            lampAttributeReportSubmit.Attributes.UpdateLatencyInMilliseconds = MILLISECONDS_TO_MICROSECONDS(m_lampAttributes[m_lastLampIdRequested].UpdateLatencyInMilliseconds);
-            lampAttributeReportSubmit.Attributes.LampPurposes = m_lampAttributes[m_lastLampIdRequested].LampPurposes;
-            lampAttributeReportSubmit.Attributes.RedLevelCount = m_lampAttributes[m_lastLampIdRequested].RedLevelCount;
-            lampAttributeReportSubmit.Attributes.GreenLevelCount = m_lampAttributes[m_lastLampIdRequested].GreenLevelCount;
-            lampAttributeReportSubmit.Attributes.BlueLevelCount = m_lampAttributes[m_lastLampIdRequested].BlueLevelCount;
-            lampAttributeReportSubmit.Attributes.IntensityLevelCount = m_lampAttributes[m_lastLampIdRequested].IntensityLevelCount;
-            lampAttributeReportSubmit.Attributes.IsProgrammable = m_lampAttributes[m_lastLampIdRequested].IsProgrammable;
-            lampAttributeReportSubmit.Attributes.LampKey = m_lampAttributes[m_lastLampIdRequested].LampKey;
-
-            *data = (uint8_t *)&lampAttributeReportSubmit;
+            *data = LampArrayReportBuffer;
             *len = sizeof(LampAttributesResponseReport);
             m_lastLampIdRequested++;
             if (m_lastLampIdRequested >= lampArrayAttributesReport.LampCount) {
@@ -211,7 +213,6 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
                 m_lastLampIdRequested = 0;
             }
             break;
-        }
         default:
             break;
     }

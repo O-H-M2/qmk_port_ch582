@@ -101,7 +101,8 @@ void ch582_toggle_qmk_protocol(bool status)
 #ifdef RGB_RAW_ENABLE
         ch582_interface.send_rgb_raw = NULL;
         ch582_interface.receive_rgb_raw = NULL;
-        ch582_interface.control_send_rgb_raw = NULL;
+        // always ready for GET_REPORT setup packet
+        // ch582_interface.control_send_rgb_raw = NULL;
         ch582_interface.receive_rgb_raw_control = NULL;
 #endif
     }
