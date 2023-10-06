@@ -267,7 +267,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef NKRO_ENABLE
 // a special trick
 #define PROTOCOL_LUFA
+#ifdef RGB_RAW_ENABLE
+#define ENDPOINT_TOTAL_ENDPOINTS 8
+#else
 #define ENDPOINT_TOTAL_ENDPOINTS 5
+#endif
 #else
 #ifdef FORCE_NKRO
 #undef FORCE_NKRO

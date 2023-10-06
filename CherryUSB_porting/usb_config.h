@@ -47,7 +47,11 @@
 #define EP_NUMS                 USB_NUM_BIDIR_ENDPOINTS
 
 /* Ep0 max transfer buffer, specially for receiving data from ep0 out */
+#ifdef RGB_RAW_ENABLE
+#define CONFIG_USBDEV_REQUEST_BUFFER_LEN 512
+#else
 #define CONFIG_USBDEV_REQUEST_BUFFER_LEN 256
+#endif
 
 /* Setup packet log for debug */
 // #define CONFIG_USBDEV_SETUP_LOG_PRINT
