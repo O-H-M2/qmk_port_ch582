@@ -169,11 +169,16 @@ void dynamic_lighting_UpdateLampStateCacheFromRangeUpdateReport(uint8_t *data, u
 
 void dynamic_lighting_ProcessControlReport(uint8_t *data, uint16_t length)
 {
-    auxiliary_mode_confirm();
-
     LampArrayControlReport *report = (LampArrayControlReport *)data;
 
     if (report->ReportId == LAMP_ARRAY_CONTROL_REPORT_ID) {
+        if (m_isAutonomousMode && !report->AutonomousMode) {
+            rgb_matrix_enable_noeeprom();
+            dynamic_lighting_local_state_reset();
+            auxiliary_mode_confirm();
+        } else if (!m_isAutonomousMode && report->AutonomousMode) {
+            rgb_matrix_reload_from_eeprom();
+        }
         m_isAutonomousMode = !!report->AutonomousMode;
     }
 }
