@@ -31,7 +31,7 @@ __attribute__((weak)) const LampArrayAttributesReport lampArrayAttributesReport 
     .BoundingBoxHeightInMillimeters = 95,
     .BoundingBoxDepthInMillimeters = 2,
     .LampArrayKind = LampArrayKindKeyboard,
-    .MinUpdateIntervalInMilliseconds = 4,
+    .MinUpdateIntervalInMilliseconds = 10,
 };
 __attribute__((weak)) const LampAttributes m_lampAttributes[] = {
     // TODO: adjust these to GH60 compatible
