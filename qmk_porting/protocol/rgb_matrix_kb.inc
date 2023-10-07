@@ -51,12 +51,6 @@ bool AUXILIARY_RGB(effect_params_t *params)
     // extern bool g_auxiliary_rgb_anim_playing;
     // uint8_t time = scale16by8(g_auxiliary_rgb_timer, AUXILIARY_RGB_WELCOME_ANIM_SPD);
 
-#ifdef AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
-    HSV hsv = rgb_matrix_config.hsv;
-    float brightness = (float)hsv.v / UINT8_MAX;
-#else
-    float brightness = 1;
-#endif
     // g_auxiliary_rgb_anim_playing = (time != UINT8_MAX);
 
     for (uint8_t i = led_min; i < led_max; i++) {
@@ -73,7 +67,20 @@ bool AUXILIARY_RGB(effect_params_t *params)
         //         hsv.v = qadd8(hsv.v, effect);
         //         hsv.v = scale8(hsv.v, rgb_matrix_config.hsv.v);
         //     }
-        rgb_matrix_set_color(i, buffer[i].r * brightness, buffer[i].g * brightness, buffer[i].b * brightness);
+
+        RGB palette = {
+#ifdef AUXILIARY_RGB_USE_UNIVERSAL_BRIGHTNESS
+            .r = buffer[i].r * rgb_matrix_config.hsv.v / UINT8_MAX,
+            .g = buffer[i].g * rgb_matrix_config.hsv.v / UINT8_MAX,
+            .b = buffer[i].b * rgb_matrix_config.hsv.v / UINT8_MAX,
+#else
+            .r = min(buffer[i].r, RGB_MATRIX_MAXIMUM_BRIGHTNESS),
+            .g = min(buffer[i].g, RGB_MATRIX_MAXIMUM_BRIGHTNESS),
+            .b = min(buffer[i].b, RGB_MATRIX_MAXIMUM_BRIGHTNESS),
+#endif
+        };
+
+        rgb_matrix_set_color(i, palette.r, palette.g, palette.b);
     }
 
     // if (g_auxiliary_rgb_anim_playing) {
