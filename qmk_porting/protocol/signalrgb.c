@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static uint8_t *signalrgb_buffer = NULL;
 
-static void get_qmk_version() //Grab the QMK Version the board's firmware is built off of
+static void get_qmk_version() // Grab the QMK Version the board's firmware is built off of
 {
     signalrgb_buffer[0] = SIGNALRGB_GET_QMK_VERSION;
 
@@ -50,7 +50,7 @@ static void get_signalrgb_protocol_version()
     signalrgb_buffer[3] = PROTOCOL_VERSION_BYTE_3;
 }
 
-static void get_unique_identifier() //Grab the unique identifier for each specific model of keyboard.
+static void get_unique_identifier() // Grab the unique identifier for each specific model of keyboard.
 {
     signalrgb_buffer[0] = SIGNALRGB_GET_UNIQUE_IDENTIFIER;
     signalrgb_buffer[1] = DEVICE_UNIQUE_IDENTIFIER_BYTE_1;
@@ -58,7 +58,7 @@ static void get_unique_identifier() //Grab the unique identifier for each specif
     signalrgb_buffer[3] = DEVICE_UNIQUE_IDENTIFIER_BYTE_3;
 }
 
-static void led_streaming(uint8_t *data) //Stream data from HID Packets to Keyboard.
+static void led_streaming(uint8_t *data) // Stream data from HID Packets to Keyboard.
 {
     uint8_t index = data[1];
     uint8_t numberofleds = data[2];
@@ -80,22 +80,22 @@ static void led_streaming(uint8_t *data) //Stream data from HID Packets to Keybo
 
 void signalrgb_mode_enable()
 {
-    rgb_matrix_mode_noeeprom(RGB_MATRIX_CUSTOM_AUXILIARY_RGB); //Set RGB Matrix to SignalRGB Compatible Mode
-    auxiliary_rgb_flush();
+    rgb_matrix_enable_noeeprom();
+    auxiliary_mode_confirm(); // Set RGB Matrix to SignalRGB Compatible Mode
 }
 
 void signalrgb_mode_disable()
 {
-    rgb_matrix_reload_from_eeprom(); //Reloading last effect from eeprom
+    rgb_matrix_reload_from_eeprom(); // Reloading last effect from eeprom
 }
 
-static void get_total_leds() //Grab total number of leds that a board has.
+static void get_total_leds() // Grab total number of leds that a board has.
 {
     signalrgb_buffer[0] = SIGNALRGB_GET_TOTAL_LEDS;
     signalrgb_buffer[1] = RGB_MATRIX_LED_COUNT;
 }
 
-static void get_firmware_type() //Grab which fork of qmk a board is running.
+static void get_firmware_type() // Grab which fork of qmk a board is running.
 {
     signalrgb_buffer[0] = SIGNALRGB_GET_FIRMWARE_TYPE;
     signalrgb_buffer[1] = FIRMWARE_TYPE_BYTE;
