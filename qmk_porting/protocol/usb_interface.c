@@ -410,6 +410,9 @@ void init_usb_driver()
     usbd_initialize();
 }
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void usbd_hid_get_report(uint8_t intf, uint8_t report_id, uint8_t report_type, uint8_t **data, uint32_t *len)
 {
 #ifdef RGB_RAW_ENABLE
@@ -437,6 +440,9 @@ uint8_t usbd_hid_get_protocol(uint8_t intf)
     }
 }
 
+#if defined ESB_ENABLE && ESB_ENABLE == 2
+__HIGH_CODE
+#endif
 void usbd_hid_set_report(uint8_t intf, uint8_t report_id, uint8_t report_type, uint8_t *report, uint32_t report_len)
 {
 #ifdef RGB_RAW_ENABLE
