@@ -107,6 +107,8 @@ static inline void dynamic_lighting_local_state_reset()
 
 void dynamic_lighting_UpdateRequestLampFromLampAttributesRequestReport(uint8_t *data, uint16_t length)
 {
+    auxiliary_mode_confirm();
+
     LampAttributesRequestReport *report = (LampAttributesRequestReport *)data;
 
     if (report->ReportId == LAMP_ATTRIBUTES_REQUEST_REPORT_ID) {
@@ -121,6 +123,8 @@ void dynamic_lighting_UpdateRequestLampFromLampAttributesRequestReport(uint8_t *
 
 void dynamic_lighting_UpdateLampStateCacheFromMultiUpdateReport(uint8_t *data, uint16_t length)
 {
+    auxiliary_mode_confirm();
+
     LampMultiUpdateReport *report = (LampMultiUpdateReport *)data;
 
     if (report->ReportId == LAMP_MULTI_UPDATE_REPORT_ID) {
@@ -141,6 +145,8 @@ void dynamic_lighting_UpdateLampStateCacheFromMultiUpdateReport(uint8_t *data, u
 
 void dynamic_lighting_UpdateLampStateCacheFromRangeUpdateReport(uint8_t *data, uint16_t length)
 {
+    auxiliary_mode_confirm();
+
     LampRangeUpdateReport *report = (LampRangeUpdateReport *)data;
 
     if (report->ReportId == LAMP_RANGE_UPDATE_REPORT_ID) {
@@ -163,6 +169,8 @@ void dynamic_lighting_UpdateLampStateCacheFromRangeUpdateReport(uint8_t *data, u
 
 void dynamic_lighting_ProcessControlReport(uint8_t *data, uint16_t length)
 {
+    auxiliary_mode_confirm();
+
     LampArrayControlReport *report = (LampArrayControlReport *)data;
 
     if (report->ReportId == LAMP_ARRAY_CONTROL_REPORT_ID) {
