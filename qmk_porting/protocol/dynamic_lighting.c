@@ -26,15 +26,13 @@ static uint8_t LampArrayReportBuffer[64] = {};
 __attribute__((weak)) const LampArrayAttributesReport lampArrayAttributesReport = {
     .ReportId = LAMP_ARRAY_ATTRIBUTES_REPORT_ID,
     .LampCount = 61,
-    // TODO: adjust these dimensions to GH60
     .BoundingBoxWidthInMillimeters = 282,
-    .BoundingBoxHeightInMillimeters = 95,
+    .BoundingBoxHeightInMillimeters = 94,
     .BoundingBoxDepthInMillimeters = 2,
     .LampArrayKind = LampArrayKindKeyboard,
     .MinUpdateIntervalInMilliseconds = 10,
 };
 __attribute__((weak)) const LampAttributes m_lampAttributes[] = {
-    // TODO: adjust these to GH60 compatible
     { .LampId = 0, .PositionXInMillimeters = 9, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_ESC },
     { .LampId = 1, .PositionXInMillimeters = 28, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_1 },
     { .LampId = 2, .PositionXInMillimeters = 47, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_2 },
