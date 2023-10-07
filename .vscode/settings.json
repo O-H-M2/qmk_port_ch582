@@ -123,7 +123,10 @@
         "streambuf": "c",
         "variant": "c",
         "thread": "c",
-        "charconv": "c"
+        "charconv": "c",
+        "chrono": "c",
+        "limits": "c",
+        "valarray": "c"
     },
     "cmake.configureOnOpen": false,
     "git.ignoreLimitWarning": true,

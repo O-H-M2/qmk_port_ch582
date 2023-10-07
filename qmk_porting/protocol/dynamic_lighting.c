@@ -187,7 +187,6 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
 {
     switch (report_id) {
         case LAMP_ARRAY_ATTRIBUTES_REPORT_ID:
-            dynamic_lighting_local_state_reset();
             *(LampArrayAttributesReport *)LampArrayReportBuffer = (LampArrayAttributesReport){
                 .ReportId = lampArrayAttributesReport.ReportId,
                 .LampCount = lampArrayAttributesReport.LampCount,
