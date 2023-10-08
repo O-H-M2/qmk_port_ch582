@@ -59,7 +59,7 @@ static volatile uint8_t qmkraw_state = HID_STATE_IDLE;
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t kbd_out_buffer[CONFIG_USB_ALIGN_SIZE];
 #ifdef RGB_RAW_ENABLE
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t rgbraw_out_buffer[RGBRAW_OUT_EP_SIZE];
-USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t dynamiclighting_out_buffer[DYNAMICLIGHTING_OUT_EP_SIZE];
+// USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t dynamiclighting_out_buffer[DYNAMICLIGHTING_OUT_EP_SIZE];
 #endif
 #ifdef RAW_ENABLE
 USB_NOCACHE_RAM_SECTION USB_MEM_ALIGNX uint8_t qmkraw_out_buffer[QMKRAW_OUT_EP_SIZE];
@@ -117,15 +117,15 @@ void usbd_hid_dynamic_lighting_in_callback(uint8_t ep, uint32_t nbytes)
     // #endif
 }
 
-#if defined ESB_ENABLE && ESB_ENABLE == 2
-__HIGH_CODE
-#endif
-void usbd_hid_dynamic_lighting_out_callback(uint8_t ep, uint32_t nbytes)
-{
-    PRINT("%s: %d %d\n", __func__, ep, nbytes);
-    // receive_dynamic_lighting(dynamiclighting_out_buffer, sizeof(dynamiclighting_out_buffer));
-    usbd_ep_start_read(ep, dynamiclighting_out_buffer, sizeof(dynamiclighting_out_buffer));
-}
+// #if defined ESB_ENABLE && ESB_ENABLE == 2
+// __HIGH_CODE
+// #endif
+// void usbd_hid_dynamic_lighting_out_callback(uint8_t ep, uint32_t nbytes)
+// {
+//     PRINT("%s: %d %d\n", __func__, ep, nbytes);
+//     // receive_dynamic_lighting(dynamiclighting_out_buffer, sizeof(dynamiclighting_out_buffer));
+//     usbd_ep_start_read(ep, dynamiclighting_out_buffer, sizeof(dynamiclighting_out_buffer));
+// }
 #endif
 
 #if defined ESB_ENABLE && ESB_ENABLE == 2
@@ -191,7 +191,7 @@ void usbd_configure_done_callback()
     usbd_ep_start_read(KBD_OUT_EP, kbd_out_buffer, KBD_OUT_EP_SIZE);
 #ifdef RGB_RAW_ENABLE
     usbd_ep_start_read(RGBRAW_OUT_EP, rgbraw_out_buffer, sizeof(rgbraw_out_buffer));
-    usbd_ep_start_read(DYNAMICLIGHTING_OUT_EP, dynamiclighting_out_buffer, sizeof(dynamiclighting_out_buffer));
+    // usbd_ep_start_read(DYNAMICLIGHTING_OUT_EP, dynamiclighting_out_buffer, sizeof(dynamiclighting_out_buffer));
 #endif
 #ifdef RAW_ENABLE
     usbd_ep_start_read(QMKRAW_OUT_EP, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
@@ -255,7 +255,7 @@ int usb_dc_deinit()
     memset(kbd_out_buffer, 0x00, sizeof(kbd_out_buffer));
 #ifdef RGB_RAW_ENABLE
     memset(rgbraw_out_buffer, 0x00, sizeof(rgbraw_out_buffer));
-    memset(dynamiclighting_out_buffer, 0x00, sizeof(dynamiclighting_out_buffer));
+    // memset(dynamiclighting_out_buffer, 0x00, sizeof(dynamiclighting_out_buffer));
 #endif
 #ifdef RAW_ENABLE
     memset(qmkraw_out_buffer, 0x00, sizeof(qmkraw_out_buffer));
@@ -292,10 +292,10 @@ void init_usb_driver()
         .ep_addr = DYNAMICLIGHTING_IN_EP
     };
 
-    struct usbd_endpoint dynamiclighting_out_ep = {
-        .ep_cb = usbd_hid_dynamic_lighting_out_callback,
-        .ep_addr = DYNAMICLIGHTING_OUT_EP
-    };
+    // struct usbd_endpoint dynamiclighting_out_ep = {
+    //     .ep_cb = usbd_hid_dynamic_lighting_out_callback,
+    //     .ep_addr = DYNAMICLIGHTING_OUT_EP
+    // };
 #endif
 
     struct usbd_endpoint exkey_in_ep = {
@@ -385,7 +385,7 @@ void init_usb_driver()
 
     usbd_add_interface(usbd_hid_init_intf(&dynamiclighting_interface, DynamicLightingReport, HID_DYNAMICLIGHTING_REPORT_DESC_SIZE));
     usbd_add_endpoint(&dynamiclighting_in_ep);
-    usbd_add_endpoint(&dynamiclighting_out_ep);
+    // usbd_add_endpoint(&dynamiclighting_out_ep);
 #endif
 
     usbd_add_interface(usbd_hid_init_intf(&extrakey_interface, ExtrakeyReport, HID_EXTRAKEY_REPORT_DESC_SIZE));

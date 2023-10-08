@@ -402,7 +402,7 @@ const uint8_t hid_descriptor_scratch_1[] = {
     USB_CONFIG_DESCRIPTOR_INIT((USB_HID_CONFIG_DESC_SIZ_SCRATCH
 #ifdef RGB_RAW_ENABLE
                                 + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2 +
-                                USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
+                                USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC /* * 2 */
 #endif
 #ifdef RAW_ENABLE
                                 + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
@@ -532,7 +532,7 @@ const uint8_t hid_descriptor_scratch_3[] = {
     0x04,                             /* bDescriptorType */
     InterfaceNumber_dynamic_lighting, /* bInterfaceNumber */
     0x00,                             /* bAlternateSetting */
-    0x02,                             /* bNumEndpoints */
+    0x01 /* 0x02 */,                  /* bNumEndpoints */
     0x03,                             /* bInterfaceClass */
     0x00,                             /* bInterfaceSubClass : 1=BOOT, 0=no boot */
     0x00,                             /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
@@ -552,13 +552,13 @@ const uint8_t hid_descriptor_scratch_3[] = {
     0x03,                           /* bmAttributes */
     WBVAL(DYNAMICLIGHTING_IN_SIZE), /* wMaxPacketSize */
     DYNAMICLIGHTING_IN_INTERVAL,    /* bInterval */
-    /******************** Descriptor of DYNAMIC_LIGHTING out endpoint ********************/
-    0x07,                               /* bLength */
-    0x05,                               /* bDescriptorType */
-    DYNAMICLIGHTING_OUT_EP,             /* bEndpointAddress */
-    0x03,                               /* bmAttributes */
-    WBVAL(DYNAMICLIGHTING_OUT_EP_SIZE), /* wMaxPacketSize */
-    DYNAMICLIGHTING_OUT_EP_INTERVAL,    /* bInterval */
+// /******************** Descriptor of DYNAMIC_LIGHTING out endpoint ********************/
+// 0x07,                               /* bLength */
+// 0x05,                               /* bDescriptorType */
+// DYNAMICLIGHTING_OUT_EP,             /* bEndpointAddress */
+// 0x03,                               /* bmAttributes */
+// WBVAL(DYNAMICLIGHTING_OUT_EP_SIZE), /* wMaxPacketSize */
+// DYNAMICLIGHTING_OUT_EP_INTERVAL,    /* bInterval */
 #endif
 
     /************** Descriptor of EXTRAKEY interface *****************/
