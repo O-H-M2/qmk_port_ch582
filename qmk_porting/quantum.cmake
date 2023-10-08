@@ -46,7 +46,6 @@ file(GLOB_RECURSE quantum_SOURCES
     "${QMK_BASE_DIR}/quantum/deferred_exec.c"
 
     # "${QMK_BASE_DIR}/quantum/digitizer.c"
-    # "${QMK_BASE_DIR}/quantum/dip_switch.c"
     # "${QMK_BASE_DIR}/quantum/haptic.c"
     # "${QMK_BASE_DIR}/quantum/joystick.c"
     "${QMK_BASE_DIR}/quantum/keyboard.c"
@@ -60,7 +59,7 @@ file(GLOB_RECURSE quantum_SOURCES
     "${QMK_BASE_DIR}/quantum/quantum.c"
 
     # "${QMK_BASE_DIR}/quantum/secure.c"
-    "${QMK_BASE_DIR}/quantum/send_string.c"
+    "${QMK_BASE_DIR}/quantum/send_string/send_string.c"
     "${QMK_BASE_DIR}/quantum/sync_timer.c"
 
     # "${QMK_BASE_DIR}/quantum/variable_trace.c"
