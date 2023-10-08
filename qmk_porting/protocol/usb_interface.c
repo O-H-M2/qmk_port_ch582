@@ -126,7 +126,6 @@ void usbd_hid_dynamic_lighting_out_callback(uint8_t ep, uint32_t nbytes)
     // receive_dynamic_lighting(dynamiclighting_out_buffer, sizeof(dynamiclighting_out_buffer));
     usbd_ep_start_read(ep, dynamiclighting_out_buffer, sizeof(dynamiclighting_out_buffer));
 }
-
 #endif
 
 #if defined ESB_ENABLE && ESB_ENABLE == 2
