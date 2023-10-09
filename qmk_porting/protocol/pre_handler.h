@@ -267,12 +267,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef NKRO_ENABLE
 // a special trick
 #define PROTOCOL_LUFA
-#define ENDPOINT_TOTAL_ENDPOINTS 5
 #else
 #ifdef FORCE_NKRO
 #undef FORCE_NKRO
 #endif
 #endif
+
+#define ENDPOINT_TOTAL_ENDPOINTS 5
 
 #if defined LSE_ENABLE && LSE_ENABLE
 #define FREQ_RTC   32768
