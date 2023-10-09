@@ -43,6 +43,15 @@ if(GRAVE_ESC_ENABLE)
     )
 endif()
 
+# DYNAMIC_MACRO_ENABLE
+if(DYNAMIC_MACRO_ENABLE)
+    message(STATUS "DYNAMIC_MACRO_ENABLE")
+    add_definitions(-DDYNAMIC_MACRO_ENABLE)
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_dynamic_macro.c"
+    )
+endif()
+
 # ENCODER_ENABLE
 if(ENCODER_ENABLE)
     add_definitions(-DENCODER_ENABLE)
