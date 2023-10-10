@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT ******************************
  * File Name         : CH58xBLE_LIB.H
  * Author            : WCH
- * Version           : V1.90
- * Date              : 2023/07/03
+ * Version           : V1.91
+ * Date              : 2023/09/18
  * Description       : head file
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  * Attention: This software (modified or not) and binary are used for
@@ -839,7 +839,8 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define TGAP_ADV_SECONDARY_PHY                  27  //!< LE 1M/LE 2M/LE Coded. Default GAP_PHY_VAL_LE_1M.
 #define TGAP_ADV_SECONDARY_MAX_SKIP             28  //!< Maximum advertising events the Controller can skip before sending the AUX_ADV_IND packets on the secondary advertising channel. Default 0.
 #define TGAP_ADV_ADVERTISING_SID                29  //!< Value of the Advertising SID subfield in the ADI field of the PDU Range:0-15. Default 0.
-#define TGAP_ADV_SCAN_REQ_NOTIFY                30  //!< Scan request notifications enabled.Default 0-disabled.
+#define TGAP_ADV_SCAN_REQ_NOTIFY                30  //!< bit0:Scan request notifications enabled.Default 0-disabled.
+                                                    //!< bit1:After the SCAN_RSP PDU is sent the advertiser move to the next used primary advertising channel index.Default 0-close the advertising event.
 #define TGAP_ADV_ADVERTISING_DURATION           31  //!< Advertising duration Range: 0x0001 - 0xFFFF Time = N * 10ms. Default 0-No advertising duration.
 #define TGAP_ADV_MAX_EVENTS                     32  //!< indicates the maximum number of extended advertising events.Range: 0x00 - 0xFF. Default 0(No maximum number of advertising events).
 
