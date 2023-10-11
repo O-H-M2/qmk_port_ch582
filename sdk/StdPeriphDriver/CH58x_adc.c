@@ -26,11 +26,14 @@ signed short ADC_DataCalib_Rough(void) // 采样数据粗调,获取偏差值
     uint16_t i;
     uint32_t sum = 0;
     uint8_t  ch = 0;   // 备份通道
+    uint8_t  cfg = 0;   // 备份
 
     ch = R8_ADC_CHANNEL;
+    cfg = R8_ADC_CFG;
 
     ADC_ChannelCfg(1);                                          // ADC校准通道请选择通道1
     R8_ADC_CFG |= RB_ADC_OFS_TEST; // 进入测试模式
+    R8_ADC_CFG &= ~RB_ADC_DIFF_EN; // 关闭差分
     R8_ADC_CONVERT = RB_ADC_START;
     while(R8_ADC_CONVERT & RB_ADC_START);
     for(i = 0; i < 16; i++)
@@ -40,8 +43,8 @@ signed short ADC_DataCalib_Rough(void) // 采样数据粗调,获取偏差值
         sum += (~R16_ADC_DATA) & RB_ADC_DATA;
     }
     sum = (sum + 8) >> 4;
-    R8_ADC_CFG &= ~RB_ADC_OFS_TEST; // 关闭测试模式
 
+    R8_ADC_CFG = cfg;  // 恢复配置值
     R8_ADC_CHANNEL = ch;
 
     return (2048 - sum);
@@ -123,7 +126,7 @@ void ADC_InterBATSampInit(void)
  */
 void TouchKey_ChSampInit(void)
 {
-    R8_ADC_CFG = RB_ADC_POWER_ON | RB_ADC_BUF_EN | (2 << 4);
+    R8_ADC_CFG = RB_ADC_POWER_ON | RB_ADC_BUF_EN | (1 << 4); // 使用-6dB模式，
     R8_TKEY_CFG |= RB_TKEY_PWR_ON;
 }
 

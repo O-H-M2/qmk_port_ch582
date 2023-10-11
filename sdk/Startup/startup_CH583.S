@@ -90,33 +90,35 @@ _vector_base:
     .weak   UART3_IRQHandler
     .weak   WDOG_BAT_IRQHandler
 
-NMI_Handler:         1:  j 1b
-HardFault_Handler:   1:  j 1b
-Ecall_M_Mode_Handler:   1:  j 1b
-Ecall_U_Mode_Handler:   1:  j 1b
-Break_Point_Handler:   1:  j 1b
-SysTick_Handler:     1:  j 1b
-SW_Handler:          1:  j 1b
-TMR0_IRQHandler:     1:  j 1b
-GPIOA_IRQHandler:    1:  j 1b
-GPIOB_IRQHandler:    1:  j 1b
-SPI0_IRQHandler:     1:  j 1b
-BB_IRQHandler:       1:  j 1b
-LLE_IRQHandler:      1:  j 1b
-USB_IRQHandler:      1:  j 1b
-USB2_IRQHandler:      1:  j 1b
-TMR1_IRQHandler:     1:  j 1b
-TMR2_IRQHandler:     1:  j 1b
-UART0_IRQHandler:    1:  j 1b
-UART1_IRQHandler:    1:  j 1b
-RTC_IRQHandler:      1:  j 1b
-ADC_IRQHandler:      1:  j 1b
-I2C_IRQHandler:		 1:  j 1b
-PWMX_IRQHandler:     1:  j 1b
-TMR3_IRQHandler:     1:  j 1b
-UART2_IRQHandler:    1:  j 1b
-UART3_IRQHandler:    1:  j 1b
-WDOG_BAT_IRQHandler: 1:  j 1b
+NMI_Handler:
+HardFault_Handler:
+Ecall_M_Mode_Handler:
+Ecall_U_Mode_Handler:
+Break_Point_Handler:
+SysTick_Handler:
+SW_Handler:
+TMR0_IRQHandler:
+GPIOA_IRQHandler:
+GPIOB_IRQHandler:
+SPI0_IRQHandler:
+BB_IRQHandler:
+LLE_IRQHandler:
+USB_IRQHandler:
+USB2_IRQHandler:
+TMR1_IRQHandler:
+TMR2_IRQHandler:
+UART0_IRQHandler:
+UART1_IRQHandler:
+RTC_IRQHandler:
+ADC_IRQHandler:
+I2C_IRQHandler:
+PWMX_IRQHandler:
+TMR3_IRQHandler:
+UART2_IRQHandler:
+UART3_IRQHandler:
+WDOG_BAT_IRQHandler: 
+1:  
+	j 1b
 
 	.section	.handle_reset,"ax",@progbits
 	.weak	handle_reset

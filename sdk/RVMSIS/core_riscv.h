@@ -96,8 +96,8 @@ typedef struct
     else                                                            \
       __asm__ volatile ("csrw  " #reg ", %0" :: "r"(val)); })
 
-#define PFIC_EnableAllIRQ()     write_csr(0x800, 0x88)
-#define PFIC_DisableAllIRQ()    write_csr(0x800, 0x80)
+#define PFIC_EnableAllIRQ()     {write_csr(0x800, 0x88);__nop();__nop();}
+#define PFIC_DisableAllIRQ()    {write_csr(0x800, 0x80);__nop();__nop();}
 /* ##########################   PFIC functions  #################################### */
 
 /*******************************************************************************
@@ -348,6 +348,267 @@ RV_STATIC_INLINE void PFIC_SystemReset(void)
 {
     PFIC->CFGR = PFIC_KEY3 | (1 << 7);
 }
+
+/*********************************************************************
+ *  @fn      __AMOADD_W
+ *
+ *  @brief   Atomic Add with 32bit value
+ *              Atomically ADD 32bit value with value in memory using amoadd.d.
+ *              addr   Address pointer to data, address need to be 4byte aligned
+ *                        value  value to be ADDed
+ *
+ *
+ * @return  return memory value + add value
+ */
+__attribute__((always_inline)) RV_STATIC_INLINE int32_t __AMOADD_W(volatile int32_t *addr, int32_t value)
+{
+    int32_t result;
+
+    __asm volatile ("amoadd.w %0, %2, %1" : \
+            "=r"(result), "+A"(*addr) : "r"(value) : "memory");
+    return *addr;
+}
+
+/*********************************************************************
+ * @fn      __AMOAND_W
+ *
+ * @brief  Atomic And with 32bit value
+ *              Atomically AND 32bit value with value in memory using amoand.d.
+ *              addr   Address pointer to data, address need to be 4byte aligned
+ *              value  value to be ANDed
+ *
+ *
+ * @return  return memory value & and value
+ */
+__attribute__((always_inline)) RV_STATIC_INLINE int32_t __AMOAND_W(volatile int32_t *addr, int32_t value)
+{
+    int32_t result;
+
+    __asm volatile ("amoand.w %0, %2, %1" : \
+            "=r"(result), "+A"(*addr) : "r"(value) : "memory");
+    return *addr;
+}
+
+/*********************************************************************
+ * @fn         __AMOMAX_W
+ *
+ * @brief      Atomic signed MAX with 32bit value
+ * @details   Atomically signed max compare 32bit value with value in memory using amomax.d.
+ *                 addr   Address pointer to data, address need to be 4byte aligned
+ *                 value  value to be compared
+ *
+ *
+ * @return the bigger value
+ */
+__attribute__((always_inline)) RV_STATIC_INLINE int32_t __AMOMAX_W(volatile int32_t *addr, int32_t value)
+{
+    int32_t result;
+
+    __asm volatile ("amomax.w %0, %2, %1" : \
+            "=r"(result), "+A"(*addr) : "r"(value) : "memory");
+    return *addr;
+}
+
+/*********************************************************************
+ * @fn        __AMOMAXU_W
+ *
+ * @brief  Atomic unsigned MAX with 32bit value
+ *             Atomically unsigned max compare 32bit value with value in memory using amomaxu.d.
+ *             addr   Address pointer to data, address need to be 4byte aligned
+ *             value  value to be compared
+ *
+ * @return  return the bigger value
+ */
+__attribute__((always_inline)) RV_STATIC_INLINE uint32_t __AMOMAXU_W(volatile uint32_t *addr, uint32_t value)
+{
+    uint32_t result;
+
+    __asm volatile ("amomaxu.w %0, %2, %1" : \
+            "=r"(result), "+A"(*addr) : "r"(value) : "memory");
+    return *addr;
+}
+
+/*********************************************************************
+ * @fn      __AMOMIN_W
+ *
+ * @brief  Atomic signed MIN with 32bit value
+ *             Atomically signed min compare 32bit value with value in memory using amomin.d.
+ *             addr   Address pointer to data, address need to be 4byte aligned
+ *             value  value to be compared
+ *
+ *
+ * @return  the smaller value
+ */
+__attribute__((always_inline)) RV_STATIC_INLINE int32_t __AMOMIN_W(volatile int32_t *addr, int32_t value)
+{
+    int32_t result;
+
+    __asm volatile ("amomin.w %0, %2, %1" : \
+            "=r"(result), "+A"(*addr) : "r"(value) : "memory");
+    return *addr;
+}
+
+/*********************************************************************
+ * @fn      __AMOMINU_W
+ *
+ * @brief   Atomic unsigned MIN with 32bit value
+ *              Atomically unsigned min compare 32bit value with value in memory using amominu.d.
+ *              addr   Address pointer to data, address need to be 4byte aligned
+ *              value  value to be compared
+ *
+ *
+ * @return the smaller value
+ */
+__attribute__((always_inline)) RV_STATIC_INLINE uint32_t __AMOMINU_W(volatile uint32_t *addr, uint32_t value)
+{
+    uint32_t result;
+
+    __asm volatile ("amominu.w %0, %2, %1" : \
+            "=r"(result), "+A"(*addr) : "r"(value) : "memory");
+    return *addr;
+}
+
+/*********************************************************************
+ * @fn           __AMOOR_W
+ *
+ * @brief       Atomic OR with 32bit value
+ * @details    Atomically OR 32bit value with value in memory using amoor.d.
+ *                  addr   Address pointer to data, address need to be 4byte aligned
+ *                  value  value to be ORed
+ *
+ *
+ * @return  return memory value | and value
+ */
+__attribute__((always_inline)) RV_STATIC_INLINE int32_t __AMOOR_W(volatile int32_t *addr, int32_t value)
+{
+    int32_t result;
+
+    __asm volatile ("amoor.w %0, %2, %1" : \
+            "=r"(result), "+A"(*addr) : "r"(value) : "memory");
+    return *addr;
+}
+
+/*********************************************************************
+ * @fn          __AMOSWAP_W
+ *
+ * @brief      Atomically swap new 32bit value into memory using amoswap.d.
+ *                  addr      Address pointer to data, address need to be 4byte aligned
+ *                  newval    New value to be stored into the address
+ *
+ * @return    return the original value in memory
+ */
+__attribute__((always_inline)) RV_STATIC_INLINE uint32_t __AMOSWAP_W(volatile uint32_t *addr, uint32_t newval)
+{
+    uint32_t result;
+
+    __asm volatile ("amoswap.w %0, %2, %1" : \
+            "=r"(result), "+A"(*addr) : "r"(newval) : "memory");
+    return result;
+}
+
+/*********************************************************************
+ * @fn        __AMOXOR_W
+ *
+ * @brief    Atomic XOR with 32bit value
+ * @details Atomically XOR 32bit value with value in memory using amoxor.d.
+ *               addr   Address pointer to data, address need to be 4byte aligned
+ *               value  value to be XORed
+ *
+ *
+ * @return  return memory value ^ and value
+ */
+__attribute__((always_inline)) RV_STATIC_INLINE int32_t __AMOXOR_W(volatile int32_t *addr, int32_t value)
+{
+    int32_t result;
+
+    __asm volatile ("amoxor.w %0, %2, %1" : \
+            "=r"(result), "+A"(*addr) : "r"(value) : "memory");
+    return *addr;
+}
+
+/**
+ * @brief   Return the Machine Status Register
+ *
+ * @return  mstatus value
+ */
+uint32_t __get_MSTATUS(void);
+
+/**
+ * @brief   Return the Machine ISA Register
+ *
+ * @return  misa value
+ */
+uint32_t __get_MISA(void);
+
+/***
+ * @brief   Return the Machine Trap-Vector Base-Address Register
+ *
+ * @return  mtvec value
+ */
+uint32_t __get_MTVEC(void);
+
+/**
+ * @brief   Return the Machine Seratch Register
+ *
+ * @return  mscratch value
+ */
+uint32_t __get_MSCRATCH(void);
+
+/**
+ * @brief   Return the Machine Exception Program Register
+ *
+ * @return  mepc value
+ */
+uint32_t __get_MEPC(void);
+
+/**
+ * @brief   Return the Machine Cause Register
+ *
+ * @return  mcause value
+ */
+uint32_t __get_MCAUSE(void);
+
+/**
+ * @brief   Return the Machine Trap Value Register
+ *
+ * @return  mtval value
+ */
+uint32_t __get_MTVAL(void);
+
+/**
+ * @brief   Return Vendor ID Register
+ *
+ * @return  mvendorid value
+ */
+uint32_t __get_MVENDORID(void);
+
+/**
+ * @brief   Return Machine Architecture ID Register
+ *
+ * @return  marchid value
+ */
+uint32_t __get_MARCHID(void);
+
+/**
+ * @brief   Return Machine Implementation ID Register
+ *
+ * @return  mimpid value
+ */
+uint32_t __get_MIMPID(void);
+
+/**
+ * @brief   Return Hart ID Register
+ *
+ * @return  mhartid value
+ */
+uint32_t __get_MHARTID(void);
+
+/**
+ * @brief   Return SP Register
+ *
+ * @return  SP value
+ */
+uint32_t __get_SP(void);
 
 #define SysTick_LOAD_RELOAD_Msk    (0xFFFFFFFFFFFFFFFF)
 #define SysTick_CTLR_SWIE          (1 << 31)
