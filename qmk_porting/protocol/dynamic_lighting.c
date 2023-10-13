@@ -109,8 +109,6 @@ static inline void dynamic_lighting_local_state_reset()
 
 void dynamic_lighting_UpdateRequestLampFromLampAttributesRequestReport(uint8_t *data, uint16_t length)
 {
-    auxiliary_mode_confirm();
-
     LampAttributesRequestReport *report = (LampAttributesRequestReport *)data;
 
     if (report->ReportId == LAMP_ATTRIBUTES_REQUEST_REPORT_ID) {
