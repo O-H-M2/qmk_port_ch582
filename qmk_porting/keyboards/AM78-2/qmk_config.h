@@ -72,7 +72,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BLE_SLOT_2_INDICATOR 4
 #define BLE_SLOT_3_INDICATOR 4
 #define BLE_SLOT_4_INDICATOR 4
-#define RGB_MATRIX_KEYPRESSES
 //#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define WS2812_SPI_DRIVER             2
 #define RGBLED_NUM                    6

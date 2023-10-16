@@ -372,3 +372,7 @@ enum {
 #define strlen(pString)          tmos_strlen((char *)(pString))
 #define memset(pDst, Value, len) tmos_memset(pDst, (int)(Value), (size_t)(len))
 #define memcpy                   tmos_memcpy
+
+#ifdef RGB_MATRIX_ENABLE
+#include "rgb_matrix/post_config.h"
+#endif

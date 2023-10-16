@@ -51,7 +51,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 // #define POWER_DETECT_PIN    B12
 
 #ifdef RGB_MATRIX_ENABLE
-#define RGB_MATRIX_KEYPRESSES
 //#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define RGBLED_NUM                    67
 #define RGB_MATRIX_LED_COUNT          RGBLED_NUM
