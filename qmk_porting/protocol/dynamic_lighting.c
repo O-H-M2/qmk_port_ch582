@@ -185,6 +185,10 @@ void dynamic_lighting_ProcessControlReport(uint8_t *data, uint16_t length)
 
 void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint32_t *len)
 {
+    static bool m_useQMKPositionRecord = false;
+    static uint8_t QMKPositionRecordMinimumX = UINT8_MAX, QMKPositionRecordMaximumX = 0;
+    static uint8_t QMKPositionRecordMinimumY = UINT8_MAX, QMKPositionRecordMaximumY = 0;
+
     switch (report_id) {
         case LAMP_ARRAY_ATTRIBUTES_REPORT_ID:
             *(LampArrayAttributesReport *)LampArrayReportBuffer = (LampArrayAttributesReport){
@@ -196,6 +200,29 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
                 .LampArrayKind = lampArrayAttributesReport.LampArrayKind,
                 .MinUpdateIntervalInMilliseconds = MILLISECONDS_TO_MICROSECONDS(lampArrayAttributesReport.MinUpdateIntervalInMilliseconds),
             };
+
+            for (uint16_t i = 0; i < sizeof(m_lampAttributes) / sizeof(m_lampAttributes[0]); i++) {
+                if (!m_lampAttributes[i].PositionXInMillimeters || !m_lampAttributes[i].PositionYInMillimeters) {
+                    m_useQMKPositionRecord = true;
+                    break;
+                }
+            }
+            if (m_useQMKPositionRecord) {
+                for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
+                    if (g_led_config.point[i].x < QMKPositionRecordMinimumX) {
+                        QMKPositionRecordMinimumX = g_led_config.point[i].x;
+                    }
+                    if (g_led_config.point[i].x > QMKPositionRecordMaximumX) {
+                        QMKPositionRecordMaximumX = g_led_config.point[i].x;
+                    }
+                    if (g_led_config.point[i].y < QMKPositionRecordMinimumY) {
+                        QMKPositionRecordMinimumY = g_led_config.point[i].y;
+                    }
+                    if (g_led_config.point[i].y > QMKPositionRecordMaximumY) {
+                        QMKPositionRecordMaximumY = g_led_config.point[i].y;
+                    }
+                }
+            }
 
             *data = LampArrayReportBuffer;
             *len = sizeof(LampArrayAttributesReport);
@@ -216,6 +243,26 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
                 .Attributes.IsProgrammable = m_lampAttributes[m_lastLampIdRequested].IsProgrammable,
                 .Attributes.LampKey = m_lampAttributes[m_lastLampIdRequested].LampKey,
             };
+
+            if (m_useQMKPositionRecord) {
+                // calculate position from g_led_config
+                uint8_t index = 0;
+
+                for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
+                    for (uint8_t j = 0; j < MATRIX_COLS; j++) {
+                        if (g_led_config.matrix_co[i][j] == ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampId) {
+                            ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionXInMillimeters =
+                                MILLIMETERS_TO_MICROMETERS(lampArrayAttributesReport.BoundingBoxWidthInMillimeters *
+                                                           g_led_config.point[index].x / (QMKPositionRecordMaximumX - QMKPositionRecordMinimumX));
+                            ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionYInMillimeters =
+                                MILLIMETERS_TO_MICROMETERS(lampArrayAttributesReport.BoundingBoxHeightInMillimeters *
+                                                           g_led_config.point[index].y / (QMKPositionRecordMaximumY - QMKPositionRecordMinimumY));
+                        } else if (g_led_config.matrix_co[i][j] != NO_LED) {
+                            index++;
+                        }
+                    }
+                }
+            }
 
             *data = LampArrayReportBuffer;
             *len = sizeof(LampAttributesResponseReport);
