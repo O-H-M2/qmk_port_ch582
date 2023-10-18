@@ -74,7 +74,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BLE_SLOT_3_INDICATOR [0][2]
 #define BLE_SLOT_4_INDICATOR [0][3]
 
-#define RGB_MATRIX_KEYPRESSES
 // #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define RGBLED_NUM                    17
 #define RGB_MATRIX_LED_COUNT          RGBLED_NUM

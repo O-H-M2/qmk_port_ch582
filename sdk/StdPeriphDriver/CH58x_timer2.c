@@ -55,8 +55,8 @@ void TMR2_EXTSingleCounterInit(CapModeTypeDef cap)
  */
 void TMR2_PWMInit(PWMX_PolarTypeDef pr, PWM_RepeatTsTypeDef ts)
 {
-    //    R8_TMR2_CTRL_MOD = RB_TMR_ALL_CLEAR;
-    R8_TMR2_CTRL_MOD = RB_TMR_COUNT_EN | RB_TMR_OUT_EN | (pr << 4) | (ts << 6);
+    R8_TMR2_CTRL_MOD = RB_TMR_ALL_CLEAR;
+    R8_TMR2_CTRL_MOD = (pr << 4) | (ts << 6);
 }
 
 /*********************************************************************
