@@ -33,72 +33,69 @@ __attribute__((weak)) const LampArrayAttributesReport lampArrayAttributesReport 
     .MinUpdateIntervalInMilliseconds = 10,
 };
 __attribute__((weak)) const LampAttributes m_lampAttributes[] = {
-    { .LampId = 0, .PositionXInMillimeters = 9, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_ESC },
-    { .LampId = 1, .PositionXInMillimeters = 28, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_1 },
-    { .LampId = 2, .PositionXInMillimeters = 47, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_2 },
-    { .LampId = 3, .PositionXInMillimeters = 66, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_3 },
-    { .LampId = 4, .PositionXInMillimeters = 85, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_4 },
-    { .LampId = 5, .PositionXInMillimeters = 104, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_5 },
-    { .LampId = 6, .PositionXInMillimeters = 123, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_6 },
-    { .LampId = 7, .PositionXInMillimeters = 142, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_7 },
-    { .LampId = 8, .PositionXInMillimeters = 161, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_8 },
-    { .LampId = 9, .PositionXInMillimeters = 180, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_9 },
-    { .LampId = 10, .PositionXInMillimeters = 199, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_0 },
-    { .LampId = 11, .PositionXInMillimeters = 218, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_MINS },
-    { .LampId = 12, .PositionXInMillimeters = 237, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_EQL },
-    { .LampId = 13, .PositionXInMillimeters = 266, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_BSPC },
-
-    { .LampId = 14, .PositionXInMillimeters = 14, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_TAB },
-    { .LampId = 15, .PositionXInMillimeters = 38, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_Q },
-    { .LampId = 16, .PositionXInMillimeters = 57, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_W },
-    { .LampId = 17, .PositionXInMillimeters = 76, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_E },
-    { .LampId = 18, .PositionXInMillimeters = 95, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_R },
-    { .LampId = 19, .PositionXInMillimeters = 114, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_T },
-    { .LampId = 20, .PositionXInMillimeters = 133, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_Y },
-    { .LampId = 21, .PositionXInMillimeters = 152, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_U },
-    { .LampId = 22, .PositionXInMillimeters = 171, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_I },
-    { .LampId = 23, .PositionXInMillimeters = 190, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_O },
-    { .LampId = 24, .PositionXInMillimeters = 209, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_P },
-    { .LampId = 25, .PositionXInMillimeters = 228, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LBRC },
-    { .LampId = 26, .PositionXInMillimeters = 247, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RBRC },
-    { .LampId = 27, .PositionXInMillimeters = 271, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_BSLS },
-
-    { .LampId = 28, .PositionXInMillimeters = 16, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_CAPS },
-    { .LampId = 29, .PositionXInMillimeters = 42, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_A },
-    { .LampId = 30, .PositionXInMillimeters = 61, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_S },
-    { .LampId = 31, .PositionXInMillimeters = 80, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_D },
-    { .LampId = 32, .PositionXInMillimeters = 99, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_F },
-    { .LampId = 33, .PositionXInMillimeters = 118, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_G },
-    { .LampId = 34, .PositionXInMillimeters = 137, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_H },
-    { .LampId = 35, .PositionXInMillimeters = 156, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_J },
-    { .LampId = 36, .PositionXInMillimeters = 175, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_K },
-    { .LampId = 37, .PositionXInMillimeters = 194, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_L },
-    { .LampId = 38, .PositionXInMillimeters = 213, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_SCLN },
-    { .LampId = 39, .PositionXInMillimeters = 232, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_QUOT },
-    { .LampId = 40, .PositionXInMillimeters = 264, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_ENT },
-
-    { .LampId = 41, .PositionXInMillimeters = 21, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LSFT },
-    { .LampId = 42, .PositionXInMillimeters = 52, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_Z },
-    { .LampId = 43, .PositionXInMillimeters = 71, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_X },
-    { .LampId = 44, .PositionXInMillimeters = 90, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_C },
-    { .LampId = 45, .PositionXInMillimeters = 109, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_V },
-    { .LampId = 46, .PositionXInMillimeters = 128, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_B },
-    { .LampId = 47, .PositionXInMillimeters = 147, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_N },
-    { .LampId = 48, .PositionXInMillimeters = 166, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_M },
-    { .LampId = 49, .PositionXInMillimeters = 185, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_COMM },
-    { .LampId = 50, .PositionXInMillimeters = 204, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_DOT },
-    { .LampId = 51, .PositionXInMillimeters = 223, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_SLSH },
-    { .LampId = 52, .PositionXInMillimeters = 259, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RSFT },
-
-    { .LampId = 53, .PositionXInMillimeters = 11, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LCTL },
-    { .LampId = 54, .PositionXInMillimeters = 35, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LGUI },
-    { .LampId = 55, .PositionXInMillimeters = 59, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LALT },
-    { .LampId = 56, .PositionXInMillimeters = 130, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_SPC },
-    { .LampId = 57, .PositionXInMillimeters = 202, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RALT },
-    { .LampId = 58, .PositionXInMillimeters = 226, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RGUI },
-    { .LampId = 59, .PositionXInMillimeters = 250, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_MENU },
-    { .LampId = 60, .PositionXInMillimeters = 274, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RCTL },
+    { .LampId = 0, .PositionXInMillimeters = 9, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_ESC },
+    { .LampId = 1, .PositionXInMillimeters = 28, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_1 },
+    { .LampId = 2, .PositionXInMillimeters = 47, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_2 },
+    { .LampId = 3, .PositionXInMillimeters = 66, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_3 },
+    { .LampId = 4, .PositionXInMillimeters = 85, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_4 },
+    { .LampId = 5, .PositionXInMillimeters = 104, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_5 },
+    { .LampId = 6, .PositionXInMillimeters = 123, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_6 },
+    { .LampId = 7, .PositionXInMillimeters = 142, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_7 },
+    { .LampId = 8, .PositionXInMillimeters = 161, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_8 },
+    { .LampId = 9, .PositionXInMillimeters = 180, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_9 },
+    { .LampId = 10, .PositionXInMillimeters = 199, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_0 },
+    { .LampId = 11, .PositionXInMillimeters = 218, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_MINS },
+    { .LampId = 12, .PositionXInMillimeters = 237, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_EQL },
+    { .LampId = 13, .PositionXInMillimeters = 266, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_BSPC },
+    { .LampId = 14, .PositionXInMillimeters = 14, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_TAB },
+    { .LampId = 15, .PositionXInMillimeters = 38, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_Q },
+    { .LampId = 16, .PositionXInMillimeters = 57, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_W },
+    { .LampId = 17, .PositionXInMillimeters = 76, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_E },
+    { .LampId = 18, .PositionXInMillimeters = 95, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_R },
+    { .LampId = 19, .PositionXInMillimeters = 114, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_T },
+    { .LampId = 20, .PositionXInMillimeters = 133, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_Y },
+    { .LampId = 21, .PositionXInMillimeters = 152, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_U },
+    { .LampId = 22, .PositionXInMillimeters = 171, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_I },
+    { .LampId = 23, .PositionXInMillimeters = 190, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_O },
+    { .LampId = 24, .PositionXInMillimeters = 209, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_P },
+    { .LampId = 25, .PositionXInMillimeters = 228, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LBRC },
+    { .LampId = 26, .PositionXInMillimeters = 247, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RBRC },
+    { .LampId = 27, .PositionXInMillimeters = 271, .PositionYInMillimeters = 28, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_BSLS },
+    { .LampId = 28, .PositionXInMillimeters = 16, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_CAPS },
+    { .LampId = 29, .PositionXInMillimeters = 42, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_A },
+    { .LampId = 30, .PositionXInMillimeters = 61, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_S },
+    { .LampId = 31, .PositionXInMillimeters = 80, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_D },
+    { .LampId = 32, .PositionXInMillimeters = 99, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_F },
+    { .LampId = 33, .PositionXInMillimeters = 118, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_G },
+    { .LampId = 34, .PositionXInMillimeters = 137, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_H },
+    { .LampId = 35, .PositionXInMillimeters = 156, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_J },
+    { .LampId = 36, .PositionXInMillimeters = 175, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_K },
+    { .LampId = 37, .PositionXInMillimeters = 194, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_L },
+    { .LampId = 38, .PositionXInMillimeters = 213, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_SCLN },
+    { .LampId = 39, .PositionXInMillimeters = 232, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_QUOT },
+    { .LampId = 40, .PositionXInMillimeters = 264, .PositionYInMillimeters = 47, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_ENT },
+    { .LampId = 41, .PositionXInMillimeters = 21, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LSFT },
+    { .LampId = 42, .PositionXInMillimeters = 52, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_Z },
+    { .LampId = 43, .PositionXInMillimeters = 71, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_X },
+    { .LampId = 44, .PositionXInMillimeters = 90, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_C },
+    { .LampId = 45, .PositionXInMillimeters = 109, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_V },
+    { .LampId = 46, .PositionXInMillimeters = 128, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_B },
+    { .LampId = 47, .PositionXInMillimeters = 147, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_N },
+    { .LampId = 48, .PositionXInMillimeters = 166, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_M },
+    { .LampId = 49, .PositionXInMillimeters = 185, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_COMM },
+    { .LampId = 50, .PositionXInMillimeters = 204, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_DOT },
+    { .LampId = 51, .PositionXInMillimeters = 223, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_SLSH },
+    { .LampId = 52, .PositionXInMillimeters = 259, .PositionYInMillimeters = 66, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RSFT },
+    { .LampId = 53, .PositionXInMillimeters = 11, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LCTL },
+    { .LampId = 54, .PositionXInMillimeters = 35, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LGUI },
+    { .LampId = 55, .PositionXInMillimeters = 59, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_LALT },
+    { .LampId = 56, .PositionXInMillimeters = 130, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_SPC },
+    { .LampId = 57, .PositionXInMillimeters = 202, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RALT },
+    { .LampId = 58, .PositionXInMillimeters = 226, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RGUI },
+    { .LampId = 59, .PositionXInMillimeters = 250, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_MENU },
+    { .LampId = 60, .PositionXInMillimeters = 274, .PositionYInMillimeters = 85, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_RCTL },
 };
+static const bool m_useQMKPositionRecord = sizeof(m_lampAttributes) == 0;
 
 static inline void dynamic_lighting_local_state_reset()
 {
@@ -185,7 +182,6 @@ void dynamic_lighting_ProcessControlReport(uint8_t *data, uint16_t length)
 
 void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint32_t *len)
 {
-    static bool m_useQMKPositionRecord = false;
     static uint8_t QMKPositionRecordMinimumX = UINT8_MAX, QMKPositionRecordMaximumX = 0;
     static uint8_t QMKPositionRecordMinimumY = UINT8_MAX, QMKPositionRecordMaximumY = 0;
 
@@ -201,12 +197,6 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
                 .MinUpdateIntervalInMilliseconds = MILLISECONDS_TO_MICROSECONDS(lampArrayAttributesReport.MinUpdateIntervalInMilliseconds),
             };
 
-            for (uint16_t i = 0; i < sizeof(m_lampAttributes) / sizeof(m_lampAttributes[0]); i++) {
-                if (!m_lampAttributes[i].PositionXInMillimeters || !m_lampAttributes[i].PositionYInMillimeters) {
-                    m_useQMKPositionRecord = true;
-                    break;
-                }
-            }
             if (m_useQMKPositionRecord) {
                 for (uint8_t i = 0; i < RGB_MATRIX_LED_COUNT; i++) {
                     if (g_led_config.point[i].x < QMKPositionRecordMinimumX) {
@@ -230,21 +220,11 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
         case LAMP_ATTRIBUTES_RESPONSE_REPORT_ID:
             *(LampAttributesResponseReport *)LampArrayReportBuffer = (LampAttributesResponseReport){
                 .ReportId = LAMP_ATTRIBUTES_RESPONSE_REPORT_ID,
-                .Attributes.LampId = m_lampAttributes[m_lastLampIdRequested].LampId,
-                .Attributes.PositionXInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionXInMillimeters),
-                .Attributes.PositionYInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionYInMillimeters),
-                .Attributes.PositionZInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionZInMillimeters),
-                .Attributes.UpdateLatencyInMilliseconds = MILLISECONDS_TO_MICROSECONDS(m_lampAttributes[m_lastLampIdRequested].UpdateLatencyInMilliseconds),
-                .Attributes.LampPurposes = m_lampAttributes[m_lastLampIdRequested].LampPurposes,
-                .Attributes.RedLevelCount = m_lampAttributes[m_lastLampIdRequested].RedLevelCount ? m_lampAttributes[m_lastLampIdRequested].RedLevelCount : UINT8_MAX,
-                .Attributes.GreenLevelCount = m_lampAttributes[m_lastLampIdRequested].GreenLevelCount ? m_lampAttributes[m_lastLampIdRequested].GreenLevelCount : UINT8_MAX,
-                .Attributes.BlueLevelCount = m_lampAttributes[m_lastLampIdRequested].BlueLevelCount ? m_lampAttributes[m_lastLampIdRequested].BlueLevelCount : UINT8_MAX,
-                .Attributes.IntensityLevelCount = m_lampAttributes[m_lastLampIdRequested].IntensityLevelCount,
-                .Attributes.IsProgrammable = m_lampAttributes[m_lastLampIdRequested].IsProgrammable,
-                .Attributes.LampKey = m_lampAttributes[m_lastLampIdRequested].LampKey,
             };
 
             if (m_useQMKPositionRecord) {
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampId = m_lastLampIdRequested;
+
                 // calculate position from g_led_config
                 uint8_t index = 0;
 
@@ -262,6 +242,28 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
                         }
                     }
                 }
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionZInMillimeters = MILLIMETERS_TO_MICROMETERS(0);
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.UpdateLatencyInMilliseconds = MILLISECONDS_TO_MICROSECONDS(4);
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampPurposes = LampPurposeAccent;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.RedLevelCount = UINT8_MAX;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.GreenLevelCount = UINT8_MAX;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.BlueLevelCount = UINT8_MAX;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.IntensityLevelCount = 1;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.IsProgrammable = 1;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampKey = KC_NO;
+            } else {
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampId = m_lampAttributes[m_lastLampIdRequested].LampId;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionXInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionXInMillimeters);
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionYInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionYInMillimeters);
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionZInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionZInMillimeters);
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.UpdateLatencyInMilliseconds = MILLISECONDS_TO_MICROSECONDS(m_lampAttributes[m_lastLampIdRequested].UpdateLatencyInMilliseconds);
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampPurposes = m_lampAttributes[m_lastLampIdRequested].LampPurposes;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.RedLevelCount = m_lampAttributes[m_lastLampIdRequested].RedLevelCount ? m_lampAttributes[m_lastLampIdRequested].RedLevelCount : UINT8_MAX;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.GreenLevelCount = m_lampAttributes[m_lastLampIdRequested].GreenLevelCount ? m_lampAttributes[m_lastLampIdRequested].GreenLevelCount : UINT8_MAX;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.BlueLevelCount = m_lampAttributes[m_lastLampIdRequested].BlueLevelCount ? m_lampAttributes[m_lastLampIdRequested].BlueLevelCount : UINT8_MAX;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.IntensityLevelCount = m_lampAttributes[m_lastLampIdRequested].IntensityLevelCount;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.IsProgrammable = m_lampAttributes[m_lastLampIdRequested].IsProgrammable;
+                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampKey = m_lampAttributes[m_lastLampIdRequested].LampKey;
             }
 
             *data = LampArrayReportBuffer;
