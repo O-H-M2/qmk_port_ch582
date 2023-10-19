@@ -25,9 +25,9 @@ static uint8_t LampArrayReportBuffer[64] = {};
 
 __attribute__((weak)) const LampArrayAttributesReport lampArrayAttributesReport = {
     .ReportId = LAMP_ARRAY_ATTRIBUTES_REPORT_ID,
-    .LampCount = 61,
-    .BoundingBoxWidthInMillimeters = 282,
-    .BoundingBoxHeightInMillimeters = 94,
+    .LampCount = RGB_MATRIX_LED_COUNT,
+    .BoundingBoxWidthInMillimeters = MATRIX_COLS * 20.15,
+    .BoundingBoxHeightInMillimeters = MATRIX_ROWS * 18.8,
     .BoundingBoxDepthInMillimeters = 2,
     .LampArrayKind = LampArrayKindKeyboard,
     .MinUpdateIntervalInMilliseconds = 10,
