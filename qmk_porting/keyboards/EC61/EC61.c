@@ -103,6 +103,15 @@ void spi_master_pre_transmit_cb()
 #endif
 
 #ifdef RGB_RAW_ENABLE
+const LampArrayAttributesReport lampArrayAttributesReport = {
+    .ReportId = LAMP_ARRAY_ATTRIBUTES_REPORT_ID,
+    .LampCount = 61,
+    .BoundingBoxWidthInMillimeters = 282,
+    .BoundingBoxHeightInMillimeters = 94,
+    .BoundingBoxDepthInMillimeters = 2,
+    .LampArrayKind = LampArrayKindKeyboard,
+    .MinUpdateIntervalInMilliseconds = 10,
+};
 const LampAttributes m_lampAttributes[] = {
     { .LampId = 0, .PositionXInMillimeters = 9, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_ESC },
     { .LampId = 1, .PositionXInMillimeters = 28, .PositionYInMillimeters = 9, .UpdateLatencyInMilliseconds = 4, .LampPurposes = LampPurposeAccent, .RedLevelCount = UINT8_MAX, .GreenLevelCount = UINT8_MAX, .BlueLevelCount = UINT8_MAX, .IntensityLevelCount = 1, .IsProgrammable = 1, .LampKey = KC_1 },
