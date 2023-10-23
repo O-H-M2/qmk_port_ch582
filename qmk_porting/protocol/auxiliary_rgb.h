@@ -45,6 +45,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void rgb_raw_hid_receive(uint8_t *data, uint8_t length);
 void rgb_raw_hid_send(uint8_t *data, uint8_t length);
+void rgb_raw_control_receive(uint8_t report_id, uint8_t *data, uint32_t len);
 
 bool auxiliary_rgb_init_buffer();
 void auxiliary_rgb_deinit_buffer();

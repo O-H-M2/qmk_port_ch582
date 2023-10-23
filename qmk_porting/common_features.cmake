@@ -212,6 +212,7 @@ if(AUXILIARY_RGB_ENABLE)
         add_definitions(-DRGB_MATRIX_CUSTOM_KB -DRGB_RAW_ENABLE)
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/protocol/auxiliary_rgb.c"
+            "${CMAKE_CURRENT_LIST_DIR}/protocol/dynamic_lighting.c"
             "${CMAKE_CURRENT_LIST_DIR}/protocol/openrgb.c"
             "${CMAKE_CURRENT_LIST_DIR}/protocol/signalrgb.c"
         )

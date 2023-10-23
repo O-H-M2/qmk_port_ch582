@@ -19,6 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "quantum.h"
 #include "extra_keycode.h"
+#ifdef RGB_RAW_ENABLE
+#include "dynamic_lighting.h"
+#endif
 
 // clang-format off
 #define LAYOUT_all(                                                                            \
