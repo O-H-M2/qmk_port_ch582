@@ -35,8 +35,7 @@ message(STATUS "Found mergehex: ${MERGEHEX_PATH}")
 
 if(NOT DEFINED TOOLCHAIN_PREFIX)
     set(TOOLCHAIN_PREFIX riscv-none-embed)
-endif
-
+endif()
 
 if(NOT DEFINED ADDITIONAL_TOOLCHAIN_PATH)
     set(ADDITIONAL_TOOLCHAIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-embed-gcc/bin/")
