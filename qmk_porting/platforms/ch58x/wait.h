@@ -27,13 +27,13 @@ extern "C" {
 #define wait_us(us) DelayUs(us)
 
 #ifndef GPIO_INPUT_PIN_DELAY
-#define GPIO_INPUT_PIN_DELAY 5
+#define GPIO_INPUT_PIN_DELAY (FREQ_SYS / 1000000L / 8)
 #endif
 #ifndef MATRIX_IO_DELAY
 #define MATRIX_IO_DELAY 5
 #endif
 
-#define waitInputPinDelay() wait_us(GPIO_INPUT_PIN_DELAY);
+#define waitInputPinDelay() SAFEOPERATE;
 
 #ifdef __cplusplus
 }
