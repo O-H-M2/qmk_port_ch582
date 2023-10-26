@@ -33,7 +33,10 @@ file(GLOB NRF_BIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/nrf*/bin")
 find_program(MERGEHEX_PATH NAMES mergehex PATHS ${NRF_BIN_PATH} REQUIRED)
 message(STATUS "Found mergehex: ${MERGEHEX_PATH}")
 
-set(TOOLCHAIN_PREFIX riscv-none-embed)
+if(NOT DEFINED TOOLCHAIN_PREFIX)
+    set(TOOLCHAIN_PREFIX riscv-none-embed)
+endif
+
 
 if(NOT DEFINED ADDITIONAL_TOOLCHAIN_PATH)
     set(ADDITIONAL_TOOLCHAIN_PATH "${CMAKE_CURRENT_LIST_DIR}/utils/riscv-none-embed-gcc/bin/")
