@@ -71,7 +71,7 @@ typedef struct __packed {
     uint8_t LampKey;
 } LampAttributes;
 
-#define LAMP_ARRAY_ATTRIBUTES_REPORT_ID 1
+#define LAMP_ARRAY_ATTRIBUTES_REPORT_ID 72
 typedef struct __packed {
     uint8_t ReportId;
     uint16_t LampCount;
@@ -82,19 +82,19 @@ typedef struct __packed {
     uint32_t MinUpdateIntervalInMilliseconds;
 } LampArrayAttributesReport;
 
-#define LAMP_ATTRIBUTES_REQUEST_REPORT_ID 2
+#define LAMP_ATTRIBUTES_REQUEST_REPORT_ID 73
 typedef struct __packed {
     uint8_t ReportId;
     uint16_t LampId;
 } LampAttributesRequestReport;
 
-#define LAMP_ATTRIBUTES_RESPONSE_REPORT_ID 3
+#define LAMP_ATTRIBUTES_RESPONSE_REPORT_ID 74
 typedef struct __packed {
     uint8_t ReportId;
     LampAttributes Attributes;
 } LampAttributesResponseReport;
 
-#define LAMP_MULTI_UPDATE_REPORT_ID  4
+#define LAMP_MULTI_UPDATE_REPORT_ID  75
 #define LAMP_MULTI_UPDATE_LAMP_COUNT 8
 typedef struct __packed {
     uint8_t ReportId;
@@ -104,7 +104,7 @@ typedef struct __packed {
     LampArrayColor UpdateColors[LAMP_MULTI_UPDATE_LAMP_COUNT];
 } LampMultiUpdateReport;
 
-#define LAMP_RANGE_UPDATE_REPORT_ID 5
+#define LAMP_RANGE_UPDATE_REPORT_ID 76
 typedef struct __packed {
     uint8_t ReportId;
     uint8_t LampUpdateFlags;
@@ -113,7 +113,7 @@ typedef struct __packed {
     LampArrayColor UpdateColor;
 } LampRangeUpdateReport;
 
-#define LAMP_ARRAY_CONTROL_REPORT_ID 6
+#define LAMP_ARRAY_CONTROL_REPORT_ID 77
 typedef struct __packed {
     uint8_t ReportId;
     uint8_t AutonomousMode;
