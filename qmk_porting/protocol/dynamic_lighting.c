@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "dynamic_lighting.h"
 #include "auxiliary_rgb.h"
 #include "quantum.h"
+#include "keymap_introspection.h"
 
 static uint16_t m_lastLampIdRequested = 0;
 static bool m_isAutonomousMode = true;
@@ -169,12 +170,33 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
                 for (uint8_t i = 0; i < MATRIX_ROWS; i++) {
                     for (uint8_t j = 0; j < MATRIX_COLS; j++) {
                         if (g_led_config.matrix_co[i][j] == ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampId) {
+                            // fill in XY coordinates
                             ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionXInMillimeters =
                                 MILLIMETERS_TO_MICROMETERS(lampArrayAttributesReport.BoundingBoxWidthInMillimeters *
                                                            g_led_config.point[index].x / (QMKPositionRecordMaximumX - QMKPositionRecordMinimumX));
                             ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionYInMillimeters =
                                 MILLIMETERS_TO_MICROMETERS(lampArrayAttributesReport.BoundingBoxHeightInMillimeters *
                                                            g_led_config.point[index].y / (QMKPositionRecordMaximumY - QMKPositionRecordMinimumY));
+
+                            // fill in lamp purpose and Z coordinate if needed
+                            if (g_led_config.flags[index] & LED_FLAG_UNDERGLOW) {
+                                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionZInMillimeters =
+                                    MILLIMETERS_TO_MICROMETERS(lampArrayAttributesReport.BoundingBoxDepthInMillimeters);
+                                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampPurposes = LampPurposeAccent;
+                            } else if (g_led_config.flags[index] & LED_FLAG_INDICATOR) {
+                                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampPurposes = LampPurposeStatus;
+                            } else {
+                                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampPurposes = LampPurposeControl;
+                            }
+
+                            // fill in keycode
+                            uint16_t keycode = keycode_at_keymap_location(get_highest_layer(default_layer_state), i, j);
+
+                            if (IS_BASIC_KEYCODE(keycode) || IS_MODIFIER_KEYCODE(keycode)) {
+                                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampKey = keycode;
+                            } else {
+                                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampKey = KC_NO;
+                            }
                         } else if (g_led_config.matrix_co[i][j] != NO_LED) {
                             index++;
                         }
@@ -182,13 +204,11 @@ void dynamic_lighting_handle_get_report(uint8_t report_id, uint8_t **data, uint3
                 }
                 ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionZInMillimeters = MILLIMETERS_TO_MICROMETERS(0);
                 ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.UpdateLatencyInMilliseconds = MILLISECONDS_TO_MICROSECONDS(4);
-                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampPurposes = LampPurposeAccent;
                 ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.RedLevelCount = UINT8_MAX;
                 ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.GreenLevelCount = UINT8_MAX;
                 ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.BlueLevelCount = UINT8_MAX;
                 ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.IntensityLevelCount = 1;
                 ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.IsProgrammable = 1;
-                ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampKey = KC_NO;
             } else {
                 ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.LampId = m_lampAttributes[m_lastLampIdRequested].LampId;
                 ((LampAttributesResponseReport *)LampArrayReportBuffer)->Attributes.PositionXInMillimeters = MILLIMETERS_TO_MICROMETERS(m_lampAttributes[m_lastLampIdRequested].PositionXInMillimeters);
