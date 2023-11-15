@@ -1,0 +1,32 @@
+I am thinking about restructing gpm, for the following reasons:
+
+- the code is old
+- the code is huge
+- the code is next to unmaintainable
+- the code is linux specific
+
+What I think one could reach:
+
+- create gpm, that runs on any Unix?
+- create gpm that is easy to extend
+- create gpm that is easy to maintain
+
+What ways are possible?
+
+- rewrite everything from scratch
+   * takes a long time and much motivitation
+- migrate old code to clean codebase
+   * takes some time to analyse old code
+   * seems to me some way one could go
+
+How to do it?
+
+- new functions / code references 'gpm2' instead of gpm
+- perhaps some people want to sponsor me for creating a clean
+  mouse driver for the console?
+  => thus I got more time to focus on gpm2
+- motivate other foss developers to take part into it
+
+Let's see what happens!
+
+      -- Nico Schottelius, 2007-05-11 2245 CEST in a train in Zurich

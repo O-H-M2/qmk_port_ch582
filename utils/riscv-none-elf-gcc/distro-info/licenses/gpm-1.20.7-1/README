@@ -1,0 +1,314 @@
+/*
+ * README -- gpm 1.xx
+ *
+ * Copyright 1995-2000   rubini@linux.it (Alessandro Rubini)
+ * Copyright 2001-2012   nico-gpm at schottelius.org (Nico Schottelius)
+ *
+ *******/
+
+The gpm (general purpose mouse) daemon tries to be a useful mouse
+server for applications running on the Linux console.  Its roots are
+in the "selection" package, by Andrew Haylett, and the original code
+comes from selection itself. This package is intended as a replacement
+for "selection", to provide additional facilities.  From 0.18 onward
+gpm supports xterm as well, so you can run mouse-sensitive
+applications under X, and you can easily write curses applications
+which support the mouse on both the Linux console and xterm. The xterm
+code is portable to any U*x flavour (look at sample/README).
+
+The first clients have been "The Midnight Commander", by Miguel de
+Icaza and an emacs library included in this release. Recent dialog
+distributions and the Jed editor use gpm as well, and the same do
+several custom applications.
+
+If you want to make a patch to gpm, please read doc/HACK_GPM.
+
+For additionally documentation and other READMEs have a look into doc/.
+
+=========== MAINTENANCE
+
+As of 1.19.4, gpm is officially maintained again.
+Most of the README is written by Alessandro Rubine,
+only minor changes are made by Nico Schottelius.
+
+
+=========== MAILING LIST
+
+The mailing list devoted to gpm is "gpm@lists.linux.it"
+The list is managed by Mailman and is currently open,
+so non-subscribers are allowed to post.
+
+In order to subscribe to the mailing list, visit
+   http://lists.linux.it/listinfo/gpm
+
+or send a message with "subscribe" in its body to
+   gpm-request@lists.linux.it.
+
+For example:
+	echo subscribe | mail gpm-request@lists.linux.it
+
+
+=========== DOWNLOAD / HOMEPAGE
+
+The latest releases can always be found in one of the following place:
+
+   http://www.nico.schottelius.org/software/gpm/archives/
+
+   Mirror:
+
+   ftp://arcana.linux.it/pub/gpm/
+   http://www.ar.linux.it/pub/gpm/
+
+The homepage of gpm can be found at
+
+   http://www.nico.schottelius.org/software/gpm/
+
+You can get the latest development tree of gpm via git:
+
+   git-clone git://git.schottelius.org/gpm
+
+There are three branches available:
+
+   master: Contains the latest gpm1 code, may be broken.
+   gpm-1-stable: Contains the latest stable source code.
+   gpm-2-dev: Contains work that heads to gpm2.
+
+=========== COMPILING AND INSTALLING
+
+The package uses autoconf as of 2.12. 
+Use "./autogen.sh && ./configure && make" to
+compile the gpm suite.  To install "make install". This installs
+everything under the "prefix" directory, which by default is
+/usr/local.
+
+Use "./configure --prefix=/usr" if you want to install under /usr
+instead of /usr/local.
+
+Exectuable files are installed in $(prefix)/bin (except the gpm daemon
+in $(prefix)/sbin), libraries in $(prefix)/lib, man pages in
+$(prefix)/man, the lisp library in the proper location for emacs-list
+files (detected during the "configure" step); info files are installed
+under $(prefix)/info.
+
+If you would like to 'clean'up very tidy, use distclean. Don't forget to use
+make distclean config! Otherwise there will be no configure script!
+
+
+=========== CONFIGURING
+
+Configuration is optional...
+
+* You would like to tell emacs to use t-mouse.el when appropriate. Add
+	the following lines to your own .emacs (in your home
+	directory), or in the /usr/lib/emacs/site-lisp/default
+
+	(if (and (string-match ".*-linux" system-configuration)
+                 (not window-system)
+	         (or (string-match "linux" (getenv "TERM"))
+	             (string-match "con.*" (getenv "TERM"))))
+	    (load-library "t-mouse"))
+
+* If you want to use gpm-root, copy gpm-root.conf to your /usr/etc
+	directory, test it out and then edit it to suit your feels.
+
+* You'd like to name the gpm info file inside /usr/info/dir. Just insert
+	the line
+		* gpm: (gpm.info).  A mouse server for the Linux console
+	at the proper place. Note that this is usually automatically
+	performed if you install a package prepared for your own
+	distribution.
+
+* To invoke gpm (and gpm-root) at system boot, add something like this
+	to your /etc/rc.d/rc.local
+
+		/usr/sbin/gpm -t msc -m /dev/tts/0 &
+		/usr/bin/gpm-root &
+
+	If you are running the new setup of SysVinit, you should better
+	add a "gpm" script in /etc/rc.d/rc.init and install it in your
+	runlevels in the usual way (this is usually included in your
+	distribution as well)
+
+	You may want to put the mouse server at a higher priority: in
+	this case invoke instead "/usr/bin/nice -n -20 /usr/sbin/gpm -t
+	msc"
+
+	The program goes to the background by itself, unless
+	it is run with debuging enabled (see the -D option in the
+        documentation).
+
+
+========== DOCS
+
+The directory "./doc" holds the documentation. The release embeds a
+postscript file, slightly reduced to save paper (doc/gpm2.ps), an info
+one (doc/gpm.info) and a text-only version (doc/gpmdoc.txt -- but
+without table of contents, for now).  Man pages are automatically
+extracted from the info file, and are installed with "make install"
+
+
+=========== BUG REPORTS
+
+Before sending bug reports, please look at the file "FAQ",
+which outlines some known problems, and how to deal with them.
+
+If your bug isn't fixed by reading there, please report it to me,
+without getting angry with me if things don't work at first trial
+(but they usually work).
+
+Bug reports are best sent to the gpm mailing list (see above) or to me
+via email, if you use personal mail please include the string "gpm"
+somewhere in the subject line. This will help my filters in sorting
+things out.
+
+* When compilation fails I need your kernel version ("uname -a"), the
+compiler version ("gcc -v") and the library version ("ls -l /lib" or,
+better "ldd /usr/sbin/gpm").  And the compiler messages, obviously.
+
+* When a program hangs or segfaults, please reinvoke the program under strace:
+	strace -tf -o /tmp/trace.gpm gpm -t msc
+                                     ^^^^^^^^^^ put your true cmdline here.
+Then send me /tmp/trace.gpm* (they may be one or two files, according
+to the strace version), and a description of how you reproduce the problem.
+
+The last resort is a core dump, but I'll ask it personally if I have real
+difficulties in tracing out your problem.
+
+
+=========== CREDITS
+
+The following people contributed to gpm, in chronological order. This
+list used to reside in a different file, but it's better for it to stand
+out in the README
+
+Andrew Haylett (ajh@gec-mrc.co.uk)
+		donated "selection" to the linux community, so I could get
+		the idea and the code. A few others contributed to selection,
+		but I lost track of their contributions and names.
+
+Steven S. Dick (ssd@nevets.oau.org)
+		fixed a pair of bugs in early gpm versions.
+
+Miguel de Icaza (miguel@roxanne.nuclecu.unam.mx)
+		helped fixing some bugs and provided a good client to test
+		my server. He helped a lot in testing the various pre-releases.
+
+Olav Woelfelschneider (wosch@rbg.informatik.th-darmstadt.de)
+		fixed 0.10 with MouseSystems compatible mice.
+
+Janne Kukonlehto (jtklehto@stekt.oulu.fi)
+		provided xterm mouse decoding to be stolen by me.
+
+Rick Lyons (rick@razorback.brisnet.org.au)
+		fixed a bug in gpm-0.9.
+
+Reuben Sumner (rasumner@undergrad.math.uwaterloo.ca)
+		helped fixing behaviour with "-t bm".
+
+Larry Bartholdi (lbartho@scsun.unige.ch)
+		pinpointed an error in t-mouse-suspend
+		and provided good suggestions for 0.97.
+
+Mark Lord (mlord@bnr.ca)
+		ported to Dexxa/Logitech mice and gave feedback several times.
+
+Stefan Giessler (stg@gandalf.han.de)
+		fixed some problems with gpm-root and
+		suggested to put gpm in the background (0.97).
+
+Roman Shapiro
+		helped with the Logitech MouseMan.
+
+Andries Brouwer (aeb@cwi.nl)
+		Provided a Latin-1 LUT for chars, and enhanced
+		lut-loading code (0.98).
+
+Adrian Johnson (ajohnson@apanix.apana.org.au)
+		Gave good feedback and ideas for the 0.98's
+
+Stephen Lee (sl14@crux1.cit.cornell.edu)
+		Helped a lot with the damned MouseMan protocol (0.98 and 1.0)
+
+John van Leeuwen (johnvl@einstein.et.tudelft.nl)
+		Outlined and fixed a pair of bugs in gpm-root 0.98
+
+Alvar Bray (alvar@meiko.co.uk)
+		Pointed out an error with awk (0.99)
+ 
+David A. van Leeuwen (david@tm.tno.nl)
+		Helped with chord-middle protocols (1.0)
+
+Pavel Kankovsky (KAN@frode.dcit.cz)
+		Open /dev/ttyxx instead of /dev/console in the lib (1.01)
+
+Mark Shadley (shadcat@catcher.com) 
+		Helped in turning to ELF (1.01 and 1.02) and in fixing
+		horrible bugs of mine. Without his help 1.03 wouldn't be there.
+
+Lou Sortman (lou@lounix4.conc.tdsnet.com)
+		Added support for glidepoint mice within "-t mman". (1.05)
+
+Marc Meis (100334.1426@compuserve.com)
+		Provided support for absolute pointing devices, and in
+		particular for the ncr3125 pen. (1.05)
+
+Michael Plass (Michael_Plass.PARC@xerox.com)
+		Fixed a damned bug in middle button decoding (M_ms) (1.07)
+
+Markus Gutschke (gutschk@uni-muenster.de)
+		Provided a better re-encoding for "-R" (1.10)
+
+Karsten Ballueder (Karsten@piobelix.physik.uni-karlsruhe.de)
+		Suggested the reboot compile-time option (1.10)
+
+John Davis (davis@space.mit.edu)
+		Found and fixed a buglet in liblow.c for some jed users (1.10)
+
+Julian Thompson (jrt@miel.demon.co.uk)
+		Fixed a buglet in gpm-root (1.10)
+
+Dave Flater (dave@universe.digex.net)
+		Removed a typo in the disabled decoder for ms-3b (1.11)
+
+Thomas E. Dickey (dickey@clark.net)
+		Ported to autoconf (1.11)
+
+Pavel Machek (pavel@ucw.cz)
+		New mode "logim" (1.11) and NetMouse (1.14)
+
+Matthias Grimrath (y0001032@rzserv8.rz.tu-bs.de)
+		Be c++ compliant in gpm.h (1.11)
+
+Stephen Tell (tell@cs.unc.edu)
+		Patch for the ps2 decoder to support misbehaving devices (1.11)
+
+Francois Chastrette (no-email)
+		Great help to support plugnpray mice (1.13)
+
+Steve Bennett (s.bennett@lancaster.ac.uk)
+		Support for the intellimouse serial devices. (1.13)
+
+Jan Daciuk (jandac@pg.gda.pl)
+		t-mouse: yet another regexp possibility
+
+Ian Zimmerman is now actively cooperating in maintaining gpm, so
+he'll no longer appear in the acknowledgements ;-)
+
+David Given (dg@tao.co.uk)
+		Offered support for joystick mouse emulation (1.14)
+
+Tim Goodwin (tgoodwin@cygnus.co.uk)
+Colin Plumb (colin@nyx10.nyx.net)
+Ben Pfaff (pfaffben@pilot.msu.edu)
+Ian and Iris (brooke@jump.net)
+		All of them sent in support for ps2 intellimouse (1.14)
+
+Edmund Grimley Evans (edmund@vocalis.com)
+		Added "-t ms+lr"
+
+Stefan Runker (runkeledv@t-online.de)
+		Contributed a new Wacom decoder
+
+Alessandro Rubini (rubini@linux.it)
+   He's done a lot of work on gpm and maintained it.
+   He's still helping me a lot to understand all parts of gpm.
