@@ -81,7 +81,7 @@ void I2C_Init(I2C_ModeTypeDef I2C_Mode, UINT32 I2C_ClockSpeed, I2C_DutyTypeDef I
     R16_I2C_CTRL1 &= ~(RB_I2C_SMBUS | RB_I2C_SMBTYPE | RB_I2C_ACK);
     R16_I2C_CTRL1 |= I2C_Mode | I2C_Ack;
 
-    R16_I2C_OADDR1 &= ~0xFFFF;
+    R16_I2C_OADDR1 &= (uint16_t)~0xFFFF;
     R16_I2C_OADDR1 |= I2C_AckAddr | I2C_OwnAddress1;
 }
 
