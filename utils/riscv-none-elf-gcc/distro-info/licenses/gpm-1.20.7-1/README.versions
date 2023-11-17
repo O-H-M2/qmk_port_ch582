@@ -1,0 +1,29 @@
+Dear gpm README reader,
+
+   this letter is to you, as I have to tell you about my idea of versioning
+   of gpm. Traditionally, there were 1.19.x releases. That was, before the gpm
+   source code and I met. After that, there was 1.20.x, indicating a new
+   maintainer, but continuing with the old naming versioning. Today, on the
+   19th of February 2008, I decided to give gpm a real chance of getting a
+   "second life" under the name of "gpm2" (as described in README.gpm2). It
+   seems that the best effort for creating gpm2 is to rewrite everything, but
+   to migrate the logic from the old code (as in: how to handle the individual
+   mouse).
+
+   So, how does that relate to the versions of gpm? Let us have a look at it:
+
+      1.19.x: old versions, not continued
+      1.20.x: current stable versions: no new features.
+      
+      1.99.x: versions that move to 2.x, but contain much 1.20.x code.
+              includes new features.
+
+      2.0.x: future stable versions
+      2.1.x: future testing versions
+
+   Perhaps you have some comments to tell me? If so, just drop me a letter to
+   nico-gpm-versions at schottelius.org.
+
+Yours,
+
+Nico

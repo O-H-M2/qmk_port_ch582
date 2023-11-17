@@ -41,8 +41,8 @@
 void FLASH_ROM_READ(uint32_t StartAddr, void *Buffer, uint32_t len)
 {
     uint32_t  i, Length = (len + 3) >> 2;
-    uint32_t *pCode = (uint32_t *)StartAddr;
-    uint32_t *pBuf = (uint32_t *)Buffer;
+    uint32_t * volatile pCode = (uint32_t *)StartAddr;
+    uint32_t * volatile pBuf = (uint32_t *)Buffer;
 
     for(i = 0; i < Length; i++)
     {
