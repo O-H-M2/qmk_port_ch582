@@ -295,6 +295,13 @@ endif()
 # WS2812 REQUIRED
 if(WS2812_REQUIRED)
     add_definitions(-DWS2812)
+
+    if(RGBLIGHT_ENABLE)
+        add_definitions(-DRGBLIGHT_WS2812)
+    elseif(RGB_MATRIX_ENABLE)
+        add_definitions(-DRGB_MATRIX_WS2812)
+    endif()
+
     message(STATUS "WS2812_REQUIRED")
     message(STATUS "WS2812_DRIVER = ${WS2812_DRIVER}")
 
@@ -358,6 +365,13 @@ endif()
 # AW20216S REQUIRED
 if(AW20216S_REQUIRED)
     add_definitions(-DAW20216S)
+
+    if(RGBLIGHT_ENABLE)
+        add_definitions(-DRGBLIGHT_AW20216S)
+    elseif(RGB_MATRIX_ENABLE)
+        add_definitions(-DRGB_MATRIX_AW20216S)
+    endif()
+
     message(STATUS "AW20216S_REQUIRED")
     include_directories(${QMK_BASE_DIR}/drivers/led)
     list(APPEND quantum_SOURCES
