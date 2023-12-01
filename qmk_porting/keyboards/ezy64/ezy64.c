@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef RGB_MATRIX_ENABLE
 
-#ifdef AW20216
+#ifdef AW20216S
 const aw_led PROGMEM g_aw_leds[DRIVER_LED_TOTAL] = {
     { 0, CS1_SW1, CS2_SW1, CS3_SW1 },
     { 0, CS4_SW1, CS5_SW1, CS6_SW1 },
@@ -108,7 +108,7 @@ const aw_led PROGMEM g_aw_leds[DRIVER_LED_TOTAL] = {
 
 void spi_master_pre_transmit_cb()
 {
-    aw20216_power_check();
+    aw20216s_power_check();
 }
 
 #endif

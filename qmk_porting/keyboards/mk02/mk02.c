@@ -44,7 +44,7 @@ led_config_t g_led_config = {
 	}
 };
 
-#ifdef AW20216
+#ifdef AW20216S
 const aw_led g_aw_leds[DRIVER_LED_TOTAL] = {
     {0, CS1_SW1, CS2_SW1, CS3_SW1},        //  0, ESC, k13
     {0, CS4_SW1, CS5_SW1, CS6_SW1},        //  1, ~, k16

@@ -188,8 +188,8 @@ if(RGB_MATRIX_ENABLE)
 
     if(RGB_MATRIX_DRIVER STREQUAL "WS2812")
         set(WS2812_REQUIRED ON CACHE BOOL "QMK" FORCE)
-    elseif(RGB_MATRIX_DRIVER STREQUAL "AW20216")
-        set(AW20216_REQUIRED ON CACHE BOOL "QMK" FORCE)
+    elseif(RGB_MATRIX_DRIVER STREQUAL "AW20216S")
+        set(AW20216S_REQUIRED ON CACHE BOOL "QMK" FORCE)
     endif()
 
     message(STATUS "RGB_MATRIX_ENABLE")
@@ -355,16 +355,16 @@ if(WPM_ENABLE)
     )
 endif()
 
-# AW20216 REQUIRED
-if(AW20216_REQUIRED)
-    add_definitions(-DAW20216)
-    message(STATUS "AW20216_REQUIRED")
+# AW20216S REQUIRED
+if(AW20216S_REQUIRED)
+    add_definitions(-DAW20216S)
+    message(STATUS "AW20216S_REQUIRED")
     include_directories(${QMK_BASE_DIR}/drivers/led)
     list(APPEND quantum_SOURCES
-        "${QMK_BASE_DIR}/drivers/led/aw20216.c"
+        "${QMK_BASE_DIR}/drivers/led/aw20216s.c"
     )
     list(APPEND QMK_PORTING_SOURCES
-        "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216/aw20216_supplement.c"
+        "${CMAKE_CURRENT_LIST_DIR}/drivers/aw20216s/aw20216s_supplement.c"
     )
     set(SPI_MASTER_ENABLE ON CACHE BOOL "KB" FORCE)
 endif()
