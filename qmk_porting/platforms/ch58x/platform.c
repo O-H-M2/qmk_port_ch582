@@ -37,8 +37,10 @@ int8_t sendchar(uint8_t c)
 }
 
 #if !defined ESB_ENABLE || ESB_ENABLE == 1
-void shutdown_user()
+void shutdown_user(bool jump_to_bootloader)
 {
+    (void)jump_to_bootloader;
+
     rgbled_power_off();
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
     wireless_indicator_status_reset();
