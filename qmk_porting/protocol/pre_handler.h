@@ -264,13 +264,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define SEND_STRING_ENABLE
 #endif
 
-#ifdef NKRO_ENABLE
-// a special trick
-#define PROTOCOL_LUFA
-#else
-#ifdef FORCE_NKRO
+#if !defined NKRO_ENABLE && defined FORCE_NKRO
 #undef FORCE_NKRO
-#endif
 #endif
 
 #ifdef RGB_RAW_ENABLE
@@ -278,6 +273,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #else
 #define ENDPOINT_TOTAL_ENDPOINTS 5
 #endif
+
+#define MAX_ENDPOINTS ENDPOINT_TOTAL_ENDPOINTS
 
 #if defined LSE_ENABLE && LSE_ENABLE
 #define FREQ_RTC   32768
