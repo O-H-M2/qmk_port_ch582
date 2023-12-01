@@ -113,7 +113,7 @@ __attribute__((weak)) __INTERRUPT __HIGH_CODE void GPIOB_IRQHandler()
 __attribute__((noinline)) static void battery_critical_prerequisite()
 {
 #if __BUILDING_APP__
-    shutdown_user(false);
+    shutdown_kb(false);
 #endif
     battery_critical_gpio_prerequisite();
 
