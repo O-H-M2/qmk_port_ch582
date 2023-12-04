@@ -89,7 +89,7 @@
         "ch58x_gpio.h": "c",
         "mcuconf.h": "c",
         "halconf.h": "c",
-        "aw20216_supplement.h": "c",
+        "aw20216s_supplement.h": "c",
         "aw20216.h": "c",
         "typeinfo": "c",
         "protocol_usb.h": "c",
@@ -126,7 +126,11 @@
         "charconv": "c",
         "chrono": "c",
         "limits": "c",
-        "valarray": "c"
+        "valarray": "c",
+        "rainbow_moving_chevron_anim.h": "c",
+        "raindrops_anim.h": "c",
+        "rainbow_pinwheels_anim.h": "c",
+        "flower_blooming_anim.h": "c"
     },
     "cmake.configureOnOpen": false,
     "git.ignoreLimitWarning": true,

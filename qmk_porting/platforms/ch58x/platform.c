@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include "HAL.h"
 #include "gpio.h"
+#include "quantum.h"
 #include "quantum_keycodes.h"
 
 volatile uint8_t kbd_protocol_type = 0;
@@ -37,7 +38,7 @@ int8_t sendchar(uint8_t c)
 }
 
 #if !defined ESB_ENABLE || ESB_ENABLE == 1
-void shutdown_user()
+bool shutdown_kb(bool jump_to_bootloader)
 {
     rgbled_power_off();
 #if defined BLE_ENABLE || (defined ESB_ENABLE && (ESB_ENABLE == 1 || ESB_ENABLE == 2))
@@ -54,6 +55,12 @@ void shutdown_user()
         setPinInputLow(encoders_pad_b[i]);
     }
 #endif
+
+    if (!shutdown_user(jump_to_bootloader)) {
+        return false;
+    }
+
+    return true;
 }
 #endif
 

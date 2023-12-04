@@ -97,7 +97,7 @@ __HIGH_CODE void gpio_strap()
     } else {
         pin_a &= ~(WS2812_EN_PIN & 0x7FFFFFFF);
     }
-#elif defined AW20216
+#elif defined AW20216S
     if (DRIVER_1_CS & 0x80000000) {
         pin_b &= ~(DRIVER_1_CS & 0x7FFFFFFF);
     } else {
@@ -160,7 +160,7 @@ __attribute__((noinline)) __attribute__((weak)) void battery_critical_gpio_prere
     } else {
         pin_a &= ~(WS2812_EN_PIN & 0x7FFFFFFF);
     }
-#elif defined AW20216
+#elif defined AW20216S
     if (DRIVER_1_EN & 0x80000000) {
         pin_b &= ~(DRIVER_1_EN & 0x7FFFFFFF);
     } else {

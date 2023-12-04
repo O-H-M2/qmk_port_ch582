@@ -32,14 +32,16 @@ extern int usbd_deinitialize();
 
 static void send_keyboard(report_keyboard_t *report)
 {
-#ifdef NKRO_ENABLE
-    if (keymap_config.nkro) {
-        hid_keyboard_send_report(KEYBOARD_MODE_NKRO, (uint8_t *)&report->nkro, EXKEY_IN_EP_SIZE);
-    } else
-#endif
-    {
+    if (!keyboard_protocol) {
+        hid_keyboard_send_report(KEYBOARD_MODE_BIOS, &report->mods, 8);
+    } else {
         hid_keyboard_send_report(KEYBOARD_MODE_BIOS, (uint8_t *)report, KEYBOARD_REPORT_SIZE);
     }
+}
+
+static void send_nkro(report_nkro_t *report)
+{
+    hid_keyboard_send_report(KEYBOARD_MODE_NKRO, (uint8_t *)&report, EXKEY_IN_EP_SIZE);
 }
 
 static void send_mouse(report_mouse_t *report)
@@ -117,6 +119,7 @@ __HIGH_CODE static void protocol_task()
 const ch582_interface_t ch582_protocol_usb = {
     .ch582_common_driver.keyboard_leds = keyboard_leds,
     .ch582_common_driver.send_keyboard = send_keyboard,
+    .ch582_common_driver.send_nkro = send_nkro,
     .ch582_common_driver.send_mouse = send_mouse,
     .ch582_common_driver.send_extra = send_extra,
 #ifdef RAW_ENABLE

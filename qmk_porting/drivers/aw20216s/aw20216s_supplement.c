@@ -16,16 +16,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "rgb_matrix.h"
-#include "aw20216_supplement.h"
+#include "aw20216s_supplement.h"
 
-static volatile bool aw20216_powered_on = true;
+static volatile bool aw20216s_powered_on = true;
 
-inline bool aw20216_power_status_get()
+inline bool aw20216s_power_status_get()
 {
-    return aw20216_powered_on;
+    return aw20216s_powered_on;
 }
 
-inline void aw20216_power_toggle(bool status)
+inline void aw20216s_power_toggle(bool status)
 {
     if (status) {
         writePinHigh(DRIVER_1_EN);
@@ -42,12 +42,12 @@ inline void aw20216_power_toggle(bool status)
         setPinOutput(DRIVER_2_EN);
 #endif
     }
-    aw20216_powered_on = status;
+    aw20216s_powered_on = status;
 }
 
-void aw20216_power_check()
+void aw20216s_power_check()
 {
-    if (!aw20216_power_status_get()) {
-        aw20216_power_toggle(true);
+    if (!aw20216s_power_status_get()) {
+        aw20216s_power_toggle(true);
     }
 }

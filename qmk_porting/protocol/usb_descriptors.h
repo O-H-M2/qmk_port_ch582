@@ -89,13 +89,13 @@ const uint8_t NkroReport[] = {
     0x15, 0x00,                                  //   Logical Minimum (0),
     0x25, 0x01,                                  //   Logical Maximum (1),
     0x81, 0x02,                                  //   Input (Data, Variable, Absolute), ;Modifier byte
-    0x95, KEYBOARD_REPORT_BITS * 8,              //   Report Count (),
+    0x95, NKRO_REPORT_BITS * 8,              //   Report Count (),
     0x75, 0x01,                                  //   Report Size (1),
     0x15, 0x00,                                  //   Logical Minimum (0),
     0x25, 0x01,                                  //   Logical Maximum(1),
     0x05, 0x07,                                  //   Usage Page (Key Codes),
     0x19, 0x00,                                  //   Usage Minimum (0),
-    0x29, (KEYBOARD_REPORT_BITS * 8 - 1) & 0xFF, //   Usage Maximum (),
+    0x29, (NKRO_REPORT_BITS * 8 - 1) & 0xFF, //   Usage Maximum (),
     0x81, 0x02,                                  //   Input (Data, Variable, Absolute),
     0x05, 0x08,                                  //   Usage Page (LED)
     0x19, 0x01,                                  //   Usage Minimum (Num Lock)
