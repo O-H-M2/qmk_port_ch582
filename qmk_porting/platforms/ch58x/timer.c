@@ -19,6 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 static uint32_t ticks_offset = 0;
 
+// Generate out-of-line copies for inline functions defined in timer.h.
+extern inline fast_timer_t timer_read_fast(void);
+extern inline fast_timer_t timer_elapsed_fast(fast_timer_t last);
+
 inline void timer_init(void)
 {
     timer_clear();
