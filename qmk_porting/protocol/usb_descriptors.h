@@ -32,7 +32,6 @@ enum {
     InterfaceNumber_keyboard = InterfaceNumber_start,
 #ifdef RGB_RAW_ENABLE
     InterfaceNumber_rgb_raw,
-    InterfaceNumber_dynamic_lighting,
 #endif
     InterfaceNumber_extra_key,
 #ifdef RAW_ENABLE
@@ -77,36 +76,36 @@ const uint8_t KeyboardReport[] = {
 
 #ifdef NKRO_ENABLE
 const uint8_t NkroReport[] = {
-    0x05, 0x01,                                  // Usage Page (Generic Desktop)
-    0x09, 0x06,                                  // Usage (Keyboard)
-    0xA1, 0x01,                                  // Collection (Application),
-    0x85, REPORT_ID_NKRO,                        //   REPORT_ID
-    0x75, 0x01,                                  //   Report Size (1),
-    0x95, 0x08,                                  //   Report Count (8),
-    0x05, 0x07,                                  //   Usage Page (Key Codes),
-    0x19, 0xE0,                                  //   Usage Minimum (224),
-    0x29, 0xE7,                                  //   Usage Maximum (231),
-    0x15, 0x00,                                  //   Logical Minimum (0),
-    0x25, 0x01,                                  //   Logical Maximum (1),
-    0x81, 0x02,                                  //   Input (Data, Variable, Absolute), ;Modifier byte
+    0x05, 0x01,                              // Usage Page (Generic Desktop)
+    0x09, 0x06,                              // Usage (Keyboard)
+    0xA1, 0x01,                              // Collection (Application),
+    0x85, REPORT_ID_NKRO,                    //   REPORT_ID
+    0x75, 0x01,                              //   Report Size (1),
+    0x95, 0x08,                              //   Report Count (8),
+    0x05, 0x07,                              //   Usage Page (Key Codes),
+    0x19, 0xE0,                              //   Usage Minimum (224),
+    0x29, 0xE7,                              //   Usage Maximum (231),
+    0x15, 0x00,                              //   Logical Minimum (0),
+    0x25, 0x01,                              //   Logical Maximum (1),
+    0x81, 0x02,                              //   Input (Data, Variable, Absolute), ;Modifier byte
     0x95, NKRO_REPORT_BITS * 8,              //   Report Count (),
-    0x75, 0x01,                                  //   Report Size (1),
-    0x15, 0x00,                                  //   Logical Minimum (0),
-    0x25, 0x01,                                  //   Logical Maximum(1),
-    0x05, 0x07,                                  //   Usage Page (Key Codes),
-    0x19, 0x00,                                  //   Usage Minimum (0),
+    0x75, 0x01,                              //   Report Size (1),
+    0x15, 0x00,                              //   Logical Minimum (0),
+    0x25, 0x01,                              //   Logical Maximum(1),
+    0x05, 0x07,                              //   Usage Page (Key Codes),
+    0x19, 0x00,                              //   Usage Minimum (0),
     0x29, (NKRO_REPORT_BITS * 8 - 1) & 0xFF, //   Usage Maximum (),
-    0x81, 0x02,                                  //   Input (Data, Variable, Absolute),
-    0x05, 0x08,                                  //   Usage Page (LED)
-    0x19, 0x01,                                  //   Usage Minimum (Num Lock)
-    0x29, 0x05,                                  //   Usage Maximum (Kana)
-    0x95, 0x05,                                  //   Report Count (5)
-    0x75, 0x01,                                  //   Report Size (1)
-    0x91, 0x02,                                  //   Output (Data, Variable, Absolute)
-    0x95, 0x01,                                  //   Report Count (1)
-    0x75, 0x03,                                  //   Report Size (3)
-    0x91, 0x03,                                  //   Output (Constant)
-    0xC0,                                        // End Collection
+    0x81, 0x02,                              //   Input (Data, Variable, Absolute),
+    0x05, 0x08,                              //   Usage Page (LED)
+    0x19, 0x01,                              //   Usage Minimum (Num Lock)
+    0x29, 0x05,                              //   Usage Maximum (Kana)
+    0x95, 0x05,                              //   Report Count (5)
+    0x75, 0x01,                              //   Report Size (1)
+    0x91, 0x02,                              //   Output (Data, Variable, Absolute)
+    0x95, 0x01,                              //   Report Count (1)
+    0x75, 0x03,                              //   Report Size (3)
+    0x91, 0x03,                              //   Output (Constant)
+    0xC0,                                    // End Collection
 };
 #endif
 
@@ -131,8 +130,74 @@ const uint8_t RGBRawReport[] = {
     0x91, 0x02,       //   Output (Data, Variable, Absolute)
     0xC0,             // End Collection
 };
+#endif
 
-const uint8_t DynamicLightingReport[] = {
+const uint8_t ExtrakeyReport[] = {
+#ifdef MOUSE_ENABLE
+    0x05, 0x01,            // Usage Page (Generic Desktop)
+    0x09, 0x02,            // Usage (Mouse)
+    0xA1, 0x01,            // Collection (Application)
+    0x85, REPORT_ID_MOUSE, //   Report ID
+    0x09, 0x01,            //   Usage (Pointer)
+    0xA1, 0x00,            //   Collection (Physical)
+    0x05, 0x09,            //     Usage Page (Button)
+    0x19, 0x01,            //     Usage Minimum (Button 1)
+    0x29, 0x08,            //     Usage Maximum (Button 8)
+    0x15, 0x00,            //     Logical Minimum (0)
+    0x25, 0x01,            //     Logical Maximum (1)
+    0x95, 0x08,            //     Report Count (8)
+    0x75, 0x01,            //     Report Size (1)
+    0x81, 0x02,            //     Input (Data, Variable, Absolute)
+    0x05, 0x01,            //     Usage Page (Generic Desktop)
+    0x09, 0x30,            //     Usage (X)
+    0x09, 0x31,            //     Usage (Y)
+    0x15, 0x81,            //     Logical Minimum (-127)
+    0x25, 0x7F,            //     Logical Maximum (127)
+    0x95, 0x02,            //     Report Count (2)
+    0x75, 0x08,            //     Report Size (8)
+    0x81, 0x06,            //     Input (Data, Variable, Relative)
+    0x09, 0x38,            //     Usage (Wheel)
+    0x15, 0x81,            //     Logical Minimum (-127)
+    0x25, 0x7F,            //     Logical Maximum (127)
+    0x95, 0x01,            //     Report Count (1)
+    0x75, 0x08,            //     Report Size (8)
+    0x81, 0x06,            //     Input (Data, Variable, Relative)
+    0x05, 0x0C,            //     Usage Page (Consumer)
+    0x0A, 0x38, 0x02,      //     Usage (AC Pan)
+    0x15, 0x81,            //     Logical Minimum (-127)
+    0x25, 0x7F,            //     Logical Maximum (127)
+    0x95, 0x01,            //     Report Count (1)
+    0x75, 0x08,            //     Report Size (8)
+    0x81, 0x06,            //     Input (Data, Variable, Relative)
+    0xC0,                  //   End Collection
+    0xC0,                  // End Collection
+#endif
+    // Extrakeys report descriptor
+    0x05, 0x01,               // Usage Page (Generic Desktop)
+    0x09, 0x80,               // Usage (System Control)
+    0xA1, 0x01,               // Collection (Application)
+    0x85, REPORT_ID_SYSTEM,   //   Report ID
+    0x19, 0x01,               //   Usage Minimum (Pointer)
+    0x2A, 0xB7, 0x00,         //   Usage Maximum (System Display LCD Autoscale)
+    0x15, 0x01,               //   Logical Minimum
+    0x26, 0xB7, 0x00,         //   Logical Maximum
+    0x95, 0x01,               //   Report Count (1)
+    0x75, 0x10,               //   Report Size (16)
+    0x81, 0x00,               //   Input (Data, Array, Absolute)
+    0xC0,                     // End Collection
+    0x05, 0x0C,               // Usage Page (Consumer)
+    0x09, 0x01,               // Usage (Consumer Control)
+    0xA1, 0x01,               // Collection (Application)
+    0x85, REPORT_ID_CONSUMER, //   Report ID
+    0x19, 0x01,               //   Usage Minimum (Consumer Control)
+    0x2A, 0xA0, 0x02,         //   Usage Maximum (AC Desktop Show All Applications)
+    0x15, 0x01,               //   Logical Minimum
+    0x26, 0xA0, 0x02,         //   Logical Maximum
+    0x95, 0x01,               //   Report Count (1)
+    0x75, 0x10,               //   Report Size (16)
+    0x81, 0x00,               //   Input (Data, Array, Absolute)
+    0xC0,                     // End Collection
+#ifdef RGB_RAW_ENABLE
     0x05, 0x59,                               // Usage Page (LightingAndIllumination)
     0x09, 0x01,                               // Usage (LampArray)
     0xa1, 0x01,                               // Collection (Application)
@@ -288,74 +353,7 @@ const uint8_t DynamicLightingReport[] = {
     0xb1, 0x02,                               //     Feature (Data,Var,Abs)
     0xc0,                                     //   End Collection
     0xc0                                      // End Collection
-};
 #endif
-
-const uint8_t ExtrakeyReport[] = {
-#ifdef MOUSE_ENABLE
-    0x05, 0x01,            // Usage Page (Generic Desktop)
-    0x09, 0x02,            // Usage (Mouse)
-    0xA1, 0x01,            // Collection (Application)
-    0x85, REPORT_ID_MOUSE, //   Report ID
-    0x09, 0x01,            //   Usage (Pointer)
-    0xA1, 0x00,            //   Collection (Physical)
-    0x05, 0x09,            //     Usage Page (Button)
-    0x19, 0x01,            //     Usage Minimum (Button 1)
-    0x29, 0x08,            //     Usage Maximum (Button 8)
-    0x15, 0x00,            //     Logical Minimum (0)
-    0x25, 0x01,            //     Logical Maximum (1)
-    0x95, 0x08,            //     Report Count (8)
-    0x75, 0x01,            //     Report Size (1)
-    0x81, 0x02,            //     Input (Data, Variable, Absolute)
-    0x05, 0x01,            //     Usage Page (Generic Desktop)
-    0x09, 0x30,            //     Usage (X)
-    0x09, 0x31,            //     Usage (Y)
-    0x15, 0x81,            //     Logical Minimum (-127)
-    0x25, 0x7F,            //     Logical Maximum (127)
-    0x95, 0x02,            //     Report Count (2)
-    0x75, 0x08,            //     Report Size (8)
-    0x81, 0x06,            //     Input (Data, Variable, Relative)
-    0x09, 0x38,            //     Usage (Wheel)
-    0x15, 0x81,            //     Logical Minimum (-127)
-    0x25, 0x7F,            //     Logical Maximum (127)
-    0x95, 0x01,            //     Report Count (1)
-    0x75, 0x08,            //     Report Size (8)
-    0x81, 0x06,            //     Input (Data, Variable, Relative)
-    0x05, 0x0C,            //     Usage Page (Consumer)
-    0x0A, 0x38, 0x02,      //     Usage (AC Pan)
-    0x15, 0x81,            //     Logical Minimum (-127)
-    0x25, 0x7F,            //     Logical Maximum (127)
-    0x95, 0x01,            //     Report Count (1)
-    0x75, 0x08,            //     Report Size (8)
-    0x81, 0x06,            //     Input (Data, Variable, Relative)
-    0xC0,                  //   End Collection
-    0xC0,                  // End Collection
-#endif
-    // Extrakeys report descriptor
-    0x05, 0x01,               // Usage Page (Generic Desktop)
-    0x09, 0x80,               // Usage (System Control)
-    0xA1, 0x01,               // Collection (Application)
-    0x85, REPORT_ID_SYSTEM,   //   Report ID
-    0x19, 0x01,               //   Usage Minimum (Pointer)
-    0x2A, 0xB7, 0x00,         //   Usage Maximum (System Display LCD Autoscale)
-    0x15, 0x01,               //   Logical Minimum
-    0x26, 0xB7, 0x00,         //   Logical Maximum
-    0x95, 0x01,               //   Report Count (1)
-    0x75, 0x10,               //   Report Size (16)
-    0x81, 0x00,               //   Input (Data, Array, Absolute)
-    0xC0,                     // End Collection
-    0x05, 0x0C,               // Usage Page (Consumer)
-    0x09, 0x01,               // Usage (Consumer Control)
-    0xA1, 0x01,               // Collection (Application)
-    0x85, REPORT_ID_CONSUMER, //   Report ID
-    0x19, 0x01,               //   Usage Minimum (Consumer Control)
-    0x2A, 0xA0, 0x02,         //   Usage Maximum (AC Desktop Show All Applications)
-    0x15, 0x01,               //   Logical Minimum
-    0x26, 0xA0, 0x02,         //   Logical Maximum
-    0x95, 0x01,               //   Report Count (1)
-    0x75, 0x10,               //   Report Size (16)
-    0x81, 0x00,               //   Input (Data, Array, Absolute)
-    0xC0,                     // End Collection
 };
 
 #ifdef RAW_ENABLE
@@ -388,8 +386,7 @@ const uint8_t QMKRawReport[] = {
 
 /*!< report descriptor size */
 #ifdef RGB_RAW_ENABLE
-#define HID_RGBRAW_REPORT_DESC_SIZE          sizeof(RGBRawReport)
-#define HID_DYNAMICLIGHTING_REPORT_DESC_SIZE sizeof(DynamicLightingReport)
+#define HID_RGBRAW_REPORT_DESC_SIZE sizeof(RGBRawReport)
 #endif
 #define HID_EXTRAKEY_REPORT_DESC_SIZE sizeof(ExtrakeyReport)
 #ifdef RAW_ENABLE
@@ -401,8 +398,7 @@ const uint8_t hid_descriptor_scratch_1[] = {
     USB_DEVICE_DESCRIPTOR_INIT(USB_2_0, 0x00, 0x00, 0x00, USBD_VID, USBD_PID, DEVICE_VER, 0x01),
     USB_CONFIG_DESCRIPTOR_INIT((USB_HID_CONFIG_DESC_SIZ_SCRATCH
 #ifdef RGB_RAW_ENABLE
-                                + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2 +
-                                USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC /* * 2 */
+                                + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
 #endif
 #ifdef RAW_ENABLE
                                 + USB_SIZEOF_INTERFACE_DESC + 0x09 + USB_SIZEOF_ENDPOINT_DESC * 2
@@ -410,8 +406,7 @@ const uint8_t hid_descriptor_scratch_1[] = {
                                 ),
                                (0x02
 #ifdef RGB_RAW_ENABLE
-                                + 0x01 +
-                                0x01
+                                + 0x01
 #endif
 #ifdef RAW_ENABLE
                                 + 0x01
@@ -526,39 +521,6 @@ const uint8_t hid_descriptor_scratch_3[] = {
     0x03,                      /* bmAttributes */
     WBVAL(RGBRAW_OUT_EP_SIZE), /* wMaxPacketSize */
     RGBRAW_OUT_EP_INTERVAL,    /* bInterval */
-
-    /************** Descriptor of DYNAMIC_LIGHTING interface *****************/
-    0x09,                             /* bLength */
-    0x04,                             /* bDescriptorType */
-    InterfaceNumber_dynamic_lighting, /* bInterfaceNumber */
-    0x00,                             /* bAlternateSetting */
-    0x01 /* 0x02 */,                  /* bNumEndpoints */
-    0x03,                             /* bInterfaceClass */
-    0x00,                             /* bInterfaceSubClass : 1=BOOT, 0=no boot */
-    0x00,                             /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
-    0x00,                             /* iInterface: Index of string descriptor */
-    /******************** Descriptor of DYNAMIC_LIGHTING HID ********************/
-    0x09,                                        /* bLength */
-    0x21,                                        /* bDescriptorType */
-    0x11, 0x01,                                  /* bcdHID */
-    0x00,                                        /* bCountryCode */
-    0x01,                                        /* bNumDescriptors */
-    0x22,                                        /* bDescriptorType */
-    WBVAL(HID_DYNAMICLIGHTING_REPORT_DESC_SIZE), /* wItemLength */
-    /******************** Descriptor of DYNAMIC_LIGHTING in endpoint ********************/
-    0x07,                           /* bLength */
-    0x05,                           /* bDescriptorType */
-    DYNAMICLIGHTING_IN_EP,          /* bEndpointAddress */
-    0x03,                           /* bmAttributes */
-    WBVAL(DYNAMICLIGHTING_IN_SIZE), /* wMaxPacketSize */
-    DYNAMICLIGHTING_IN_INTERVAL,    /* bInterval */
-// /******************** Descriptor of DYNAMIC_LIGHTING out endpoint ********************/
-// 0x07,                               /* bLength */
-// 0x05,                               /* bDescriptorType */
-// DYNAMICLIGHTING_OUT_EP,             /* bEndpointAddress */
-// 0x03,                               /* bmAttributes */
-// WBVAL(DYNAMICLIGHTING_OUT_EP_SIZE), /* wMaxPacketSize */
-// DYNAMICLIGHTING_OUT_EP_INTERVAL,    /* bInterval */
 #endif
 
     /************** Descriptor of EXTRAKEY interface *****************/

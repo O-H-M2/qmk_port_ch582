@@ -268,11 +268,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef FORCE_NKRO
 #endif
 
-#ifdef RGB_RAW_ENABLE
-#define ENDPOINT_TOTAL_ENDPOINTS 8
-#else
+// #ifdef RGB_RAW_ENABLE
+// #define ENDPOINT_TOTAL_ENDPOINTS 8
+// #else
 #define ENDPOINT_TOTAL_ENDPOINTS 5
-#endif
+// #endif
 
 #define MAX_ENDPOINTS ENDPOINT_TOTAL_ENDPOINTS
 
