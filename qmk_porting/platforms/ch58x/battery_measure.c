@@ -224,7 +224,7 @@ __attribute__((weak)) uint16_t battery_measure()
 
     return adc_data;
 #else
-    return 0;
+    return UINT16_MAX;
 #endif
 }
 

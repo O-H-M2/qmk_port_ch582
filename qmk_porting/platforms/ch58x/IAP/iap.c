@@ -498,7 +498,6 @@ int main()
 #if !defined ESB_ENABLE || ESB_ENABLE == 1
 #ifdef BATTERY_MEASURE_PIN
     // do a power check, only on keyboard
-
     setPinInput(BATTERY_MEASURE_PIN);
     battery_init();
 
