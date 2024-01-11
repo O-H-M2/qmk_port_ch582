@@ -24,6 +24,10 @@
 #include <stdbool.h>
 #include "gpio.h"
 
+#ifndef I2C_CLOCK_SPEED
+#define I2C_CLOCK_SPEED 400000
+#endif
+
 typedef int16_t i2c_status_t;
 
 #define TxAdderss 0x52

@@ -58,7 +58,7 @@ void i2c_init()
     setPinInputHigh(B12);
     setPinInputHigh(B13);
 #endif
-    I2C_Init(I2C_Mode_I2C, 400000, I2C_DutyCycle_16_9, I2C_Ack_Enable, I2C_AckAddr_7bit, TxAdderss);
+    I2C_Init(I2C_Mode_I2C, I2C_CLOCK_SPEED, I2C_DutyCycle_16_9, I2C_Ack_Enable, I2C_AckAddr_7bit, TxAdderss);
     while (I2C_GetFlagStatus(I2C_FLAG_BUSY)) {
         __nop();
     }
