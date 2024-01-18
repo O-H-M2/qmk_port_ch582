@@ -23,21 +23,21 @@ extern "C" {
  * @brief  TMR0 interrupt bit define
  */
 
-#define TMR0_3_IT_CYC_END     0x01  // å‘¨æœŸç»“æŸæ ‡å¿—ï¼šæ•æ‰-è¶…æ—¶ï¼Œå®šæ—¶-å‘¨æœŸç»“æŸï¼ŒPWM-å‘¨æœŸç»“æŸ
-#define TMR0_3_IT_DATA_ACT    0x02  // æ•°æ®æœ‰æ•ˆæ ‡å¿—ï¼šæ•æ‰-æ–°æ•°æ®ï¼ŒPWM-æœ‰æ•ˆç”µå¹³ç»“æŸ
-#define TMR0_3_IT_FIFO_HF     0x04  // FIFO ä½¿ç”¨è¿‡åŠï¼šæ•æ‰- FIFO>=4ï¼Œ PWM- FIFO<4
-#define TMR1_2_IT_DMA_END     0x08  // DMA ç»“æŸï¼Œæ”¯æŒTMR1å’ŒTMR2
-#define TMR0_3_IT_FIFO_OV     0x10  // FIFO æº¢å‡ºï¼šæ•æ‰- FIFOæ»¡ï¼Œ PWM- FIFOç©º
+#define TMR0_3_IT_CYC_END     0x01  // ÖÜÆÚ½áÊø±êÖ¾£º²¶×½-³¬Ê±£¬¶¨Ê±-ÖÜÆÚ½áÊø£¬PWM-ÖÜÆÚ½áÊø
+#define TMR0_3_IT_DATA_ACT    0x02  // Êý¾ÝÓÐÐ§±êÖ¾£º²¶×½-ÐÂÊý¾Ý£¬PWM-ÓÐÐ§µçÆ½½áÊø
+#define TMR0_3_IT_FIFO_HF     0x04  // FIFO Ê¹ÓÃ¹ý°ë£º²¶×½- FIFO>=4£¬ PWM- FIFO<4
+#define TMR1_2_IT_DMA_END     0x08  // DMA ½áÊø£¬Ö§³ÖTMR1ºÍTMR2
+#define TMR0_3_IT_FIFO_OV     0x10  // FIFO Òç³ö£º²¶×½- FIFOÂú£¬ PWM- FIFO¿Õ
 
 /**
  * @brief  Configuration PWM effective level repeat times
  */
 typedef enum
 {
-    PWM_Times_1 = 0, // PWM æœ‰æ•ˆè¾“å‡ºé‡å¤1æ¬¡æ•°
-    PWM_Times_4,     // PWM æœ‰æ•ˆè¾“å‡ºé‡å¤4æ¬¡æ•°
-    PWM_Times_8,     // PWM æœ‰æ•ˆè¾“å‡ºé‡å¤8æ¬¡æ•°
-    PWM_Times_16,    // PWM æœ‰æ•ˆè¾“å‡ºé‡å¤16æ¬¡æ•°
+    PWM_Times_1 = 0, // PWM ÓÐÐ§Êä³öÖØ¸´1´ÎÊý
+    PWM_Times_4,     // PWM ÓÐÐ§Êä³öÖØ¸´4´ÎÊý
+    PWM_Times_8,     // PWM ÓÐÐ§Êä³öÖØ¸´8´ÎÊý
+    PWM_Times_16,    // PWM ÓÐÐ§Êä³öÖØ¸´16´ÎÊý
 } PWM_RepeatTsTypeDef;
 
 /**
@@ -45,10 +45,10 @@ typedef enum
  */
 typedef enum
 {
-    CAP_NULL = 0,         // ä¸æ•æ‰ & ä¸è®¡æ•°
-    Edge_To_Edge,         // ä»»æ„è¾¹æ²¿ä¹‹é—´  &  è®¡æ•°ä»»æ„è¾¹æ²¿
-    FallEdge_To_FallEdge, // ä¸‹é™æ²¿åˆ°ä¸‹é™æ²¿  & è®¡æ•°ä¸‹é™æ²¿
-    RiseEdge_To_RiseEdge, // ä¸Šå‡æ²¿åˆ°ä¸Šå‡æ²¿  &  è®¡æ•°ä¸Šå‡æ²¿
+    CAP_NULL = 0,         // ²»²¶×½ & ²»¼ÆÊý
+    Edge_To_Edge,         // ÈÎÒâ±ßÑØÖ®¼ä  &  ¼ÆÊýÈÎÒâ±ßÑØ
+    FallEdge_To_FallEdge, // ÏÂ½µÑØµ½ÏÂ½µÑØ  & ¼ÆÊýÏÂ½µÑØ
+    RiseEdge_To_RiseEdge, // ÉÏÉýÑØµ½ÉÏÉýÑØ  &  ¼ÆÊýÉÏÉýÑØ
 } CapModeTypeDef;
 
 /**
@@ -56,54 +56,54 @@ typedef enum
  */
 typedef enum
 {
-    Mode_Single = 0, // å•æ¬¡æ¨¡å¼
-    Mode_LOOP,       // å¾ªçŽ¯æ¨¡å¼
+    Mode_Single = 0, // µ¥´ÎÄ£Ê½
+    Mode_LOOP,       // Ñ­»·Ä£Ê½
 } DMAModeTypeDef;
 
 /**
- * @brief   å®šæ—¶åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   ¶¨Ê±¹¦ÄÜ³õÊ¼»¯
  *
- * @param   t       - å®šæ—¶æ—¶é—´ï¼ŒåŸºäºŽå½“å‰ç³»ç»Ÿæ—¶é’ŸTsys, æœ€é•¿å®šæ—¶å‘¨æœŸ 67108864
+ * @param   t       - ¶¨Ê±Ê±¼ä£¬»ùÓÚµ±Ç°ÏµÍ³Ê±ÖÓTsys, ×î³¤¶¨Ê±ÖÜÆÚ 67108864
  */
 void TMR0_TimerInit(uint32_t t);
 
 /**
- * @brief   èŽ·å–å½“å‰å®šæ—¶å™¨å€¼ï¼Œæœ€å¤§67108864
+ * @brief   »ñÈ¡µ±Ç°¶¨Ê±Æ÷Öµ£¬×î´ó67108864
  *
- * @return  å½“å‰å®šæ—¶å™¨å€¼
+ * @return  µ±Ç°¶¨Ê±Æ÷Öµ
  */
 #define TMR0_GetCurrentTimer()    R32_TMR0_COUNT
 
 /**
- * @brief   è¾¹æ²¿è®¡æ•°åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   ±ßÑØ¼ÆÊý¹¦ÄÜ³õÊ¼»¯
  *
- * @param   cap     - é‡‡é›†è®¡æ•°ç±»åž‹
+ * @param   cap     - ²É¼¯¼ÆÊýÀàÐÍ
  */
 void TMR0_EXTSingleCounterInit(CapModeTypeDef cap);
 
 /**
- * @brief   è®¾ç½®è®¡æ•°ç»Ÿè®¡æº¢å‡ºå¤§å°ï¼Œæœ€å¤§67108862
+ * @brief   ÉèÖÃ¼ÆÊýÍ³¼ÆÒç³ö´óÐ¡£¬×î´ó67108862
  *
- * @param   cyc     - è®¡æ•°ç»Ÿè®¡æº¢å‡ºå¤§å°
+ * @param   cyc     - ¼ÆÊýÍ³¼ÆÒç³ö´óÐ¡
  */
 #define TMR0_CountOverflowCfg(cyc)    (R32_TMR0_CNT_END = (cyc + 2))
 
 /**
- * @brief   èŽ·å–å½“å‰è®¡æ•°å€¼ï¼Œæœ€å¤§67108862
+ * @brief   »ñÈ¡µ±Ç°¼ÆÊýÖµ£¬×î´ó67108862
  *
- * @return  å½“å‰è®¡æ•°å€¼
+ * @return  µ±Ç°¼ÆÊýÖµ
  */
 #define TMR0_GetCurrentCount()        R32_TMR0_COUNT
 
 /**
- * @brief   PWM0 é€šé“è¾“å‡ºæ³¢å½¢å‘¨æœŸé…ç½®, æœ€å¤§67108864
+ * @brief   PWM0 Í¨µÀÊä³ö²¨ÐÎÖÜÆÚÅäÖÃ, ×î´ó67108864
  *
- * @param   cyc     - è¾“å‡ºæ³¢å½¢å‘¨æœŸ
+ * @param   cyc     - Êä³ö²¨ÐÎÖÜÆÚ
  */
 #define TMR0_PWMCycleCfg(cyc)         (R32_TMR0_CNT_END = cyc)
 
 /**
- * @brief   PWM è¾“å‡ºåˆå§‹åŒ–
+ * @brief   PWM Êä³ö³õÊ¼»¯
  *
  * @param   pr      - select wave polar, refer to PWMX_PolarTypeDef
  * @param   ts      - set pwm repeat times, refer to PWM_RepeatTsTypeDef
@@ -111,126 +111,126 @@ void TMR0_EXTSingleCounterInit(CapModeTypeDef cap);
 void TMR0_PWMInit(PWMX_PolarTypeDef pr, PWM_RepeatTsTypeDef ts);
 
 /**
- * @brief   PWM0 æœ‰æ•ˆæ•°æ®è„‰å®½, æœ€å¤§67108864
+ * @brief   PWM0 ÓÐÐ§Êý¾ÝÂö¿í, ×î´ó67108864
  *
- * @param   d       - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d       - ÓÐÐ§Êý¾ÝÂö¿í
  */
 #define TMR0_PWMActDataWidth(d)    (R32_TMR0_FIFO = d)
 
 /**
- * @brief   CAP0 æ•æ‰ç”µå¹³è¶…æ—¶é…ç½®, æœ€å¤§33554432
+ * @brief   CAP0 ²¶×½µçÆ½³¬Ê±ÅäÖÃ, ×î´ó33554432
  *
- * @param   cyc     - æ•æ‰ç”µå¹³è¶…æ—¶
+ * @param   cyc     - ²¶×½µçÆ½³¬Ê±
  */
 #define TMR0_CAPTimeoutCfg(cyc)    (R32_TMR0_CNT_END = cyc)
 
 /**
- * @brief   å¤–éƒ¨ä¿¡å·æ•æ‰åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   Íâ²¿ÐÅºÅ²¶×½¹¦ÄÜ³õÊ¼»¯
  *
  * @param   cap     - select capture mode, refer to CapModeTypeDef
  */
 void TMR0_CapInit(CapModeTypeDef cap);
 
 /**
- * @brief   èŽ·å–è„‰å†²æ•°æ®
+ * @brief   »ñÈ¡Âö³åÊý¾Ý
  *
- * @return  è„‰å†²æ•°æ®
+ * @return  Âö³åÊý¾Ý
  */
 #define TMR0_CAPGetData()        R32_TMR0_FIFO
 
 /**
- * @brief   èŽ·å–å½“å‰å·²æ•èŽ·æ•°æ®ä¸ªæ•°
+ * @brief   »ñÈ¡µ±Ç°ÒÑ²¶»ñÊý¾Ý¸öÊý
  *
- * @return  å½“å‰å·²æ•èŽ·æ•°æ®ä¸ªæ•°
+ * @return  µ±Ç°ÒÑ²¶»ñÊý¾Ý¸öÊý
  */
 #define TMR0_CAPDataCounter()    R8_TMR0_FIFO_COUNT
 
 /**
- * @brief   å…³é—­ TMR0 PWMè¾“å‡º
+ * @brief   ¹Ø±Õ TMR0 PWMÊä³ö
  */
 #define TMR0_PWMDisable()           (R8_TMR0_CTRL_MOD &= ~RB_TMR_OUT_EN)
 
 /**
- * @brief   å¼€å¯ TMR0 PWMè¾“å‡º
+ * @brief   ¿ªÆô TMR0 PWMÊä³ö
  */
 #define TMR0_PWMEnable()           (R8_TMR0_CTRL_MOD |= RB_TMR_OUT_EN)
 
 /**
- * @brief   å…³é—­ TMR0
+ * @brief   ¹Ø±Õ TMR0
  */
 #define TMR0_Disable()           (R8_TMR0_CTRL_MOD &= ~RB_TMR_COUNT_EN)
 
 /**
- * @brief   å¼€å¯ TMR0
+ * @brief   ¿ªÆô TMR0
  */
 #define TMR0_Enable()            (R8_TMR0_CTRL_MOD |= RB_TMR_COUNT_EN)
 
 /**
- * @brief   ä¸­æ–­é…ç½®
+ * @brief   ÖÐ¶ÏÅäÖÃ
  *
- * @param   s       - ä½¿èƒ½/å…³é—­
+ * @param   s       - Ê¹ÄÜ/¹Ø±Õ
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR0_ITCfg(s, f)         ((s) ? (R8_TMR0_INTER_EN |= f) : (R8_TMR0_INTER_EN &= ~f))
 
 /**
- * @brief   æ¸…é™¤ä¸­æ–­æ ‡å¿—
+ * @brief   Çå³ýÖÐ¶Ï±êÖ¾
  *
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR0_ClearITFlag(f)      (R8_TMR0_INT_FLAG = f)
 
 /**
- * @brief   æŸ¥è¯¢ä¸­æ–­æ ‡å¿—çŠ¶æ€
+ * @brief   ²éÑ¯ÖÐ¶Ï±êÖ¾×´Ì¬
  *
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR0_GetITFlag(f)        (R8_TMR0_INT_FLAG & f)
 
 /**
- * @brief   å®šæ—¶åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   ¶¨Ê±¹¦ÄÜ³õÊ¼»¯
  *
- * @param   t       - å®šæ—¶æ—¶é—´ï¼ŒåŸºäºŽå½“å‰ç³»ç»Ÿæ—¶é’ŸTsys, æœ€é•¿å®šæ—¶å‘¨æœŸ 67108864
+ * @param   t       - ¶¨Ê±Ê±¼ä£¬»ùÓÚµ±Ç°ÏµÍ³Ê±ÖÓTsys, ×î³¤¶¨Ê±ÖÜÆÚ 67108864
  */
 void TMR1_TimerInit(uint32_t t);
 
 /**
- * @brief   èŽ·å–å½“å‰å®šæ—¶å™¨å€¼ï¼Œæœ€å¤§67108864
+ * @brief   »ñÈ¡µ±Ç°¶¨Ê±Æ÷Öµ£¬×î´ó67108864
  *
- * @return  å½“å‰å®šæ—¶å™¨å€¼
+ * @return  µ±Ç°¶¨Ê±Æ÷Öµ
  */
 #define TMR1_GetCurrentTimer()    R32_TMR1_COUNT
 
 /**
- * @brief   è¾¹æ²¿è®¡æ•°åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   ±ßÑØ¼ÆÊý¹¦ÄÜ³õÊ¼»¯
  *
- * @param   cap     - é‡‡é›†è®¡æ•°ç±»åž‹
+ * @param   cap     - ²É¼¯¼ÆÊýÀàÐÍ
  */
 void TMR1_EXTSingleCounterInit(CapModeTypeDef cap);
 
 /**
- * @brief   è®¾ç½®è®¡æ•°ç»Ÿè®¡æº¢å‡ºå¤§å°ï¼Œæœ€å¤§67108862
+ * @brief   ÉèÖÃ¼ÆÊýÍ³¼ÆÒç³ö´óÐ¡£¬×î´ó67108862
  *
- * @param   cyc     - è®¡æ•°ç»Ÿè®¡æº¢å‡ºå¤§å°
+ * @param   cyc     - ¼ÆÊýÍ³¼ÆÒç³ö´óÐ¡
  */
 #define TMR1_CountOverflowCfg(cyc)    (R32_TMR1_CNT_END = (cyc + 2))
 
 /**
- * @brief   èŽ·å–å½“å‰è®¡æ•°å€¼ï¼Œæœ€å¤§67108862
+ * @brief   »ñÈ¡µ±Ç°¼ÆÊýÖµ£¬×î´ó67108862
  *
- * @return  å½“å‰è®¡æ•°å€¼
+ * @return  µ±Ç°¼ÆÊýÖµ
  */
 #define TMR1_GetCurrentCount()        R32_TMR1_COUNT
 
 /**
- * @brief   PWM1 é€šé“è¾“å‡ºæ³¢å½¢å‘¨æœŸé…ç½®, æœ€å¤§67108864
+ * @brief   PWM1 Í¨µÀÊä³ö²¨ÐÎÖÜÆÚÅäÖÃ, ×î´ó67108864
  *
- * @param   cyc     - è¾“å‡ºæ³¢å½¢å‘¨æœŸ
+ * @param   cyc     - Êä³ö²¨ÐÎÖÜÆÚ
  */
 #define TMR1_PWMCycleCfg(cyc)         (R32_TMR1_CNT_END = cyc)
 
 /**
- * @brief   PWM è¾“å‡ºåˆå§‹åŒ–
+ * @brief   PWM Êä³ö³õÊ¼»¯
  *
  * @param   pr      - select wave polar, refer to PWMX_PolarTypeDef
  * @param   ts      - set pwm repeat times, refer to PWM_RepeatTsTypeDef
@@ -238,136 +238,136 @@ void TMR1_EXTSingleCounterInit(CapModeTypeDef cap);
 void TMR1_PWMInit(PWMX_PolarTypeDef pr, PWM_RepeatTsTypeDef ts);
 
 /**
- * @brief   PWM1 æœ‰æ•ˆæ•°æ®è„‰å®½, æœ€å¤§67108864
+ * @brief   PWM1 ÓÐÐ§Êý¾ÝÂö¿í, ×î´ó67108864
  *
- * @param   d       - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d       - ÓÐÐ§Êý¾ÝÂö¿í
  */
 #define TMR1_PWMActDataWidth(d)    (R32_TMR1_FIFO = d)
 
 /**
- * @brief   CAP1 æ•æ‰ç”µå¹³è¶…æ—¶é…ç½®, æœ€å¤§33554432
+ * @brief   CAP1 ²¶×½µçÆ½³¬Ê±ÅäÖÃ, ×î´ó33554432
  *
- * @param   cyc     - æ•æ‰ç”µå¹³è¶…æ—¶
+ * @param   cyc     - ²¶×½µçÆ½³¬Ê±
  */
 #define TMR1_CAPTimeoutCfg(cyc)    (R32_TMR1_CNT_END = cyc)
 
 /**
- * @brief   å¤–éƒ¨ä¿¡å·æ•æ‰åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   Íâ²¿ÐÅºÅ²¶×½¹¦ÄÜ³õÊ¼»¯
  *
  * @param   cap     - select capture mode, refer to CapModeTypeDef
  */
 void TMR1_CapInit(CapModeTypeDef cap);
 
 /**
- * @brief   èŽ·å–è„‰å†²æ•°æ®
+ * @brief   »ñÈ¡Âö³åÊý¾Ý
  *
- * @return  è„‰å†²æ•°æ®
+ * @return  Âö³åÊý¾Ý
  */
 #define TMR1_CAPGetData()        R32_TMR1_FIFO
 
 /**
- * @brief   èŽ·å–å½“å‰å·²æ•èŽ·æ•°æ®ä¸ªæ•°
+ * @brief   »ñÈ¡µ±Ç°ÒÑ²¶»ñÊý¾Ý¸öÊý
  *
- * @return  å½“å‰å·²æ•èŽ·æ•°æ®ä¸ªæ•°
+ * @return  µ±Ç°ÒÑ²¶»ñÊý¾Ý¸öÊý
  */
 #define TMR1_CAPDataCounter()    R8_TMR1_FIFO_COUNT
 
 /**
- * @brief   é…ç½®DMAåŠŸèƒ½
+ * @brief   ÅäÖÃDMA¹¦ÄÜ
  *
- * @param   s           - æ˜¯å¦æ‰“å¼€DMAåŠŸèƒ½
- * @param   startAddr   - DMA èµ·å§‹åœ°å€
- * @param   endAddr     - DMA ç»“æŸåœ°å€
- * @param   m           - é…ç½®DMAæ¨¡å¼
+ * @param   s           - ÊÇ·ñ´ò¿ªDMA¹¦ÄÜ
+ * @param   startAddr   - DMA ÆðÊ¼µØÖ·
+ * @param   endAddr     - DMA ½áÊøµØÖ·
+ * @param   m           - ÅäÖÃDMAÄ£Ê½
  */
 void TMR1_DMACfg(uint8_t s, uint16_t startAddr, uint16_t endAddr, DMAModeTypeDef m);
 
 /**
- * @brief   å…³é—­ TMR1 PWMè¾“å‡º
+ * @brief   ¹Ø±Õ TMR1 PWMÊä³ö
  */
 #define TMR1_PWMDisable()           (R8_TMR1_CTRL_MOD &= ~RB_TMR_OUT_EN)
 
 /**
- * @brief   å¼€å¯ TMR1 PWMè¾“å‡º
+ * @brief   ¿ªÆô TMR1 PWMÊä³ö
  */
 #define TMR1_PWMEnable()           (R8_TMR1_CTRL_MOD |= RB_TMR_OUT_EN)
 
 /**
- * @brief   å…³é—­ TMR1
+ * @brief   ¹Ø±Õ TMR1
  */
 #define TMR1_Disable()         (R8_TMR1_CTRL_MOD &= ~RB_TMR_COUNT_EN)
 
 /**
- * @brief   å¼€å¯ TMR1
+ * @brief   ¿ªÆô TMR1
  */
 #define TMR1_Enable()          (R8_TMR1_CTRL_MOD |= RB_TMR_COUNT_EN)
 
 /**
- * @brief   ä¸­æ–­é…ç½®
+ * @brief   ÖÐ¶ÏÅäÖÃ
  *
- * @param   s       - ä½¿èƒ½/å…³é—­
+ * @param   s       - Ê¹ÄÜ/¹Ø±Õ
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR1_ITCfg(s, f)       ((s) ? (R8_TMR1_INTER_EN |= f) : (R8_TMR1_INTER_EN &= ~f))
 
 /**
- * @brief   æ¸…é™¤ä¸­æ–­æ ‡å¿—
+ * @brief   Çå³ýÖÐ¶Ï±êÖ¾
  *
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR1_ClearITFlag(f)    (R8_TMR1_INT_FLAG = f)
 
 /**
- * @brief   æŸ¥è¯¢ä¸­æ–­æ ‡å¿—çŠ¶æ€
+ * @brief   ²éÑ¯ÖÐ¶Ï±êÖ¾×´Ì¬
  *
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR1_GetITFlag(f)      (R8_TMR1_INT_FLAG & f)
 
 /**
- * @brief   å®šæ—¶åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   ¶¨Ê±¹¦ÄÜ³õÊ¼»¯
  *
- * @param   t       - å®šæ—¶æ—¶é—´ï¼ŒåŸºäºŽå½“å‰ç³»ç»Ÿæ—¶é’ŸTsys, æœ€é•¿å®šæ—¶å‘¨æœŸ 67108864
+ * @param   t       - ¶¨Ê±Ê±¼ä£¬»ùÓÚµ±Ç°ÏµÍ³Ê±ÖÓTsys, ×î³¤¶¨Ê±ÖÜÆÚ 67108864
  */
 void TMR2_TimerInit(uint32_t t);
 
 /**
- * @brief   èŽ·å–å½“å‰å®šæ—¶å™¨å€¼ï¼Œæœ€å¤§67108864
+ * @brief   »ñÈ¡µ±Ç°¶¨Ê±Æ÷Öµ£¬×î´ó67108864
  *
- * @return  å½“å‰å®šæ—¶å™¨å€¼
+ * @return  µ±Ç°¶¨Ê±Æ÷Öµ
  */
 #define TMR2_GetCurrentTimer()    R32_TMR2_COUNT
 
 /**
- * @brief   è¾¹æ²¿è®¡æ•°åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   ±ßÑØ¼ÆÊý¹¦ÄÜ³õÊ¼»¯
  *
- * @param   cap     - é‡‡é›†è®¡æ•°ç±»åž‹
+ * @param   cap     - ²É¼¯¼ÆÊýÀàÐÍ
  */
 void TMR2_EXTSingleCounterInit(CapModeTypeDef cap);
 
 /**
- * @brief   è®¾ç½®è®¡æ•°ç»Ÿè®¡æº¢å‡ºå¤§å°ï¼Œæœ€å¤§67108862
+ * @brief   ÉèÖÃ¼ÆÊýÍ³¼ÆÒç³ö´óÐ¡£¬×î´ó67108862
  *
- * @param   cyc     - è®¡æ•°ç»Ÿè®¡æº¢å‡ºå¤§å°
+ * @param   cyc     - ¼ÆÊýÍ³¼ÆÒç³ö´óÐ¡
  */
 #define TMR2_CountOverflowCfg(cyc)    (R32_TMR2_CNT_END = (cyc + 2))
 
 /**
- * @brief   èŽ·å–å½“å‰è®¡æ•°å€¼ï¼Œæœ€å¤§67108862
+ * @brief   »ñÈ¡µ±Ç°¼ÆÊýÖµ£¬×î´ó67108862
  *
- * @return  å½“å‰è®¡æ•°å€¼
+ * @return  µ±Ç°¼ÆÊýÖµ
  */
 #define TMR2_GetCurrentCount()        R32_TMR2_COUNT
 
 /**
- * @brief   PWM2 é€šé“è¾“å‡ºæ³¢å½¢å‘¨æœŸé…ç½®, æœ€å¤§67108864
+ * @brief   PWM2 Í¨µÀÊä³ö²¨ÐÎÖÜÆÚÅäÖÃ, ×î´ó67108864
  *
- * @param   cyc     - è¾“å‡ºæ³¢å½¢å‘¨æœŸ
+ * @param   cyc     - Êä³ö²¨ÐÎÖÜÆÚ
  */
 #define TMR2_PWMCycleCfg(cyc)         (R32_TMR2_CNT_END = cyc)
 
 /**
- * @brief   PWM è¾“å‡ºåˆå§‹åŒ–
+ * @brief   PWM Êä³ö³õÊ¼»¯
  *
  * @param   pr      - select wave polar, refer to PWMX_PolarTypeDef
  * @param   ts      - set pwm repeat times, refer to PWM_RepeatTsTypeDef
@@ -375,136 +375,136 @@ void TMR2_EXTSingleCounterInit(CapModeTypeDef cap);
 void TMR2_PWMInit(PWMX_PolarTypeDef pr, PWM_RepeatTsTypeDef ts);
 
 /**
- * @brief   PWM2 æœ‰æ•ˆæ•°æ®è„‰å®½, æœ€å¤§67108864
+ * @brief   PWM2 ÓÐÐ§Êý¾ÝÂö¿í, ×î´ó67108864
  *
- * @param   d       - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d       - ÓÐÐ§Êý¾ÝÂö¿í
  */
 #define TMR2_PWMActDataWidth(d)    (R32_TMR2_FIFO = d)
 
 /**
- * @brief   CAP2 æ•æ‰ç”µå¹³è¶…æ—¶é…ç½®, æœ€å¤§33554432
+ * @brief   CAP2 ²¶×½µçÆ½³¬Ê±ÅäÖÃ, ×î´ó33554432
  *
- * @param   cyc     - æ•æ‰ç”µå¹³è¶…æ—¶
+ * @param   cyc     - ²¶×½µçÆ½³¬Ê±
  */
 #define TMR2_CAPTimeoutCfg(cyc)    (R32_TMR2_CNT_END = cyc)
 
 /**
- * @brief   å¤–éƒ¨ä¿¡å·æ•æ‰åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   Íâ²¿ÐÅºÅ²¶×½¹¦ÄÜ³õÊ¼»¯
  *
  * @param   cap     - select capture mode, refer to CapModeTypeDef
  */
 void TMR2_CapInit(CapModeTypeDef cap);
 
 /**
- * @brief   èŽ·å–è„‰å†²æ•°æ®
+ * @brief   »ñÈ¡Âö³åÊý¾Ý
  *
- * @return  è„‰å†²æ•°æ®
+ * @return  Âö³åÊý¾Ý
  */
 #define TMR2_CAPGetData()        R32_TMR2_FIFO
 
 /**
- * @brief   èŽ·å–å½“å‰å·²æ•èŽ·æ•°æ®ä¸ªæ•°
+ * @brief   »ñÈ¡µ±Ç°ÒÑ²¶»ñÊý¾Ý¸öÊý
  *
- * @return  å½“å‰å·²æ•èŽ·æ•°æ®ä¸ªæ•°
+ * @return  µ±Ç°ÒÑ²¶»ñÊý¾Ý¸öÊý
  */
 #define TMR2_CAPDataCounter()    R8_TMR2_FIFO_COUNT
 
 /**
- * @brief   é…ç½®DMAåŠŸèƒ½
+ * @brief   ÅäÖÃDMA¹¦ÄÜ
  *
- * @param   s           - æ˜¯å¦æ‰“å¼€DMAåŠŸèƒ½
- * @param   startAddr   - DMA èµ·å§‹åœ°å€
- * @param   endAddr     - DMA ç»“æŸåœ°å€
- * @param   m           - é…ç½®DMAæ¨¡å¼
+ * @param   s           - ÊÇ·ñ´ò¿ªDMA¹¦ÄÜ
+ * @param   startAddr   - DMA ÆðÊ¼µØÖ·
+ * @param   endAddr     - DMA ½áÊøµØÖ·
+ * @param   m           - ÅäÖÃDMAÄ£Ê½
  */
 void TMR2_DMACfg(uint8_t s, uint16_t startAddr, uint16_t endAddr, DMAModeTypeDef m);
 
 /**
- * @brief   å…³é—­ TMR2 PWMè¾“å‡º
+ * @brief   ¹Ø±Õ TMR2 PWMÊä³ö
  */
 #define TMR2_PWMDisable()           (R8_TMR2_CTRL_MOD &= ~RB_TMR_OUT_EN)
 
 /**
- * @brief   å¼€å¯ TMR2 PWMè¾“å‡º
+ * @brief   ¿ªÆô TMR2 PWMÊä³ö
  */
 #define TMR2_PWMEnable()           (R8_TMR2_CTRL_MOD |= RB_TMR_OUT_EN)
 
 /**
- * @brief   å…³é—­ TMR2
+ * @brief   ¹Ø±Õ TMR2
  */
 #define TMR2_Disable()         (R8_TMR2_CTRL_MOD &= ~RB_TMR_COUNT_EN)
 
 /**
- * @brief   å¼€å¯ TMR2
+ * @brief   ¿ªÆô TMR2
  */
 #define TMR2_Enable()          (R8_TMR2_CTRL_MOD |= RB_TMR_COUNT_EN)
 
 /**
- * @brief   ä¸­æ–­é…ç½®
+ * @brief   ÖÐ¶ÏÅäÖÃ
  *
- * @param   s       - ä½¿èƒ½/å…³é—­
+ * @param   s       - Ê¹ÄÜ/¹Ø±Õ
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR2_ITCfg(s, f)       ((s) ? (R8_TMR2_INTER_EN |= f) : (R8_TMR2_INTER_EN &= ~f))
 
 /**
- * @brief   æ¸…é™¤ä¸­æ–­æ ‡å¿—
+ * @brief   Çå³ýÖÐ¶Ï±êÖ¾
  *
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR2_ClearITFlag(f)    (R8_TMR2_INT_FLAG = f)
 
 /**
- * @brief   æŸ¥è¯¢ä¸­æ–­æ ‡å¿—çŠ¶æ€
+ * @brief   ²éÑ¯ÖÐ¶Ï±êÖ¾×´Ì¬
  *
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR2_GetITFlag(f)      (R8_TMR2_INT_FLAG & f)
 
 /**
- * @brief   å®šæ—¶åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   ¶¨Ê±¹¦ÄÜ³õÊ¼»¯
  *
- * @param   t       - å®šæ—¶æ—¶é—´ï¼ŒåŸºäºŽå½“å‰ç³»ç»Ÿæ—¶é’ŸTsys, æœ€é•¿å®šæ—¶å‘¨æœŸ 67108864
+ * @param   t       - ¶¨Ê±Ê±¼ä£¬»ùÓÚµ±Ç°ÏµÍ³Ê±ÖÓTsys, ×î³¤¶¨Ê±ÖÜÆÚ 67108864
  */
 void TMR3_TimerInit(uint32_t t);
 
 /**
- * @brief   èŽ·å–å½“å‰å®šæ—¶å™¨å€¼ï¼Œæœ€å¤§67108864
+ * @brief   »ñÈ¡µ±Ç°¶¨Ê±Æ÷Öµ£¬×î´ó67108864
  *
- * @return  å½“å‰å®šæ—¶å™¨å€¼
+ * @return  µ±Ç°¶¨Ê±Æ÷Öµ
  */
 #define TMR3_GetCurrentTimer()    R32_TMR3_COUNT
 
 /**
- * @brief   è¾¹æ²¿è®¡æ•°åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   ±ßÑØ¼ÆÊý¹¦ÄÜ³õÊ¼»¯
  *
- * @param   cap     - é‡‡é›†è®¡æ•°ç±»åž‹
+ * @param   cap     - ²É¼¯¼ÆÊýÀàÐÍ
  */
 void TMR3_EXTSingleCounterInit(CapModeTypeDef cap);
 
 /**
- * @brief   è®¾ç½®è®¡æ•°ç»Ÿè®¡æº¢å‡ºå¤§å°ï¼Œæœ€å¤§67108862
+ * @brief   ÉèÖÃ¼ÆÊýÍ³¼ÆÒç³ö´óÐ¡£¬×î´ó67108862
  *
- * @param   cyc     - è®¡æ•°ç»Ÿè®¡æº¢å‡ºå¤§å°
+ * @param   cyc     - ¼ÆÊýÍ³¼ÆÒç³ö´óÐ¡
  */
 #define TMR3_CountOverflowCfg(cyc)    (R32_TMR3_CNT_END = (cyc + 2))
 
 /**
- * @brief   èŽ·å–å½“å‰è®¡æ•°å€¼ï¼Œæœ€å¤§67108862
+ * @brief   »ñÈ¡µ±Ç°¼ÆÊýÖµ£¬×î´ó67108862
  *
- * @return  å½“å‰è®¡æ•°å€¼
+ * @return  µ±Ç°¼ÆÊýÖµ
  */
 #define TMR3_GetCurrentCount()        R32_TMR3_COUNT
 
 /**
- * @brief   PWM3 é€šé“è¾“å‡ºæ³¢å½¢å‘¨æœŸé…ç½®, æœ€å¤§67108864
+ * @brief   PWM3 Í¨µÀÊä³ö²¨ÐÎÖÜÆÚÅäÖÃ, ×î´ó67108864
  *
- * @param   cyc     - è¾“å‡ºæ³¢å½¢å‘¨æœŸ
+ * @param   cyc     - Êä³ö²¨ÐÎÖÜÆÚ
  */
 #define TMR3_PWMCycleCfg(cyc)         (R32_TMR3_CNT_END = cyc)
 
 /**
- * @brief   PWM è¾“å‡ºåˆå§‹åŒ–
+ * @brief   PWM Êä³ö³õÊ¼»¯
  *
  * @param   pr      - select wave polar, refer to PWMX_PolarTypeDef
  * @param   ts      - set pwm repeat times, refer to PWM_RepeatTsTypeDef
@@ -512,77 +512,77 @@ void TMR3_EXTSingleCounterInit(CapModeTypeDef cap);
 void TMR3_PWMInit(PWMX_PolarTypeDef pr, PWM_RepeatTsTypeDef ts);
 
 /**
- * @brief   PWM3 æœ‰æ•ˆæ•°æ®è„‰å®½, æœ€å¤§67108864
+ * @brief   PWM3 ÓÐÐ§Êý¾ÝÂö¿í, ×î´ó67108864
  *
- * @param   d       - æœ‰æ•ˆæ•°æ®è„‰å®½
+ * @param   d       - ÓÐÐ§Êý¾ÝÂö¿í
  */
 #define TMR3_PWMActDataWidth(d)    (R32_TMR3_FIFO = d)
 
 /**
- * @brief   CAP3 æ•æ‰ç”µå¹³è¶…æ—¶é…ç½®, æœ€å¤§33554432
+ * @brief   CAP3 ²¶×½µçÆ½³¬Ê±ÅäÖÃ, ×î´ó33554432
  *
- * @param   cyc     - æ•æ‰ç”µå¹³è¶…æ—¶
+ * @param   cyc     - ²¶×½µçÆ½³¬Ê±
  */
 #define TMR3_CAPTimeoutCfg(cyc)    (R32_TMR3_CNT_END = cyc)
 
 /**
- * @brief   å¤–éƒ¨ä¿¡å·æ•æ‰åŠŸèƒ½åˆå§‹åŒ–
+ * @brief   Íâ²¿ÐÅºÅ²¶×½¹¦ÄÜ³õÊ¼»¯
  *
  * @param   cap     - select capture mode, refer to CapModeTypeDef
  */
 void TMR3_CapInit(CapModeTypeDef cap);
 
 /**
- * @brief   èŽ·å–è„‰å†²æ•°æ®
+ * @brief   »ñÈ¡Âö³åÊý¾Ý
  *
- * @return  è„‰å†²æ•°æ®
+ * @return  Âö³åÊý¾Ý
  */
 #define TMR3_CAPGetData()        R32_TMR3_FIFO
 
 /**
- * @brief   èŽ·å–å½“å‰å·²æ•èŽ·æ•°æ®ä¸ªæ•°
+ * @brief   »ñÈ¡µ±Ç°ÒÑ²¶»ñÊý¾Ý¸öÊý
  *
- * @return  å½“å‰å·²æ•èŽ·æ•°æ®ä¸ªæ•°
+ * @return  µ±Ç°ÒÑ²¶»ñÊý¾Ý¸öÊý
  */
 #define TMR3_CAPDataCounter()    R8_TMR3_FIFO_COUNT
 
 /**
- * @brief   å…³é—­ TMR3 PWMè¾“å‡º
+ * @brief   ¹Ø±Õ TMR3 PWMÊä³ö
  */
 #define TMR3_PWMDisable()           (R8_TMR3_CTRL_MOD &= ~RB_TMR_OUT_EN)
 
 /**
- * @brief   å¼€å¯ TMR3 PWMè¾“å‡º
+ * @brief   ¿ªÆô TMR3 PWMÊä³ö
  */
 #define TMR3_PWMEnable()           (R8_TMR3_CTRL_MOD |= RB_TMR_OUT_EN)
 
 /**
- * @brief   å…³é—­ TMR3
+ * @brief   ¹Ø±Õ TMR3
  */
 #define TMR3_Disable()           (R8_TMR3_CTRL_MOD &= ~RB_TMR_COUNT_EN)
 
 /**
- * @brief   å¼€å¯ TMR3
+ * @brief   ¿ªÆô TMR3
  */
 #define TMR3_Enable()            (R8_TMR3_CTRL_MOD |= RB_TMR_COUNT_EN)
 
 /**
- * @brief   ä¸­æ–­é…ç½®
+ * @brief   ÖÐ¶ÏÅäÖÃ
  *
- * @param   s       - ä½¿èƒ½/å…³é—­
+ * @param   s       - Ê¹ÄÜ/¹Ø±Õ
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR3_ITCfg(s, f)         ((s) ? (R8_TMR3_INTER_EN |= f) : (R8_TMR3_INTER_EN &= ~f))
 
 /**
- * @brief   æ¸…é™¤ä¸­æ–­æ ‡å¿—
+ * @brief   Çå³ýÖÐ¶Ï±êÖ¾
  *
  * @param   f       - refer to TMR interrupt bit define
  */
 #define TMR3_ClearITFlag(f)      (R8_TMR3_INT_FLAG = f)
 
 /**
- * @brief   æŸ¥è¯¢ä¸­æ–­æ ‡å¿—çŠ¶æ€
+ * @brief   ²éÑ¯ÖÐ¶Ï±êÖ¾×´Ì¬
  *
  * @param   f       - refer to TMR interrupt bit define
  */

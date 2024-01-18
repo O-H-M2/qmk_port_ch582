@@ -74,9 +74,11 @@ void HAL_TimeInit(void)
 #if(CLK_OSC32K)
     sys_safe_access_enable();
     R8_CK32K_CONFIG &= ~(RB_CLK_OSC32K_XT | RB_CLK_XT32K_PON);
+    sys_safe_access_disable();
     sys_safe_access_enable();
     R8_CK32K_CONFIG |= RB_CLK_INT32K_PON;
     sys_safe_access_disable();
+    LSECFG_Current(LSE_RCur_100);
     Lib_Calibration_LSI();
 #else
     sys_safe_access_enable();

@@ -34,6 +34,7 @@ void SetSysClock(SYS_CLKTypeDef sc)
         {
             sys_safe_access_enable();
             R8_HFCK_PWR_CTRL |= RB_CLK_XT32M_PON; // HSE power on
+            sys_safe_access_disable();
             for(i = 0; i < 1200; i++)
             {
                 __nop();
@@ -60,6 +61,7 @@ void SetSysClock(SYS_CLKTypeDef sc)
         {
             sys_safe_access_enable();
             R8_HFCK_PWR_CTRL |= RB_CLK_PLL_PON; // PLL power on
+            sys_safe_access_disable();
             for(i = 0; i < 2000; i++)
             {
                 __nop();
@@ -90,6 +92,7 @@ void SetSysClock(SYS_CLKTypeDef sc)
     {
         sys_safe_access_enable();
         R16_CLK_SYS_CFG |= RB_CLK_SYS_MOD;
+        sys_safe_access_disable();
     }
     //更改FLASH clk的驱动能力
     sys_safe_access_enable();
@@ -299,6 +302,7 @@ void HardFault_Handler(void)
     FLASH_ROM_SW_RESET();
     sys_safe_access_enable();
     R16_INT32K_TUNE = 0xFFFF;
+	sys_safe_access_disable();
     sys_safe_access_enable();
     R8_RST_WDOG_CTRL |= RB_SOFTWARE_RESET;
     sys_safe_access_disable();
@@ -393,4 +397,26 @@ int _write(int fd, char *buf, int size)
 }
 
 #endif
+
+/*********************************************************************
+ * @fn      _sbrk
+ *
+ * @brief   Change the spatial position of data segment.
+ *
+ * @return  size: Data length
+ */
+__attribute__((used))
+void *_sbrk(ptrdiff_t incr)
+{
+    extern char _end[];
+    extern char _heap_end[];
+    static char *curbrk = _end;
+
+    if ((curbrk + incr < _end) || (curbrk + incr > _heap_end))
+    return NULL - 1;
+
+    curbrk += incr;
+    return curbrk - incr;
+}
+
 

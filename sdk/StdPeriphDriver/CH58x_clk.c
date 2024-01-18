@@ -28,6 +28,7 @@ void LClk32K_Select(LClk32KTypeDef hc)
     if(hc == Clk32K_LSI)
     {
         cfg &= ~RB_CLK_OSC32K_XT;
+        LSECFG_Current(LSE_RCur_100);
     }
     else
     {
@@ -137,116 +138,177 @@ void LSECFG_Capacitance(LSECapTypeDef c)
 void Calibration_LSI(Cali_LevelTypeDef cali_Lv)
 {
     UINT32 i;
-    INT32  cnt_offset;
+    INT32 cnt_offset;
     UINT8  retry = 0;
+    UINT8  retry_all = 0;
     INT32  freq_sys;
     UINT32 cnt_32k = 0;
-
+    UINT32 irqv = 0;
     freq_sys = GetSysClock();
 
     sys_safe_access_enable();
-    R8_CK32K_CONFIG |= RB_CLK_OSC32K_FILT;
     R8_CK32K_CONFIG &= ~RB_CLK_OSC32K_FILT;
+    R8_CK32K_CONFIG |= RB_CLK_OSC32K_FILT;
+    sys_safe_access_disable();
     sys_safe_access_enable();
     R8_XT32K_TUNE &= ~3;
     R8_XT32K_TUNE |= 1;
-
-    // 粗调
-    sys_safe_access_enable();
-    R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
-    R8_OSC_CAL_CTRL |= 1;
+    sys_safe_access_disable();
 
     while(1)
     {
+        // 粗调
         sys_safe_access_enable();
-        R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
-        R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
-        R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
-        while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
+        R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
+        R8_OSC_CAL_CTRL |= 1;
+        sys_safe_access_disable();
+
+        while(1)
         {
             sys_safe_access_enable();
             R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+            R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
+            R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
+            sys_safe_access_disable();
+            while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
+            {
+                sys_safe_access_enable();
+                R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+                sys_safe_access_disable();
+            }
+
+            while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT)); // 用于丢弃
+
+            SYS_DisableAllIrq(&irqv);
+            sys_safe_access_enable();
+            R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
+            R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+            R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
+            R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
+            sys_safe_access_disable();
+            while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
+            {
+                sys_safe_access_enable();
+                R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+                sys_safe_access_disable();
+            }
+
+            while(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT);
+            cnt_32k = RTC_GetCycle32k();
+            while(RTC_GetCycle32k() == cnt_32k);
+            R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
+            SYS_RecoverIrq(irqv);
+            while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
+            i = R16_OSC_CAL_CNT; // 实时校准后采样值
+            cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF - 2000 * (freq_sys / 1000) / CAB_LSIFQ;
+            if(((cnt_offset > -37 * (freq_sys / 1000) / 60000) && (cnt_offset < 37 * (freq_sys / 1000) / 60000)) || retry > 2)
+            {
+                if(retry)
+                    break;
+            }
+            retry++;
+            cnt_offset = (cnt_offset > 0) ? (((cnt_offset * 2) / (74 * (freq_sys/1000) / 60000)) + 1) / 2 : (((cnt_offset * 2) / (74 * (freq_sys/1000) / 60000 )) - 1) / 2;
+            sys_safe_access_enable();
+            R16_INT32K_TUNE += cnt_offset;
+            sys_safe_access_disable();
         }
 
-        while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT)); // 用于丢弃
-        
+        // 细调
+        // 配置细调参数后，丢弃2次捕获值（软件行为）上判断已有一次，这里只留一次
+        sys_safe_access_enable();
+        R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
+        R8_OSC_CAL_CTRL |= cali_Lv;
+        sys_safe_access_disable();
+        while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_TOTAL) != cali_Lv )
+        {
+            sys_safe_access_enable();
+            R8_OSC_CAL_CTRL |= cali_Lv;
+            sys_safe_access_disable();
+        }
+
         sys_safe_access_enable();
         R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
         R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
         R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
         R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
+        sys_safe_access_disable();
         while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
         {
             sys_safe_access_enable();
             R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+            sys_safe_access_disable();
+        }
+
+        while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT)); // 用于丢弃
+
+        SYS_DisableAllIrq(&irqv);
+        sys_safe_access_enable();
+        R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
+        R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+        R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
+        R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
+        sys_safe_access_disable();
+        while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
+        {
+            sys_safe_access_enable();
+            R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
+            sys_safe_access_disable();
         }
 
         while(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT);
         cnt_32k = RTC_GetCycle32k();
         while(RTC_GetCycle32k() == cnt_32k);
         R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
+        SYS_RecoverIrq(irqv);
         while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
+        sys_safe_access_enable();
+        R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
+        sys_safe_access_disable();
         i = R16_OSC_CAL_CNT; // 实时校准后采样值
-        cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF - 2000 * (freq_sys / 1000) / CAB_LSIFQ;
-        if(((cnt_offset > -37 * (freq_sys / 1000) / CAB_LSIFQ) && (cnt_offset < 37 * (freq_sys / 1000) / CAB_LSIFQ)) || retry > 2)
+        cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF -  4000 * (1 << cali_Lv) * (freq_sys / 1000000) / 256 * 1000/(CAB_LSIFQ/256);
+        cnt_offset = (cnt_offset > 0) ? ((((cnt_offset * 2*(100 )) / (1366 * ((1 << cali_Lv)/8) * (freq_sys/1000) / 60000)) + 1) / 2) : ((((cnt_offset * 2*(100)) / (1366 * ((1 << cali_Lv)/8) * (freq_sys/1000) / 60000)) - 1) / 2);
+        if((cnt_offset > 0)&&(((R16_INT32K_TUNE>>5)+cnt_offset)>0xFF))
         {
-            if(retry)
-                break;
+            if(retry_all>2)
+            {
+                sys_safe_access_enable();
+                R16_INT32K_TUNE |= (0xFF<<5);
+                sys_safe_access_disable();
+                return;
+            }
+            else
+            {
+                sys_safe_access_enable();
+                R16_INT32K_TUNE = (R16_INT32K_TUNE&0x1F)|(0x7F<<5);
+                sys_safe_access_disable();
+            }
         }
-        retry++;
-        cnt_offset = (cnt_offset > 0) ? (((cnt_offset * 2) / (74 * (freq_sys/1000) / 60000)) + 1) / 2 : (((cnt_offset * 2) / (74 * (freq_sys/1000) / 60000 )) - 1) / 2;
-        sys_safe_access_enable();
-        R16_INT32K_TUNE += cnt_offset;
+        else if((cnt_offset < 0)&&((R16_INT32K_TUNE>>5)<(-cnt_offset)))
+        {
+            if(retry_all>2)
+            {
+                sys_safe_access_enable();
+                R16_INT32K_TUNE &= 0x1F;
+                sys_safe_access_disable();
+                return;
+            }
+            else
+            {
+                sys_safe_access_enable();
+                R16_INT32K_TUNE = (R16_INT32K_TUNE&0x1F)|(0x7F<<5);
+                sys_safe_access_disable();
+            }
+        }
+        else
+        {
+            sys_safe_access_enable();
+            R16_INT32K_TUNE += (cnt_offset<<5);
+            sys_safe_access_disable();
+            return;
+        }
+        retry_all++;
+
     }
-
-    // 细调
-    // 配置细调参数后，丢弃2次捕获值（软件行为）上判断已有一次，这里只留一次
-    sys_safe_access_enable();
-    R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_TOTAL;
-    R8_OSC_CAL_CTRL |= cali_Lv;
-    while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_TOTAL) != cali_Lv )
-    {
-        sys_safe_access_enable();
-        R8_OSC_CAL_CTRL |= cali_Lv;
-    }
-
-    sys_safe_access_enable();
-    R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
-    R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
-    R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
-    R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
-    while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
-    {
-        sys_safe_access_enable();
-        R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
-    }
-
-    while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT)); // 用于丢弃
-
-    sys_safe_access_enable();
-    R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
-    R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
-    R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
-    R16_OSC_CAL_CNT |= RB_OSC_CAL_IF;
-    while( (R8_OSC_CAL_CTRL & RB_OSC_CNT_EN) == 0 )
-    {
-        sys_safe_access_enable();
-        R8_OSC_CAL_CTRL |= RB_OSC_CNT_EN;
-    }
-
-    while(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT);
-    cnt_32k = RTC_GetCycle32k();
-    while(RTC_GetCycle32k() == cnt_32k);
-    R16_OSC_CAL_CNT |= RB_OSC_CAL_OV_CLR;
-    while(!(R8_OSC_CAL_CTRL & RB_OSC_CNT_HALT));
-    sys_safe_access_enable();
-    R8_OSC_CAL_CTRL &= ~RB_OSC_CNT_EN;
-    i = R16_OSC_CAL_CNT; // 实时校准后采样值
-
-    cnt_offset = (i & 0x3FFF) + R8_OSC_CAL_OV_CNT * 0x3FFF -  4000 * (1 << cali_Lv) * (freq_sys / 1000000) / 256 * 1000/(CAB_LSIFQ/256);
-    cnt_offset = (cnt_offset > 0) ? ((((cnt_offset * 2*(100 )) / (1366 * ((1 << cali_Lv)/8) * (freq_sys/1000) / 60000)) + 1) / 2)<<5 : ((((cnt_offset * 2*(100)) / (1366 * ((1 << cali_Lv)/8) * (freq_sys/1000) / 60000)) - 1) / 2)<<5;
-    sys_safe_access_enable();
-    R16_INT32K_TUNE += cnt_offset;
 }
 
 /*********************************************************************
@@ -307,6 +369,7 @@ void RTC_InitTime(uint16_t y, uint16_t mon, uint16_t d, uint16_t h, uint16_t m, 
     sys_safe_access_enable();
     R32_RTC_TRIG = day;
     R8_RTC_MODE_CTRL |= RB_RTC_LOAD_HI;
+    sys_safe_access_disable();
     while((R32_RTC_TRIG & 0x3FFF) != (R32_RTC_CNT_DAY & 0x3FFF));
     sys_safe_access_enable();
     R32_RTC_TRIG = t;
@@ -417,6 +480,7 @@ void RTC_TMRFunCfg(RTC_TMRCycTypeDef t)
 {
     sys_safe_access_enable();
     R8_RTC_MODE_CTRL &= ~(RB_RTC_TMR_EN | RB_RTC_TMR_MODE);
+    sys_safe_access_disable();
     sys_safe_access_enable();
     R8_RTC_MODE_CTRL |= RB_RTC_TMR_EN | (t);
     sys_safe_access_disable();

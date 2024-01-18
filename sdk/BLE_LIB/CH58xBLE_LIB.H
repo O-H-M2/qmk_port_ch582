@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT ******************************
  * File Name         : CH58xBLE_LIB.H
  * Author            : WCH
- * Version           : V1.91
- * Date              : 2023/09/18
+ * Version           : V2.00
+ * Date              : 2024/01/02
  * Description       : head file
  * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
  * Attention: This software (modified or not) and binary are used for
@@ -191,7 +191,7 @@ typedef struct
 /*********************************************************************
  * GLOBAL MACROS
  */
-#define VER_FILE  "CH58x_BLE_LIB_V1.9"
+#define VER_FILE  "CH58x_BLE_LIB_V2.0"
 extern const uint8_t VER_LIB[];  // LIB version
 #define SYSTEM_TIME_MICROSEN            625   // unit of process event timer is 625us
 #define MS1_TO_SYSTEM_TIME(x)  ((x)*1000/SYSTEM_TIME_MICROSEN)   // transform unit in ms to unit in 625us ( attentional bias )
@@ -890,7 +890,9 @@ extern const uint8_t VER_LIB[];  // LIB version
 #define TGAP_ADV_PRIMARY_PHY_OPTIONS            64  //!< Indicate the Host's preference or requirement concerning coding scheme.Default GAP_PHY_OPTIONS_NOPRE.
 #define TGAP_ADV_SECONDARY_PHY_OPTIONS          65  //!< indicate the Host's preference or requirement concerning coding scheme (including for periodic advertising).Default GAP_PHY_OPTIONS_NOPRE.
 
-#define TGAP_PARAMID_MAX                        66  //!< ID MAX-valid Parameter ID
+#define TGAP_ADV_RSP_RSSI_MIN                   66  //!< The minimum RSSI for advertising to send scanning response. Default -127.
+
+#define TGAP_PARAMID_MAX                        67  //!< ID MAX-valid Parameter ID
 
 // GAP_DEVDISC_MODE_DEFINES GAP Device Discovery Modes
 #define DEVDISC_MODE_NONDISCOVERABLE            0x00  //!< No discoverable setting
@@ -4544,6 +4546,17 @@ extern bStatus_t RF_Shut( void );
  * @return  0 - success.
  */
 extern void RF_SetChannel( uint32_t channel );
+
+/**
+ * @brief   rf mode set radio frequency and whitening channel index
+ *  note: LLEMode bit6 set 1
+ *
+ * @param   frequency -
+ * @param   ch - the whitening channel index
+ *
+ * @return  0 - success.
+ */
+extern bStatus_t RF_SetFrequency( uint32_t frequency, uint8_t ch );
 
 /**
  * @brief   shut down rf frequency hopping

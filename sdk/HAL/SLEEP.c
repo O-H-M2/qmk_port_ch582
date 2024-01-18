@@ -91,6 +91,7 @@ void HAL_SleepInit(void)
 #if(defined(HAL_SLEEP)) && (HAL_SLEEP == TRUE)
     sys_safe_access_enable();
     R8_SLP_WAKE_CTRL |= RB_SLP_RTC_WAKE; // RTC»½ÐÑ
+    sys_safe_access_disable();              //
     sys_safe_access_enable();
     R8_RTC_MODE_CTRL |= RB_RTC_TRIG_EN;  // ´¥·¢Ä£Ê½
     sys_safe_access_disable();              //

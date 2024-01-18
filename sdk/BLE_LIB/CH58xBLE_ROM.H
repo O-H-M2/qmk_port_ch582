@@ -1,8 +1,8 @@
 /********************************** (C) COPYRIGHT ******************************
  * File Name         : CH58xBLE_ROM.H
  * Author            : WCH
- * Version           : V1.91
- * Date              : 2023/09/18
+ * Version           : V2.00
+ * Date              : 2024/01/02
  * Description       : head file
  *                    Address Space
  *                       CODE:   00010000H - 0003FFFFH   192K
@@ -201,7 +201,7 @@ typedef struct
 /*********************************************************************
  * GLOBAL MACROS
  */
-#define VER_FILE  "CH58x_BLE_LIB_V1.9"
+#define VER_FILE  "CH58x_BLE_LIB_V2.0"
 extern const uint8_t VER_LIB[];  // LIB version
 #define SYSTEM_TIME_MICROSEN            625   // unit of process event timer is 625us
 #define MS1_TO_SYSTEM_TIME(x)  ((x)*1000/SYSTEM_TIME_MICROSEN)   // transform unit in ms to unit in 625us ( attentional bias )
@@ -4569,6 +4569,18 @@ typedef struct tag_rf_config
  * @return  0 - success.
  */
 #define    RF_SetChannel  ((  void   (*)  ( uint32_t channel ))  BLE_LIB_JT(115) )
+
+/**
+ * @brief   rf mode set radio frequency and whitening channel index
+ *  note: LLEMode bit6 set 1
+ *
+ * @param   frequency -
+ * @param   ch - the whitening channel index
+ *
+ * @return  0 - success.
+ */
+#define    RF_SetFrequency  ((  bStatus_t   (*)  ( uint32_t frequency, uint8_t channel ))  BLE_LIB_JT(141) )
+
 
 /**
  * @brief   shut down rf frequency hopping

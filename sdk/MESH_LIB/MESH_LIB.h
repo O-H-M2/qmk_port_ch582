@@ -1,10 +1,12 @@
 /********************************** (C) COPYRIGHT *******************************
  * File Name          : mesh_lib.h
  * Author             : WCH
- * Version            : V1.6
+ * Version            : V1.70
  * Date               : 2022/10/26
  * Description        :
- * Copyright (c) 2021 Nanjing Qinheng Microelectronics Co., Ltd.
+ * Copyright (c) 2023 Nanjing Qinheng Microelectronics Co., Ltd.
+ * Attention: This software (modified or not) and binary are used for
+ * microcontroller manufactured by Nanjing Qinheng Microelectronics.
  *******************************************************************************/
 
 #ifndef mesh_lib_H
@@ -118,7 +120,7 @@ typedef signed int ssize_t;
 #endif
 
 /******************************************************************************/
-#define  VER_MESH_FILE            "MESH_LIB_V1.6"
+#define  VER_MESH_FILE            "MESH_LIB_V1.7"
 extern const uint8_t VER_MESH_LIB[];
 
 // Global_Error_Code
@@ -3505,6 +3507,11 @@ void MeshDeamon_Init( void );
  * @brief Initialize RF.
  */
 void hal_rf_init( void );
+
+/**
+ * @brief Weather wait for end when RF tx.
+ */
+void hal_rf_tx_wait_enable(uint8_t enable );
 
 /**
  * @brief Config the RF.

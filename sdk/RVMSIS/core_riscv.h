@@ -312,7 +312,7 @@ RV_STATIC_INLINE void PFIC_DisableFastINT3(void)
  */
 __attribute__((always_inline)) RV_STATIC_INLINE void __SEV(void)
 {
-    PFIC->SCTLR |= (1 << 3);
+    PFIC->SCTLR |= (1 << 5);
 }
 
 /*********************************************************************

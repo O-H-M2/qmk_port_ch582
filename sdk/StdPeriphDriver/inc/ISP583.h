@@ -103,15 +103,6 @@ extern uint32_t FLASH_EEPROM_CMD( uint8_t cmd, uint32_t StartAddr, void *Buffer,
 #define GET_BOOT_INFO(Buffer)                       FLASH_EEPROM_CMD( CMD_GET_ROM_INFO, ROM_CFG_BOOT_INFO, Buffer, 0 )
 
 /**
- * @brief   get 64 bit unique ID
- *
- * @param   Buffer      - Pointer to the buffer where data should be stored, Must be aligned to 4 bytes.
- *
- * @return  0-SUCCESS  (!0)-FAILURE
- */
-#define GET_UNIQUE_ID(Buffer)                       FLASH_EEPROM_CMD( CMD_GET_UNIQUE_ID, 0, Buffer, 0 )
-
-/**
  * @brief   power-down FlashROM
  *
  * @return  0-SUCCESS  (!0)-FAILURE
