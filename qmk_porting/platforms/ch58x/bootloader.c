@@ -21,6 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void bootmagic_lite_reset_eeprom(void)
 {
+#ifdef POWER_DETECT_PIN
+    if (!readPin(POWER_DETECT_PIN)) {
+        // cable removed
+        return;
+    }
+#endif
+
     eeprom_driver_erase();
 }
 
@@ -167,6 +174,13 @@ uint8_t bootloader_set_to_default_mode(const char *reason)
 
 void bootloader_jump()
 {
+#ifdef POWER_DETECT_PIN
+    if (!readPin(POWER_DETECT_PIN)) {
+        // cable removed
+        return;
+    }
+#endif
+
     PRINT("Jumping IAP...\n");
     retention_register_set_iap();
     mcu_reset();
