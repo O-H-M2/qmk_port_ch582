@@ -39,6 +39,7 @@ enum {
 
 extern volatile uint8_t kbd_protocol_type;
 
+bool bootmagic_allow_jump();
 void bootloader_boot_mode_set(uint8_t mode);
 uint8_t bootloader_boot_mode_get();
 void bootloader_select_boot_mode();

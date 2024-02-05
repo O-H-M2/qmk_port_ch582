@@ -509,12 +509,9 @@ int main()
 
     // check if there is any existing bootmagic pin setting
     do {
-#ifdef POWER_DETECT_PIN
-        if (!readPin(POWER_DETECT_PIN)) {
-            // cable removed
+        if (!bootmagic_allow_jump()) {
             break;
         }
-#endif
 
         uint8_t buffer[2], ret;
 
