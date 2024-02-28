@@ -151,6 +151,16 @@ if(COMMAND_ENABLE)
     )
 endif()
 
+# MAGIC_ENABLE
+if(MAGIC_ENABLE)
+    add_definitions(-DMAGIC_ENABLE)
+    set(EEPROM_ENABLE ON CACHE BOOL "QMK" FORCE)
+    message(STATUS "MAGIC_ENABLE")
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/process_keycode/process_magic.c"
+    )
+endif()
+
 # BOOTMAGIC_ENABLE
 if(BOOTMAGIC_ENABLE)
     add_definitions(-DBOOTMAGIC_LITE -DBOOTMAGIC_ENABLE)
