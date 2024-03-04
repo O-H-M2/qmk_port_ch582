@@ -138,6 +138,12 @@ if(DIP_SWITCH_ENABLE)
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/dip_switch.c"
     )
+
+    # DIP_SWITCH_MAP_ENABLE
+    if(DIP_SWITCH_MAP_ENABLE)
+        add_definitions(-DDIP_SWITCH_MAP_ENABLE)
+        message(STATUS "DIP_SWITCH_MAP_ENABLE")
+    endif()
 endif()
 
 # COMMAND_ENABLE
