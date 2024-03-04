@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 #ifdef WS2812
 #include "ws2812.h"
+#include "ws2812_supplement.h"
 #endif
 #ifdef AW20216S
 #include "aw20216s_supplement.h"
