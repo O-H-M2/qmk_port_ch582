@@ -14,9 +14,9 @@
 #define MATRIX_ROWS 4
 #define MATRIX_COLS 2
 
-#define DIODE_DIRECTION       COL2ROW
-#define BOOTMAGIC_LITE_ROW    0
-#define BOOTMAGIC_LITE_COLUMN 0
+#define DIODE_DIRECTION  COL2ROW
+#define BOOTMAGIC_ROW    0
+#define BOOTMAGIC_COLUMN 0
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
 
@@ -45,8 +45,8 @@
 #define LED_CAPS_LOCK_PIN A8
 
 #define DEBUG_MATRIX_SCAN_RATE
-//0x0001, 0x0002, 0x0004, 0x0008, 0x0010, 0x0020, 0x0040, 0x0080, 0x0100, 0x0200, 0x0400, 0x0800, 0x1000, 0x2000, 0x4000, 0x8000
-// 1QA     1QB     1QC     1QD     1QE     1QF     1QG     1QH     2QA     2QB     2QC     2QD     2QE     2QF     2QG     2QH
+// 0x0001, 0x0002, 0x0004, 0x0008, 0x0010, 0x0020, 0x0040, 0x0080, 0x0100, 0x0200, 0x0400, 0x0800, 0x1000, 0x2000, 0x4000, 0x8000
+//  1QA     1QB     1QC     1QD     1QE     1QF     1QG     1QH     2QA     2QB     2QC     2QD     2QE     2QF     2QG     2QH
 
 //              C0      C1
 //              1QA     2QA

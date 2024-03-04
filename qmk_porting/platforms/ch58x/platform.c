@@ -97,15 +97,15 @@ void platform_setup()
 #endif
 
     {
-        // preserve BOOTMAGIC_LITE_ROW and BOOTMAGIC_LITE_COLUMN to eeprom for future use
+        // preserve BOOTMAGIC_ROW and BOOTMAGIC_COLUMN to eeprom for future use
         uint8_t buffer[EEPROM_PAGE_SIZE], ret;
 
         do {
             ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION, buffer, sizeof(buffer));
         } while (ret);
-        if (buffer[1] != BOOTMAGIC_LITE_ROW || buffer[2] != BOOTMAGIC_LITE_COLUMN) {
-            buffer[1] = BOOTMAGIC_LITE_ROW;
-            buffer[2] = BOOTMAGIC_LITE_COLUMN;
+        if (buffer[1] != BOOTMAGIC_ROW || buffer[2] != BOOTMAGIC_COLUMN) {
+            buffer[1] = BOOTMAGIC_ROW;
+            buffer[2] = BOOTMAGIC_COLUMN;
             do {
                 ret = EEPROM_ERASE(QMK_EEPROM_RESERVED_START_POSITION, EEPROM_PAGE_SIZE) ||
                       EEPROM_WRITE(QMK_EEPROM_RESERVED_START_POSITION, buffer, EEPROM_PAGE_SIZE);

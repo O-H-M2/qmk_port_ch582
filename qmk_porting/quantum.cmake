@@ -22,6 +22,7 @@ file(GLOB_RECURSE quantum_SOURCES
 
     # "${QMK_BASE_DIR}/quantum/audio/*.c"
     # "${QMK_BASE_DIR}/quantum/backlight/*.c"
+    "${QMK_BASE_DIR}/quantum/bootmagic/bootmagic.c"
     "${QMK_BASE_DIR}/quantum/debounce/sym_eager_pk.c"
 
     # "${QMK_BASE_DIR}/quantum/debounce/asym_eager_defer_pk.c"

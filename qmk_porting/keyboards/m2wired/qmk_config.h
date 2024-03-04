@@ -35,11 +35,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {                                                                                                  \
         A4, A5, A6, A0, A1, A12, A11, A10, A7, B9, B8, B17, B16, B15, B14, B13, B12, B7, B22, B19, B18 \
     }
-//#define DYNAMIC_KEYMAP_LAYER_COUNT 10
+// #define DYNAMIC_KEYMAP_LAYER_COUNT 10
 
-#define DIODE_DIRECTION       COL2ROW
-#define BOOTMAGIC_LITE_ROW    0
-#define BOOTMAGIC_LITE_COLUMN 0
+#define DIODE_DIRECTION  COL2ROW
+#define BOOTMAGIC_ROW    0
+#define BOOTMAGIC_COLUMN 0
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
 
@@ -61,7 +61,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WS2812_EN_LEVEL 1
 
 #ifdef RGB_MATRIX_ENABLE
-//#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
+// #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define RGBLED_NUM                    64
 #define RGB_MATRIX_LED_COUNT          RGBLED_NUM
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 32
@@ -132,7 +132,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 /* define if matrix has ghost */
-//#define MATRIX_HAS_GHOST
+// #define MATRIX_HAS_GHOST
 
 /* Set 0 if debouncing isn't needed */
 #define DEBOUNCE 10
@@ -143,15 +143,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* disable debug print */
-//#define NO_DEBUG
+// #define NO_DEBUG
 
 /* disable print */
-//#define NO_PRINT
+// #define NO_PRINT
 
 /* disable action features */
-//#define NO_ACTION_LAYER
-//#define NO_ACTION_TAPPING
-//#define NO_ACTION_ONESHOT
+// #define NO_ACTION_LAYER
+// #define NO_ACTION_TAPPING
+// #define NO_ACTION_ONESHOT
 
 /* define for OLED resolution  */
 #ifdef OLED_ENABLE

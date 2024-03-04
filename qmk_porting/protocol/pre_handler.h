@@ -252,14 +252,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #error "CPU clock speed too low!"
 #endif
 
+// platform specific default functions
+#ifndef BOOTMAGIC_ENABLE
+#define BOOTMAGIC_ENABLE
+#endif
 #ifndef EXTRAKEY_ENABLE
 #define EXTRAKEY_ENABLE
 #endif
-
 #ifndef MAGIC_ENABLE
 #define MAGIC_ENABLE
 #endif
-
 #ifndef SEND_STRING_ENABLE
 #define SEND_STRING_ENABLE
 #endif

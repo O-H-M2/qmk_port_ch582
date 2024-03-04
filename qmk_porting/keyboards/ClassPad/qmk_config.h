@@ -40,9 +40,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #define DYNAMIC_KEYMAP_LAYER_COUNT 10
 
-#define DIODE_DIRECTION       COL2ROW
-#define BOOTMAGIC_LITE_ROW    0
-#define BOOTMAGIC_LITE_COLUMN 0
+#define DIODE_DIRECTION  COL2ROW
+#define BOOTMAGIC_ROW    0
+#define BOOTMAGIC_COLUMN 0
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
 
@@ -60,11 +60,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef ENCODER_ENABLE
 #define ENCODERS_PAD_A \
     {                  \
-        A3,A14         \
+        A3, A14        \
     }
 #define ENCODERS_PAD_B \
     {                  \
-        A15,A13        \
+        A15, A13       \
     }
 #define ENCODER_RESOLUTION 1
 #endif

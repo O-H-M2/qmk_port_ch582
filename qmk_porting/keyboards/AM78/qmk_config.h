@@ -36,9 +36,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 #define DYNAMIC_KEYMAP_LAYER_COUNT 10
 
-#define DIODE_DIRECTION       COL2ROW
-#define BOOTMAGIC_LITE_ROW    0
-#define BOOTMAGIC_LITE_COLUMN 0
+#define DIODE_DIRECTION  COL2ROW
+#define BOOTMAGIC_ROW    0
+#define BOOTMAGIC_COLUMN 0
 // #define PERMISSIVE_HOLD
 #define HOLD_ON_OTHER_KEY_PRESS
 
@@ -70,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define BLE_SLOT_2_INDICATOR [0][2]
 #define BLE_SLOT_3_INDICATOR [0][3]
 #define BLE_SLOT_4_INDICATOR [0][4]
-//#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
+// #define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_SOLID_REACTIVE
 #define RGBLED_NUM                    29
 #define RGB_MATRIX_LED_COUNT          RGBLED_NUM
 #define RGB_MATRIX_MAXIMUM_BRIGHTNESS 32
@@ -129,7 +129,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endif
 
 /* define if matrix has ghost */
-//#define MATRIX_HAS_GHOST
+// #define MATRIX_HAS_GHOST
 
 /* Set 0 if debouncing isn't needed */
 #define DEBOUNCE 10
@@ -140,12 +140,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* disable debug print */
-//#define NO_DEBUG
+// #define NO_DEBUG
 
 /* disable print */
-//#define NO_PRINT
+// #define NO_PRINT
 
 /* disable action features */
-//#define NO_ACTION_LAYER
-//#define NO_ACTION_TAPPING
-//#define NO_ACTION_ONESHOT
+// #define NO_ACTION_LAYER
+// #define NO_ACTION_TAPPING
+// #define NO_ACTION_ONESHOT

@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "eeprom_driver.h"
+#include "eeconfig.h"
 #include "platform_deps.h"
 #include "gpio.h"
 
@@ -30,13 +31,13 @@ bool bootmagic_allow_jump()
     return true;
 }
 
-void bootmagic_lite_reset_eeprom(void)
+void bootmagic_reset_eeprom(void)
 {
     if (!bootmagic_allow_jump()) {
         return;
     }
 
-    eeprom_driver_erase();
+    eeconfig_disable();
 }
 
 void bootloader_boot_mode_set(uint8_t mode)

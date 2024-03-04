@@ -124,7 +124,6 @@ endif()
 if(VIA_ENABLE)
     add_definitions(-DVIA_ENABLE -DRAW_ENABLE -DDYNAMIC_KEYMAP_ENABLE)
     set(EEPROM_ENABLE ON CACHE BOOL "QMK" FORCE)
-    set(BOOTMAGIC_ENABLE ON CACHE BOOL "QMK" FORCE)
     message(STATUS "VIA_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/dynamic_keymap.c"
@@ -148,16 +147,6 @@ if(COMMAND_ENABLE)
     message(STATUS "COMMAND_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/command.c"
-    )
-endif()
-
-# BOOTMAGIC_ENABLE
-if(BOOTMAGIC_ENABLE)
-    add_definitions(-DBOOTMAGIC_LITE -DBOOTMAGIC_ENABLE)
-    message(STATUS "BOOTMAGIC_ENABLE")
-    list(APPEND quantum_SOURCES
-        "${QMK_BASE_DIR}/quantum/bootmagic/magic.c"
-        "${QMK_BASE_DIR}/quantum/bootmagic/bootmagic_lite.c"
     )
 endif()
 
