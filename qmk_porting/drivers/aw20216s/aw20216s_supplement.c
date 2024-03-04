@@ -28,19 +28,11 @@ inline bool aw20216s_power_status_get()
 inline void aw20216s_power_toggle(bool status)
 {
     if (status) {
-        gpio_write_pin_high(DRIVER_1_EN);
-        gpio_set_pin_output(DRIVER_1_EN);
-#ifdef DRIVER_2_EN
-        gpio_write_pin_high(DRIVER_2_EN);
-        gpio_set_pin_output(DRIVER_2_EN);
-#endif
+        gpio_write_pin_high(AW20216S_EN_PIN);
+        gpio_set_pin_output(AW20216S_EN_PIN);
     } else {
-        gpio_write_pin_low(DRIVER_1_EN);
-        gpio_set_pin_output(DRIVER_1_EN);
-#ifdef DRIVER_2_EN
-        gpio_write_pin_low(DRIVER_2_EN);
-        gpio_set_pin_output(DRIVER_2_EN);
-#endif
+        gpio_write_pin_low(AW20216S_EN_PIN);
+        gpio_set_pin_output(AW20216S_EN_PIN);
     }
     aw20216s_powered_on = status;
 }

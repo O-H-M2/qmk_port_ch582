@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdbool.h>
 #include "gpio.h"
+#include "aw20216s.h"
 
 bool aw20216s_power_status_get();
 void aw20216s_power_toggle(bool status);
