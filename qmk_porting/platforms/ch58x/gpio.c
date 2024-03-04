@@ -92,7 +92,7 @@ __HIGH_CODE void gpio_strap()
     pin_a &= ~bX32KO;
 #endif
 #ifdef POWER_DETECT_PIN
-    setPinInputLow(POWER_DETECT_PIN);
+    gpio_set_pin_input_low(POWER_DETECT_PIN);
 #endif
 #if defined WS2812 && defined WS2812_EN_PIN
     if (WS2812_EN_PIN & 0x80000000) {
@@ -111,7 +111,7 @@ __HIGH_CODE void gpio_strap()
     // } else {
     //     pin_a &= ~(DRIVER_1_EN & 0x7FFFFFFF);
     // }
-    setPinInputHigh(DRIVER_1_CS);
+    gpio_set_pin_input_high(DRIVER_1_CS);
 #ifdef DRIVER_2_EN
     if (DRIVER_2_CS & 0x80000000) {
         pin_b &= ~(DRIVER_2_CS & 0x7FFFFFFF);
@@ -123,29 +123,29 @@ __HIGH_CODE void gpio_strap()
     // } else {
     //     pin_a &= ~(DRIVER_2_EN & 0x7FFFFFFF);
     // }
-    setPinInputHigh(DRIVER_2_CS);
+    gpio_set_pin_input_high(DRIVER_2_CS);
 #endif
 #endif
 #ifdef I2C_MASTER_ENABLE
 #ifdef I2C_IO_REMAPPING
     pin_b &= ~((B20 | B21) & 0x7FFFFFFF);
-    setPinInputHigh(B20 | B21);
+    gpio_set_pin_input_high(B20 | B21);
 #else
     pin_b &= ~((B12 | B13) & 0x7FFFFFFF);
-    setPinInputHigh(B12 | B13);
+    gpio_set_pin_input_high(B12 | B13);
 #endif
 #endif
 #ifdef UART_ENABLE
     pin_b &= ~((B4 | B7) & 0x7FFFFFFF);
-    setPinInputHigh(B4 | B7);
+    gpio_set_pin_input_high(B4 | B7);
 #endif
-    setPinInputLow(pin_a);
-    setPinInputLow(pin_b);
+    gpio_set_pin_input_low(pin_a);
+    gpio_set_pin_input_low(pin_b);
 #ifdef BATTERY_MEASURE_PIN
-    setPinInputHigh(BATTERY_MEASURE_PIN);
+    gpio_set_pin_input_high(BATTERY_MEASURE_PIN);
 #endif
 #ifdef POWER_DETECT_PIN
-    setPinInput(POWER_DETECT_PIN);
+    gpio_set_pin_input(POWER_DETECT_PIN);
 #endif
 }
 
@@ -180,15 +180,15 @@ __attribute__((noinline)) __attribute__((weak)) void battery_critical_gpio_prere
 #ifdef I2C_MASTER_ENABLE
 #ifdef I2C_IO_REMAPPING
     pin_b &= ~((B20 | B21) & 0x7FFFFFFF);
-    setPinInputHigh(B20 | B21);
+    gpio_set_pin_input_high(B20 | B21);
 #else
     pin_b &= ~((B12 | B13) & 0x7FFFFFFF);
-    setPinInputHigh(B12 | B13);
+    gpio_set_pin_input_high(B12 | B13);
 #endif
 #endif
 #ifdef UART_ENABLE
     pin_b &= ~((B4 | B7) & 0x7FFFFFFF);
-    setPinInputHigh(B4 | B7);
+    gpio_set_pin_input_high(B4 | B7);
 #endif
 #ifdef BATTERY_MEASURE_PIN
     if (BATTERY_MEASURE_PIN & 0x80000000) {
@@ -197,6 +197,6 @@ __attribute__((noinline)) __attribute__((weak)) void battery_critical_gpio_prere
         pin_a &= ~(BATTERY_MEASURE_PIN & 0x7FFFFFFF);
     }
 #endif
-    setPinInputLow(pin_a);
-    setPinInputLow(pin_b);
+    gpio_set_pin_input_low(pin_a);
+    gpio_set_pin_input_low(pin_b);
 }

@@ -74,8 +74,8 @@ static struct LCD_env_t {
 
 void LCD_on()
 {
-    writePinHigh(LCD_EN);
-    setPinOutput(LCD_EN);
+    gpio_write_pin_high(LCD_EN);
+    gpio_set_pin_output(LCD_EN);
     LCD_env.state = 1;
     LCD_env.initial_sequence = 0;
     LCD_env.auxiliary_timer = timer_read();
@@ -88,8 +88,8 @@ void LCD_on()
 
 void LCD_off()
 {
-    writePinLow(LCD_EN);
-    setPinOutput(LCD_EN);
+    gpio_write_pin_low(LCD_EN);
+    gpio_set_pin_output(LCD_EN);
     LCD_env.state = 0;
 
     if (LCD_env.state != user_config.lcd_state) {
@@ -114,14 +114,14 @@ void quit_power_level_2_kb()
 
 static inline void USB2LCD()
 {
-    writePinHigh(USB_SET);
-    setPinOutput(USB_SET);
+    gpio_write_pin_high(USB_SET);
+    gpio_set_pin_output(USB_SET);
 }
 
 static inline void USB2MCU()
 {
-    writePinLow(USB_SET);
-    setPinOutput(USB_SET);
+    gpio_write_pin_low(USB_SET);
+    gpio_set_pin_output(USB_SET);
 }
 
 static void bat_send(uint8_t bat_num)

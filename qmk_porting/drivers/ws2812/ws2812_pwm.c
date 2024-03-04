@@ -1,5 +1,6 @@
 #include "quantum.h"
 #include "ws2812.h"
+#include "ws2812_supplement.h"
 
 /* Adapted from https://github.com/joewa/WS2812-LED-Driver_ChibiOS/ */
 
@@ -14,7 +15,7 @@
 #define WS2812_DI_PIN     A10
 #endif
 
-static volatile bool ws2812_inited = false, ws2812_powered_on = false;
+static volatile bool ws2812_inited = false;
 
 #if WS2812_PWM_DRIVER == 1
 #define WS2812_PWM_CNT_END_REG R32_TMR1_CNT_END
@@ -272,7 +273,7 @@ static void ws2812_init(void)
     for (i = 0; i < WS2812_RESET_BIT_N; i++)
         ws2812_frame_buffer[i + WS2812_COLOR_BIT_N] = 0; // All reset bits are zero
 
-    setPinOutput(WS2812_DI_PIN);
+    gpio_set_pin_output(WS2812_DI_PIN);
 
     WS2812_PWM_CNT_END_REG = WS2812_PWM_PERIOD;
     WS2812_DMA_CONFIG(ENABLE, ws2812_frame_buffer[0], ws2812_frame_buffer[WS2812_BIT_N + 1]);
@@ -314,7 +315,7 @@ void ws2812_setleds(rgb_led_t *ledarray, uint16_t leds)
     if (!ws2812_inited) {
         ws2812_init();
     }
-    if (!ws2812_powered_on) {
+    if (!ws2812_power_get()) {
         ws2812_power_toggle(true);
     }
 
@@ -326,23 +327,4 @@ void ws2812_setleds(rgb_led_t *ledarray, uint16_t leds)
 #endif
     }
     WS2812_PWM_DMA_INTERRUPT_SET;
-}
-
-void ws2812_power_toggle(bool status)
-{
-    if (ws2812_powered_on == status) {
-        return;
-    }
-
-#ifdef WS2812_EN_PIN
-    if (status) {
-        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
-        setPinOutput(WS2812_EN_PIN);
-    } else {
-        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL ? 0 : 1);
-        setPinOutput(WS2812_EN_PIN);
-    }
-#endif
-
-    ws2812_powered_on = status;
 }

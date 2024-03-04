@@ -45,6 +45,6 @@ void set_default_rgb_layers(layer_state_t);
 static inline void led_caps(const bool on)
 {
 #ifdef LED_CAPS_LOCK_PIN
-    writePin(LED_CAPS_LOCK_PIN, !on);
+    gpio_write_pin(LED_CAPS_LOCK_PIN, !on);
 #endif
 }

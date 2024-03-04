@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Huckies <https://github.com/Huckies>
+Copyright 2024 Huckies <https://github.com/Huckies>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,31 +15,30 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "rgb_matrix.h"
-#include "aw20216s_supplement.h"
+#include "ws2812_supplement.h"
 
-static volatile bool aw20216s_powered_on = true;
+static bool ws2812_powered_on = false;
 
-inline bool aw20216s_power_status_get()
+bool ws2812_power_get()
 {
-    return aw20216s_powered_on;
+    return ws2812_powered_on;
 }
 
-inline void aw20216s_power_toggle(bool status)
+void ws2812_power_toggle(bool status)
 {
+    if (ws2812_powered_on == status) {
+        return;
+    }
+
+#ifdef WS2812_EN_PIN
     if (status) {
-        gpio_write_pin_high(AW20216S_EN_PIN);
-        gpio_set_pin_output(AW20216S_EN_PIN);
+        gpio_write_pin(WS2812_EN_PIN, WS2812_EN_LEVEL);
+        gpio_set_pin_output(WS2812_EN_PIN);
     } else {
-        gpio_write_pin_low(AW20216S_EN_PIN);
-        gpio_set_pin_output(AW20216S_EN_PIN);
+        gpio_write_pin(WS2812_EN_PIN, WS2812_EN_LEVEL ? 0 : 1);
+        gpio_set_pin_output(WS2812_EN_PIN);
     }
-    aw20216s_powered_on = status;
-}
+#endif
 
-void aw20216s_power_check()
-{
-    if (!aw20216s_power_status_get()) {
-        aw20216s_power_toggle(true);
-    }
+    ws2812_powered_on = status;
 }

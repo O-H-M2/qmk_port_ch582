@@ -31,7 +31,7 @@ typedef struct _gpio_pin_record_t {
 #define GPIO_FIELD_TO_BIT(_field) \
     ((_field) ? 1 : 0)
 
-#define setPinInput(pin)                          \
+#define gpio_set_pin_input(pin)                   \
     do {                                          \
         if ((pin)&0x80000000) {                   \
             R32_PB_PD_DRV &= ~((pin)&0x7FFFFFFF); \
@@ -43,7 +43,7 @@ typedef struct _gpio_pin_record_t {
             R32_PA_DIR &= ~(pin);                 \
         }                                         \
     } while (0);
-#define setPinInputHigh(pin)                      \
+#define gpio_set_pin_input_high(pin)              \
     do {                                          \
         if ((pin)&0x80000000) {                   \
             R32_PB_PD_DRV &= ~((pin)&0x7FFFFFFF); \
@@ -55,7 +55,7 @@ typedef struct _gpio_pin_record_t {
             R32_PA_DIR &= ~(pin);                 \
         }                                         \
     } while (0);
-#define setPinInputLow(pin)                      \
+#define gpio_set_pin_input_low(pin)              \
     do {                                         \
         if ((pin)&0x80000000) {                  \
             R32_PB_PD_DRV |= ((pin)&0x7FFFFFFF); \
@@ -67,7 +67,7 @@ typedef struct _gpio_pin_record_t {
             R32_PA_DIR &= ~(pin);                \
         }                                        \
     } while (0);
-#define setPinOutputPushPull(pin)                 \
+#define gpio_set_pin_output_push_pull(pin)        \
     do {                                          \
         if ((pin)&0x80000000) {                   \
             R32_PB_PD_DRV &= ~((pin)&0x7FFFFFFF); \
@@ -77,18 +77,18 @@ typedef struct _gpio_pin_record_t {
             R32_PA_DIR |= (pin);                  \
         }                                         \
     } while (0);
-#define setPinOutputOpenDrain(pin) _Static_assert(0, "WCH platform does not implement an open-drain output")
-#define setPinOutput(pin)          setPinOutputPushPull(pin)
+#define gpio_set_pin_output_open_drain(pin) _Static_assert(0, "WCH platform does not implement an open-drain output")
+#define gpio_set_pin_output(pin)            gpio_set_pin_output_push_pull(pin)
 
-#define writePinHigh(pin)    (((pin)&0x80000000) ? GPIOB_SetBits((pin)&0x7FFFFFFF) : GPIOA_SetBits(pin))
-#define writePinLow(pin)     (((pin)&0x80000000) ? GPIOB_ResetBits((pin)&0x7FFFFFFF) : GPIOA_ResetBits(pin))
-#define writePin(pin, level) ((level) ? writePinHigh(pin) : writePinLow(pin))
+#define gpio_write_pin_high(pin)   (((pin)&0x80000000) ? GPIOB_SetBits((pin)&0x7FFFFFFF) : GPIOA_SetBits(pin))
+#define gpio_write_pin_low(pin)    (((pin)&0x80000000) ? GPIOB_ResetBits((pin)&0x7FFFFFFF) : GPIOA_ResetBits(pin))
+#define gpio_write_pin(pin, level) ((level) ? gpio_write_pin_high(pin) : gpio_write_pin_low(pin))
 
-#define readPin(pin)   (GPIO_FIELD_TO_BIT(((pin)&0x80000000) ? GPIOB_ReadPortPin((pin)&0x7FFFFFFF) : GPIOA_ReadPortPin(pin)))
-#define togglePin(pin) (((pin)&0x80000000) ? GPIOB_InverseBits((pin)&0x7FFFFFFF) : GPIOA_InverseBits(pin))
+#define gpio_read_pin(pin)   (GPIO_FIELD_TO_BIT(((pin)&0x80000000) ? GPIOB_ReadPortPin((pin)&0x7FFFFFFF) : GPIOA_ReadPortPin(pin)))
+#define gpio_toggle_pin(pin) (((pin)&0x80000000) ? GPIOB_InverseBits((pin)&0x7FFFFFFF) : GPIOA_InverseBits(pin))
 
 /* self-defined functions */
-#define setPinInterruptRisingEdge(pin)                                                                       \
+#define gpio_set_pin_interrupt_rising_edge(pin)                                                              \
     do {                                                                                                     \
         if ((pin)&0x80000000) {                                                                              \
             pin_t pin_int = ((pin)&0x7FFFFFFF) | ((((pin)&0x7FFFFFFF) & (GPIO_Pin_22 | GPIO_Pin_23)) >> 14); \
@@ -104,7 +104,7 @@ typedef struct _gpio_pin_record_t {
             R16_PA_INT_EN |= (uint16_t)(pin);                                                                \
         }                                                                                                    \
     } while (0);
-#define setPinInterruptFallingEdge(pin)                                                                      \
+#define gpio_set_pin_interrupt_falling_edge(pin)                                                             \
     do {                                                                                                     \
         if ((pin)&0x80000000) {                                                                              \
             pin_t pin_int = ((pin)&0x7FFFFFFF) | ((((pin)&0x7FFFFFFF) & (GPIO_Pin_22 | GPIO_Pin_23)) >> 14); \
@@ -120,7 +120,7 @@ typedef struct _gpio_pin_record_t {
             R16_PA_INT_EN |= (uint16_t)(pin);                                                                \
         }                                                                                                    \
     } while (0);
-#define setPinInterruptHighLevel(pin)                                                                        \
+#define gpio_set_pin_interrupt_high_level(pin)                                                               \
     do {                                                                                                     \
         if ((pin)&0x80000000) {                                                                              \
             pin_t pin_int = ((pin)&0x7FFFFFFF) | ((((pin)&0x7FFFFFFF) & (GPIO_Pin_22 | GPIO_Pin_23)) >> 14); \
@@ -136,7 +136,7 @@ typedef struct _gpio_pin_record_t {
             R16_PA_INT_EN |= (uint16_t)(pin);                                                                \
         }                                                                                                    \
     } while (0);
-#define setPinInterruptLowLevel(pin)                                                                         \
+#define gpio_set_pin_interrupt_low_level(pin)                                                                \
     do {                                                                                                     \
         if ((pin)&0x80000000) {                                                                              \
             pin_t pin_int = ((pin)&0x7FFFFFFF) | ((((pin)&0x7FFFFFFF) & (GPIO_Pin_22 | GPIO_Pin_23)) >> 14); \

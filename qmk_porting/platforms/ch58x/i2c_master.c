@@ -51,12 +51,12 @@ void i2c_init()
 {
 #ifdef I2C_IO_REMAPPING
     R16_PIN_ALTERNATE |= RB_PIN_I2C;
-    setPinInputHigh(B20);
-    setPinInputHigh(B21);
+    gpio_set_pin_input_high(B20);
+    gpio_set_pin_input_high(B21);
 #else
     R16_PIN_ALTERNATE &= ~RB_PIN_I2C;
-    setPinInputHigh(B12);
-    setPinInputHigh(B13);
+    gpio_set_pin_input_high(B12);
+    gpio_set_pin_input_high(B13);
 #endif
     I2C_Init(I2C_Mode_I2C, I2C_CLOCK_SPEED, I2C_DutyCycle_16_9, I2C_Ack_Enable, I2C_AckAddr_7bit, TxAdderss);
     while (I2C_GetFlagStatus(I2C_FLAG_BUSY)) {
@@ -168,7 +168,7 @@ i2c_status_t i2c_receive(uint8_t address, uint8_t *data, uint16_t length, uint16
     return I2C_STATUS_SUCCESS;
 }
 
-i2c_status_t i2c_writeReg(uint8_t devaddr, uint8_t regaddr, const uint8_t *data, uint16_t length, uint16_t timeout)
+i2c_status_t i2c_write_register(uint8_t devaddr, uint8_t regaddr, const uint8_t *data, uint16_t length, uint16_t timeout)
 {
     uint8_t buffer[length + 1];
 
@@ -180,7 +180,7 @@ i2c_status_t i2c_writeReg(uint8_t devaddr, uint8_t regaddr, const uint8_t *data,
     return i2c_transmit(devaddr, (const uint8_t *)buffer, length + 1, timeout);
 }
 
-i2c_status_t i2c_writeReg16(uint8_t devaddr, uint16_t regaddr, const uint8_t *data, uint16_t length, uint16_t timeout)
+i2c_status_t i2c_write_register16(uint8_t devaddr, uint16_t regaddr, const uint8_t *data, uint16_t length, uint16_t timeout)
 {
     uint8_t buffer[length + 2];
 
@@ -193,7 +193,7 @@ i2c_status_t i2c_writeReg16(uint8_t devaddr, uint16_t regaddr, const uint8_t *da
     return i2c_transmit(devaddr, (const uint8_t *)buffer, length + 2, timeout);
 }
 
-i2c_status_t i2c_readReg(uint8_t devaddr, uint8_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
+i2c_status_t i2c_read_register(uint8_t devaddr, uint8_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
 {
     i2c_status_t status = i2c_start(devaddr, timeout);
 
@@ -258,7 +258,7 @@ i2c_status_t i2c_readReg(uint8_t devaddr, uint8_t regaddr, uint8_t *data, uint16
     return I2C_STATUS_SUCCESS;
 }
 
-i2c_status_t i2c_readReg16(uint8_t devaddr, uint16_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
+i2c_status_t i2c_read_register16(uint8_t devaddr, uint16_t regaddr, uint8_t *data, uint16_t length, uint16_t timeout)
 {
     i2c_status_t status = i2c_start(devaddr, timeout);
 
@@ -327,4 +327,16 @@ i2c_status_t i2c_readReg16(uint8_t devaddr, uint16_t regaddr, uint8_t *data, uin
     i2c_power_toggle(false);
 
     return I2C_STATUS_SUCCESS;
+}
+
+__attribute__((weak)) i2c_status_t i2c_ping_address(uint8_t address, uint16_t timeout)
+{
+    i2c_status_t status = i2c_start(address, timeout);
+
+    i2c_stop();
+
+    wait_us(200);
+    i2c_power_toggle(false);
+
+    return status;
 }

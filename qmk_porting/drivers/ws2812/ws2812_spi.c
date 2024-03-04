@@ -1,9 +1,10 @@
 #include "quantum.h"
 #include "ws2812.h"
+#include "ws2812_supplement.h"
 
 // Define SPI config speed
 #ifndef WS2812_SPI_DIVISOR
-#define WS2812_SPI_DIVISOR FREQ_SYS / 3200000 + (FREQ_SYS % 3200000 ? 1 : 0) //target 3.2MHz
+#define WS2812_SPI_DIVISOR FREQ_SYS / 3200000 + (FREQ_SYS % 3200000 ? 1 : 0) // target 3.2MHz
 #endif
 
 #define BYTES_FOR_LED_BYTE 4
@@ -18,12 +19,12 @@
 #define PREAMBLE_SIZE 4
 
 __attribute__((aligned(4))) static uint8_t txbuf[PREAMBLE_SIZE + DATA_SIZE + RESET_SIZE] = { 0 };
-static volatile bool ws2812_inited = false, ws2812_powered_on = false, spi_transfering = false;
+static volatile bool ws2812_inited = false, spi_transfering = false;
 
 static void ws2812_init()
 {
     // we have only one spi controller
-    setPinOutput(WS2812_DI_PIN);
+    gpio_set_pin_output(WS2812_DI_PIN);
 #ifdef SPI_IO_REMAPPING
     R16_PIN_ALTERNATE |= RB_PIN_SPI0;
 #else
@@ -136,7 +137,7 @@ void ws2812_setleds(rgb_led_t *ledarray, uint16_t leds)
     if (!ws2812_inited) {
         ws2812_init();
     }
-    if (!ws2812_powered_on) {
+    if (!ws2812_power_get()) {
         ws2812_power_toggle(true);
     }
 
@@ -147,23 +148,4 @@ void ws2812_setleds(rgb_led_t *ledarray, uint16_t leds)
     // Send async - each led takes ~0.03ms, 50 leds ~1.5ms, animations flushing faster than send will cause issues.
     // Instead spiSend can be used to send synchronously (or the thread logic can be added back).
     SPI0_StartDMA(txbuf, sizeof(txbuf) / sizeof(txbuf[0]));
-}
-
-void ws2812_power_toggle(bool status)
-{
-    if (ws2812_powered_on == status) {
-        return;
-    }
-
-#ifdef WS2812_EN_PIN
-    if (status) {
-        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
-        setPinOutput(WS2812_EN_PIN);
-    } else {
-        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL ? 0 : 1);
-        setPinOutput(WS2812_EN_PIN);
-    }
-#endif
-
-    ws2812_powered_on = status;
 }

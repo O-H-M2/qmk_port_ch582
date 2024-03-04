@@ -49,10 +49,10 @@ bool shutdown_kb(bool jump_to_bootloader)
     pin_t encoders_pad_a[] = ENCODERS_PAD_A, encoders_pad_b[] = ENCODERS_PAD_B;
 
     for (uint8_t i = 0; i < sizeof(encoders_pad_a) / sizeof(encoders_pad_a[0]); i++) {
-        setPinInputLow(encoders_pad_a[i]);
+        gpio_set_pin_input_low(encoders_pad_a[i]);
     }
     for (uint8_t i = 0; i < sizeof(encoders_pad_b) / sizeof(encoders_pad_b[0]); i++) {
-        setPinInputLow(encoders_pad_b[i]);
+        gpio_set_pin_input_low(encoders_pad_b[i]);
     }
 #endif
 
@@ -73,9 +73,9 @@ void platform_setup()
     DBG_INIT;
     PRINT("App " MACRO2STR(__GIT_VERSION__) ", build on %s\n", QMK_BUILDDATE);
 #else
-    writePinHigh(A9);
-    setPinOutput(A9);
-    setPinInputHigh(A8);
+    gpio_write_pin_high(A9);
+    gpio_set_pin_output(A9);
+    gpio_set_pin_input_high(A8);
     UART1_DefInit();
     UART1_BaudRateCfg(DEBUG_BAUDRATE);
 
@@ -92,20 +92,20 @@ void platform_setup()
         __nop();
     }
     R8_UART1_IER = RB_IER_RESET;
-    setPinInputLow(A8);
-    setPinInputLow(A9);
+    gpio_set_pin_input_low(A8);
+    gpio_set_pin_input_low(A9);
 #endif
 
     {
-        // preserve BOOTMAGIC_LITE_ROW and BOOTMAGIC_LITE_COLUMN to eeprom for future use
+        // preserve BOOTMAGIC_ROW and BOOTMAGIC_COLUMN to eeprom for future use
         uint8_t buffer[EEPROM_PAGE_SIZE], ret;
 
         do {
             ret = EEPROM_READ(QMK_EEPROM_RESERVED_START_POSITION, buffer, sizeof(buffer));
         } while (ret);
-        if (buffer[1] != BOOTMAGIC_LITE_ROW || buffer[2] != BOOTMAGIC_LITE_COLUMN) {
-            buffer[1] = BOOTMAGIC_LITE_ROW;
-            buffer[2] = BOOTMAGIC_LITE_COLUMN;
+        if (buffer[1] != BOOTMAGIC_ROW || buffer[2] != BOOTMAGIC_COLUMN) {
+            buffer[1] = BOOTMAGIC_ROW;
+            buffer[2] = BOOTMAGIC_COLUMN;
             do {
                 ret = EEPROM_ERASE(QMK_EEPROM_RESERVED_START_POSITION, EEPROM_PAGE_SIZE) ||
                       EEPROM_WRITE(QMK_EEPROM_RESERVED_START_POSITION, buffer, EEPROM_PAGE_SIZE);

@@ -65,6 +65,22 @@ if(ENCODER_ENABLE)
         add_definitions(-DENCODER_MAP_ENABLE)
         message(STATUS "ENCODER_MAP_ENABLE")
     endif()
+
+    if(ENCODER_DRIVER STREQUAL "quadrature")
+        add_definitions(-DENCODER_DRIVER_QUADRATURE)
+        message(STATUS "ENCODER_DRIVER = ${ENCODER_DRIVER}")
+        list(APPEND quantum_SOURCES
+            "${QMK_BASE_DIR}/drivers/encoder/encoder_quadrature.c"
+        )
+    elseif(DEFINED ENCODER_DRIVER AND EXISTS "${ENCODER_DRIVER}")
+        add_definitions(-DENCODER_DRIVER_CUSTOM)
+        message(STATUS "CUSTOM_ENCODER_DRIVER: ${ENCODER_DRIVER}")
+        list(APPEND QMK_PORTING_SOURCES
+            "${ENCODER_DRIVER}"
+        )
+    else()
+        message(FATAL_ERROR "Unsupported Encoder Driver!")
+    endif()
 endif()
 
 # UCIS_ENABLE
@@ -124,7 +140,6 @@ endif()
 if(VIA_ENABLE)
     add_definitions(-DVIA_ENABLE -DRAW_ENABLE -DDYNAMIC_KEYMAP_ENABLE)
     set(EEPROM_ENABLE ON CACHE BOOL "QMK" FORCE)
-    set(BOOTMAGIC_ENABLE ON CACHE BOOL "QMK" FORCE)
     message(STATUS "VIA_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/dynamic_keymap.c"
@@ -139,6 +154,12 @@ if(DIP_SWITCH_ENABLE)
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/dip_switch.c"
     )
+
+    # DIP_SWITCH_MAP_ENABLE
+    if(DIP_SWITCH_MAP_ENABLE)
+        add_definitions(-DDIP_SWITCH_MAP_ENABLE)
+        message(STATUS "DIP_SWITCH_MAP_ENABLE")
+    endif()
 endif()
 
 # COMMAND_ENABLE
@@ -148,16 +169,6 @@ if(COMMAND_ENABLE)
     message(STATUS "COMMAND_ENABLE")
     list(APPEND quantum_SOURCES
         "${QMK_BASE_DIR}/quantum/command.c"
-    )
-endif()
-
-# BOOTMAGIC_ENABLE
-if(BOOTMAGIC_ENABLE)
-    add_definitions(-DBOOTMAGIC_LITE -DBOOTMAGIC_ENABLE)
-    message(STATUS "BOOTMAGIC_ENABLE")
-    list(APPEND quantum_SOURCES
-        "${QMK_BASE_DIR}/quantum/bootmagic/magic.c"
-        "${QMK_BASE_DIR}/quantum/bootmagic/bootmagic_lite.c"
     )
 endif()
 
@@ -304,17 +315,21 @@ if(WS2812_REQUIRED)
 
     message(STATUS "WS2812_REQUIRED")
     message(STATUS "WS2812_DRIVER = ${WS2812_DRIVER}")
+    include_directories(${QMK_BASE_DIR}/drivers)
+    include_directories(${CMAKE_CURRENT_LIST_DIR}/drivers/ws2812)
 
     if(WS2812_DRIVER STREQUAL "spi")
         add_definitions(-DWS2812_DRIVER_SPI)
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/drivers/ws2812/ws2812_spi.c"
+            "${CMAKE_CURRENT_LIST_DIR}/drivers/ws2812/ws2812_supplement.c"
         )
         set(SPI_OCCUPIED ON CACHE BOOL "KB" FORCE)
     elseif(WS2812_DRIVER STREQUAL "pwm")
         add_definitions(-DWS2812_DRIVER_PWM)
         list(APPEND QMK_PORTING_SOURCES
             "${CMAKE_CURRENT_LIST_DIR}/drivers/ws2812/ws2812_pwm.c"
+            "${CMAKE_CURRENT_LIST_DIR}/drivers/ws2812/ws2812_supplement.c"
         )
     else()
         message(FATAL_ERROR "Unsupported WS2812 Driver!")

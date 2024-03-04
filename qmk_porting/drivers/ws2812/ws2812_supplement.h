@@ -1,5 +1,5 @@
 /*
-Copyright 2022 Huckies <https://github.com/Huckies>
+Copyright 2024 Huckies <https://github.com/Huckies>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
+#include <stdint.h>
 #include <stdbool.h>
 #include "gpio.h"
-#include "aw20216s.h"
 
-bool aw20216s_power_status_get();
-void aw20216s_power_toggle(bool status);
-void aw20216s_power_check();
+#ifndef WS2812_TIMEOUT
+#define WS2812_TIMEOUT 100
+#endif
+
+void ws2812_power_toggle(bool status);
+bool ws2812_power_get();

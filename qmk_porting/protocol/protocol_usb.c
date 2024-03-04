@@ -86,8 +86,8 @@ static void platform_initialize()
         __nop();
     }
     UART1_Reset();
-    setPinInputLow(A8);
-    setPinInputLow(A9);
+    gpio_set_pin_input_low(A8);
+    gpio_set_pin_input_low(A9);
 #endif
 }
 
