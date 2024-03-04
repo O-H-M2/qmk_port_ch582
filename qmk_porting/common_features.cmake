@@ -65,6 +65,22 @@ if(ENCODER_ENABLE)
         add_definitions(-DENCODER_MAP_ENABLE)
         message(STATUS "ENCODER_MAP_ENABLE")
     endif()
+
+    if(ENCODER_DRIVER STREQUAL "quadrature")
+        add_definitions(-DENCODER_DRIVER_QUADRATURE)
+        message(STATUS "ENCODER_DRIVER = ${ENCODER_DRIVER}")
+        list(APPEND quantum_SOURCES
+            "${QMK_BASE_DIR}/drivers/encoder/encoder_quadrature.c"
+        )
+    elseif(DEFINED ENCODER_DRIVER AND EXISTS "${ENCODER_DRIVER}")
+        add_definitions(-DENCODER_DRIVER_CUSTOM)
+        message(STATUS "CUSTOM_ENCODER_DRIVER: ${ENCODER_DRIVER}")
+        list(APPEND QMK_PORTING_SOURCES
+            "${ENCODER_DRIVER}"
+        )
+    else()
+        message(FATAL_ERROR "Unsupported Encoder Driver!")
+    endif()
 endif()
 
 # UCIS_ENABLE
