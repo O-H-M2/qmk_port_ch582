@@ -32,7 +32,7 @@ __attribute__((weak)) __HIGH_CODE void spi_master_post_transmit_cb()
 __HIGH_CODE static void spi_stop_internal()
 {
     if (currentSlavePin != NO_PIN) {
-        writePinHigh(currentSlavePin);
+        gpio_write_pin_high(currentSlavePin);
     }
     // disable interrupt
     R8_SPI0_INT_FLAG = RB_SPI_IF_FST_BYTE | RB_SPI_IF_FIFO_OV | RB_SPI_IF_DMA_END | RB_SPI_IF_FIFO_HF | RB_SPI_IF_BYTE_END | RB_SPI_IF_CNT_END;
@@ -64,14 +64,14 @@ void spi_init()
     }
 #ifdef SPI_IO_REMAPPING
     R16_PIN_ALTERNATE |= RB_PIN_SPI0;
-    setPinOutput(B13);
-    setPinOutput(B14);
-    setPinInputHigh(B15);
+    gpio_set_pin_output(B13);
+    gpio_set_pin_output(B14);
+    gpio_set_pin_input_high(B15);
 #else
     R16_PIN_ALTERNATE &= ~RB_PIN_SPI0;
-    setPinOutput(A13);
-    setPinOutput(A14);
-    setPinInputHigh(A15);
+    gpio_set_pin_output(A13);
+    gpio_set_pin_output(A14);
+    gpio_set_pin_input_high(A15);
 #endif
     R8_SPI0_CTRL_MOD = RB_SPI_ALL_CLEAR;
     R8_SPI0_CTRL_MOD = RB_SPI_MOSI_OE | RB_SPI_SCK_OE;
@@ -158,8 +158,8 @@ bool spi_start(pin_t slavePin, bool lsbFirst, uint8_t mode, uint16_t divisor)
     spi_master_pre_transmit_cb();
 
     currentSlavePin = slavePin;
-    writePinLow(currentSlavePin);
-    setPinOutput(currentSlavePin);
+    gpio_write_pin_low(currentSlavePin);
+    gpio_set_pin_output(currentSlavePin);
 
     return true;
 }

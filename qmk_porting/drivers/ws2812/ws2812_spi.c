@@ -3,7 +3,7 @@
 
 // Define SPI config speed
 #ifndef WS2812_SPI_DIVISOR
-#define WS2812_SPI_DIVISOR FREQ_SYS / 3200000 + (FREQ_SYS % 3200000 ? 1 : 0) //target 3.2MHz
+#define WS2812_SPI_DIVISOR FREQ_SYS / 3200000 + (FREQ_SYS % 3200000 ? 1 : 0) // target 3.2MHz
 #endif
 
 #define BYTES_FOR_LED_BYTE 4
@@ -23,7 +23,7 @@ static volatile bool ws2812_inited = false, ws2812_powered_on = false, spi_trans
 static void ws2812_init()
 {
     // we have only one spi controller
-    setPinOutput(WS2812_DI_PIN);
+    gpio_set_pin_output(WS2812_DI_PIN);
 #ifdef SPI_IO_REMAPPING
     R16_PIN_ALTERNATE |= RB_PIN_SPI0;
 #else
@@ -157,11 +157,11 @@ void ws2812_power_toggle(bool status)
 
 #ifdef WS2812_EN_PIN
     if (status) {
-        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL);
-        setPinOutput(WS2812_EN_PIN);
+        gpio_write_pin(WS2812_EN_PIN, WS2812_EN_LEVEL);
+        gpio_set_pin_output(WS2812_EN_PIN);
     } else {
-        writePin(WS2812_EN_PIN, WS2812_EN_LEVEL ? 0 : 1);
-        setPinOutput(WS2812_EN_PIN);
+        gpio_write_pin(WS2812_EN_PIN, WS2812_EN_LEVEL ? 0 : 1);
+        gpio_set_pin_output(WS2812_EN_PIN);
     }
 #endif
 

@@ -63,16 +63,16 @@ bool dip_switch_update_kb(uint8_t index, bool active)
         case 0:
             if (active) // run once when tirggle
             {
-                // writePinHigh(B12); // for debug
-                // setPinOutput(B12);
+                // gpio_write_pin_high(B12); // for debug
+                // gpio_set_pin_output(B12);
                 if (kbd_protocol_type != kbd_protocol_ble) {
                     wait_ms(50); // for debounce
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_BLE);
                     soft_reset_keyboard();
                 }
             } else {
-                // writePinLow(B12); // for debug
-                // setPinOutput(B12);
+                // gpio_write_pin_low(B12); // for debug
+                // gpio_set_pin_output(B12);
                 if (kbd_protocol_type != kbd_protocol_usb) {
                     wait_ms(50); // for debounce
                     bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);

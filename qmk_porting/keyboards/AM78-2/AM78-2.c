@@ -68,9 +68,9 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max)
 // logo灯板会在USB固件下常亮，双模固件下跟随WS2812，不是bug
 void keyboard_pre_init_user(void)
 {
-    writePinHigh(ULIGHT_IO);
+    gpio_write_pin_high(ULIGHT_IO);
 
-    setPinOutput(ULIGHT_IO);
+    gpio_set_pin_output(ULIGHT_IO);
 }
 
 int main()

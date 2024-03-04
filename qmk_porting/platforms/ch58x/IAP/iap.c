@@ -330,8 +330,8 @@ jump:
         R8_USB_CTRL |= RB_UC_RESET_SIE | RB_UC_CLR_ALL;
         my_delay_ms(10);
         R8_USB_CTRL &= ~(RB_UC_RESET_SIE | RB_UC_CLR_ALL);
-        setPinInputLow(B10);
-        setPinInputLow(B11);
+        gpio_set_pin_input_low(B10);
+        gpio_set_pin_input_low(B11);
     }
     ((void (*)(void))((int *)(jump_address)))();
 
@@ -464,9 +464,9 @@ int main()
     }
 #else
     // manually initialize uart1 and send some debug information
-    writePinHigh(A9);
-    setPinOutput(A9);
-    setPinInputHigh(A8);
+    gpio_write_pin_high(A9);
+    gpio_set_pin_output(A9);
+    gpio_set_pin_input_high(A8);
 
     uint32_t x;
 
@@ -491,14 +491,14 @@ int main()
         __nop();
     }
     R8_UART1_IER = RB_IER_RESET;
-    setPinInputLow(A8);
-    setPinInputLow(A9);
+    gpio_set_pin_input_low(A8);
+    gpio_set_pin_input_low(A9);
 #endif
 
 #if !defined ESB_ENABLE || ESB_ENABLE == 1
 #ifdef BATTERY_MEASURE_PIN
     // do a power check, only on keyboard
-    setPinInput(BATTERY_MEASURE_PIN);
+    gpio_set_pin_input(BATTERY_MEASURE_PIN);
     battery_init();
 
     uint16_t adc = battery_measure();
@@ -538,21 +538,21 @@ int main()
         break;
 #endif
 
-        writePinHigh(input_pin);
-        setPinOutput(input_pin);
+        gpio_write_pin_high(input_pin);
+        gpio_set_pin_output(input_pin);
         my_delay_ms(5);
-        setPinInputHigh(input_pin);
-        writePinLow(output_pin);
-        setPinOutput(output_pin);
+        gpio_set_pin_input_high(input_pin);
+        gpio_write_pin_low(output_pin);
+        gpio_set_pin_output(output_pin);
 
         bool bootmagic = false;
 
         do {
-            if (readPin(input_pin)) {
+            if (gpio_read_pin(input_pin)) {
                 break;
             }
             my_delay_ms(DEBOUNCE * 3);
-            if (readPin(input_pin)) {
+            if (gpio_read_pin(input_pin)) {
                 break;
             }
             bootmagic = true;
@@ -575,8 +575,8 @@ int main()
     usbd_desc_register(msc_ram_descriptor);
     usbd_add_interface(usbd_msc_init_intf(&intf0, MSC_OUT_EP, MSC_IN_EP));
 
-    setPinInput(B10);
-    setPinInput(B11);
+    gpio_set_pin_input(B10);
+    gpio_set_pin_input(B11);
 
     usbd_initialize();
 

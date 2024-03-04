@@ -128,8 +128,8 @@ __attribute__((noinline)) static void battery_critical_prerequisite()
         PFIC_EnableIRQ(GPIO_A_IRQn);
         PFIC_DisableIRQ(GPIO_B_IRQn);
     }
-    setPinInputLow(POWER_DETECT_PIN);
-    setPinInterruptRisingEdge(POWER_DETECT_PIN);
+    gpio_set_pin_input_low(POWER_DETECT_PIN);
+    gpio_set_pin_interrupt_rising_edge(POWER_DETECT_PIN);
 #endif
     do {
         sys_safe_access_enable();
@@ -190,7 +190,7 @@ __attribute__((weak)) void battery_init()
         case A13:
         case A14:
         case A15:
-            setPinInput(BATTERY_MEASURE_PIN);
+            gpio_set_pin_input(BATTERY_MEASURE_PIN);
             break;
         default:
             break;
@@ -234,7 +234,7 @@ __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
 
     if ((adcVal < battery_map[0] * 10)
 #ifdef POWER_DETECT_PIN
-        && !readPin(POWER_DETECT_PIN)
+        && !gpio_read_pin(POWER_DETECT_PIN)
 #endif
     ) {
         PRINT("Battery level critical.\n");
@@ -251,7 +251,7 @@ __attribute__((weak)) uint8_t battery_calculate(uint16_t adcVal)
 
 done:
 #ifdef POWER_DETECT_PIN
-    if (!readPin(POWER_DETECT_PIN)) {
+    if (!gpio_read_pin(POWER_DETECT_PIN)) {
         // with cable unpluged, battery level should get lower only
         if (percent < battery_get_last_percentage()) {
             battery_update_last_percentage(percent);

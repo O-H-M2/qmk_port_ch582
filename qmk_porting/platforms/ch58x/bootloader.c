@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 bool bootmagic_allow_jump()
 {
 #ifdef POWER_DETECT_PIN
-    if (!readPin(POWER_DETECT_PIN)) {
+    if (!gpio_read_pin(POWER_DETECT_PIN)) {
         // cable removed
         return false;
     }
@@ -97,7 +97,7 @@ void bootloader_select_boot_mode()
 #if !defined ESB_ENABLE || ESB_ENABLE == 1
         if (mode == BOOTLOADER_BOOT_MODE_USB) {
 #ifdef POWER_DETECT_PIN
-        if (!readPin(POWER_DETECT_PIN)) {
+        if (!gpio_read_pin(POWER_DETECT_PIN)) {
             PRINT("Cable not connected, USB mode is disabled.\n");
 #ifdef ESB_ENABLE
             bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);

@@ -51,12 +51,12 @@ void i2c_init()
 {
 #ifdef I2C_IO_REMAPPING
     R16_PIN_ALTERNATE |= RB_PIN_I2C;
-    setPinInputHigh(B20);
-    setPinInputHigh(B21);
+    gpio_set_pin_input_high(B20);
+    gpio_set_pin_input_high(B21);
 #else
     R16_PIN_ALTERNATE &= ~RB_PIN_I2C;
-    setPinInputHigh(B12);
-    setPinInputHigh(B13);
+    gpio_set_pin_input_high(B12);
+    gpio_set_pin_input_high(B13);
 #endif
     I2C_Init(I2C_Mode_I2C, I2C_CLOCK_SPEED, I2C_DutyCycle_16_9, I2C_Ack_Enable, I2C_AckAddr_7bit, TxAdderss);
     while (I2C_GetFlagStatus(I2C_FLAG_BUSY)) {

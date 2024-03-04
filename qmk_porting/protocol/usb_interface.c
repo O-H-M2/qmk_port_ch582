@@ -193,8 +193,8 @@ void usb_dc_low_level_deinit()
         R8_SLP_CLK_OFF1 |= RB_SLP_CLK_USB;
         sys_safe_access_disable();
     } while (!(R8_SLP_CLK_OFF1 & RB_SLP_CLK_USB));
-    setPinInputLow(B10);
-    setPinInputLow(B11);
+    gpio_set_pin_input_low(B10);
+    gpio_set_pin_input_low(B11);
 }
 
 int usb_dc_deinit()
@@ -361,8 +361,8 @@ void init_usb_driver()
         sys_safe_access_disable();
     } while (R8_SLP_CLK_OFF1 & RB_SLP_CLK_USB);
 
-    setPinInput(B10);
-    setPinInput(B11);
+    gpio_set_pin_input(B10);
+    gpio_set_pin_input(B11);
 
     usbd_initialize();
 }
