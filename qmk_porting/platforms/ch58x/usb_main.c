@@ -15,13 +15,13 @@ static uint16_t usb_ProcessEvent(uint8_t task_id, uint16_t events)
         keyboard_task();
         keyboard_check_protocol_mode();
         housekeeping_task();
-#ifdef POWER_DETECT_PIN
-        if (!gpio_read_pin(POWER_DETECT_PIN)) {
-            // cable removed
-            PRINT("Cable pulled out.\n");
-            mcu_reset();
-        }
-#endif
+// #ifdef POWER_DETECT_PIN
+//         if (!gpio_read_pin(POWER_DETECT_PIN)) {
+//             // cable removed
+//             PRINT("Cable pulled out.\n");
+//             mcu_reset();
+//         }
+// #endif
         tmos_start_task(task_id, USB_RUN_QMK_TASK_EVT, 0);
 
         return (events ^ USB_RUN_QMK_TASK_EVT);
