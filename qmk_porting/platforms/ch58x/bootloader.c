@@ -95,10 +95,9 @@ void bootloader_select_boot_mode()
         __builtin_trap();
     } else
 #if !defined ESB_ENABLE || ESB_ENABLE == 1
+        // usb模式只因io状态进入
         if (mode == BOOTLOADER_BOOT_MODE_USB) {
-#ifdef POWER_DETECT_PIN
-        if (!gpio_read_pin(POWER_DETECT_PIN)) {
-            PRINT("Cable not connected, USB mode is disabled.\n");
+            PRINT("unexpected usb mode .\n");
 #ifdef ESB_ENABLE
             bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_ESB);
             mode = BOOTLOADER_BOOT_MODE_ESB;
@@ -109,8 +108,6 @@ void bootloader_select_boot_mode()
             PRINT("Default to BLE.\n");
 #endif
         }
-#endif
-    }
 #else
         if (mode != BOOTLOADER_BOOT_MODE_ESB) {
         PRINT("Dongle has fixed mode, will correct.\n");
@@ -118,6 +115,13 @@ void bootloader_select_boot_mode()
     }
 #endif
 
+#ifdef MODE_DETECT_PIN
+    if (!gpio_read_pin(MODE_DETECT_PIN)) { // power on
+        mode = BOOTLOADER_BOOT_MODE_USB;
+    }
+#else
+#warning "MODE_DETECT_PIN undefined."
+#endif
     //! TODO: for test only!
     // mode = BOOTLOADER_BOOT_MODE_BLE;
     // mode = BOOTLOADER_BOOT_MODE_ESB;

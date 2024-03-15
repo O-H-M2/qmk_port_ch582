@@ -147,6 +147,9 @@ __HIGH_CODE void gpio_strap()
 #ifdef POWER_DETECT_PIN
     gpio_set_pin_input(POWER_DETECT_PIN);
 #endif
+#ifdef MODE_DETECT_PIN
+    gpio_set_pin_input_high(MODE_DETECT_PIN);
+#endif
 }
 
 __attribute__((noinline)) __attribute__((weak)) void battery_critical_gpio_prerequisite()
