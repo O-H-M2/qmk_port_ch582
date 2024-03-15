@@ -114,7 +114,7 @@ void bootloader_select_boot_mode()
         mode = BOOTLOADER_BOOT_MODE_ESB;
     }
 #endif
-
+#if ESB_ENABLE != 2
 #ifdef MODE_DETECT_PIN
     if (gpio_read_pin(MODE_DETECT_PIN)) { // power on
         mode = BOOTLOADER_BOOT_MODE_USB;
@@ -122,6 +122,7 @@ void bootloader_select_boot_mode()
     }
 #else
 #warning "MODE_DETECT_PIN undefined."
+#endif
 #endif
     //! TODO: for test only!
     // mode = BOOTLOADER_BOOT_MODE_BLE;
