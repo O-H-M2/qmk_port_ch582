@@ -116,8 +116,9 @@ void bootloader_select_boot_mode()
 #endif
 
 #ifdef MODE_DETECT_PIN
-    if (!gpio_read_pin(MODE_DETECT_PIN)) { // power on
+    if (gpio_read_pin(MODE_DETECT_PIN)) { // power on
         mode = BOOTLOADER_BOOT_MODE_USB;
+        PRINT("USB mode triger by MODE_DETECT_PIN\n");
     }
 #else
 #warning "MODE_DETECT_PIN undefined."
