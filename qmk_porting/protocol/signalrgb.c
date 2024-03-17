@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include "signalrgb.h"
 
+static uint8_t enabled = false;
 static uint8_t *signalrgb_buffer = NULL;
 
 static void get_qmk_version() // Grab the QMK Version the board's firmware is built off of
@@ -80,12 +81,14 @@ static void led_streaming(uint8_t *data) // Stream data from HID Packets to Keyb
 
 void signalrgb_mode_enable()
 {
+    enabled = true;
     rgb_matrix_enable_noeeprom();
     auxiliary_mode_confirm(); // Set RGB Matrix to SignalRGB Compatible Mode
 }
 
 void signalrgb_mode_disable()
 {
+    enabled = false;
     rgb_matrix_reload_from_eeprom(); // Reloading last effect from eeprom
 }
 
@@ -117,7 +120,9 @@ bool signalrgb_command_handler(uint8_t *data, uint8_t length)
             get_unique_identifier();
             break;
         case SIGNALRGB_STREAM_RGB_DATA:
-            auxiliary_mode_confirm();
+            if (enabled) {
+                auxiliary_mode_confirm();
+            }
             led_streaming(data);
             break;
         case SIGNALRGB_SET_SIGNALRGB_MODE_ENABLE:

@@ -59,7 +59,9 @@ void dynamic_lighting_UpdateRequestLampFromLampAttributesRequestReport(uint8_t *
 
 void dynamic_lighting_UpdateLampStateCacheFromMultiUpdateReport(uint8_t *data, uint16_t length)
 {
-    auxiliary_mode_confirm();
+    if (!m_isAutonomousMode) {
+        auxiliary_mode_confirm();
+    }
 
     LampMultiUpdateReport *report = (LampMultiUpdateReport *)data;
 
@@ -81,7 +83,9 @@ void dynamic_lighting_UpdateLampStateCacheFromMultiUpdateReport(uint8_t *data, u
 
 void dynamic_lighting_UpdateLampStateCacheFromRangeUpdateReport(uint8_t *data, uint16_t length)
 {
-    auxiliary_mode_confirm();
+    if (!m_isAutonomousMode) {
+        auxiliary_mode_confirm();
+    }
 
     LampRangeUpdateReport *report = (LampRangeUpdateReport *)data;
 
