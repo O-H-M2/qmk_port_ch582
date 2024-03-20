@@ -73,7 +73,11 @@ void bootloader_boot_mode_set(uint8_t mode)
               EEPROM_WRITE(QMK_EEPROM_RESERVED_START_POSITION, buffer, EEPROM_PAGE_SIZE);
     } while (ret);
 }
-
+uint8_t boot_mode_now;
+uint8_t boot_mode_get_noeeprom()
+{
+    return boot_mode_now;
+}
 uint8_t bootloader_boot_mode_get()
 {
     uint8_t buffer, ret;
@@ -88,7 +92,7 @@ uint8_t bootloader_boot_mode_get()
 void bootloader_select_boot_mode()
 {
     uint8_t mode = bootloader_boot_mode_get();
-
+    boot_mode_now = mode;
     if (mode == BOOTLOADER_BOOT_MODE_IAP) {
         PRINT("Fatal: Boot mode tampering detected!\n");
         WAIT_FOR_DBG;
@@ -117,9 +121,7 @@ void bootloader_select_boot_mode()
 #if ESB_ENABLE != 2
 #ifdef MODE_DETECT_PIN
     if (gpio_read_pin(MODE_DETECT_PIN)) { // 如果为USB模式
-        if (mode != BOOTLOADER_BOOT_MODE_USB) {
-            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);//为kb层级可以正常读取设备所处BOOT状态
-        }
+        boot_mode_now = BOOTLOADER_BOOT_MODE_USB;
         mode = BOOTLOADER_BOOT_MODE_USB;
         PRINT("USB mode triger by MODE_DETECT_PIN\n");
     }
