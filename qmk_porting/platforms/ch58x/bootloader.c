@@ -116,7 +116,10 @@ void bootloader_select_boot_mode()
 #endif
 #if ESB_ENABLE != 2
 #ifdef MODE_DETECT_PIN
-    if (gpio_read_pin(MODE_DETECT_PIN)) { // power on
+    if (gpio_read_pin(MODE_DETECT_PIN)) { // 如果为USB模式
+        if (mode != BOOTLOADER_BOOT_MODE_USB) {
+            bootloader_boot_mode_set(BOOTLOADER_BOOT_MODE_USB);//为kb层级可以正常读取设备所处BOOT状态
+        }
         mode = BOOTLOADER_BOOT_MODE_USB;
         PRINT("USB mode triger by MODE_DETECT_PIN\n");
     }
