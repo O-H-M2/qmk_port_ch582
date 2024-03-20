@@ -33,6 +33,7 @@ void eeprom_driver_erase(void)
     print("eeprom_driver_erase\n");
 #endif
     EEPROM_ERASE(QMK_EEPROM_START_POSITION, EEPROM_SIZE);
+    EEPROM_ERASE(BLE_SNV_ADDR, EEPROM_MAX_SIZE - BLE_SNV_ADDR);
 }
 
 void eeprom_read_block(void *buf, const void *addr, size_t len)
