@@ -42,7 +42,7 @@ extern volatile uint8_t kbd_protocol_type;
 bool bootmagic_allow_jump();
 void bootloader_boot_mode_set(uint8_t mode);
 uint8_t bootloader_boot_mode_get();
-uint8_t boot_mode_get_noeeprom();
+// uint8_t boot_mode_get_noeeprom();
 void bootloader_select_boot_mode();
 uint8_t bootloader_set_to_default_mode(const char *reason);
 void bootloader_jump();
