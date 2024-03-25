@@ -162,9 +162,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef BATTERY_MEASURE_PIN
 #undef BATTERY_MEASURE_PIN
 #endif
-#ifdef POWER_DETECT_PIN
-#undef POWER_DETECT_PIN
-#endif
+// #ifdef POWER_DETECT_PIN
+// #undef POWER_DETECT_PIN
+// #endif
 #ifndef LSE_ENABLE
 #define LSE_ENABLE 0
 #endif
