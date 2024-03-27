@@ -3,7 +3,7 @@
 	url = https://github.com/qmk/qmk_firmware.git
 [submodule "CherryUSB"]
 	path = CherryUSB
-	url = https://github.com/sakumisu/CherryUSB.git
+	url = https://github.com/O-H-M2/CherryUSB.git
 [submodule "utils/toolchain"]
 	path = utils/toolchain
 	url = https://github.com/Huckies/riscv-none-embed-gcc.git
