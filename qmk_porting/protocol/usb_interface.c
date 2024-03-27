@@ -171,7 +171,6 @@ void usbd_configure_done_callback()
 #ifdef RAW_ENABLE
     usbd_ep_start_read(QMKRAW_OUT_EP, qmkraw_out_buffer, sizeof(qmkraw_out_buffer));
 #endif
-    usb_device_state_set_configuration(true, 1);
 }
 
 void usb_dc_low_level_init()
@@ -452,13 +451,26 @@ void usbd_event_handler(uint8_t event)
         case USBD_EVENT_DISCONNECTED:
             break;
         case USBD_EVENT_RESUME:
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
             usb_device_state_set_resume(usb_device_is_configured(), 1);
+#else
+            inform_keyboard_usb_resume(usb_device_is_configured());
+#endif
             break;
         case USBD_EVENT_SUSPEND:
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
             usb_device_state_set_suspend(usb_device_is_configured(), 1);
+#else
+            inform_keyboard_usb_suspend(usb_device_is_configured());
+#endif
             break;
         case USBD_EVENT_CONFIGURED:
             usbd_configure_done_callback();
+#if !defined ESB_ENABLE || ESB_ENABLE == 1
+            usb_device_state_set_configuration(true, 1);
+#else
+            inform_keyboard_usb_configured();
+#endif
             break;
         case USBD_EVENT_SET_REMOTE_WAKEUP:
             break;
