@@ -49,7 +49,7 @@ file(GLOB_RECURSE quantum_SOURCES
 
     # "${QMK_BASE_DIR}/quantum/digitizer.c"
     # "${QMK_BASE_DIR}/quantum/haptic.c"
-    # "${QMK_BASE_DIR}/quantum/joystick.c"
+    "${QMK_BASE_DIR}/quantum/joystick.c"
     "${QMK_BASE_DIR}/quantum/keyboard.c"
     "${QMK_BASE_DIR}/quantum/keycode_config.c"
     "${QMK_BASE_DIR}/quantum/keymap_common.c"

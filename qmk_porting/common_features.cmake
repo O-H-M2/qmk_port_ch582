@@ -498,3 +498,24 @@ else()
         "${QMK_BASE_DIR}/quantum/matrix.c"
     )
 endif()
+
+
+# POINTING_DEVICE_ENABLE
+if(POINTING_DEVICE_ENABLE)
+    add_definitions(-DPOINTING_DEVICE_ENABLE)
+    message(STATUS "POINTING_DEVICE_ENABLE")
+    include_directories(${QMK_BASE_DIR}/quantum/pointing_device)
+    list(APPEND quantum_SOURCES
+        "${QMK_BASE_DIR}/quantum/pointing_device/pointing_device.c"
+    )
+
+    if(POINTING_DEVICE_DRIVER STREQUAL "analog_joystick")
+        add_definitions(-DPOINTING_DEVICE_DRIVER_analog_joystick)
+        message(STATUS "POINTING_DEVICE_DRIVER = ${POINTING_DEVICE_DRIVER}")
+        include_directories(${QMK_BASE_DIR}/drivers/sensors/)
+        list(APPEND quantum_SOURCES
+            "${QMK_BASE_DIR}/quantum/pointing_device/pointing_device_drivers.c"
+            "${QMK_BASE_DIR}/drivers/sensors/analog_joystick.c"
+        )
+    endif()
+endif()
